@@ -1,0 +1,2 @@
+# Gnome Shell Extension - Hanabi
+
