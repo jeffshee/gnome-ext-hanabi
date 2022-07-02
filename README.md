@@ -3,6 +3,7 @@
 <p align="center">Live Wallpaper for GNOME</p>  
 <p align="center">Hanabi 花火【はなび】(n) fireworks</p>
 <p align="center">( ・ω・)o─━・*:'・:・゜'・:※</p>
+
 # Gnome Shell Extension - Hanabi
 Work in Progress 🌱
 
