@@ -5,6 +5,8 @@
 <p align="center">( ・ω・)o─━・*:'・:・゜'・:※</p>
 
 # Gnome Shell Extension - Hanabi
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/jeffshee)
+
 Work in Progress 🌱
 
 ## Demo 📽️
