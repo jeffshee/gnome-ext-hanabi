@@ -40,3 +40,17 @@ If the GNOME shell keep crashing, you can try to disable the extension using tty
 ```
 gnome-extensions disable hanabi-extension@jeffshee.github.io
 ```
+
+## Please!! 🙏
+
+Collaboration is welcome! Let's make it better together~  
+Feel free to open an issue if you have any problem or suggestion 🤗  
+
+## Contributors ✨
+
+<a href="https://github.com/jeffshee/gnome-ext-hanabi/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=jeffshee/gnome-ext-hanabi" />
+</a>
+
+Made with [contributors-img](https://contrib.rocks).  
+Icons made by [Freepik](http://www.freepik.com/) from [Flaticon](https://www.flaticon.com)
