@@ -1,8 +1,24 @@
 /**
- * Emulate X11WindowType
  * Copyright (C) 2020 Sergio Costas (rastersoft@gmail.com)
+ * Copyright (C) 2022 Jeff Shee (jeffshee8969@gmail.com)
  * 
- * Modified by JeffShee, for Hanabi extension.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Original code from Sergio Costas's DING extension.
+ * Modified by Jeff Shee, for Hanabi extension.
  */
 
 const { GLib, Shell, Meta } = imports.gi;
@@ -23,7 +39,8 @@ class ManageWindow {
        * T : put this window at the top of the screen
        * D : show this window in all desktops
        * H : hide this window from window list
-       * | : break the loop (end the letters checking)
+       * U : unminimize window if minimized (DING default)
+       * | : break the flag checking loop
 
        Using the title is generally not a problem because the desktop windows
        doesn't have a tittle. But some other windows may have and still need to
@@ -56,9 +73,11 @@ class ManageWindow {
                 this._window.unmake_above();
             }
         }));
-        // this._signalIDs.push(window.connect("notify::minimized", () => {
-        //     this._window.unminimize();
-        // }));
+        this._signalIDs.push(window.connect("notify::minimized", () => {
+            if (this._keepUnminimized){
+                this._window.unminimize();
+            }
+        }));
         this._parseTitle();
     }
 
@@ -86,6 +105,7 @@ class ManageWindow {
         this._showInAllDesktops = false;
         this._hideFromWindowList = false;
         this._fixed = false;
+        this._keepUnminimized = false;
         let title = this._window.get_title();
         if (title != null) {
             if ((title.length > 0) && (title[title.length - 1] == ' ')) {
@@ -118,29 +138,33 @@ class ManageWindow {
                             break;
                         switch (char) {
                             case 'B':
-                                log("B");
+                                // log("B");
                                 this._keepAtBottom = true;
                                 this._keepAtTop = false;
                                 break;
                             case 'T':
-                                log("T");
+                                // log("T");
                                 this._keepAtTop = true;
                                 this._keepAtBottom = false;
                                 break;
                             case 'D':
-                                log("D");
+                                // log("D");
                                 this._showInAllDesktops = true;
                                 break;
                             case 'H':
-                                log("H");
+                                // log("H");
                                 this._hideFromWindowList = true;
                                 break;
                             case 'F':
-                                log("F");
+                                // log("F");
                                 this._fixed = true;
                                 break;
+                            case 'U':
+                                // log("U");
+                                this._keepUnminimized = true;
+                                break;
                             case '|':
-                                log("|");
+                                // log("|");
                                 break_flag = true;
                                 break;
                         }

@@ -1,3 +1,28 @@
+/**
+ * Copyright (C) 2022 Jeff Shee (jeffshee8969@gmail.com)
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Special thanks to the black magic of DING extension.
+ * Especially the ManageWindow class that gives superpower to Wayland windows.
+ * That is one of the most crucial parts for this extension to work.
+ * Also, the replaceMethod function is very convenient and helpful.
+ * Without them, I don't know how to get started.
+ */
+
 const { Meta, Gio, GLib } = imports.gi;
 
 const Main = imports.ui.main;
@@ -17,11 +42,6 @@ function debug(...args) {
     if (isDebugMode)
         log("[Hanabi]", ...args);
 }
-
-/**
- * Special thanks to the blackmagics from DING extension ;)
- * Without them, I have absolutely no idea how to begin with.
- */
 
 // This object will contain all the global variables
 let data = {};
