@@ -182,7 +182,7 @@ var LiveWallpaper = GObject.registerClass(
                 return;
 
             // Find renderer
-            let renderer = window_actors.find(window => window.meta_window.title.includes(applicationId));
+            let renderer = window_actors.find(window => window.meta_window.title?.includes(applicationId));
             if (renderer) {
                 return renderer.meta_window;
             }
@@ -270,7 +270,7 @@ function new_createBackgroundActor() {
  * It removes the window animation (minimize, maximize, etc).
  */
  function new__shouldAnimateActor(actor, types) {
-    if (actor.meta_window.title.includes(applicationId))
+    if (actor.meta_window.title?.includes(applicationId))
         return false;
     return replaceData.old__shouldAnimateActor[0].apply(this, [actor, types]);
 }
@@ -289,7 +289,7 @@ function new_createBackgroundActor() {
  function new_get_window_actors(hideRenderer = true) {
     let windowActors = replaceData.old_get_window_actors[0].call(this);
     if (hideRenderer)
-        return windowActors.filter(window => !window.meta_window.title.includes(applicationId));
+        return windowActors.filter(window => !window.meta_window.title?.includes(applicationId));
     else
         return windowActors;
 }
@@ -300,7 +300,7 @@ function new_createBackgroundActor() {
  */
 
  function new__shouldShowWindow(window) {
-    if (window.title.includes(applicationId)) {
+    if (window.title?.includes(applicationId)) {
         return false;
     }
     return replaceData.old__shouldShowWindow[0].apply(this, [window,]);
@@ -311,14 +311,14 @@ function new_createBackgroundActor() {
  * These remove the window preview in overview, but not the icon in alt+Tab.
  */
 function new_Workspace__isOverviewWindow(window) {
-    if (window.title.includes(applicationId)) {
+    if (window.title?.includes(applicationId)) {
         return false;
     }
     return replaceData.old_Workspace__isOverviewWindow[0].apply(this, [window,]);
 }
 
 function new_WorkspaceThumbnail__isOverviewWindow(window) {
-    if (window.title.includes(applicationId)) {
+    if (window.title?.includes(applicationId)) {
         return false;
     }
     return replaceData.old_WorkspaceThumbnail__isOverviewWindow[0].apply(this, [window,]);
