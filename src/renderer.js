@@ -21,6 +21,7 @@ imports.gi.versions.Gtk = "4.0";
 imports.gi.versions.GdkX11 = "4.0";
 const { Gtk, Gio, GLib, Gdk, GdkX11 } = imports.gi;
 
+const applicationId = "io.github.jeffshee.hanabi_renderer";
 const isDebugMode = true;
 const waitTime = 500;
 
@@ -130,7 +131,7 @@ class VideoWallpaperWindow {
     _buildUI() {
         this._window = new Gtk.ApplicationWindow({
             application: this._app,
-            title: "io.github.jeffshee.hanabi_renderer@!0,0;H",
+            title: `@${applicationId}!0,0;H`,
             defaultHeight: windowConfig.height,
             defaultWidth: windowConfig.width,
             fullscreened: !windowed,
@@ -202,7 +203,7 @@ class VideoWallpaperWindow {
 }
 
 const renderer = new Gtk.Application({
-    application_id: "io.github.jeffshee.hanabi_renderer",
+    application_id: applicationId,
     flags: Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
 });
 
