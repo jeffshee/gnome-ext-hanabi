@@ -33,6 +33,7 @@ let codePath = "";
 let filePath = "";
 let volume = 1.0;
 let muted = false;
+let nohide = false;
 
 let lastCommand = null;
 let errorFound = false;
@@ -51,6 +52,12 @@ function parseCommandLine(argv) {
                 case '--muted':
                     muted = true;
                     debug(`muted = ${muted}`);
+                    break;
+                case '-N':
+                case '--nohide':
+                    // Launch renderer in standalone mode without hiding
+                    nohide = true
+                    debug(`nohide = ${nohide}`);
                     break;
                 case '-D':
                 case '--display':
@@ -131,12 +138,12 @@ class VideoWallpaperWindow {
     _buildUI() {
         this._window = new Gtk.ApplicationWindow({
             application: this._app,
-            title: `@${applicationId}!0,0;H`,
+            title: nohide? "Hanabi Renderer": `@${applicationId}!0,0;H`,
             defaultHeight: windowConfig.height,
             defaultWidth: windowConfig.width,
             fullscreened: !windowed,
             display: display,
-            decorated: false,
+            decorated: nohide? true : false ,
         });
 
         // Transparent* (opacity=0.01) window background
@@ -215,41 +222,45 @@ renderer.connect("activate", (app) => {
         activeWindow = window.getWidget();
     }
 
-    /**
-     * Hiding mechanism of the renderer
-     * 
-     * TBH I'm not too fond of the current hiding approach. 
-     * It is too hacky, and I'm afraid it might break someday.
-     * The idea though is simple; skip the taskbar + minimize the window (problematic). 
-     * Then the window should look like it doesn't exist at all.
-     * It is very important to make sure that the compositor **actually** draws the hidden window properly. 
-     * Otherwise, the window preview (shown as background by gnome-extension) will not be animated.
-     * 
-     * Based on my experiments,
-     * 1. Minimize > show: preview not animated
-     * 2. Show > minimize: preview not animated
-     * 3. Minimize > present: window moved to front, minimize not work, preview animated
-     * 4. Present > minimize: window moved to front, minimize work (glitch), preview animated (glitch if preview is created too early)
-     * 5. Opacity=0 > present > (500ms delay) > minimize > opacity=1: 
-     *       minimize work, preview animated (glitch if preview is created too early)
-     */
+    if (nohide) {
+        activeWindow.present();
+    } else {
+        /**
+         * Hiding mechanism of the renderer
+         * 
+         * TBH I'm not too fond of the current hiding approach. 
+         * It is too hacky, and I'm afraid it might break someday.
+         * The idea though is simple; skip the taskbar + minimize the window (problematic). 
+         * Then the window should look like it doesn't exist at all.
+         * It is very important to make sure that the compositor **actually** draws the hidden window properly. 
+         * Otherwise, the window preview (shown as background by gnome-extension) will not be animated.
+         * 
+         * Based on my experiments,
+         * 1. Minimize > show: preview not animated
+         * 2. Show > minimize: preview not animated
+         * 3. Minimize > present: window moved to front, minimize not work, preview animated
+         * 4. Present > minimize: window moved to front, minimize work (glitch), preview animated (glitch if preview is created too early)
+         * 5. Opacity=0 > present > (500ms delay) > minimize > opacity=1: 
+         *       minimize work, preview animated (glitch if preview is created too early)
+         */
 
-    // Hide the content at first
-    window.hideWallpaper();
-    activeWindow.present();
-    // Skip taskbar (X11 only)
-    if (isUsingX11){
-        // No such method under Wayland. Instead it is done by gnome-extension.
-        activeWindow.get_native().get_surface().set_skip_taskbar_hint(true);
+        // Hide the content at first
+        window.hideWallpaper();
+        activeWindow.present();
+        // Skip taskbar (X11 only)
+        if (isUsingX11) {
+            // No such method under Wayland. Instead it is done by gnome-extension.
+            activeWindow.get_native().get_surface().set_skip_taskbar_hint(true);
+        }
+        // Add a timeout for glitch workaround...
+        GLib.timeout_add(GLib.PRIORITY_DEFAULT, waitTime, () => {
+            window.showWallpaper();
+            activeWindow.minimize();
+            // if (!windowed)
+            //     activeWindow.fullscreen();
+            return false;
+        });
     }
-    // Add a timeout for glitch workaround...
-    GLib.timeout_add(GLib.PRIORITY_DEFAULT, waitTime, () => {
-        window.showWallpaper();
-        activeWindow.minimize();
-        // if (!windowed)
-        //     activeWindow.fullscreen();
-        return false;
-    });
 });
 
 renderer.connect("command-line", (app, commandLine) => {
