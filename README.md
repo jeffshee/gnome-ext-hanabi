@@ -18,6 +18,7 @@ Work in Progress 🌱
 Please click on the image to view <i>(redirect to YouTube)</i>
 
 [![](https://i3.ytimg.com/vi/BWjXl4h9_BA/maxresdefault.jpg)](https://www.youtube.com/watch?v=BWjXl4h9_BA)
+[Wallpaper used in demo](https://www.youtube.com/watch?v=2pBj0RKN3Y8)
 
 ## Experimenting 🧪
 Note that the Hanabi extension is not even close to alpha quality.  
