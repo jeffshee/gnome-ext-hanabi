@@ -126,7 +126,6 @@ class VideoWallpaperWindow {
     constructor(app) {
         this._app = app;
         this._window = null;
-        this._box = null;
         this._label = null;
 
         // Load CSS with custom style
@@ -150,11 +149,6 @@ class VideoWallpaperWindow {
         this._windowContext = this._window.get_style_context();
         this._windowContext.add_class("desktopwindow");
 
-        this._box = new Gtk.Box({
-            halign: Gtk.Align.FILL,
-            valign: Gtk.Align.FILL,
-        });
-
         // The constructor of MediaFile doesn't work in gjs.
         // Have to call the `new_for_xxx` function here.
         this._media = Gtk.MediaFile.new_for_filename(filePath);
@@ -172,10 +166,7 @@ class VideoWallpaperWindow {
             paintable: this._media,
         });
 
-        this._box.append(this._picture);
-        this._box.show();
-
-        this._window.set_child(this._box);
+        this._window.set_child(this._picture);
     }
 
     /**
@@ -201,11 +192,11 @@ class VideoWallpaperWindow {
     }
 
     showWallpaper() {
-        this._box.visible = true;
+        this._window.child.visible = true;
     }
 
     hideWallpaper() {
-        this._box.visible = false;
+        this._window.child.visible = false;
     }
 }
 
