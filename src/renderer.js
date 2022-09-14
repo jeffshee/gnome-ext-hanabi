@@ -25,8 +25,7 @@ const applicationId = "io.github.jeffshee.hanabi_renderer";
 const isDebugMode = true;
 const waitTime = 500;
 
-let display = Gdk.Display.open(GLib.getenv("DISPLAY"));
-let isUsingX11 = display.constructor.$gtype.name === 'GdkX11Display'
+let display = null;
 let windowed = false;
 let windowConfig = { width: 1920, height: 1080 }
 let codePath = "";
@@ -127,6 +126,9 @@ class VideoWallpaperWindow {
         this._app = app;
         this._window = null;
         this._label = null;
+
+        if (!display)
+            display = Gdk.Display.get_default();
 
         // Load CSS with custom style
         let cssProvider = new Gtk.CssProvider();
@@ -238,7 +240,9 @@ renderer.connect("activate", (app) => {
         // Hide the content at first
         window.hideWallpaper();
         activeWindow.present();
+
         // Skip taskbar (X11 only)
+        let isUsingX11 = (display && display.constructor.$gtype.name === 'GdkX11Display');
         if (isUsingX11) {
             // No such method under Wayland. Instead it is done by gnome-extension.
             activeWindow.get_native().get_surface().set_skip_taskbar_hint(true);
