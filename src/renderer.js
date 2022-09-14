@@ -163,6 +163,10 @@ class VideoWallpaperWindow {
             // Try to find "clappersink" for best performance
             let sink = Gst.ElementFactory.make('clappersink', 'clappersink');
 
+            // Try "gtk4paintablesink" from gstreamer-rs plugins as 2nd best choice
+            if (!sink)
+                sink = Gst.ElementFactory.make('gtk4paintablesink', 'gtk4paintablesink');
+
             if (sink) {
                 widget = this._getWidgetFromSink(sink);
 
