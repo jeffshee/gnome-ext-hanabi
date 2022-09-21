@@ -19,14 +19,19 @@
 
 imports.gi.versions.Gtk = "4.0";
 imports.gi.versions.GdkX11 = "4.0";
-const { Gtk, Gio, GLib, Gdk, GdkX11 } = imports.gi;
+const { Gtk, Gio, GLib, Gdk, GdkX11, Gst, GstAudio } = imports.gi;
+
+let GstPlay = null;
+
+// GstPlay is available from GStreamer 1.20+
+try { GstPlay = imports.gi.GstPlay; } catch(e) {};
+const haveGstPlay = (GstPlay != null);
 
 const applicationId = "io.github.jeffshee.hanabi_renderer";
 const isDebugMode = true;
 const waitTime = 500;
 
-let display = Gdk.Display.open(GLib.getenv("DISPLAY"));
-let isUsingX11 = display.constructor.$gtype.name === 'GdkX11Display'
+let display = null;
 let windowed = false;
 let windowConfig = { width: 1920, height: 1080 }
 let codePath = "";
@@ -126,8 +131,10 @@ class VideoWallpaperWindow {
     constructor(app) {
         this._app = app;
         this._window = null;
-        this._box = null;
         this._label = null;
+
+        if (!display)
+            display = Gdk.Display.get_default();
 
         // Load CSS with custom style
         let cssProvider = new Gtk.CssProvider();
@@ -150,11 +157,81 @@ class VideoWallpaperWindow {
         this._windowContext = this._window.get_style_context();
         this._windowContext.add_class("desktopwindow");
 
-        this._box = new Gtk.Box({
-            halign: Gtk.Align.FILL,
-            valign: Gtk.Align.FILL,
+        let widget = null;
+
+        if (haveGstPlay) {
+            // Try to find "clappersink" for best performance
+            let sink = Gst.ElementFactory.make('clappersink', 'clappersink');
+
+            // Try "gtk4paintablesink" from gstreamer-rs plugins as 2nd best choice
+            if (!sink)
+                sink = Gst.ElementFactory.make('gtk4paintablesink', 'gtk4paintablesink');
+
+            if (sink) {
+                widget = this._getWidgetFromSink(sink);
+
+                if (widget && nohide)
+                    this._window.title += ` - ${sink.name}`;
+            }
+        }
+
+        if (!widget)
+            widget = this._getGtkStockWidget();
+
+        this._window.set_child(widget);
+    }
+
+    _getWidgetFromSink(sink)
+    {
+        // If sink already offers GTK widget, use it.
+        // Otherwise use GtkPicture with paintable from sink.
+        const widget = (sink.widget)
+            ? sink.widget
+            : (sink.paintable)
+            ? new Gtk.Picture({ paintable: sink.paintable })
+            : null;
+
+        if (!widget)
+            return null;
+
+        this._play = new GstPlay.Play({
+            video_renderer: new GstPlay.PlayVideoOverlayVideoRenderer({
+                video_sink: sink,
+            }),
+        });
+        this._adapter = GstPlay.PlaySignalAdapter.new(this._play);
+
+        // Loop video
+        this._adapter.connect('end-of-stream', (adapter) => adapter.play.seek(0));
+
+        // Error handling
+        this._adapter.connect('warning', (adapter, err) => logError(err));
+        this._adapter.connect('error', (adapter, err) => logError(err));
+
+        // Set the volume and muted after paused state, otherwise it won't work.
+        // Use paused or greater, as some states might be skipped.
+        let stateSignal = this._adapter.connect('state-changed', (adapter, state) => {
+            if (state >= GstPlay.PlayState.PAUSED) {
+                this.setVolume(volume);
+                this.setMuted(muted);
+
+                this._adapter.disconnect(stateSignal);
+                stateSignal = null;
+            }
         });
 
+        const file = Gio.File.new_for_path(filePath);
+        this._play.set_uri(file.get_uri());
+
+        debug(`using ${sink.name} for video output`);
+
+        this._play.play();
+
+        return widget;
+    }
+
+    _getGtkStockWidget()
+    {
         // The constructor of MediaFile doesn't work in gjs.
         // Have to call the `new_for_xxx` function here.
         this._media = Gtk.MediaFile.new_for_filename(filePath);
@@ -166,16 +243,15 @@ class VideoWallpaperWindow {
             this.setVolume(volume);
             this.setMuted(muted)
         })
-        this._media.play();
-
-        this._picture = new Gtk.Picture({
+        const widget = new Gtk.Picture({
             paintable: this._media,
         });
 
-        this._box.append(this._picture);
-        this._box.show();
+        debug(`using GtkMedia for video output`);
 
-        this._window.set_child(this._box);
+        this._media.play();
+
+        return widget;
     }
 
     /**
@@ -184,15 +260,32 @@ class VideoWallpaperWindow {
      * Avoid this behavior by resetting the current value to null before setting the new value.
      */
     setVolume(volume) {
-        if (this._media.volume == volume)
-            this._media.volume = null
-        this._media.volume = volume
+        const player = (this._play != null)
+            ? this._play
+            : this._media;
+
+        // GstPlay uses linear volume
+        if (this._play) {
+            volume = GstAudio.StreamVolume.convert_volume (
+                GstAudio.StreamVolumeFormat.CUBIC,
+                GstAudio.StreamVolumeFormat.LINEAR, volume);
+        }
+
+        if (player.volume == volume)
+            player.volume = null;
+        player.volume = volume;
     }
 
     setMuted(muted) {
-        if (this._media.muted == muted)
-            this._media.muted = null
-        this._media.muted = muted
+        if (this._play) {
+            if (this._play.mute == muted)
+                this._play.mute = !muted;
+            this._play.mute = muted;
+        } else if (this._media) {
+            if (this._media.muted == muted)
+                this._media.muted = !muted;
+            this._media.muted = muted;
+        }
     }
 
     getWidget() {
@@ -201,11 +294,11 @@ class VideoWallpaperWindow {
     }
 
     showWallpaper() {
-        this._box.visible = true;
+        this._window.child.visible = true;
     }
 
     hideWallpaper() {
-        this._box.visible = false;
+        this._window.child.visible = false;
     }
 }
 
@@ -247,7 +340,9 @@ renderer.connect("activate", (app) => {
         // Hide the content at first
         window.hideWallpaper();
         activeWindow.present();
+
         // Skip taskbar (X11 only)
+        let isUsingX11 = (display && display.constructor.$gtype.name === 'GdkX11Display');
         if (isUsingX11) {
             // No such method under Wayland. Instead it is done by gnome-extension.
             activeWindow.get_native().get_surface().set_skip_taskbar_hint(true);
@@ -274,6 +369,8 @@ renderer.connect("command-line", (app, commandLine) => {
     else
         commandLine.set_exit_status(1);
 });
+
+Gst.init(null);
 
 renderer.run(ARGV);
 
