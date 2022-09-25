@@ -42,6 +42,28 @@ If the GNOME shell keep crashing, you can try to disable the extension using tty
 gnome-extensions disable hanabi-extension@jeffshee.github.io
 ```
 
+### Known issues
+1. Video doesn't play / Extension enabled but nothing happen  
+The GTK4 media backend is not pre-installed on some distributions (such as PopOS).
+The solution is to install the backend:  
+`sudo apt install libgtk-4-media-gstreamer`
+
+### Optimization
+Hanabi extension can ultilize `clappersink` from [Clapper](https://github.com/Rafostar/clapper) for the best performance, if installed.
+
+For this to work, Clapper must be installed **from the package manager and not from Flatpak**.
+
+<details>
+  <summary>Perfromance comparison</summary>
+
+- With `clappersink`
+![](https://user-images.githubusercontent.com/25530920/190872365-f1cefa30-6e11-40e4-bf99-1b79c3790d6b.png)
+
+- Without `clappersink` (Use `Gtk.MediaFile` as fallback)
+![](https://user-images.githubusercontent.com/25530920/190872366-7fce5703-2310-4c68-81c7-f17a8a15019f.png)
+
+</details>
+
 ## Please!! 🙏
 
 Collaboration is welcome! Let's make it better together~  
