@@ -172,9 +172,9 @@ var LiveWallpaper = GObject.registerClass(
         _getRendererMetaWindow() {
             let window_actors;
             // Check if the get_window_actors is replaced or not.
-            if(replaceData["old_get_window_actors"]){
+            if (replaceData["old_get_window_actors"]) {
                 window_actors = global.get_window_actors(true);
-            }else{
+            } else {
                 window_actors = global.get_window_actors();
             }
 
@@ -188,18 +188,14 @@ var LiveWallpaper = GObject.registerClass(
             }
         }
 
-        _getWorkArea() {
-            return Main.layoutManager.getWorkAreaForMonitor(this._monitorIndex);
-        }
-
         _getMonitorHeight() {
-            let { y, height } = this._getWorkArea();
-            return y + height;
+            let { height } = Main.layoutManager.monitors[this._monitorIndex];
+            return height;
         }
 
         _getMonitorWidth() {
-            let { x, width } = this._getWorkArea();
-            return x + width;
+            let { width } = Main.layoutManager.monitors[this._monitorIndex];
+            return width;
         }
 
         _updateSize() {
@@ -269,7 +265,7 @@ function new_createBackgroundActor() {
  * Method replacement for WindowManager.WindowManager._shouldAnimateActor.
  * It removes the window animation (minimize, maximize, etc).
  */
- function new__shouldAnimateActor(actor, types) {
+function new__shouldAnimateActor(actor, types) {
     if (actor.meta_window.title?.includes(applicationId))
         return false;
     return replaceData.old__shouldAnimateActor[0].apply(this, [actor, types]);
@@ -286,7 +282,7 @@ function new_createBackgroundActor() {
  * (Need to be bypassed in LiveWallpaper._getRendererMetaWindow)
  */
 
- function new_get_window_actors(hideRenderer = true) {
+function new_get_window_actors(hideRenderer = true) {
     let windowActors = replaceData.old_get_window_actors[0].call(this);
     if (hideRenderer)
         return windowActors.filter(window => !window.meta_window.title?.includes(applicationId));
@@ -299,7 +295,7 @@ function new_createBackgroundActor() {
  * It removes the desktop window from the window animation.
  */
 
- function new__shouldShowWindow(window) {
+function new__shouldShowWindow(window) {
     if (window.title?.includes(applicationId)) {
         return false;
     }
