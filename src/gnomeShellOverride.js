@@ -61,9 +61,9 @@ var GnomeShellOverride = class {
         this.replaceMethod(Background.BackgroundManager, "_createBackgroundActor", new_createBackgroundActor)
 
         // Hiding mechanism
-        // this.replaceMethod(Shell.Global, 'get_window_actors', new_get_window_actors);
-        // this.replaceMethod(Workspace.Workspace, "_isOverviewWindow", new_Workspace__isOverviewWindow, "Workspace");
-        // this.replaceMethod(WorkspaceThumbnail.WorkspaceThumbnail, "_isOverviewWindow", new_WorkspaceThumbnail__isOverviewWindow, "WorkspaceThumbnail");
+        this.replaceMethod(Shell.Global, 'get_window_actors', new_get_window_actors);
+        this.replaceMethod(Workspace.Workspace, "_isOverviewWindow", new_Workspace__isOverviewWindow, "Workspace");
+        this.replaceMethod(WorkspaceThumbnail.WorkspaceThumbnail, "_isOverviewWindow", new_WorkspaceThumbnail__isOverviewWindow, "WorkspaceThumbnail");
         this.replaceMethod(WindowManager.WindowManager, "_shouldAnimateActor", new__shouldAnimateActor);
 
         this._reloadBackgrounds();
@@ -162,7 +162,7 @@ var LiveWallpaper = GObject.registerClass(
             let window_actors;
             if (replaceData["old_get_window_actors"]) {
                 // `get_window_actors` is replaced.
-                window_actors = global.get_window_actors(true);
+                window_actors = global.get_window_actors(false);
             } else {
                 window_actors = global.get_window_actors();
             }
