@@ -24,7 +24,6 @@ const WorkspaceThumbnail = imports.ui.workspaceThumbnail;
 const WindowManager = imports.ui.windowManager;
 
 const isDebugMode = true;
-const useDummyWallpaper = false;
 const applicationId = "io.github.jeffshee.hanabi_renderer";
 
 function debug(...args) {
@@ -112,111 +111,94 @@ var GnomeShellOverride = class {
 var LiveWallpaper = GObject.registerClass(
     class LiveWallpaper extends St.Widget {
         _init(backgroundActor) {
-            this._backgroundActor = backgroundActor;
-            this._monitorIndex = this._backgroundActor.monitor;
-
             super._init({
                 layout_manager: new Clutter.BinLayout(),
+                // Layout manager will allocate extra space for the actor, if possible.
                 x_expand: true,
                 y_expand: true,
+                // backgroundActor's z_position is 0. Positive values = nearer to the user.
+                z_position: 1,
                 opacity: 0,
             });
 
-            this._backgroundActor.layout_manager = new Clutter.BinLayout();
-            this._backgroundActor.add_child(this);
+            this._backgroundActor = backgroundActor;
+            this._monitorIndex = backgroundActor.monitor;
+            let { height, width } = Main.layoutManager.monitors[this._monitorIndex];
+            this._monitorHeight = height;
+            this._monitorWidth = width;
+            this._metaBackgroundGroup = backgroundActor.get_parent();
+            this._metaBackgroundGroup.add_child(this);
+            this._wallpaper = null
 
             this.connect('destroy', this._onDestroy.bind(this));
-            /**
-             * backgroundActor
-             *  - LiveWallpaper (this) (St.Widget)
-             */
-            this._updateWallpaper();
-            this._updateVisibility();
+            this._applyWallpaper();
         }
 
-        _updateWallpaper() {
-            if (this._wallpaper)
-                this._wallpaper.destroy();
-            this._wallpaper = null;
-
-            let windowContainer = new Clutter.Actor({
-                // The point around which the scaling and rotation transformations occur
+        _applyWallpaper() {
+            this._wallpaper = new Clutter.Actor({
+                layout_manager: new Shell.WindowPreviewLayout(),
+                // The point around which the scaling and rotation transformations occur.
                 pivot_point: new Graphene.Point({ x: 0.5, y: 0.5 }),
             });
-            windowContainer.layout_manager = new Shell.WindowPreviewLayout();
-            let renderer = this._getRendererMetaWindow();
-            if (renderer && !useDummyWallpaper)
-                this._wallpaper = windowContainer.layout_manager.add_window(renderer);
+
+            let renderer = this._getRenderer();
+            if (renderer) {
+                this._wallpaper.layout_manager.add_window(renderer);
+            }
             else {
-                debug("renderer == null || useDummyWallpaper == true");
-                // Create a dummy actor as wallpaper
-                // this._wallpaper = new Clutter.Actor({ width: this._getMonitorWidth(), height: this._getMonitorHeight()});
+                debug("renderer == null, retry `_applyWallpaper()` after 100ms");
                 GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
-                    // data.launchDesktopId = 0;
-                    this._updateWallpaper();
+                    this._applyWallpaper();
                     return false;
                 });
                 return;
             }
-            debug("_updateWallpaper: " + this._wallpaper);
 
-            // Why the new created WindowPreview has a parent already to begin with?
-            // TODO clutter_actor_remove_child: assertion 'CLUTTER_IS_ACTOR (self)' failed
-            // TODO clutter_actor_remove_child: assertion 'child->priv->parent == self' failed
-            let parent = this._wallpaper.get_parent();
-            if (parent != null)
-                parent.remove_child(this._wallpaper);
             this.add_child(this._wallpaper);
+            this._fade();
         }
 
-        _getRendererMetaWindow() {
+        _getRenderer() {
             let window_actors;
-            // Check if the get_window_actors is replaced or not.
             if (replaceData["old_get_window_actors"]) {
+                // `get_window_actors` is replaced.
                 window_actors = global.get_window_actors(true);
             } else {
                 window_actors = global.get_window_actors();
             }
 
-            if (window_actors && window_actors.length == 0)
+            if (window_actors && window_actors.length === 0)
                 return;
 
-            // Find renderer
+            // Find renderer by `applicationId`.
             let renderer = window_actors.find(window => window.meta_window.title?.includes(applicationId));
             if (renderer) {
                 return renderer.meta_window;
             }
         }
 
-        _getMonitorHeight() {
-            let { height } = Main.layoutManager.monitors[this._monitorIndex];
-            return height;
-        }
-
-        _getMonitorWidth() {
-            let { width } = Main.layoutManager.monitors[this._monitorIndex];
-            return width;
-        }
-
-        _updateSize() {
+        _resize() {
             if (!this._wallpaper || this._wallpaper.width === 0)
                 return;
 
             /**
-             * Only allocation.get_height() works fine so far.
+             * Only `allocation.get_height()` works fine so far. The `allocation.get_width()` gives weird result for some reasons.
              * As a workaround, we calculate the scale based on the height, then use it to calculate width.
-             * It is safe to assume that the ratio of wallpaper is constant (e.g. 16:9) in our case.
+             * It is safe to assume that the ratio of wallpaper is a constant (e.g. 16:9) in our case.
              */
-            let scale = this.allocation.get_height() / this._getMonitorHeight();
-            this._wallpaper.height = this._getMonitorHeight() * scale;
-            this._wallpaper.width = this._getMonitorWidth() * scale;
+            let scale = this.allocation.get_height() / this._monitorHeight;
+            this._wallpaper.height = this._monitorHeight * scale;
+            this._wallpaper.width = this._monitorWidth * scale;
         }
 
-        _updateVisibility() {
-            let visible = true;
-
+        _fade(visible = true) {
             this.ease({
                 opacity: visible ? 255 : 0,
+                duration: Background.FADE_ANIMATION_TIME,
+                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            });
+            this._backgroundActor.ease({
+                opacity: visible ? 0 : 255,
                 duration: Background.FADE_ANIMATION_TIME,
                 mode: Clutter.AnimationMode.EASE_OUT_QUAD,
             });
@@ -229,7 +211,7 @@ var LiveWallpaper = GObject.registerClass(
                 return;
 
             this._laterId = Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
-                this._updateSize();
+                this._resize();
 
                 this._laterId = 0;
                 return GLib.SOURCE_REMOVE;
@@ -240,7 +222,6 @@ var LiveWallpaper = GObject.registerClass(
             if (this._laterId)
                 Meta.later_remove(this._laterId);
             this._laterId = 0;
-            this._backgroundActor.layout_manager = null;
         }
     }
 );
