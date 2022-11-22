@@ -1,5 +1,4 @@
 project('hanabi-extension',
-  version: '42.0',
   meson_version: '>= 0.40.0'
 )
 
@@ -11,20 +10,15 @@ sources = [
   'stylesheet.css',
   'video.mp4'
 ]
-# extra_sources = ['COPYING']
-extra_sources = []
 
-# schemas = ['io.jeffshee.github.hanabi-extension']
-schemas = []
+extra_sources = ['../LICENSE']
 
 uuid = 'hanabi-extension@jeffshee.github.io'
 
-ver_arr = meson.project_version().split('.')
-if ver_arr[1].version_compare('>=0')
-  shell_version = ver_arr[0]
-else # pre-release (alpha, beta, rc)
-  shell_version = '.'.join(ver_arr)
-endif
+shell_versions = ['42', '43']
+
+# schemas = ['io.jeffshee.github.hanabi-extension']
+schemas = []
 
 ## Global
 # datadir = get_option('datadir')
@@ -33,7 +27,7 @@ endif
 
 ## Local
 prefix = get_option('prefix')
-datadir = join_paths (prefix, get_option('datadir'))
+datadir = join_paths(prefix, get_option('datadir'))
 schema_dir = join_paths(datadir, 'glib-2.0', 'schemas')
 extensions_dir = join_paths(prefix, 'share', 'gnome-shell', 'extensions')
 
@@ -41,7 +35,7 @@ have_schemas = schemas.length() > 0
 
 metaconf = configuration_data()
 metaconf.set('uuid', uuid)
-metaconf.set('shell_version', shell_version)
+metaconf.set('shell_versions', '", "'.join(shell_versions))
 if have_schemas
   metaconf.set('settings_schema', schemas[0])
 endif

@@ -3,6 +3,6 @@
 "name": "Hanabi Extension",
 "description": "Live Wallpaper for GNOME",
 "settings-schema": "@settings_schema@",
-"shell-version": ["@shell_version@"],
-"url": ""
+"shell-version": ["@shell_versions@"],
+"url": "https://github.com/jeffshee/gnome-ext-hanabi"
 }
