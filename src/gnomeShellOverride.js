@@ -38,6 +38,7 @@ try {
 }
 
 var replaceData = {};
+const runningWallpaperActors = new Set();
 
 /**
  * This class overrides methods in the Gnome Shell. The new methods
@@ -52,6 +53,9 @@ var GnomeShellOverride = class {
     }
 
     _reloadBackgrounds() {
+        runningWallpaperActors.forEach((actor) => actor.destroy());
+        runningWallpaperActors.clear();
+
         Main.layoutManager._updateBackgrounds();
     }
 
@@ -110,7 +114,9 @@ var GnomeShellOverride = class {
                 value[1].prototype[value[2]] = value[0];
             }
         }
+
         replaceData = {};
+
         this._reloadBackgrounds();
     }
 
@@ -156,11 +162,16 @@ var LiveWallpaper = GObject.registerClass(
         _init(backgroundActor) {
             super._init({
                 layout_manager: new Clutter.BinLayout(),
+                //
+                x: backgroundActor.x,
+                y: backgroundActor.y,
+                width: backgroundActor.width,
+                height: backgroundActor.height,
                 // Layout manager will allocate extra space for the actor, if possible.
                 x_expand: true,
                 y_expand: true,
                 // backgroundActor's z_position is 0. Positive values = nearer to the user.
-                z_position: 1,
+                z_position: backgroundActor.z_position + 1,
                 opacity: 0,
             });
 
@@ -176,6 +187,9 @@ var LiveWallpaper = GObject.registerClass(
 
             this.connect("destroy", this._onDestroy.bind(this));
             this._applyWallpaper();
+
+            runningWallpaperActors.add(this);
+            debug("LiveWallpaper created");
         }
 
         _applyWallpaper() {
@@ -263,8 +277,13 @@ var LiveWallpaper = GObject.registerClass(
         }
 
         _onDestroy() {
-            if (this._laterId) Meta.later_remove(this._laterId);
+            if (this._laterId) {
+                Meta.later_remove(this._laterId);
+            }
             this._laterId = 0;
+
+            runningWallpaperActors.delete(this);
+            debug("LiveWallpaper destroyed");
         }
     }
 );
