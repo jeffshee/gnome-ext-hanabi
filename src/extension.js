@@ -108,11 +108,7 @@ function innerEnable(removeId) {
     }
 
     data.GnomeShellOverride.enable();
-
-    // under X11 we don't need to cheat, so only do all this under wayland
-    if (Meta.is_wayland_compositor()) {
-        data.x11Manager.enable();
-    }
+    data.x11Manager.enable();
 
     data.isEnabled = true;
     if (data.launchRendererId) {
@@ -278,6 +274,7 @@ function launchRenderer() {
  */
 var LaunchSubprocess = class {
     constructor(flags, process_id, cmd_parameter) {
+        this._isX11 = !Meta.is_wayland_compositor();
         this._process_id = process_id;
         this._cmd_parameter = cmd_parameter;
         this._UUID = null;
@@ -287,7 +284,7 @@ var LaunchSubprocess = class {
             Gio.SubprocessFlags.STDERR_MERGE;
         this.cancellable = new Gio.Cancellable();
         this._launcher = new Gio.SubprocessLauncher({ flags: this._flags });
-        if (Meta.is_wayland_compositor()) {
+        if (!this._isX11) {
             this._waylandClient = Meta.WaylandClient.new(this._launcher);
             if (Config.PACKAGE_VERSION == "3.38.0") {
                 // workaround for bug in 3.38.0
@@ -299,7 +296,7 @@ var LaunchSubprocess = class {
     }
 
     spawnv(argv) {
-        if (Meta.is_wayland_compositor()) {
+        if (!this._isX11) {
             this.subprocess = this._waylandClient.spawnv(global.display, argv);
         } else {
             this.subprocess = this._launcher.spawnv(argv);
@@ -361,7 +358,7 @@ var LaunchSubprocess = class {
      * @param {MetaWindow} window The window to check.
      */
     query_window_belongs_to(window) {
-        if (!Meta.is_wayland_compositor()) {
+        if (this._isX11) {
             return false;
         }
         if (!this.process_running) {
@@ -374,14 +371,20 @@ var LaunchSubprocess = class {
         }
     }
 
+    query_pid_of_program() {
+        if (!this.process_running) return false;
+
+        return this.subprocess.get_identifier();
+    }
+
     show_in_window_list(window) {
-        if (Meta.is_wayland_compositor() && this.process_running) {
+        if (!this._isX11 && this.process_running) {
             this._waylandClient.show_in_window_list(window);
         }
     }
 
     hide_from_window_list(window) {
-        if (Meta.is_wayland_compositor() && this.process_running) {
+        if (!this._isX11 && this.process_running) {
             this._waylandClient.hide_from_window_list(window);
         }
     }

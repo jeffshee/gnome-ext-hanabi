@@ -38,7 +38,7 @@ let windowed = false;
 let windowConfig = { width: 1920, height: 1080 };
 let codePath = "";
 let filePath = "";
-let volume = 1.0;
+let volume = 0.5;
 let muted = false;
 let nohide = false;
 
@@ -127,6 +127,12 @@ function parseCommandLine(argv) {
     }
 }
 
+function usingX11() {
+    return (
+        Gdk.Display.get_default().constructor.$gtype.name === "GdkX11Display"
+    );
+}
+
 class VideoWallpaperWindow {
     constructor(app) {
         this._app = app;
@@ -152,7 +158,7 @@ class VideoWallpaperWindow {
     _buildUI() {
         this._window = new Gtk.ApplicationWindow({
             application: this._app,
-            title: nohide ? "Hanabi Renderer" : `@${applicationId}!0,0;H`,
+            title: nohide ? "Hanabi Renderer" : `@${applicationId}!0,0;BHM`,
             defaultHeight: windowConfig.height,
             defaultWidth: windowConfig.width,
             fullscreened: !windowed,
@@ -307,6 +313,17 @@ class VideoWallpaperWindow {
     hideWallpaper() {
         this._window.child.visible = false;
     }
+
+    hideX11windowTaskbar() {
+        // This will cause the window fails to minimize
+        if (usingX11()) {
+            this._window.connect("realize", (window) => {
+                const gdkWindow = window.get_surface();
+                gdkWindow.set_skip_pager_hint(true);
+                gdkWindow.set_skip_taskbar_hint(true);
+            });
+        }
+    }
 }
 
 const renderer = new Gtk.Application({
@@ -322,39 +339,7 @@ renderer.connect("activate", (app) => {
         activeWindow = window.getWidget();
     }
 
-    if (nohide) {
-        activeWindow.present();
-    } else {
-        /**
-         * Hiding mechanism of the renderer
-         *
-         * TBH I'm not too fond of the current hiding approach.
-         * It is too hacky, and I'm afraid it might break someday.
-         * The idea though is simple; skip the taskbar + minimize the window (problematic).
-         * Then the window should look like it doesn't exist at all.
-         * It is very important to make sure that the compositor **actually** draws the hidden window properly.
-         * Otherwise, the window preview (shown as background by gnome-extension) will not be animated.
-         *
-         * Based on my experiments,
-         * 1. Minimize > show: preview not animated
-         * 2. Show > minimize: preview not animated
-         * 3. Minimize > present: window moved to front, minimize not work, preview animated
-         * 4. Present > minimize: window moved to front, minimize work (glitch), preview animated (glitch if preview is created too early)
-         * 5. Opacity=0 > present > (500ms delay) > minimize > opacity=1:
-         *       minimize work, preview animated (glitch if preview is created too early)
-         */
-
-        // Hide the content at first
-        window.hideWallpaper();
-        activeWindow.present();
-
-        // Add a timeout for glitch workaround...
-        GLib.timeout_add(GLib.PRIORITY_DEFAULT, waitTime, () => {
-            window.showWallpaper();
-            activeWindow.minimize();
-            return false;
-        });
-    }
+    activeWindow.present();
 });
 
 renderer.connect("command-line", (app, commandLine) => {
