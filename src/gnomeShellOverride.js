@@ -63,29 +63,43 @@ var GnomeShellOverride = class {
             new_createBackgroundActor
         );
 
+        // Remove window animations
+        this.replaceMethod(
+            WindowManager.WindowManager,
+            "_shouldAnimateActor",
+            new__shouldAnimateActor
+        );
+
+        if (WorkspaceAnimation) {
+            this.replaceMethod(
+                WorkspaceAnimation.WorkspaceGroup,
+                "_shouldShowWindow",
+                new__shouldShowWindow
+            );
+        }
+
         // Hiding mechanism
         this.replaceMethod(
             Shell.Global,
             "get_window_actors",
             new_get_window_actors
         );
+
         this.replaceMethod(
             Workspace.Workspace,
             "_isOverviewWindow",
             new_Workspace__isOverviewWindow,
             "Workspace"
         );
+
         this.replaceMethod(
             WorkspaceThumbnail.WorkspaceThumbnail,
             "_isOverviewWindow",
             new_WorkspaceThumbnail__isOverviewWindow,
             "WorkspaceThumbnail"
         );
-        this.replaceMethod(
-            WindowManager.WindowManager,
-            "_shouldAnimateActor",
-            new__shouldAnimateActor
-        );
+
+        this.replaceMethod(Meta.Display, "get_tab_list", new_get_tab_list);
 
         this._reloadBackgrounds();
     }
@@ -282,26 +296,6 @@ function new__shouldAnimateActor(actor, types) {
 }
 
 /**
- * Below is achived method replacements. Not longer used.
- */
-
-/**
- * Method replacement for Shell.Global.get_window_actors.
- * It removes the renderer window from the list of windows in the Activities mode by default.
- * This behavior can be bypassed when passing `false` to the argument.
- * (Need to be bypassed in LiveWallpaper._getRendererMetaWindow)
- */
-
-function new_get_window_actors(hideRenderer = true) {
-    let windowActors = replaceData.old_get_window_actors[0].call(this);
-    if (hideRenderer)
-        return windowActors.filter(
-            (window) => !window.meta_window.title?.includes(applicationId)
-        );
-    else return windowActors;
-}
-
-/**
  * Method replacement under X11 for should show window.
  * It removes the desktop window from the window animation.
  */
@@ -314,8 +308,23 @@ function new__shouldShowWindow(window) {
 }
 
 /**
+ * Method replacement for Shell.Global.get_window_actors.
+ * It removes the renderer window from the list of windows in the Activities mode by default.
+ * This behavior can be bypassed when passing `false` to the argument.
+ */
+
+function new_get_window_actors(hideRenderer = true) {
+    let windowActors = replaceData.old_get_window_actors[0].call(this);
+    if (hideRenderer)
+        return windowActors.filter(
+            (window) => !window.meta_window.title?.includes(applicationId)
+        );
+    else return windowActors;
+}
+
+/**
  * Similar to skip the taskbar.
- * These remove the window preview in overview, but not the icon in alt+Tab.
+ * These remove the window preview in overview.
  */
 function new_Workspace__isOverviewWindow(window) {
     if (window.title?.includes(applicationId)) {
@@ -331,4 +340,17 @@ function new_WorkspaceThumbnail__isOverviewWindow(window) {
     return replaceData.old_WorkspaceThumbnail__isOverviewWindow[0].apply(this, [
         window,
     ]);
+}
+
+/**
+ * This remove the window icon from altTab.
+ */
+function new_get_tab_list(type, workspace) {
+    let metaWindows = replaceData.old_get_tab_list[0].apply(this, [
+        type,
+        workspace,
+    ]);
+    return metaWindows.filter(
+        (meta_window) => !meta_window.title?.includes(applicationId)
+    );
 }
