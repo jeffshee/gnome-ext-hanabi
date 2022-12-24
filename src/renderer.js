@@ -29,17 +29,33 @@ try {
 } catch (e) {}
 const haveGstPlay = GstPlay != null;
 
-const applicationId = "io.github.jeffshee.hanabi_renderer";
-const isDebugMode = true;
-const waitTime = 500;
+const applicationId = "io.github.jeffshee.hanabi-renderer";
 
-let display = null;
+let extSettings = null;
+const extSchemaId = "io.github.jeffshee.hanabi-extension";
+const settingsSchemaSource = Gio.SettingsSchemaSource.get_default();
+if (settingsSchemaSource.lookup(extSchemaId, false)) {
+    extSettings = Gio.Settings.new(extSchemaId);
+}
+
+const isDebugMode = extSettings ? extSettings.get_boolean("debug-mode") : true;
+
+const isEnableVAPlugins = extSettings
+    ? extSettings.get_boolean("enable-vah264dec-vavp9dec")
+    : false;
+if (isEnableVAPlugins) {
+    GLib.setenv("GST_PLUGIN_FEATURE_RANK", "vah264dec:300,vavp9dec:300", true);
+    debug(
+        `GST_PLUGIN_FEATURE_RANK = ${GLib.getenv("GST_PLUGIN_FEATURE_RANK")}`
+    );
+}
+
 let windowed = false;
 let windowConfig = { width: 1920, height: 1080 };
 let codePath = "";
-let filePath = "";
-let volume = 0.5;
-let muted = false;
+let videoPath = extSettings ? extSettings.get_string("video-path") : "";
+let volume = extSettings ? extSettings.get_int("volume") / 100.0 : 0.5;
+let mute = extSettings ? extSettings.get_boolean("mute") : false;
 let nohide = false;
 
 let lastCommand = null;
@@ -55,9 +71,9 @@ function parseCommandLine(argv) {
         if (!lastCommand) {
             switch (arg) {
                 case "-M":
-                case "--muted":
-                    muted = true;
-                    debug(`muted = ${muted}`);
+                case "--mute":
+                    mute = true;
+                    debug(`mute = ${mute}`);
                     break;
                 case "-N":
                 case "--nohide":
@@ -65,8 +81,6 @@ function parseCommandLine(argv) {
                     nohide = true;
                     debug(`nohide = ${nohide}`);
                     break;
-                case "-D":
-                case "--display":
                 case "-W":
                 case "--windowed":
                 case "-P":
@@ -85,17 +99,6 @@ function parseCommandLine(argv) {
             continue;
         }
         switch (lastCommand) {
-            case "-D":
-            case "--display":
-                let displayIndex = parseInt(arg);
-                debug(`display = ${displayIndex}`);
-                let displays = Gdk.DisplayManager.get().list_displays();
-                if (displayIndex >= displays.length) {
-                    print("Invalid display. Aborting.");
-                    errorFound = true;
-                }
-                display = displays[displayIndex];
-                break;
             case "-W":
             case "--windowed":
                 windowed = true;
@@ -113,8 +116,8 @@ function parseCommandLine(argv) {
                 break;
             case "-F":
             case "--filepath":
-                filePath = arg;
-                debug(`filepath = ${filePath}`);
+                videoPath = arg;
+                debug(`filepath = ${videoPath}`);
                 break;
             case "-V":
             case "--volume":
@@ -139,8 +142,6 @@ class VideoWallpaperWindow {
         this._window = null;
         this._label = null;
 
-        if (!display) display = Gdk.Display.get_default();
-
         // Load CSS with custom style
         let cssProvider = new Gtk.CssProvider();
         cssProvider.load_from_file(
@@ -149,10 +150,27 @@ class VideoWallpaperWindow {
             )
         );
         Gtk.StyleContext.add_provider_for_display(
-            display,
+            Gdk.Display.get_default(),
             cssProvider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         );
+
+        extSettings?.connect("changed", (settings, key) => {
+            switch (key) {
+                case "video-path":
+                    videoPath = settings.get_string(key);
+                    this.setFilePath(videoPath);
+                    break;
+                case "mute":
+                    mute = settings.get_boolean(key);
+                    this.setMute(mute);
+                    break;
+                case "volume":
+                    volume = settings.get_int(key) / 100.0;
+                    this.setVolume(volume);
+                    break;
+            }
+        });
     }
 
     _buildUI() {
@@ -162,7 +180,6 @@ class VideoWallpaperWindow {
             defaultHeight: windowConfig.height,
             defaultWidth: windowConfig.width,
             fullscreened: !windowed,
-            display: display,
             decorated: nohide ? true : false,
         });
 
@@ -222,14 +239,14 @@ class VideoWallpaperWindow {
         this._adapter.connect("warning", (adapter, err) => logError(err));
         this._adapter.connect("error", (adapter, err) => logError(err));
 
-        // Set the volume and muted after paused state, otherwise it won't work.
+        // Set the volume and mute after paused state, otherwise it won't work.
         // Use paused or greater, as some states might be skipped.
         let stateSignal = this._adapter.connect(
             "state-changed",
             (adapter, state) => {
                 if (state >= GstPlay.PlayState.PAUSED) {
                     this.setVolume(volume);
-                    this.setMuted(muted);
+                    this.setMute(mute);
 
                     this._adapter.disconnect(stateSignal);
                     stateSignal = null;
@@ -237,7 +254,7 @@ class VideoWallpaperWindow {
             }
         );
 
-        const file = Gio.File.new_for_path(filePath);
+        const file = Gio.File.new_for_path(videoPath);
         this._play.set_uri(file.get_uri());
 
         debug(`using ${sink.name} for video output`);
@@ -250,14 +267,14 @@ class VideoWallpaperWindow {
     _getGtkStockWidget() {
         // The constructor of MediaFile doesn't work in gjs.
         // Have to call the `new_for_xxx` function here.
-        this._media = Gtk.MediaFile.new_for_filename(filePath);
+        this._media = Gtk.MediaFile.new_for_filename(videoPath);
         this._media.set({
             loop: true,
         });
-        // Set the volume and muted after prepared, otherwise it won't work.
+        // Set the volume and mute after prepared, otherwise it won't work.
         this._media.connect("notify::prepared", () => {
             this.setVolume(volume);
-            this.setMuted(muted);
+            this.setMute(mute);
         });
         const widget = new Gtk.Picture({
             paintable: this._media,
@@ -291,27 +308,31 @@ class VideoWallpaperWindow {
         player.volume = volume;
     }
 
-    setMuted(muted) {
+    setMute(mute) {
         if (this._play) {
-            if (this._play.mute == muted) this._play.mute = !muted;
-            this._play.mute = muted;
+            if (this._play.mute == mute) this._play.mute = !mute;
+            this._play.mute = mute;
         } else if (this._media) {
-            if (this._media.muted == muted) this._media.muted = !muted;
-            this._media.muted = muted;
+            if (this._media.muted == mute) this._media.muted = !mute;
+            this._media.muted = mute;
+        }
+    }
+
+    setFilePath(filePath) {
+        const file = Gio.File.new_for_path(filePath);
+        if (this._play) {
+            this._play.set_uri(file.get_uri());
+            this._play.play();
+        } else if (this._media) {
+            // FIXME: not playing
+            this._media.file = file;
+            this._media.play();
         }
     }
 
     getWidget() {
         this._buildUI();
         return this._window;
-    }
-
-    showWallpaper() {
-        this._window.child.visible = true;
-    }
-
-    hideWallpaper() {
-        this._window.child.visible = false;
     }
 
     hideX11windowTaskbar() {

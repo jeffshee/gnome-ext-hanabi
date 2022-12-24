@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+    <schema id="io.github.jeffshee.hanabi-extension" path="/io/github/jeffshee/hanabi-extension/">
+
+        <key name="video-path" type="s">
+            <default>''</default>
+            <summary>Video path</summary>
+            <description>Video path</description>
+        </key>
+
+        <key name="mute" type="b">
+            <default>false</default>
+            <summary>Mute audio</summary>
+            <description>Mute audio</description>
+        </key>
+
+        <key name="volume" type="i">
+            <range min="0" max="100" />
+            <default>50</default>
+            <summary>Audio volume</summary>
+            <description>Audio volume</description>
+        </key>
+
+        <key name="pause-on-fullscreen" type="b">
+            <default>false</default>
+            <summary>Pause on fullscreen</summary>
+            <description>Pause playback when there is a fullscreen window</description>
+        </key>
+
+        <key name="pause-on-maximize" type="b">
+            <default>false</default>
+            <summary>Pause on maximize</summary>
+            <description>Pause playback when there is a maximized window</description>
+        </key>
+
+        <key name="pause-on-battery" type="b">
+            <default>false</default>
+            <summary>Pause on battery</summary>
+            <description>Pause playback when device is on battery</description>
+        </key>
+
+        <key name="debug-mode" type="b">
+            <default>false</default>
+            <summary>Debug mode</summary>
+            <description>Print debug messages to log</description>
+        </key>
+
+        <key name="enable-vah264dec-vavp9dec" type="b">
+            <default>false</default>
+            <summary>Experimental VA plugins</summary>
+            <description>Enable vah264dec and vavp9dec which improve performance for Intel/AMD
+                Wayland users</description>
+        </key>
+
+
+    </schema>
+</schemalist>

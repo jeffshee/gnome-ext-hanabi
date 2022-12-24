@@ -6,9 +6,9 @@ sources = [
   'extension.js',
   'emulateX11WindowType.js',
   'gnomeShellOverride.js',
+  'prefs.js',
   'renderer.js',
   'stylesheet.css',
-  'video.mp4'
 ]
 
 extra_sources = ['../LICENSE']
@@ -17,8 +17,7 @@ uuid = 'hanabi-extension@jeffshee.github.io'
 
 shell_versions = ['42', '43']
 
-# schemas = ['io.jeffshee.github.hanabi-extension']
-schemas = []
+schemas = ['io.github.jeffshee.hanabi-extension']
 
 ## Global
 # datadir = get_option('datadir')

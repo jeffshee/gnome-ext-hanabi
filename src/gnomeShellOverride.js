@@ -17,17 +17,24 @@
 
 const { Clutter, GLib, GObject, Meta, St, Shell, Graphene } = imports.gi;
 
+const ExtensionUtils = imports.misc.extensionUtils;
 const Background = imports.ui.background;
 const Main = imports.ui.main;
 const Workspace = imports.ui.workspace;
 const WorkspaceThumbnail = imports.ui.workspaceThumbnail;
 const WindowManager = imports.ui.windowManager;
 
-const isDebugMode = true;
-const applicationId = "io.github.jeffshee.hanabi_renderer";
+const applicationId = "io.github.jeffshee.hanabi-renderer";
+const extSettings = ExtensionUtils.getSettings(
+    "io.github.jeffshee.hanabi-extension"
+);
+
+const getDebugMode = () => {
+    return extSettings.get_boolean("debug-mode");
+};
 
 function debug(...args) {
-    if (isDebugMode) log("[Hanabi]", ...args);
+    if (getDebugMode()) log("[Hanabi]", ...args);
 }
 
 var WorkspaceAnimation = null;
