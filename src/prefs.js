@@ -32,7 +32,7 @@ function fillPreferencesWindow(window) {
     prefsVolume(generalGroup);
 
     const pauseGroup = new Adw.PreferencesGroup({ title: "Auto pause" });
-    page.add(pauseGroup);
+    // page.add(pauseGroup);
     prefsRowBoolean(
         pauseGroup,
         "Pause on fullscreen",
@@ -59,7 +59,7 @@ function fillPreferencesWindow(window) {
     prefsRowBoolean(
         experimentalGroup,
         "Debug mode",
-        "enable-debug-mode",
+        "debug-mode",
         "Print debug messages to log"
     );
     prefsRowBoolean(
@@ -80,9 +80,10 @@ function prefsRowVideoPath(window, prefsGroup) {
         "io.github.jeffshee.hanabi-extension"
     );
 
+    let path = settings.get_string(key);
     const row = new Adw.ActionRow({
         title: title,
-        subtitle: `Current: ${settings.get_string(key)}`,
+        subtitle: `Current: ${path !== "" ? path : "None"}`,
     });
     prefsGroup.add(row);
 
@@ -104,7 +105,7 @@ function prefsRowVideoPath(window, prefsGroup) {
             if (response_id === Gtk.ResponseType.ACCEPT) {
                 let path = dialog.get_file().get_path();
                 settings.set_string(key, path);
-                row.subtitle = `Current: ${path}`;
+                row.subtitle = `Current: ${path !== "" ? path : "None"}`;
             }
             dialog.destroy();
         });

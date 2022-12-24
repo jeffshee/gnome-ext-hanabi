@@ -39,7 +39,7 @@
             <description>Pause playback when device is on battery</description>
         </key>
 
-        <key name="enable-debug-mode" type="b">
+        <key name="debug-mode" type="b">
             <default>false</default>
             <summary>Debug mode</summary>
             <description>Print debug messages to log</description>

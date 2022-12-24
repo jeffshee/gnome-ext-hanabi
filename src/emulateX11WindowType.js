@@ -25,7 +25,7 @@ const { GLib, Shell, Meta } = imports.gi;
 const Main = imports.ui.main;
 
 // Use applicationId to differentiate between hanabi and DING.
-const applicationId = "io.github.jeffshee.hanabi_renderer";
+const applicationId = "io.github.jeffshee.hanabi-renderer";
 
 class ManageWindow {
     /* This class is added to each managed window, and it's used to

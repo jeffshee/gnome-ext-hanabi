@@ -9,7 +9,6 @@ sources = [
   'prefs.js',
   'renderer.js',
   'stylesheet.css',
-  'video.mp4'
 ]
 
 extra_sources = ['../LICENSE']

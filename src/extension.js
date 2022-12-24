@@ -34,12 +34,20 @@ const Me = ExtensionUtils.getCurrentExtension();
 const EmulateX11 = Me.imports.emulateX11WindowType;
 const GnomeShellOverride = Me.imports.gnomeShellOverride;
 
-const isDebugMode = true;
-// TODO get video path from user prefs
-const videoPath = ExtensionUtils.getCurrentExtension().path + "/video.mp4";
+const extSettings = ExtensionUtils.getSettings(
+    "io.github.jeffshee.hanabi-extension"
+);
+
+const getVideoPath = () => {
+    return extSettings.get_string("video-path");
+};
+
+const getDebugMode = () => {
+    return extSettings.get_boolean("debug-mode");
+};
 
 function debug(...args) {
-    if (isDebugMode) log("[Hanabi]", ...args);
+    if (getDebugMode()) log(...args);
 }
 
 // This object will contain all the global variables
@@ -204,6 +212,12 @@ function doKillAllOldRendererProcesses() {
  * Finally, it reads STDOUT and STDERR and redirects them to the journal, to help to debug it.
  */
 function launchRenderer() {
+    // Launch prefs window for first-time user
+    let videoPath = getVideoPath();
+    if (videoPath === "") {
+        ExtensionUtils.openPrefs();
+    }
+
     data.reloadTime = 100;
     let argv = [];
     argv.push(
