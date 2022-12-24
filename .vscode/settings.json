@@ -1,0 +1,5 @@
+{
+    "prettier.tabWidth": 4,
+    "editor.formatOnSave": true,
+    "javascript.format.semicolons": "insert"
+}

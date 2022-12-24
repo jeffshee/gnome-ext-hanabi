@@ -1,16 +1,16 @@
 /**
  * Copyright (C) 2022 Jeff Shee (jeffshee8969@gmail.com)
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -27,8 +27,7 @@ const isDebugMode = true;
 const applicationId = "io.github.jeffshee.hanabi_renderer";
 
 function debug(...args) {
-    if (isDebugMode)
-        log("[Hanabi]", ...args);
+    if (isDebugMode) log("[Hanabi]", ...args);
 }
 
 var WorkspaceAnimation = null;
@@ -39,6 +38,7 @@ try {
 }
 
 var replaceData = {};
+const runningWallpaperActors = new Set();
 
 /**
  * This class overrides methods in the Gnome Shell. The new methods
@@ -53,18 +53,57 @@ var GnomeShellOverride = class {
     }
 
     _reloadBackgrounds() {
+        runningWallpaperActors.forEach((actor) => actor.destroy());
+        runningWallpaperActors.clear();
+
         Main.layoutManager._updateBackgrounds();
     }
 
     enable() {
         // Live wallpaper
-        this.replaceMethod(Background.BackgroundManager, "_createBackgroundActor", new_createBackgroundActor)
+        this.replaceMethod(
+            Background.BackgroundManager,
+            "_createBackgroundActor",
+            new_createBackgroundActor
+        );
+
+        // Remove window animations
+        this.replaceMethod(
+            WindowManager.WindowManager,
+            "_shouldAnimateActor",
+            new__shouldAnimateActor
+        );
+
+        if (WorkspaceAnimation) {
+            this.replaceMethod(
+                WorkspaceAnimation.WorkspaceGroup,
+                "_shouldShowWindow",
+                new__shouldShowWindow
+            );
+        }
 
         // Hiding mechanism
-        this.replaceMethod(Shell.Global, 'get_window_actors', new_get_window_actors);
-        this.replaceMethod(Workspace.Workspace, "_isOverviewWindow", new_Workspace__isOverviewWindow, "Workspace");
-        this.replaceMethod(WorkspaceThumbnail.WorkspaceThumbnail, "_isOverviewWindow", new_WorkspaceThumbnail__isOverviewWindow, "WorkspaceThumbnail");
-        this.replaceMethod(WindowManager.WindowManager, "_shouldAnimateActor", new__shouldAnimateActor);
+        this.replaceMethod(
+            Shell.Global,
+            "get_window_actors",
+            new_get_window_actors
+        );
+
+        this.replaceMethod(
+            Workspace.Workspace,
+            "_isOverviewWindow",
+            new_Workspace__isOverviewWindow,
+            "Workspace"
+        );
+
+        this.replaceMethod(
+            WorkspaceThumbnail.WorkspaceThumbnail,
+            "_isOverviewWindow",
+            new_WorkspaceThumbnail__isOverviewWindow,
+            "WorkspaceThumbnail"
+        );
+
+        this.replaceMethod(Meta.Display, "get_tab_list", new_get_tab_list);
 
         this._reloadBackgrounds();
     }
@@ -75,7 +114,9 @@ var GnomeShellOverride = class {
                 value[1].prototype[value[2]] = value[0];
             }
         }
+
         replaceData = {};
+
         this._reloadBackgrounds();
     }
 
@@ -95,14 +136,22 @@ var GnomeShellOverride = class {
      */
     replaceMethod(className, methodName, functionToCall, classId) {
         if (classId) {
-            replaceData['old_' + classId + '_' + methodName] = [className.prototype[methodName], className, methodName, classId];
+            replaceData["old_" + classId + "_" + methodName] = [
+                className.prototype[methodName],
+                className,
+                methodName,
+                classId,
+            ];
         } else {
-            replaceData['old_' + methodName] = [className.prototype[methodName], className, methodName];
+            replaceData["old_" + methodName] = [
+                className.prototype[methodName],
+                className,
+                methodName,
+            ];
         }
         className.prototype[methodName] = functionToCall;
     }
-}
-
+};
 
 /**
  * The widget that holds the window preview of the renderer.
@@ -113,25 +162,34 @@ var LiveWallpaper = GObject.registerClass(
         _init(backgroundActor) {
             super._init({
                 layout_manager: new Clutter.BinLayout(),
+                //
+                x: backgroundActor.x,
+                y: backgroundActor.y,
+                width: backgroundActor.width,
+                height: backgroundActor.height,
                 // Layout manager will allocate extra space for the actor, if possible.
                 x_expand: true,
                 y_expand: true,
                 // backgroundActor's z_position is 0. Positive values = nearer to the user.
-                z_position: 1,
+                z_position: backgroundActor.z_position + 1,
                 opacity: 0,
             });
 
             this._backgroundActor = backgroundActor;
             this._monitorIndex = backgroundActor.monitor;
-            let { height, width } = Main.layoutManager.monitors[this._monitorIndex];
+            let { height, width } =
+                Main.layoutManager.monitors[this._monitorIndex];
             this._monitorHeight = height;
             this._monitorWidth = width;
             this._metaBackgroundGroup = backgroundActor.get_parent();
             this._metaBackgroundGroup.add_child(this);
-            this._wallpaper = null
+            this._wallpaper = null;
 
-            this.connect('destroy', this._onDestroy.bind(this));
+            this.connect("destroy", this._onDestroy.bind(this));
             this._applyWallpaper();
+
+            runningWallpaperActors.add(this);
+            debug("LiveWallpaper created");
         }
 
         _applyWallpaper() {
@@ -144,9 +202,10 @@ var LiveWallpaper = GObject.registerClass(
             let renderer = this._getRenderer();
             if (renderer) {
                 this._wallpaper.layout_manager.add_window(renderer);
-            }
-            else {
-                debug("renderer == null, retry `_applyWallpaper()` after 100ms");
+            } else {
+                debug(
+                    "renderer == null, retry `_applyWallpaper()` after 100ms"
+                );
                 GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
                     this._applyWallpaper();
                     return false;
@@ -167,19 +226,19 @@ var LiveWallpaper = GObject.registerClass(
                 window_actors = global.get_window_actors();
             }
 
-            if (window_actors && window_actors.length === 0)
-                return;
+            if (window_actors && window_actors.length === 0) return;
 
             // Find renderer by `applicationId`.
-            let renderer = window_actors.find(window => window.meta_window.title?.includes(applicationId));
+            let renderer = window_actors.find((window) =>
+                window.meta_window.title?.includes(applicationId)
+            );
             if (renderer) {
                 return renderer.meta_window;
             }
         }
 
         _resize() {
-            if (!this._wallpaper || this._wallpaper.width === 0)
-                return;
+            if (!this._wallpaper || this._wallpaper.width === 0) return;
 
             /**
              * Only `allocation.get_height()` works fine so far. The `allocation.get_width()` gives weird result for some reasons.
@@ -207,8 +266,7 @@ var LiveWallpaper = GObject.registerClass(
         vfunc_allocate(box) {
             super.vfunc_allocate(box);
 
-            if (this._laterId)
-                return;
+            if (this._laterId) return;
 
             this._laterId = Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
                 this._resize();
@@ -219,9 +277,13 @@ var LiveWallpaper = GObject.registerClass(
         }
 
         _onDestroy() {
-            if (this._laterId)
+            if (this._laterId) {
                 Meta.later_remove(this._laterId);
+            }
             this._laterId = 0;
+
+            runningWallpaperActors.delete(this);
+            debug("LiveWallpaper destroyed");
         }
     }
 );
@@ -236,7 +298,8 @@ var LiveWallpaper = GObject.registerClass(
  */
 
 function new_createBackgroundActor() {
-    const backgroundActor = replaceData.old__createBackgroundActor[0].call(this);
+    const backgroundActor =
+        replaceData.old__createBackgroundActor[0].call(this);
     const _ = new LiveWallpaper(backgroundActor);
 
     return backgroundActor;
@@ -247,28 +310,8 @@ function new_createBackgroundActor() {
  * It removes the window animation (minimize, maximize, etc).
  */
 function new__shouldAnimateActor(actor, types) {
-    if (actor.meta_window.title?.includes(applicationId))
-        return false;
+    if (actor.meta_window.title?.includes(applicationId)) return false;
     return replaceData.old__shouldAnimateActor[0].apply(this, [actor, types]);
-}
-
-/**
- * Below is achived method replacements. Not longer used.
- */
-
-/**
- * Method replacement for Shell.Global.get_window_actors.
- * It removes the renderer window from the list of windows in the Activities mode by default.
- * This behavior can be bypassed when passing `false` to the argument. 
- * (Need to be bypassed in LiveWallpaper._getRendererMetaWindow)
- */
-
-function new_get_window_actors(hideRenderer = true) {
-    let windowActors = replaceData.old_get_window_actors[0].call(this);
-    if (hideRenderer)
-        return windowActors.filter(window => !window.meta_window.title?.includes(applicationId));
-    else
-        return windowActors;
 }
 
 /**
@@ -280,24 +323,53 @@ function new__shouldShowWindow(window) {
     if (window.title?.includes(applicationId)) {
         return false;
     }
-    return replaceData.old__shouldShowWindow[0].apply(this, [window,]);
+    return replaceData.old__shouldShowWindow[0].apply(this, [window]);
+}
+
+/**
+ * Method replacement for Shell.Global.get_window_actors.
+ * It removes the renderer window from the list of windows in the Activities mode by default.
+ * This behavior can be bypassed when passing `false` to the argument.
+ */
+
+function new_get_window_actors(hideRenderer = true) {
+    let windowActors = replaceData.old_get_window_actors[0].call(this);
+    if (hideRenderer)
+        return windowActors.filter(
+            (window) => !window.meta_window.title?.includes(applicationId)
+        );
+    else return windowActors;
 }
 
 /**
  * Similar to skip the taskbar.
- * These remove the window preview in overview, but not the icon in alt+Tab.
+ * These remove the window preview in overview.
  */
 function new_Workspace__isOverviewWindow(window) {
     if (window.title?.includes(applicationId)) {
         return false;
     }
-    return replaceData.old_Workspace__isOverviewWindow[0].apply(this, [window,]);
+    return replaceData.old_Workspace__isOverviewWindow[0].apply(this, [window]);
 }
 
 function new_WorkspaceThumbnail__isOverviewWindow(window) {
     if (window.title?.includes(applicationId)) {
         return false;
     }
-    return replaceData.old_WorkspaceThumbnail__isOverviewWindow[0].apply(this, [window,]);
+    return replaceData.old_WorkspaceThumbnail__isOverviewWindow[0].apply(this, [
+        window,
+    ]);
 }
 
+/**
+ * This remove the window icon from altTab.
+ */
+function new_get_tab_list(type, workspace) {
+    let metaWindows = replaceData.old_get_tab_list[0].apply(this, [
+        type,
+        workspace,
+    ]);
+    return metaWindows.filter(
+        (meta_window) => !meta_window.title?.includes(applicationId)
+    );
+}

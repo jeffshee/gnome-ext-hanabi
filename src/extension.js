@@ -1,16 +1,16 @@
 /**
  * Copyright (C) 2022 Jeff Shee (jeffshee8969@gmail.com)
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -36,11 +36,10 @@ const GnomeShellOverride = Me.imports.gnomeShellOverride;
 
 const isDebugMode = true;
 // TODO get video path from user prefs
-const videoPath = ExtensionUtils.getCurrentExtension().path + "/video.mp4"
+const videoPath = ExtensionUtils.getCurrentExtension().path + "/video.mp4";
 
 function debug(...args) {
-    if (isDebugMode)
-        log("[Hanabi]", ...args);
+    if (isDebugMode) log("[Hanabi]", ...args);
 }
 
 // This object will contain all the global variables
@@ -49,7 +48,8 @@ let data = {};
 class Extension {
     enable() {
         if (!data.GnomeShellOverride) {
-            data.GnomeShellOverride = new GnomeShellOverride.GnomeShellOverride();
+            data.GnomeShellOverride =
+                new GnomeShellOverride.GnomeShellOverride();
         }
 
         if (!data.x11Manager) {
@@ -58,11 +58,15 @@ class Extension {
 
         // If the desktop is still starting up, wait until it is ready
         if (Main.layoutManager._startingUp) {
-            data.startupPreparedId = Main.layoutManager.connect('startup-complete', () => { innerEnable(true); });
+            data.startupPreparedId = Main.layoutManager.connect(
+                "startup-complete",
+                () => {
+                    innerEnable(true);
+                }
+            );
         } else {
             innerEnable(false);
         }
-
     }
 
     disable() {
@@ -86,14 +90,13 @@ function init() {
     /**
      * Ensures that there aren't "rogue" processes.
      * This is a safeguard measure for the case of Gnome Shell being relaunched
-     *  (for example, under X11, with Alt+F2 and R), to kill any old renderer instance. 
-     * That's why it must be here, in init(), and not in enable() or disable() 
+     *  (for example, under X11, with Alt+F2 and R), to kill any old renderer instance.
+     * That's why it must be here, in init(), and not in enable() or disable()
      * (disable already guarantees thag the current instance is killed).
      */
     doKillAllOldRendererProcesses();
     return new Extension();
 }
-
 
 /**
  * The true code that configures everything and launches the renderer
@@ -105,11 +108,7 @@ function innerEnable(removeId) {
     }
 
     data.GnomeShellOverride.enable();
-
-    // under X11 we don't need to cheat, so only do all this under wayland
-    if (Meta.is_wayland_compositor()) {
-        data.x11Manager.enable();
-    }
+    data.x11Manager.enable();
 
     data.isEnabled = true;
     if (data.launchRendererId) {
@@ -118,8 +117,6 @@ function innerEnable(removeId) {
 
     launchRenderer();
 }
-
-
 
 /**
  * Kills the current renderer
@@ -130,11 +127,15 @@ function killCurrentProcess() {
         GLib.source_remove(data.launchRendererId);
         data.launchRendererId = 0;
         if (data.isEnabled) {
-            data.launchRendererId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, data.reloadTime, () => {
-                data.launchRendererId = 0;
-                launchRenderer();
-                return false;
-            });
+            data.launchRendererId = GLib.timeout_add(
+                GLib.PRIORITY_DEFAULT,
+                data.reloadTime,
+                () => {
+                    data.launchRendererId = 0;
+                    launchRenderer();
+                    return false;
+                }
+            );
         }
     }
 
@@ -152,36 +153,45 @@ function killCurrentProcess() {
  * It requires the /proc virtual filesystem, but doesn't fail if it doesn't exist.
  */
 function doKillAllOldRendererProcesses() {
-    let procFolder = Gio.File.new_for_path('/proc');
+    let procFolder = Gio.File.new_for_path("/proc");
     if (!procFolder.query_exists(null)) {
         return;
     }
 
-    let fileEnum = procFolder.enumerate_children('standard::*', Gio.FileQueryInfoFlags.NONE, null);
+    let fileEnum = procFolder.enumerate_children(
+        "standard::*",
+        Gio.FileQueryInfoFlags.NONE,
+        null
+    );
     let info;
     while ((info = fileEnum.next_file(null))) {
         let filename = info.get_name();
         if (!filename) {
             break;
         }
-        let processPath = GLib.build_filenamev(['/proc', filename, 'cmdline']);
+        let processPath = GLib.build_filenamev(["/proc", filename, "cmdline"]);
         let processUser = Gio.File.new_for_path(processPath);
         if (!processUser.query_exists(null)) {
             continue;
         }
         let [binaryData, etag] = processUser.load_bytes(null);
-        let contents = '';
+        let contents = "";
         let readData = binaryData.get_data();
         for (let i = 0; i < readData.length; i++) {
             if (readData[i] < 32) {
-                contents += ' ';
+                contents += " ";
             } else {
                 contents += String.fromCharCode(readData[i]);
             }
         }
-        let path = 'gjs ' + GLib.build_filenamev([ExtensionUtils.getCurrentExtension().path, 'renderer.js']);
+        let path =
+            "gjs " +
+            GLib.build_filenamev([
+                ExtensionUtils.getCurrentExtension().path,
+                "renderer.js",
+            ]);
         if (contents.startsWith(path)) {
-            let proc = new Gio.Subprocess({ argv: ['/bin/kill', filename] });
+            let proc = new Gio.Subprocess({ argv: ["/bin/kill", filename] });
             proc.init(null);
             proc.wait(null);
         }
@@ -189,19 +199,24 @@ function doKillAllOldRendererProcesses() {
 }
 
 /**
- * Launches the renderer, passing to it the path where it is stored and the video path to play. 
- * It also monitors it, to relaunch it in case it dies or is killed. 
+ * Launches the renderer, passing to it the path where it is stored and the video path to play.
+ * It also monitors it, to relaunch it in case it dies or is killed.
  * Finally, it reads STDOUT and STDERR and redirects them to the journal, to help to debug it.
  */
 function launchRenderer() {
     data.reloadTime = 100;
     let argv = [];
-    argv.push(GLib.build_filenamev([ExtensionUtils.getCurrentExtension().path, 'renderer.js']));
+    argv.push(
+        GLib.build_filenamev([
+            ExtensionUtils.getCurrentExtension().path,
+            "renderer.js",
+        ])
+    );
     // The path. Allows the program to find translations, settings and modules.
-    argv.push('-P');
+    argv.push("-P");
     argv.push(ExtensionUtils.getCurrentExtension().path);
     // The video path.
-    argv.push('-F');
+    argv.push("-F");
     argv.push(videoPath);
 
     data.currentProcess = new LaunchSubprocess(0, "Hanabi", "-U");
@@ -233,11 +248,15 @@ function launchRenderer() {
             if (data.launchRendererId) {
                 GLib.source_remove(data.launchRendererId);
             }
-            data.launchRendererId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, data.reloadTime, () => {
-                data.launchRendererId = 0;
-                launchRenderer();
-                return false;
-            });
+            data.launchRendererId = GLib.timeout_add(
+                GLib.PRIORITY_DEFAULT,
+                data.reloadTime,
+                () => {
+                    data.launchRendererId = 0;
+                    launchRenderer();
+                    return false;
+                }
+            );
         }
     });
 }
@@ -255,15 +274,19 @@ function launchRenderer() {
  */
 var LaunchSubprocess = class {
     constructor(flags, process_id, cmd_parameter) {
+        this._isX11 = !Meta.is_wayland_compositor();
         this._process_id = process_id;
         this._cmd_parameter = cmd_parameter;
         this._UUID = null;
-        this._flags = flags | Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_MERGE;
+        this._flags =
+            flags |
+            Gio.SubprocessFlags.STDOUT_PIPE |
+            Gio.SubprocessFlags.STDERR_MERGE;
         this.cancellable = new Gio.Cancellable();
         this._launcher = new Gio.SubprocessLauncher({ flags: this._flags });
-        if (Meta.is_wayland_compositor()) {
+        if (!this._isX11) {
             this._waylandClient = Meta.WaylandClient.new(this._launcher);
-            if (Config.PACKAGE_VERSION == '3.38.0') {
+            if (Config.PACKAGE_VERSION == "3.38.0") {
                 // workaround for bug in 3.38.0
                 this._launcher.ref();
             }
@@ -273,7 +296,7 @@ var LaunchSubprocess = class {
     }
 
     spawnv(argv) {
-        if (Meta.is_wayland_compositor()) {
+        if (!this._isX11) {
             this.subprocess = this._waylandClient.spawnv(global.display, argv);
         } else {
             this.subprocess = this._launcher.spawnv(argv);
@@ -289,7 +312,9 @@ var LaunchSubprocess = class {
              * This allows to have any error from the renderer in the same journal than other extensions.
              * Every line from the renderer is prepended with the "process_id" parameter sent in the constructor.
              */
-            this._dataInputStream = Gio.DataInputStream.new(this.subprocess.get_stdout_pipe());
+            this._dataInputStream = Gio.DataInputStream.new(
+                this.subprocess.get_stdout_pipe()
+            );
             this.read_output();
             this.subprocess.wait_async(this.cancellable, () => {
                 this.process_running = false;
@@ -309,20 +334,23 @@ var LaunchSubprocess = class {
         if (!this._dataInputStream) {
             return;
         }
-        this._dataInputStream.read_line_async(GLib.PRIORITY_DEFAULT, this.cancellable, (object, res) => {
-            try {
-                const [output, length] = object.read_line_finish_utf8(res);
-                if (length)
-                    print(`${this._process_id}: ${output}`);
-            } catch (e) {
-                if (e.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
-                    return;
+        this._dataInputStream.read_line_async(
+            GLib.PRIORITY_DEFAULT,
+            this.cancellable,
+            (object, res) => {
+                try {
+                    const [output, length] = object.read_line_finish_utf8(res);
+                    if (length) print(`${this._process_id}: ${output}`);
+                } catch (e) {
+                    if (e.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
+                        return;
 
-                logError(e, `${this._process_id}_Error`);
+                    logError(e, `${this._process_id}_Error`);
+                }
+
+                this.read_output();
             }
-
-            this.read_output();
-        });
+        );
     }
 
     /**
@@ -330,28 +358,34 @@ var LaunchSubprocess = class {
      * @param {MetaWindow} window The window to check.
      */
     query_window_belongs_to(window) {
-        if (!Meta.is_wayland_compositor()) {
+        if (this._isX11) {
             return false;
         }
         if (!this.process_running) {
             return false;
         }
         try {
-            return (this._waylandClient.owns_window(window));
+            return this._waylandClient.owns_window(window);
         } catch (e) {
             return false;
         }
     }
 
+    query_pid_of_program() {
+        if (!this.process_running) return false;
+
+        return this.subprocess.get_identifier();
+    }
+
     show_in_window_list(window) {
-        if (Meta.is_wayland_compositor() && this.process_running) {
+        if (!this._isX11 && this.process_running) {
             this._waylandClient.show_in_window_list(window);
         }
     }
 
     hide_from_window_list(window) {
-        if (Meta.is_wayland_compositor() && this.process_running) {
+        if (!this._isX11 && this.process_running) {
             this._waylandClient.hide_from_window_list(window);
         }
     }
-}
+};

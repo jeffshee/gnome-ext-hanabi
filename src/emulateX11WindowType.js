@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2020 Sergio Costas (rastersoft@gmail.com)
  * Copyright (C) 2022 Jeff Shee (jeffshee8969@gmail.com)
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -39,7 +39,10 @@ class ManageWindow {
        * T : put this window at the top of the screen
        * D : show this window in all desktops
        * H : hide this window from window list
-       * U : unminimize window if minimized (DING default)
+            `minimize()` is guarded now. This will cause the window fails to minimize.
+            https://gitlab.gnome.org/GNOME/mutter/-/commit/7ff1c04c8fc6148d5a940601ffa2ea98f04f6548
+       * U : keep window unminimized (DING default: enabled)
+       * M : keep window minimized
        * | : break the flag checking loop
 
        Using the title is generally not a problem because the desktop windows
@@ -50,34 +53,51 @@ class ManageWindow {
        even to decorated windows.
     */
 
-    constructor(window, wayland_client, changedStatusCB) {
-        this._wayland_client = wayland_client;
+    constructor(window, waylandClient, changedStatusCB) {
+        this._isX11 = !Meta.is_wayland_compositor();
+        this._waylandClient = waylandClient;
         this._window = window;
         this._signalIDs = [];
         this._changedStatusCB = changedStatusCB;
-        this._signalIDs.push(window.connect_after('raised', () => {
-            if (this._keepAtBottom && !this._keepAtTop) {
-                this._window.lower();
-            }
-        }));
-        this._signalIDs.push(window.connect('position-changed', () => {
-            if (this._fixed && (this._x !== null) && (this._y !== null)) {
-                this._window.move_frame(true, this._x, this._y);
-            }
-        }));
-        this._signalIDs.push(window.connect("notify::title", () => {
-            this._parseTitle();
-        }));
-        this._signalIDs.push(window.connect("notify::above", () => {
-            if (this._keepAtBottom && this._window.above) {
-                this._window.unmake_above();
-            }
-        }));
-        this._signalIDs.push(window.connect("notify::minimized", () => {
-            if (this._keepUnminimized){
-                this._window.unminimize();
-            }
-        }));
+        this._signalIDs.push(
+            window.connect_after("raised", () => {
+                if (this._keepAtBottom && !this._keepAtTop) {
+                    this._window.lower();
+                }
+                if (this._keepMinimized) {
+                    this._window.minimize();
+                }
+            })
+        );
+        this._signalIDs.push(
+            window.connect("position-changed", () => {
+                if (this._fixed && this._x !== null && this._y !== null) {
+                    this._window.move_frame(true, this._x, this._y);
+                }
+            })
+        );
+        this._signalIDs.push(
+            window.connect("notify::title", () => {
+                this._parseTitle();
+            })
+        );
+        this._signalIDs.push(
+            window.connect("notify::above", () => {
+                if (this._keepAtBottom && this._window.above) {
+                    this._window.unmake_above();
+                }
+            })
+        );
+        this._signalIDs.push(
+            window.connect("notify::minimized", () => {
+                if (this._keepUnminimized && this._window.minimized) {
+                    this._window.unminimize();
+                }
+                if (this._keepMinimized && !this._window.minimized) {
+                    this._window.minimize();
+                }
+            })
+        );
         this._parseTitle();
     }
 
@@ -89,11 +109,11 @@ class ManageWindow {
             this._window.unmake_above();
         }
         this._window = null;
-        this._wayland_client = null;
+        this._waylandClient = null;
     }
 
     set_wayland_client(client) {
-        this._wayland_client = client;
+        this._waylandClient = client;
     }
 
     _parseTitle() {
@@ -106,23 +126,30 @@ class ManageWindow {
         this._hideFromWindowList = false;
         this._fixed = false;
         this._keepUnminimized = false;
+        this._keepMinimized = false;
         let title = this._window.get_title();
-        if (title != null) {
-            if ((title.length > 0) && (title[title.length - 1] == ' ')) {
-                if ((title.length > 1) && (title[title.length - 2] == ' ')) {
+        if (title !== null) {
+            if (title.length > 0 && title[title.length - 1] === " ") {
+                if (title.length > 1 && title[title.length - 2] === " ") {
                     title = "@!HTD";
                 } else {
                     title = "@!H";
                 }
             }
             let pos = title.search(`@${applicationId}!`);
-            if (pos != -1) {
-                let pos2 = title.search(";", pos)
+            if (pos !== -1) {
+                let pos2 = title.search(";", pos);
                 let coords;
-                if (pos2 != -1) {
-                    coords = title.substring(pos + 2 + applicationId.length, pos2).trim().split(",");
+                if (pos2 !== -1) {
+                    coords = title
+                        .substring(pos + 2 + applicationId.length, pos2)
+                        .trim()
+                        .split(",");
                 } else {
-                    coords = title.substring(pos + 2 + applicationId.length).trim().split(",");
+                    coords = title
+                        .substring(pos + 2 + applicationId.length)
+                        .trim()
+                        .split(",");
                 }
                 try {
                     this._x = parseInt(coords[0]);
@@ -131,40 +158,40 @@ class ManageWindow {
                     global.log(`Exception ${e.message}.\n${e.stack}`);
                 }
                 try {
-                    let extra_chars = title.substring(pos + 2 + applicationId.length).trim().toUpperCase();
+                    let extra_chars = title
+                        .substring(pos + 2 + applicationId.length)
+                        .trim()
+                        .toUpperCase();
                     let break_flag = false;
                     for (let char of extra_chars) {
-                        if (break_flag)
-                            break;
+                        if (break_flag) break;
                         switch (char) {
-                            case 'B':
-                                // log("B");
+                            case "B":
                                 this._keepAtBottom = true;
                                 this._keepAtTop = false;
                                 break;
-                            case 'T':
-                                // log("T");
+                            case "T":
                                 this._keepAtTop = true;
                                 this._keepAtBottom = false;
                                 break;
-                            case 'D':
-                                // log("D");
+                            case "D":
                                 this._showInAllDesktops = true;
                                 break;
-                            case 'H':
-                                // log("H");
+                            case "H":
                                 this._hideFromWindowList = true;
                                 break;
-                            case 'F':
-                                // log("F");
+                            case "F":
                                 this._fixed = true;
                                 break;
-                            case 'U':
-                                // log("U");
+                            case "U":
                                 this._keepUnminimized = true;
+                                this._keepMinimized = false;
                                 break;
-                            case '|':
-                                // log("|");
+                            case "M":
+                                this._keepMinimized = true;
+                                this._keepUnminimized = false;
+                                break;
+                            case "|":
                                 break_flag = true;
                                 break;
                         }
@@ -173,11 +200,11 @@ class ManageWindow {
                     global.log(`Exception ${e.message}.\n${e.stack}`);
                 }
             }
-            if (this._wayland_client) {
+            if (!this._isX11 && this._waylandClient) {
                 if (this._hideFromWindowList) {
-                    this._wayland_client.hide_from_window_list(this._window);
+                    this._waylandClient.hide_from_window_list(this._window);
                 } else {
-                    this._wayland_client.show_in_window_list(this._window);
+                    this._waylandClient.show_in_window_list(this._window);
                 }
             }
             if (this._keepAtTop != keepAtTop) {
@@ -190,7 +217,7 @@ class ManageWindow {
             if (this._keepAtBottom) {
                 this._window.lower();
             }
-            if (this._fixed && (this._x !== null) && (this._y !== null)) {
+            if (this._fixed && this._x !== null && this._y !== null) {
                 this._window.move_frame(true, this._x, this._y);
             }
             this._changedStatusCB(this);
@@ -199,7 +226,8 @@ class ManageWindow {
 
     refreshState(checkWorkspace) {
         if (checkWorkspace && this._showInAllDesktops) {
-            let currentWorkspace = global.workspace_manager.get_active_workspace();
+            let currentWorkspace =
+                global.workspace_manager.get_active_workspace();
             if (!this._window.located_on_workspace(currentWorkspace)) {
                 this._window.change_workspace(currentWorkspace);
             }
@@ -227,63 +255,80 @@ var EmulateX11WindowType = class {
      */
     constructor() {
         this._isX11 = !Meta.is_wayland_compositor();
-        this._windowList = [];
+        this._windowList = new Set();
         this._enableRefresh = true;
-        this._wayland_client = null;
+        this._waylandClient = null;
     }
 
     set_wayland_client(client) {
-        this._wayland_client = client;
+        this._waylandClient = client;
         for (let window of this._windowList) {
             if (window.customJS_hanabi) {
-                window.customJS_hanabi.set_wayland_client(this._wayland_client);
+                window.customJS_hanabi.set_wayland_client(this._waylandClient);
             }
         }
     }
 
     enable() {
-        if (this._isX11) {
-            return;
-        }
-        this._idMap = global.window_manager.connect_after('map', (obj, windowActor) => {
-            let window = windowActor.get_meta_window();
-            if (this._wayland_client && this._wayland_client.query_window_belongs_to(window)) {
-                this.addWindow(window);
+        this._idMap = global.window_manager.connect_after(
+            "map",
+            (obj, windowActor) => {
+                let window = windowActor.get_meta_window();
+                if (
+                    this._waylandClient &&
+                    this._waylandClient.query_window_belongs_to(window)
+                ) {
+                    this.addWindow(window);
+                }
+                if (this._isX11) {
+                    let appid = window.get_gtk_application_id();
+                    let windowpid = window.get_pid();
+                    let mypid = this._waylandClient.query_pid_of_program();
+                    if (appid == applicationId && windowpid == mypid) {
+                        this.addWindow(window, windowActor);
+                    }
+                }
+                this._refreshWindows(false);
             }
-            this._refreshWindows(false);
-        });
-        this._idDestroy = global.window_manager.connect_after("destroy", (wm, windowActor) => {
-            // if a window is closed, ensure that the desktop doesn't receive the focus
-            let window = windowActor.get_meta_window();
-            if (window && (window.get_window_type() >= Meta.WindowType.DROPDOWN_MENU)) {
-                return;
+        );
+        this._idDestroy = global.window_manager.connect_after(
+            "destroy",
+            (wm, windowActor) => {
+                // if a window is closed, ensure that the desktop doesn't receive the focus
+                let window = windowActor.get_meta_window();
+                if (
+                    window &&
+                    window.get_window_type() >= Meta.WindowType.DROPDOWN_MENU
+                ) {
+                    return;
+                }
+                this._refreshWindows(true);
             }
-            this._refreshWindows(true);
-        });
+        );
         /* Something odd happens with "stick" when using popup submenus, so
            this implements the same functionality
          */
-        this._switchWorkspaceId = global.window_manager.connect('switch-workspace', () => {
-            this._refreshWindows(true);
-        });
+        this._switchWorkspaceId = global.window_manager.connect(
+            "switch-workspace",
+            () => {
+                this._refreshWindows(true);
+            }
+        );
 
         /* But in Overview mode it is paramount to not change the workspace to emulate
            "stick", or the windows will appear
          */
-        this._showingId = Main.overview.connect('showing', () => {
+        this._showingId = Main.overview.connect("showing", () => {
             this._enableRefresh = false;
         });
 
-        this._hidingId = Main.overview.connect('hiding', () => {
+        this._hidingId = Main.overview.connect("hiding", () => {
             this._enableRefresh = true;
             this._refreshWindows(true);
         });
     }
 
     disable() {
-        if (this._isX11) {
-            return;
-        }
         if (this._activate_window_ID) {
             GLib.source_remove(this._activate_window_ID);
             this._activate_window_ID = null;
@@ -291,7 +336,7 @@ var EmulateX11WindowType = class {
         for (let window of this._windowList) {
             this._clearWindow(window);
         }
-        this._windowList = [];
+        this._windowList.clear();
 
         // disconnect signals
         if (this._idMap) {
@@ -317,20 +362,25 @@ var EmulateX11WindowType = class {
     }
 
     addWindow(window) {
-        if (this._isX11) {
-            return;
-        }
-        if (window.get_meta_window) { // it is a MetaWindowActor
+        if (window.get_meta_window) {
+            // it is a MetaWindowActor
             window = window.get_meta_window();
         }
-        window.customJS_hanabi = new ManageWindow(window, this._wayland_client, () => {
-            this._refreshWindows(true);
-        });
-        this._windowList.push(window);
-        window.customJS_hanabi.unmanagedID = window.connect("unmanaged", (window) => {
-            this._clearWindow(window);
-            this._windowList = this._windowList.filter(item => item !== window);
-        });
+        window.customJS_hanabi = new ManageWindow(
+            window,
+            this._waylandClient,
+            () => {
+                this._refreshWindows(true);
+            }
+        );
+        this._windowList.add(window);
+        window.customJS_hanabi.unmanagedID = window.connect(
+            "unmanaged",
+            (window) => {
+                this._clearWindow(window);
+                this._windowList.delete(window);
+            }
+        );
     }
 
     _clearWindow(window) {
@@ -348,10 +398,17 @@ var EmulateX11WindowType = class {
                     }
                     if (checkWorkspace) {
                         // activate the top-most window
-                        let windows = global.display.get_tab_list(Meta.TabList.NORMAL_ALL, global.workspace_manager.get_active_workspace());
+                        let windows = global.display.get_tab_list(
+                            Meta.TabList.NORMAL_ALL,
+                            global.workspace_manager.get_active_workspace()
+                        );
                         let anyActive = false;
                         for (let window of windows) {
-                            if ((!window.customJS_hanabi || !window.customJS_hanabi._keepAtBottom) && !window.minimized) {
+                            if (
+                                (!window.customJS_hanabi ||
+                                    !window.customJS_hanabi._keepAtBottom) &&
+                                !window.minimized
+                            ) {
                                 Main.activateWindow(window);
                                 anyActive = true;
                                 break;
@@ -359,7 +416,11 @@ var EmulateX11WindowType = class {
                         }
                         if (!anyActive) {
                             for (let window of this._windowList) {
-                                if (window.customJS_hanabi && window.customJS_hanabi._keepAtBottom && !window.minimized) {
+                                if (
+                                    window.customJS_hanabi &&
+                                    window.customJS_hanabi._keepAtBottom &&
+                                    !window.minimized
+                                ) {
                                     Main.activateWindow(window);
                                     break;
                                 }
@@ -372,4 +433,4 @@ var EmulateX11WindowType = class {
             });
         }
     }
-}
+};
