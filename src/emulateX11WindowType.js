@@ -39,6 +39,8 @@ class ManageWindow {
        * T : put this window at the top of the screen
        * D : show this window in all desktops
        * H : hide this window from window list
+            `minimize()` is guarded now. This will cause the window fails to minimize.
+            https://gitlab.gnome.org/GNOME/mutter/-/commit/7ff1c04c8fc6148d5a940601ffa2ea98f04f6548
        * U : keep window unminimized (DING default: enabled)
        * M : keep window minimized
        * | : break the flag checking loop

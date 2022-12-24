@@ -158,7 +158,7 @@ class VideoWallpaperWindow {
     _buildUI() {
         this._window = new Gtk.ApplicationWindow({
             application: this._app,
-            title: nohide ? "Hanabi Renderer" : `@${applicationId}!0,0;BHM`,
+            title: nohide ? "Hanabi Renderer" : `@${applicationId}!0,0;BM`,
             defaultHeight: windowConfig.height,
             defaultWidth: windowConfig.width,
             fullscreened: !windowed,
@@ -315,7 +315,8 @@ class VideoWallpaperWindow {
     }
 
     hideX11windowTaskbar() {
-        // This will cause the window fails to minimize
+        // `minimize()` is guarded now. This will cause the window fails to minimize.
+        // https://gitlab.gnome.org/GNOME/mutter/-/commit/7ff1c04c8fc6148d5a940601ffa2ea98f04f6548
         if (usingX11()) {
             this._window.connect("realize", (window) => {
                 const gdkWindow = window.get_surface();
