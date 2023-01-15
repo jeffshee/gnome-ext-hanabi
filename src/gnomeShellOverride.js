@@ -33,9 +33,9 @@ const getDebugMode = () => {
     return extSettings.get_boolean("debug-mode");
 };
 
-function debug(...args) {
+const debug = (...args) => {
     if (getDebugMode()) log("[Hanabi]", ...args);
-}
+};
 
 var WorkspaceAnimation = null;
 try {
@@ -43,6 +43,23 @@ try {
 } catch (err) {
     debug("Workspace Animation does not exist");
 }
+
+/**
+ * A quick check to see if the override is actually doing something.
+ */
+const effectiveOverrides = new Set();
+const markAsEffective = (overrideName) => {
+    if (!effectiveOverrides.has(overrideName)) {
+        effectiveOverrides.add(overrideName);
+        debug(
+            `Effective overrides: ${Array.from(effectiveOverrides).join(", ")}`
+        );
+    }
+};
+
+const compareArrays = (arr1, arr2) =>
+    arr1.length === arr2.length &&
+    arr1.every((element, index) => element === arr2[index]);
 
 var replaceData = {};
 const runningWallpaperActors = new Set();
@@ -53,7 +70,6 @@ const runningWallpaperActors = new Set();
  * The old methods that are overriden can be accesed by relpacedata.old_'name-of-replaced-method'
  * in the new functions.
  */
-
 var GnomeShellOverride = class {
     constructor() {
         this._isX11 = !Meta.is_wayland_compositor();
@@ -112,6 +128,8 @@ var GnomeShellOverride = class {
 
         this.replaceMethod(Meta.Display, "get_tab_list", new_get_tab_list);
 
+        this.replaceMethod(Shell.AppSystem, "get_running", new_get_running);
+
         this._reloadBackgrounds();
     }
 
@@ -163,7 +181,6 @@ var GnomeShellOverride = class {
 /**
  * The widget that holds the window preview of the renderer.
  */
-
 var LiveWallpaper = GObject.registerClass(
     class LiveWallpaper extends St.Widget {
         _init(backgroundActor) {
@@ -300,83 +317,113 @@ var LiveWallpaper = GObject.registerClass(
  */
 
 /**
- * Method replacement for _createBackgroundActor.
- * It sticks the LiveWallpaper widget to the background actor.
+ * This creates the LiveWallpaper widget.
  */
-
 function new_createBackgroundActor() {
     const backgroundActor =
         replaceData.old__createBackgroundActor[0].call(this);
-    const _ = new LiveWallpaper(backgroundActor);
-
+    new LiveWallpaper(backgroundActor);
+    getDebugMode() && markAsEffective("new_createBackgroundActor");
     return backgroundActor;
 }
 
 /**
- * Method replacement for WindowManager.WindowManager._shouldAnimateActor.
- * It removes the window animation (minimize, maximize, etc).
+ * This removes the window animation (minimize, maximize, etc).
+ * TODO: remove due to not effective
  */
 function new__shouldAnimateActor(actor, types) {
-    if (actor.meta_window.title?.includes(applicationId)) return false;
-    return replaceData.old__shouldAnimateActor[0].apply(this, [actor, types]);
+    let isRenderer = window.title?.includes(applicationId);
+    getDebugMode() && isRenderer && markAsEffective("new__shouldAnimateActor");
+    return isRenderer
+        ? false
+        : replaceData.old__shouldAnimateActor[0].apply(this, [actor, types]);
 }
 
 /**
- * Method replacement under X11 for should show window.
- * It removes the desktop window from the window animation.
+ * This removes the desktop window from the window animation.
+ * TODO: remove due to not effective
  */
-
 function new__shouldShowWindow(window) {
-    if (window.title?.includes(applicationId)) {
-        return false;
-    }
-    return replaceData.old__shouldShowWindow[0].apply(this, [window]);
+    let isRenderer = window.title?.includes(applicationId);
+    getDebugMode() && isRenderer && markAsEffective("new__shouldShowWindow");
+    return isRenderer
+        ? false
+        : replaceData.old__shouldShowWindow[0].apply(this, [window]);
 }
 
 /**
- * Method replacement for Shell.Global.get_window_actors.
- * It removes the renderer window from the list of windows in the Activities mode by default.
- * This behavior can be bypassed when passing `false` to the argument.
+ * This removes the renderer from the window actor list.
+ * Use `false` as the argument to bypass this behavior.
  */
-
 function new_get_window_actors(hideRenderer = true) {
     let windowActors = replaceData.old_get_window_actors[0].call(this);
-    if (hideRenderer)
-        return windowActors.filter(
-            (window) => !window.meta_window.title?.includes(applicationId)
-        );
-    else return windowActors;
+    let result = hideRenderer
+        ? windowActors.filter(
+              (window) => !window.meta_window.title?.includes(applicationId)
+          )
+        : windowActors;
+    getDebugMode() &&
+        !compareArrays(result, windowActors) &&
+        markAsEffective("new_get_window_actors");
+    return result;
 }
 
 /**
- * Similar to skip the taskbar.
- * These remove the window preview in overview.
+ * These remove the renderer's window preview in overview.
+ * TODO: remove due to not effective
  */
 function new_Workspace__isOverviewWindow(window) {
-    if (window.title?.includes(applicationId)) {
-        return false;
-    }
-    return replaceData.old_Workspace__isOverviewWindow[0].apply(this, [window]);
+    let isRenderer = window.title?.includes(applicationId);
+    getDebugMode() &&
+        isRenderer &&
+        markAsEffective("new_Workspace__isOverviewWindow");
+    return isRenderer
+        ? false
+        : replaceData.old_Workspace__isOverviewWindow[0].apply(this, [window]);
 }
 
 function new_WorkspaceThumbnail__isOverviewWindow(window) {
-    if (window.title?.includes(applicationId)) {
-        return false;
-    }
-    return replaceData.old_WorkspaceThumbnail__isOverviewWindow[0].apply(this, [
-        window,
-    ]);
+    let isRenderer = window.title?.includes(applicationId);
+    getDebugMode() &&
+        isRenderer &&
+        markAsEffective("new_WorkspaceThumbnail__isOverviewWindow");
+    return isRenderer
+        ? false
+        : replaceData.old_WorkspaceThumbnail__isOverviewWindow[0].apply(this, [
+              window,
+          ]);
 }
 
 /**
- * This remove the window icon from altTab.
+ * This remove the renderer icon from altTab and ctrlAltTab(?).
  */
 function new_get_tab_list(type, workspace) {
     let metaWindows = replaceData.old_get_tab_list[0].apply(this, [
         type,
         workspace,
     ]);
-    return metaWindows.filter(
+    let result = metaWindows.filter(
         (meta_window) => !meta_window.title?.includes(applicationId)
     );
+    getDebugMode() &&
+        !compareArrays(result, metaWindows) &&
+        markAsEffective("new_get_tab_list");
+    return result;
+}
+
+/**
+ * This remove the renderer icon from altTab and dash.
+ */
+function new_get_running() {
+    let runningApps = replaceData.old_get_running[0].call(this);
+    let result = runningApps.filter(
+        (app) =>
+            !app
+                .get_windows()
+                .some((window) => window.title?.includes(applicationId))
+    );
+    getDebugMode() &&
+        !compareArrays(result, runningApps) &&
+        markAsEffective("new_get_running");
+    return result;
 }
