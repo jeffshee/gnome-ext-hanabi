@@ -38,7 +38,7 @@ const haveGstAudio = GstAudio !== null;
 // ContentFit is available from Gtk 4.8+
 const haveContentFit = Gtk.get_minor_version() >= 8;
 
-const applicationId = 'io.github.jeffshee.hanabi-renderer';
+const applicationId = 'io.github.jeffshee.HanabiRenderer';
 
 let extSettings = null;
 const extSchemaId = 'io.github.jeffshee.hanabi-extension';
@@ -147,6 +147,8 @@ const HanabiRenderer = GObject.registerClass(
                     );
                 }
             });
+
+            this._startDbusService();
         }
 
         _parseArgs(argv) {
@@ -413,6 +415,55 @@ const HanabiRenderer = GObject.registerClass(
             return widget;
         }
 
+        _startDbusService() {
+            const dbusXml = `
+            <node>
+                <interface name="io.github.jeffshee.HanabiRenderer">
+                    <method name="Play"/>
+                    <method name="Pause"/>
+                    <property name="IsPlaying" type="b" access="read"/>
+                    <signal name="IsPlayingChanged">
+                        <arg name="IsPlaying" type="b"/>
+                    </signal>
+                </interface>
+            </node>`;
+
+            const parentThis = this;
+            class DbusService {
+                Play = () => parentThis.setPlay();
+                Pause = () => parentThis.setPause();
+                get IsPlaying() {
+                    return true;
+                }
+            }
+
+            // These must be declared here, otherwise the interface will be terminated shortly
+            let serviceImplementation = null;
+            let serviceInterface = null;
+
+            const onBusAcquired = (connection, _name) => {
+                serviceImplementation = new DbusService();
+                serviceInterface = Gio.DBusExportedObject.wrapJSObject(
+                    dbusXml,
+                    serviceImplementation
+                );
+                serviceInterface.export(
+                    connection,
+                    '/io/github/jeffshee/HanabiRenderer'
+                );
+            };
+
+            this.dbusId = Gio.bus_own_name(
+                Gio.BusType.SESSION,
+                'io.github.jeffshee.HanabiRenderer',
+                Gio.BusNameOwnerFlags.NONE,
+                onBusAcquired,
+                null,
+                null
+            );
+        }
+
+
         /**
          * These workarounds are needed because get_volume() and get_muted() can be wrong in some cases.
          * If the current value is equal to the new value, the changes will be skipped.
@@ -465,6 +516,20 @@ const HanabiRenderer = GObject.registerClass(
                 this._media.file = file;
                 this._media.play();
             }
+        }
+
+        setPlay() {
+            if (this._play)
+                this._play.play();
+            else
+                this._media?.play();
+        }
+
+        setPause() {
+            if (this._play)
+                this._play.pause();
+            else
+                this._media?.pause();
         }
     }
 );
