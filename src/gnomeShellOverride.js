@@ -21,8 +21,6 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Background = imports.ui.background;
 const Main = imports.ui.main;
 const Workspace = imports.ui.workspace;
-const WorkspaceThumbnail = imports.ui.workspaceThumbnail;
-const WindowManager = imports.ui.windowManager;
 
 const applicationId = "io.github.jeffshee.hanabi-renderer";
 const extSettings = ExtensionUtils.getSettings(
@@ -36,13 +34,6 @@ const getDebugMode = () => {
 const debug = (...args) => {
     if (getDebugMode()) log("[Hanabi]", ...args);
 };
-
-var WorkspaceAnimation = null;
-try {
-    WorkspaceAnimation = imports.ui.workspaceAnimation;
-} catch (err) {
-    debug("Workspace Animation does not exist");
-}
 
 /**
  * A quick check to see if the override is actually doing something.
@@ -90,40 +81,11 @@ var GnomeShellOverride = class {
             new_createBackgroundActor
         );
 
-        // Remove window animations
-        this.replaceMethod(
-            WindowManager.WindowManager,
-            "_shouldAnimateActor",
-            new__shouldAnimateActor
-        );
-
-        if (WorkspaceAnimation) {
-            this.replaceMethod(
-                WorkspaceAnimation.WorkspaceGroup,
-                "_shouldShowWindow",
-                new__shouldShowWindow
-            );
-        }
-
         // Hiding mechanism
         this.replaceMethod(
             Shell.Global,
             "get_window_actors",
             new_get_window_actors
-        );
-
-        this.replaceMethod(
-            Workspace.Workspace,
-            "_isOverviewWindow",
-            new_Workspace__isOverviewWindow,
-            "Workspace"
-        );
-
-        this.replaceMethod(
-            WorkspaceThumbnail.WorkspaceThumbnail,
-            "_isOverviewWindow",
-            new_WorkspaceThumbnail__isOverviewWindow,
-            "WorkspaceThumbnail"
         );
 
         this.replaceMethod(Meta.Display, "get_tab_list", new_get_tab_list);
@@ -328,30 +290,6 @@ function new_createBackgroundActor() {
 }
 
 /**
- * This removes the window animation (minimize, maximize, etc).
- * TODO: remove due to not effective
- */
-function new__shouldAnimateActor(actor, types) {
-    let isRenderer = window.title?.includes(applicationId);
-    getDebugMode() && isRenderer && markAsEffective("new__shouldAnimateActor");
-    return isRenderer
-        ? false
-        : replaceData.old__shouldAnimateActor[0].apply(this, [actor, types]);
-}
-
-/**
- * This removes the desktop window from the window animation.
- * TODO: remove due to not effective
- */
-function new__shouldShowWindow(window) {
-    let isRenderer = window.title?.includes(applicationId);
-    getDebugMode() && isRenderer && markAsEffective("new__shouldShowWindow");
-    return isRenderer
-        ? false
-        : replaceData.old__shouldShowWindow[0].apply(this, [window]);
-}
-
-/**
  * This removes the renderer from the window actor list.
  * Use `false` as the argument to bypass this behavior.
  */
@@ -366,32 +304,6 @@ function new_get_window_actors(hideRenderer = true) {
         !compareArrays(result, windowActors) &&
         markAsEffective("new_get_window_actors");
     return result;
-}
-
-/**
- * These remove the renderer's window preview in overview.
- * TODO: remove due to not effective
- */
-function new_Workspace__isOverviewWindow(window) {
-    let isRenderer = window.title?.includes(applicationId);
-    getDebugMode() &&
-        isRenderer &&
-        markAsEffective("new_Workspace__isOverviewWindow");
-    return isRenderer
-        ? false
-        : replaceData.old_Workspace__isOverviewWindow[0].apply(this, [window]);
-}
-
-function new_WorkspaceThumbnail__isOverviewWindow(window) {
-    let isRenderer = window.title?.includes(applicationId);
-    getDebugMode() &&
-        isRenderer &&
-        markAsEffective("new_WorkspaceThumbnail__isOverviewWindow");
-    return isRenderer
-        ? false
-        : replaceData.old_WorkspaceThumbnail__isOverviewWindow[0].apply(this, [
-              window,
-          ]);
 }
 
 /**
