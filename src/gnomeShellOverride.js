@@ -21,6 +21,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Background = imports.ui.background;
 const Main = imports.ui.main;
 const Workspace = imports.ui.workspace;
+const WorkspaceThumbnail = imports.ui.workspaceThumbnail;
 const Util = imports.misc.util;
 
 const Me = ExtensionUtils.getCurrentExtension();
@@ -81,7 +82,10 @@ var GnomeShellOverride = class {
         // gnome-shell will disable all extensions before locking, then our
         // player is closed, but the bgManager still holds our actor, so it gets
         // black. Just simply re-create normal bgManagers fixed this.
-        if (Main.screenShield._dialog != null && Main.screenShield._dialog._updateBackgrounds != null) {
+        if (
+            Main.screenShield._dialog != null &&
+            Main.screenShield._dialog._updateBackgrounds != null
+        ) {
             Main.screenShield._dialog._updateBackgrounds();
         }
         // NOTE: WorkspaceBackground has its own bgManager, we have to recreate
@@ -98,19 +102,37 @@ var GnomeShellOverride = class {
         );
 
         // Rounded corner
-        this.replaceMethod(Workspace.WorkspaceBackground,
-                           "_updateBorderRadius",
-                           new_updateBorderRadius);
+        this.replaceMethod(
+            Workspace.WorkspaceBackground,
+            "_updateBorderRadius",
+            new_updateBorderRadius
+        );
 
-        this.replaceMethod(Workspace.WorkspaceBackground,
-                           "_updateRoundedClipBounds",
-                           new_updateRoundedClipBounds);
+        this.replaceMethod(
+            Workspace.WorkspaceBackground,
+            "_updateRoundedClipBounds",
+            new_updateRoundedClipBounds
+        );
 
         // Hiding mechanism
         this.replaceMethod(
             Shell.Global,
             "get_window_actors",
             new_get_window_actors
+        );
+
+        this.replaceMethod(
+            Workspace.Workspace,
+            "_isOverviewWindow",
+            new_Workspace__isOverviewWindow,
+            "Workspace"
+        );
+
+        this.replaceMethod(
+            WorkspaceThumbnail.WorkspaceThumbnail,
+            "_isOverviewWindow",
+            new_WorkspaceThumbnail__isOverviewWindow,
+            "WorkspaceThumbnail"
         );
 
         this.replaceMethod(Meta.Display, "get_tab_list", new_get_tab_list);
@@ -200,10 +222,13 @@ var LiveWallpaper = GObject.registerClass(
             this.connect("destroy", this._onDestroy.bind(this));
             this._applyWallpaper();
 
-            this._roundedCornersEffect = new RoundedCornersEffect.RoundedCornersEffect();
+            this._roundedCornersEffect =
+                new RoundedCornersEffect.RoundedCornersEffect();
             this.add_effect(this._roundedCornersEffect);
 
-            this._monitorScale = this._display.get_monitor_scale(this._monitorIndex);
+            this._monitorScale = this._display.get_monitor_scale(
+                this._monitorIndex
+            );
 
             this.setRoundedClipRadius(0.0);
             const rect = new Graphene.Rect();
@@ -222,7 +247,7 @@ var LiveWallpaper = GObject.registerClass(
             // width and height in the bound rect.
             this._roundedCornersEffect.setPixelStep([
                 1.0 / this._monitorWidth,
-                1.0 / this._monitorHeight
+                1.0 / this._monitorHeight,
             ]);
 
             runningWallpaperActors.add(this);
@@ -230,16 +255,22 @@ var LiveWallpaper = GObject.registerClass(
         }
 
         setRoundedClipRadius(radius) {
-            this._roundedCornersEffect.setClipRadius(radius * this._monitorScale);
+            this._roundedCornersEffect.setClipRadius(
+                radius * this._monitorScale
+            );
         }
 
         setRoundedClipBounds(rect) {
-            this._roundedCornersEffect.setBounds([
-                rect.origin.x,
-                rect.origin.y,
-                rect.origin.x + rect.size.width,
-                rect.origin.y + rect.size.height
-            ].map((e) => {return e * this._monitorScale;}));
+            this._roundedCornersEffect.setBounds(
+                [
+                    rect.origin.x,
+                    rect.origin.y,
+                    rect.origin.x + rect.size.width,
+                    rect.origin.y + rect.size.height,
+                ].map((e) => {
+                    return e * this._monitorScale;
+                })
+            );
         }
 
         _applyWallpaper() {
@@ -348,7 +379,7 @@ var LiveWallpaper = GObject.registerClass(
  */
 function new_createBackgroundActor() {
     const backgroundActor =
-          replaceData.old__createBackgroundActor[0].call(this);
+        replaceData.old__createBackgroundActor[0].call(this);
     // We need to pass radius to actors, so save a ref in bgManager.
     this.videoActor = new LiveWallpaper(backgroundActor);
     getDebugMode() && markAsEffective("new_createBackgroundActor");
@@ -370,6 +401,31 @@ function new_get_window_actors(hideRenderer = true) {
         !compareArrays(result, windowActors) &&
         markAsEffective("new_get_window_actors");
     return result;
+}
+
+/**
+ * These remove the renderer's window preview in overview.
+ */
+function new_Workspace__isOverviewWindow(window) {
+    let isRenderer = window.title?.includes(applicationId);
+    getDebugMode() &&
+        isRenderer &&
+        markAsEffective("new_Workspace__isOverviewWindow");
+    return isRenderer
+        ? false
+        : replaceData.old_Workspace__isOverviewWindow[0].apply(this, [window]);
+}
+
+function new_WorkspaceThumbnail__isOverviewWindow(window) {
+    let isRenderer = window.title?.includes(applicationId);
+    getDebugMode() &&
+        isRenderer &&
+        markAsEffective("new_WorkspaceThumbnail__isOverviewWindow");
+    return isRenderer
+        ? false
+        : replaceData.old_WorkspaceThumbnail__isOverviewWindow[0].apply(this, [
+              window,
+          ]);
 }
 
 /**
@@ -414,7 +470,8 @@ function new_updateBorderRadius() {
 
     // Basically a copy of the original function.
     const { scaleFactor } = St.ThemeContext.get_for_stage(global.stage);
-    const cornerRadius = scaleFactor * Workspace.BACKGROUND_CORNER_RADIUS_PIXELS;
+    const cornerRadius =
+        scaleFactor * Workspace.BACKGROUND_CORNER_RADIUS_PIXELS;
 
     const radius = Util.lerp(0, cornerRadius, this._stateAdjustment.value);
     this._bgManager.videoActor.setRoundedClipRadius(radius);
