@@ -8,6 +8,7 @@ sources = [
   'gnomeShellOverride.js',
   'prefs.js',
   'renderer.js',
+  'roundedCornersEffect.js',
   'stylesheet.css',
 ]
 

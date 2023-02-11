@@ -21,6 +21,10 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Background = imports.ui.background;
 const Main = imports.ui.main;
 const Workspace = imports.ui.workspace;
+const Util = imports.misc.util;
+
+const Me = ExtensionUtils.getCurrentExtension();
+const RoundedCornersEffect = Me.imports.roundedCornersEffect;
 
 const applicationId = "io.github.jeffshee.hanabi-renderer";
 const extSettings = ExtensionUtils.getSettings(
@@ -71,6 +75,18 @@ var GnomeShellOverride = class {
         runningWallpaperActors.clear();
 
         Main.layoutManager._updateBackgrounds();
+        // NOTE: Fix black lock screen background.
+        // Screen shield has its own bgManagers.
+        // We hacked background manager to add our actor before the image, but
+        // gnome-shell will disable all extensions before locking, then our
+        // player is closed, but the bgManager still holds our actor, so it gets
+        // black. Just simply re-create normal bgManagers fixed this.
+        if (Main.screenShield._dialog != null && Main.screenShield._dialog._updateBackgrounds != null) {
+            Main.screenShield._dialog._updateBackgrounds();
+        }
+        // NOTE: WorkspaceBackground has its own bgManager, we have to recreate
+        // it to use our actors, so it can set radius to our actor.
+        Main.overview._overview._controls._workspacesDisplay._updateWorkspacesViews();
     }
 
     enable() {
@@ -80,6 +96,15 @@ var GnomeShellOverride = class {
             "_createBackgroundActor",
             new_createBackgroundActor
         );
+
+        // Rounded corner
+        this.replaceMethod(Workspace.WorkspaceBackground,
+                           "_updateBorderRadius",
+                           new_updateBorderRadius);
+
+        this.replaceMethod(Workspace.WorkspaceBackground,
+                           "_updateRoundedClipBounds",
+                           new_updateRoundedClipBounds);
 
         // Hiding mechanism
         this.replaceMethod(
@@ -163,6 +188,7 @@ var LiveWallpaper = GObject.registerClass(
 
             this._backgroundActor = backgroundActor;
             this._monitorIndex = backgroundActor.monitor;
+            this._display = backgroundActor.meta_display;
             let { height, width } =
                 Main.layoutManager.monitors[this._monitorIndex];
             this._monitorHeight = height;
@@ -174,8 +200,46 @@ var LiveWallpaper = GObject.registerClass(
             this.connect("destroy", this._onDestroy.bind(this));
             this._applyWallpaper();
 
+            this._roundedCornersEffect = new RoundedCornersEffect.RoundedCornersEffect();
+            this.add_effect(this._roundedCornersEffect);
+
+            this._monitorScale = this._display.get_monitor_scale(this._monitorIndex);
+
+            this.setRoundedClipRadius(0.0);
+            const rect = new Graphene.Rect();
+            rect.origin.x = 0;
+            rect.origin.y = 0;
+            rect.size.width = this._monitorWidth;
+            rect.size.height = this._monitorHeight;
+            this.setRoundedClipBounds(rect);
+            // TODO: Not sure if monitorScale is needed.
+            // What is this? Well, OpenGL texture coordinates are [0.0, 1.0],
+            // but we do bound and radius calculation with pixels, so we need a
+            // way to convert coordinates into pixels.
+            // NOTE: I currently don't know why, but I need monitor width and
+            // height here, not actor width and height, one reason maybe that
+            // our actor actually takes the whole screen and we use monitor
+            // width and height in the bound rect.
+            this._roundedCornersEffect.setPixelStep([
+                1.0 / this._monitorWidth,
+                1.0 / this._monitorHeight
+            ]);
+
             runningWallpaperActors.add(this);
             debug("LiveWallpaper created");
+        }
+
+        setRoundedClipRadius(radius) {
+            this._roundedCornersEffect.setClipRadius(radius * this._monitorScale);
+        }
+
+        setRoundedClipBounds(rect) {
+            this._roundedCornersEffect.setBounds([
+                rect.origin.x,
+                rect.origin.y,
+                rect.origin.x + rect.size.width,
+                rect.origin.y + rect.size.height
+            ].map((e) => {return e * this._monitorScale;}));
         }
 
         _applyWallpaper() {
@@ -212,7 +276,7 @@ var LiveWallpaper = GObject.registerClass(
                 window_actors = global.get_window_actors();
             }
 
-            if (window_actors && window_actors.length === 0) return;
+            if (window_actors && window_actors.length === 0) return null;
 
             // Find renderer by `applicationId`.
             let renderer = window_actors.find((window) =>
@@ -221,6 +285,7 @@ var LiveWallpaper = GObject.registerClass(
             if (renderer) {
                 return renderer.meta_window;
             }
+            return null;
         }
 
         _resize() {
@@ -283,8 +348,9 @@ var LiveWallpaper = GObject.registerClass(
  */
 function new_createBackgroundActor() {
     const backgroundActor =
-        replaceData.old__createBackgroundActor[0].call(this);
-    new LiveWallpaper(backgroundActor);
+          replaceData.old__createBackgroundActor[0].call(this);
+    // We need to pass radius to actors, so save a ref in bgManager.
+    this.videoActor = new LiveWallpaper(backgroundActor);
     getDebugMode() && markAsEffective("new_createBackgroundActor");
     return backgroundActor;
 }
@@ -338,4 +404,33 @@ function new_get_running() {
         !compareArrays(result, runningApps) &&
         markAsEffective("new_get_running");
     return result;
+}
+
+// WorkspaceBackground has its own bgManager, the rounded corner is made by
+// passing value to MetaBackgroundContent, we don't have content, but could do
+// the same to actor.
+function new_updateBorderRadius() {
+    replaceData.old__updateBorderRadius[0].call(this);
+
+    // Basically a copy of the original function.
+    const { scaleFactor } = St.ThemeContext.get_for_stage(global.stage);
+    const cornerRadius = scaleFactor * Workspace.BACKGROUND_CORNER_RADIUS_PIXELS;
+
+    const radius = Util.lerp(0, cornerRadius, this._stateAdjustment.value);
+    this._bgManager.videoActor.setRoundedClipRadius(radius);
+}
+
+function new_updateRoundedClipBounds() {
+    replaceData.old__updateRoundedClipBounds[0].call(this);
+
+    // Basically a copy of the original function.
+    const monitor = Main.layoutManager.monitors[this._monitorIndex];
+
+    const rect = new Graphene.Rect();
+    rect.origin.x = this._workarea.x - monitor.x;
+    rect.origin.y = this._workarea.y - monitor.y;
+    rect.size.width = this._workarea.width;
+    rect.size.height = this._workarea.height;
+
+    this._bgManager.videoActor.setRoundedClipBounds(rect);
 }
