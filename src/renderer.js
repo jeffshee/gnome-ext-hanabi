@@ -220,11 +220,9 @@ class VideoWallpaperWindow {
 
         if (!widget) return null;
 
-        this._play = new GstPlay.Play({
-            video_renderer: new GstPlay.PlayVideoOverlayVideoRenderer({
-                video_sink: sink,
-            }),
-        });
+        this._play = GstPlay.Play.new(
+            GstPlay.PlayVideoOverlayVideoRenderer.new_with_sink(null, sink)
+        );
         this._adapter = GstPlay.PlaySignalAdapter.new(this._play);
 
         // Loop video
