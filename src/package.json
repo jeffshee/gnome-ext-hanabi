@@ -1,0 +1,13 @@
+{
+  "name": "gnome-ext-hanabi",
+  "version": "1.0.0",
+  "description": "Live Wallpaper for GNOME",
+  "main": "extension.js",
+  "repository": "https://github.com/jeffshee/gnome-ext-hanabi",
+  "author": "Jeff Shee",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "eslint": "^8.34.0",
+    "eslint-plugin-jsdoc": "^39.8.0"
+  }
+}
