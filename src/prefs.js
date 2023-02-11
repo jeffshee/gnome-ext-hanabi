@@ -15,10 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const { Adw, Gio, Gtk } = imports.gi;
+/* exported init fillPreferencesWindow */
+
+const {Adw, Gio, Gtk} = imports.gi;
 
 const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
 
 const settings = ExtensionUtils.getSettings(
     "io.github.jeffshee.hanabi-extension"
@@ -29,7 +30,7 @@ function init() {}
 function fillPreferencesWindow(window) {
     // Create a preferences page and group
     const page = new Adw.PreferencesPage();
-    const generalGroup = new Adw.PreferencesGroup({ title: "General" });
+    const generalGroup = new Adw.PreferencesGroup({title: 'General'});
     page.add(generalGroup);
     prefsRowVideoPath(window, generalGroup);
     prefsRowFitMode(generalGroup);
@@ -58,7 +59,7 @@ function fillPreferencesWindow(window) {
     // );
 
     const experimentalGroup = new Adw.PreferencesGroup({
-        title: "Experimental",
+        title: 'Experimental',
     });
     page.add(experimentalGroup);
     prefsRowBoolean(
@@ -155,30 +156,30 @@ function prefsRowVideoPath(window, prefsGroup) {
 
     let path = settings.get_string(key);
     const row = new Adw.ActionRow({
-        title: title,
-        subtitle: `Current: ${path !== "" ? path : "None"}`,
+        title,
+        subtitle: `Current: ${path !== '' ? path : 'None'}`,
     });
     prefsGroup.add(row);
 
     function createDialog() {
         let fileFilter = new Gtk.FileFilter();
-        fileFilter.add_mime_type("video/*");
+        fileFilter.add_mime_type('video/*');
 
         let fileChooser = new Gtk.FileChooserDialog({
-            title: "Open File",
+            title: 'Open File',
             action: Gtk.FileChooserAction.OPEN,
         });
         fileChooser.set_modal(true);
         fileChooser.set_transient_for(window);
-        fileChooser.add_button("Cancel", Gtk.ResponseType.CANCEL);
-        fileChooser.add_button("Open", Gtk.ResponseType.ACCEPT);
+        fileChooser.add_button('Cancel', Gtk.ResponseType.CANCEL);
+        fileChooser.add_button('Open', Gtk.ResponseType.ACCEPT);
         fileChooser.add_filter(fileFilter);
 
-        fileChooser.connect("response", (dialog, response_id) => {
+        fileChooser.connect('response', (dialog, response_id) => {
             if (response_id === Gtk.ResponseType.ACCEPT) {
-                let path = dialog.get_file().get_path();
-                settings.set_string(key, path);
-                row.subtitle = `Current: ${path !== "" ? path : "None"}`;
+                let _path = dialog.get_file().get_path();
+                settings.set_string(key, _path);
+                row.subtitle = `Current: ${_path !== '' ? _path : 'None'}`;
             }
             dialog.destroy();
         });
@@ -186,15 +187,15 @@ function prefsRowVideoPath(window, prefsGroup) {
     }
 
     let button = new Adw.ButtonContent({
-        icon_name: "document-open-symbolic",
-        label: "Open",
+        icon_name: 'document-open-symbolic',
+        label: 'Open',
     });
 
     row.activatable_widget = button;
     row.add_suffix(button);
 
-    row.connect("activated", () => {
-        dialog = createDialog();
+    row.connect('activated', () => {
+        let dialog = createDialog();
         dialog.show();
     });
 }

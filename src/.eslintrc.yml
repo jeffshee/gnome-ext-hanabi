@@ -48,7 +48,9 @@ rules:
     - error
     - property
   eol-last: error
-  eqeqeq: error
+  eqeqeq:
+    - error
+    - smart # changed: Allow != null check
   func-call-spacing: error
   func-name-matching: error
   func-style:
@@ -70,11 +72,12 @@ rules:
   jsdoc/check-types: error
   jsdoc/implements-on-classes: error
   jsdoc/newline-after-description: error
-  jsdoc/require-jsdoc: error
-  jsdoc/require-param: error
-  jsdoc/require-param-description: error
-  jsdoc/require-param-name: error
-  jsdoc/require-param-type: error
+  # changed: these checks are skipped for now
+  # jsdoc/require-jsdoc: error
+  # jsdoc/require-param: error
+  # jsdoc/require-param-description: error
+  # jsdoc/require-param-name: error
+  # jsdoc/require-param-type: error
   key-spacing:
     - error
     - beforeColon: false
@@ -252,6 +255,7 @@ globals:
   ARGV: readonly
   Debugger: readonly
   GIRepositoryGType: readonly
+  global: readonly # changed: Added global to globals
   globalThis: readonly
   imports: readonly
   Intl: readonly

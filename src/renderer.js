@@ -26,16 +26,15 @@ let GstPlay = null;
 try {
     GstPlay = imports.gi.GstPlay;
 } catch (e) {}
-const haveGstPlay = GstPlay != null;
+const haveGstPlay = GstPlay !== null;
 
-const applicationId = "io.github.jeffshee.hanabi-renderer";
+const applicationId = 'io.github.jeffshee.hanabi-renderer';
 
 let extSettings = null;
-const extSchemaId = "io.github.jeffshee.hanabi-extension";
+const extSchemaId = 'io.github.jeffshee.hanabi-extension';
 const settingsSchemaSource = Gio.SettingsSchemaSource.get_default();
-if (settingsSchemaSource.lookup(extSchemaId, false)) {
+if (settingsSchemaSource.lookup(extSchemaId, false))
     extSettings = Gio.Settings.new(extSchemaId);
-}
 
 const isDebugMode = extSettings ? extSettings.get_boolean("debug-mode") : true;
 const forceGtk4PaintableSink = extSettings
@@ -72,7 +71,8 @@ let windowDimension = { width: 1920, height: 1080 };
 let windowed = false;
 
 function debug(...args) {
-    if (isDebugMode) print(...args);
+    if (isDebugMode)
+        print(...args);
 }
 
 const HanabiRenderer = GObject.registerClass(
