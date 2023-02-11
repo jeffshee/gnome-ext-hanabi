@@ -45,13 +45,11 @@
             <description>Print debug messages to log</description>
         </key>
 
-        <key name="enable-vah264dec-vavp9dec" type="b">
+        <key name="enable-va" type="b">
             <default>false</default>
-            <summary>Experimental VA plugins</summary>
-            <description>Enable vah264dec and vavp9dec which improve performance for Intel/AMD
-                Wayland users</description>
+            <summary>Experimental VA plugin</summary>
+            <description>Enable VA decoders which improve performance for Intel/AMD Wayland users</description>
         </key>
-
 
     </schema>
 </schemalist>

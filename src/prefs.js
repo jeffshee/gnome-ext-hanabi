@@ -64,9 +64,9 @@ function fillPreferencesWindow(window) {
     );
     prefsRowBoolean(
         experimentalGroup,
-        "Experimental VA plugins",
-        "enable-vah264dec-vavp9dec",
-        "Enable vah264dec and vavp9dec which improve performance for Intel/AMD Wayland users"
+        "Experimental VA plugin",
+        "enable-va",
+        "Enable VA decoders which improve performance for Intel/AMD Wayland users"
     );
     // Add our page to the window
     window.add(page);
