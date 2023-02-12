@@ -40,15 +40,12 @@ if (settingsSchemaSource.lookup(extSchemaId, false)) {
 
 const isDebugMode = extSettings ? extSettings.get_boolean("debug-mode") : true;
 
-const isEnableVAPlugins = extSettings
-    ? extSettings.get_boolean("enable-vah264dec-vavp9dec")
+const isEnableVADecoders = extSettings
+    ? extSettings.get_boolean("enable-va")
     : false;
-if (isEnableVAPlugins) {
-    GLib.setenv("GST_PLUGIN_FEATURE_RANK", "vah264dec:300,vavp9dec:300", true);
-    debug(
-        `GST_PLUGIN_FEATURE_RANK = ${GLib.getenv("GST_PLUGIN_FEATURE_RANK")}`
-    );
-}
+const isEnableNvSl = extSettings
+    ? extSettings.get_boolean("enable-nvsl")
+    : false;
 
 let windowed = false;
 let windowConfig = { width: 1920, height: 1080 };
@@ -187,6 +184,15 @@ class VideoWallpaperWindow {
         this._windowContext = this._window.get_style_context();
         this._windowContext.add_class("desktopwindow");
 
+        // Software libav decoders have "primary" rank, set Nvidia higher
+        // to use NVDEC hardware acceleration
+        this._setPluginDecodersRank("nvcodec", Gst.Rank.PRIMARY + 1, isEnableNvSl);
+
+        // Legacy "vaapidecodebin" have rank "primary + 2",
+        // we need to set VA higher then that to be used
+        if (isEnableVADecoders)
+            this._setPluginDecodersRank("va", Gst.Rank.PRIMARY + 3);
+
         let widget = null;
 
         if (haveGstPlay) {
@@ -223,11 +229,9 @@ class VideoWallpaperWindow {
 
         if (!widget) return null;
 
-        this._play = new GstPlay.Play({
-            video_renderer: new GstPlay.PlayVideoOverlayVideoRenderer({
-                video_sink: sink,
-            }),
-        });
+        this._play = GstPlay.Play.new(
+            GstPlay.PlayVideoOverlayVideoRenderer.new_with_sink(null, sink)
+        );
         this._adapter = GstPlay.PlaySignalAdapter.new(this._play);
 
         // Loop video
@@ -285,6 +289,32 @@ class VideoWallpaperWindow {
         this._media.play();
 
         return widget;
+    }
+
+    _setPluginDecodersRank(pluginName, rank, useStateless = false)
+    {
+        const gstRegistry = Gst.Registry.get();
+        const features = gstRegistry.get_feature_list_by_plugin(pluginName);
+
+        for (let feature of features) {
+            const featureName = feature.get_name();
+
+            if (!featureName.endsWith("dec") && !featureName.endsWith("postproc"))
+                continue;
+
+            const isStateless = featureName.includes("sl");
+
+            if (isStateless != useStateless)
+                continue;
+
+            const oldRank = feature.get_rank();
+
+            if (rank == oldRank)
+                continue;
+
+            feature.set_rank(rank);
+            debug(`changed rank: ${oldRank} -> ${rank} for ${featureName}`);
+        }
     }
 
     /**
