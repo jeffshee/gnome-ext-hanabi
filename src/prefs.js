@@ -68,6 +68,12 @@ function fillPreferencesWindow(window) {
         "enable-va",
         "Enable VA decoders which improve performance for Intel/AMD Wayland users"
     );
+    prefsRowBoolean(
+        experimentalGroup,
+        "Nvidia stateless decoders",
+        "enable-nvsl",
+        "Use new stateless Nvidia decoders"
+    );
     // Add our page to the window
     window.add(page);
 }

@@ -51,5 +51,11 @@
             <description>Enable VA decoders which improve performance for Intel/AMD Wayland users</description>
         </key>
 
+        <key name="enable-nvsl" type="b">
+            <default>false</default>
+            <summary>Nvidia stateless decoders</summary>
+            <description>Use new stateless Nvidia decoders</description>
+        </key>
+
     </schema>
 </schemalist>
