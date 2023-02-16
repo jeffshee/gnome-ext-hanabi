@@ -76,20 +76,25 @@ var GnomeShellOverride = class {
         runningWallpaperActors.clear();
 
         Main.layoutManager._updateBackgrounds();
-        // NOTE: Fix black lock screen background.
-        // Screen shield has its own bgManagers.
-        // We hacked background manager to add our actor before the image, but
-        // gnome-shell will disable all extensions before locking, then our
-        // player is closed, but the bgManager still holds our actor, so it gets
-        // black. Just simply re-create normal bgManagers fixed this.
-        if (
-            Main.screenShield._dialog != null &&
-            Main.screenShield._dialog._updateBackgrounds != null
-        ) {
+
+        /**
+         * Fix black lock screen background.
+         * Screen shield has its own bgManagers.
+         * We hacked background manager to add our actor before the image,
+         * but gnome-shell will disable all extensions before locking,
+         * then our player is closed, but the bgManager still holds our actor, so it gets black.
+         * Just simply re-create normal bgManagers fixed this.
+         *
+         * Also, `Main.screenShield` will be `null` when the user doesn't use gnome shell locking.
+         */
+        if (Main.screenShield?._dialog?._updateBackgrounds != null) {
             Main.screenShield._dialog._updateBackgrounds();
         }
-        // NOTE: WorkspaceBackground has its own bgManager, we have to recreate
-        // it to use our actors, so it can set radius to our actor.
+
+        /**
+         * WorkspaceBackground has its own bgManager,
+         * we have to recreate it to use our actors, so it can set radius to our actor.
+         */
         Main.overview._overview._controls._workspacesDisplay._updateWorkspacesViews();
     }
 
