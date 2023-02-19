@@ -39,6 +39,20 @@ if (settingsSchemaSource.lookup(extSchemaId, false)) {
 }
 
 const isDebugMode = extSettings ? extSettings.get_boolean("debug-mode") : true;
+const forceMediaFile = extSettings
+    ? extSettings.get_boolean("force-mediafile")
+    : false;
+/**
+ * Gtk.ContentFit
+ * https://gjs-docs.gnome.org/gtk40~4.0/gtk.contentfit
+ * FILL=0 (stretched)
+ * CONTAIN=1 (scaled)
+ * COVER=2 (zoom)
+ * SCALE_DOWN=3 (centered+scaled)
+ */
+const contentFitMode = extSettings
+    ? extSettings.get_int("content-fit-mode")
+    : Gtk.ContentFit.CONTAIN;
 
 const isEnableVADecoders = extSettings
     ? extSettings.get_boolean("enable-va")
@@ -186,7 +200,11 @@ class VideoWallpaperWindow {
 
         // Software libav decoders have "primary" rank, set Nvidia higher
         // to use NVDEC hardware acceleration
-        this._setPluginDecodersRank("nvcodec", Gst.Rank.PRIMARY + 1, isEnableNvSl);
+        this._setPluginDecodersRank(
+            "nvcodec",
+            Gst.Rank.PRIMARY + 1,
+            isEnableNvSl
+        );
 
         // Legacy "vaapidecodebin" have rank "primary + 2",
         // we need to set VA higher then that to be used
@@ -195,7 +213,7 @@ class VideoWallpaperWindow {
 
         let widget = null;
 
-        if (haveGstPlay) {
+        if (!forceMediaFile && haveGstPlay) {
             // Try to find "clappersink" for best performance
             let sink = Gst.ElementFactory.make("clappersink", "clappersink");
 
@@ -224,7 +242,10 @@ class VideoWallpaperWindow {
         const widget = sink.widget
             ? sink.widget
             : sink.paintable
-            ? new Gtk.Picture({ paintable: sink.paintable })
+            ? new Gtk.Picture({
+                  paintable: sink.paintable,
+                  content_fit: contentFitMode,
+              })
             : null;
 
         if (!widget) return null;
@@ -282,6 +303,7 @@ class VideoWallpaperWindow {
         });
         const widget = new Gtk.Picture({
             paintable: this._media,
+            content_fit: contentFitMode,
         });
 
         debug(`using GtkMedia for video output`);
@@ -291,26 +313,26 @@ class VideoWallpaperWindow {
         return widget;
     }
 
-    _setPluginDecodersRank(pluginName, rank, useStateless = false)
-    {
+    _setPluginDecodersRank(pluginName, rank, useStateless = false) {
         const gstRegistry = Gst.Registry.get();
         const features = gstRegistry.get_feature_list_by_plugin(pluginName);
 
         for (let feature of features) {
             const featureName = feature.get_name();
 
-            if (!featureName.endsWith("dec") && !featureName.endsWith("postproc"))
+            if (
+                !featureName.endsWith("dec") &&
+                !featureName.endsWith("postproc")
+            )
                 continue;
 
             const isStateless = featureName.includes("sl");
 
-            if (isStateless != useStateless)
-                continue;
+            if (isStateless != useStateless) continue;
 
             const oldRank = feature.get_rank();
 
-            if (rank == oldRank)
-                continue;
+            if (rank == oldRank) continue;
 
             feature.set_rank(rank);
             debug(`changed rank: ${oldRank} -> ${rank} for ${featureName}`);
