@@ -28,8 +28,8 @@ function fillPreferencesWindow(window) {
     const generalGroup = new Adw.PreferencesGroup({ title: "General" });
     page.add(generalGroup);
     prefsRowVideoPath(window, generalGroup);
-    prefsRowBoolean(generalGroup, "Mute audio", "mute");
-    prefsVolume(generalGroup);
+    prefsRowBoolean(generalGroup, "Mute audio", "mute", "");
+    prefsRowInt(generalGroup, "Audio volume", "volume", "", 0, 100, 1, 10);
 
     const pauseGroup = new Adw.PreferencesGroup({ title: "Auto pause" });
     // page.add(pauseGroup);
@@ -58,12 +58,6 @@ function fillPreferencesWindow(window) {
     page.add(experimentalGroup);
     prefsRowBoolean(
         experimentalGroup,
-        "Debug mode",
-        "debug-mode",
-        "Print debug messages to log"
-    );
-    prefsRowBoolean(
-        experimentalGroup,
         "Experimental VA plugin",
         "enable-va",
         "Enable VA decoders which improve performance for Intel/AMD Wayland users"
@@ -74,6 +68,32 @@ function fillPreferencesWindow(window) {
         "enable-nvsl",
         "Use new stateless Nvidia decoders"
     );
+    prefsRowInt(
+        experimentalGroup,
+        "GtkPicture content-fit",
+        "content-fit",
+        "Control how content fits within the GtkPicture",
+        0,
+        3,
+        1,
+        1
+    );
+
+    const developerGroup = new Adw.PreferencesGroup({ title: "Developer" });
+    page.add(developerGroup);
+    prefsRowBoolean(
+        developerGroup,
+        "Debug mode",
+        "debug-mode",
+        "Print debug messages to log"
+    );
+    prefsRowBoolean(
+        developerGroup,
+        "Force GtkMediaFile",
+        "force-mediafile",
+        "Force use of GtkMediaFile for video playback"
+    );
+
     // Add our page to the window
     window.add(page);
 }
@@ -132,22 +152,28 @@ function prefsRowVideoPath(window, prefsGroup) {
     });
 }
 
-function prefsVolume(prefsGroup) {
-    const title = "Audio volume";
-    const key = "volume";
-
+function prefsRowInt(
+    prefsGroup,
+    title,
+    key,
+    subtitle,
+    lower,
+    upper,
+    step_increment,
+    page_increment
+) {
     const settings = ExtensionUtils.getSettings(
         "io.github.jeffshee.hanabi-extension"
     );
 
-    const row = new Adw.ActionRow({ title: title });
+    const row = new Adw.ActionRow({ title, subtitle });
     prefsGroup.add(row);
 
     const adjustment = new Gtk.Adjustment({
-        lower: 0,
-        upper: 100,
-        step_increment: 1,
-        page_increment: 10,
+        lower,
+        upper,
+        step_increment,
+        page_increment,
         value: settings.get_int(key),
     });
     adjustment.connect("value-changed", () => {
@@ -160,14 +186,14 @@ function prefsVolume(prefsGroup) {
     row.add_suffix(spin);
 }
 
-function prefsRowBoolean(prefsGroup, title, key, subtitle = "") {
+function prefsRowBoolean(prefsGroup, title, key, subtitle) {
     // Use the same GSettings schema as in `extension.js`
     const settings = ExtensionUtils.getSettings(
         "io.github.jeffshee.hanabi-extension"
     );
 
     // Create a new preferences row
-    const row = new Adw.ActionRow({ title: title, subtitle: subtitle });
+    const row = new Adw.ActionRow({ title, subtitle });
     prefsGroup.add(row);
 
     // Create the switch and bind its value to the key

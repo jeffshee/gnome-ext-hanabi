@@ -50,7 +50,7 @@ const forceMediaFile = extSettings
  * SCALE_DOWN=3 (centered+scaled)
  */
 const contentFitMode = extSettings
-    ? extSettings.get_int("content-fit-mode")
+    ? extSettings.get_int("content-fit")
     : Gtk.ContentFit.CONTAIN;
 const isEnableVADecoders = extSettings
     ? extSettings.get_boolean("enable-va")

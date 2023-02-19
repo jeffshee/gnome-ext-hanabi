@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
     <schema id="io.github.jeffshee.hanabi-extension" path="/io/github/jeffshee/hanabi-extension/">
-
         <key name="video-path" type="s">
             <default>''</default>
             <summary>Video path</summary>
@@ -59,16 +58,15 @@
 
         <key name="force-mediafile" type="b">
             <default>false</default>
-            <summary>Force MediaFile</summary>
-            <description>Force use of MediaFile for video playback (not optimal!)</description>
+            <summary>Force GtkMediaFile</summary>
+            <description>Force use of GtkMediaFile for video playback</description>
         </key>
 
-        <key name="content-fit-mode" type="i">
+        <key name="content-fit" type="i">
             <range min="0" max="3" />
             <default>1</default>
-            <summary>Gtk.ContentFit mode</summary>
-            <description>Control how content fits within the renderer. (FILL=0, CONTAIN=1, COVER=2
-                and SCALE_DOWN=3)</description>
+            <summary>GtkPicture content-fit</summary>
+            <description>Control how content fits within the GtkPicture</description>
         </key>
     </schema>
 </schemalist>
