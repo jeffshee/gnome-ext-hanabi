@@ -433,10 +433,6 @@ const HanabiRendererWindow = GObject.registerClass(
                 title,
             });
 
-            this.set_size_request(
-                windowDimension.width,
-                windowDimension.height
-            );
             this.set_child(widget);
             if (!windowed) this.fullscreen_on_monitor(gdkMonitor);
         }
