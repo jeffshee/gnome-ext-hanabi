@@ -41,17 +41,7 @@ const isDebugMode = extSettings ? extSettings.get_boolean("debug-mode") : true;
 const forceMediaFile = extSettings
     ? extSettings.get_boolean("force-mediafile")
     : false;
-/**
- * Gtk.ContentFit
- * https://gjs-docs.gnome.org/gtk40~4.0/gtk.contentfit
- * FILL=0 (stretched)
- * CONTAIN=1 (scaled)
- * COVER=2 (zoom)
- * SCALE_DOWN=3 (centered+scaled)
- */
-const contentFitMode = extSettings
-    ? extSettings.get_int("content-fit")
-    : Gtk.ContentFit.CONTAIN;
+
 const isEnableVADecoders = extSettings
     ? extSettings.get_boolean("enable-va")
     : false;
@@ -60,6 +50,17 @@ const isEnableNvSl = extSettings
     : false;
 
 let codePath = "";
+/**
+ * Gtk.ContentFit
+ * https://gjs-docs.gnome.org/gtk40~4.0/gtk.contentfit
+ * FILL=0 (stretched)
+ * CONTAIN=1 (scaled)
+ * COVER=2 (zoom)
+ * SCALE_DOWN=3 (centered+scaled)
+ */
+let contentFit = extSettings
+    ? extSettings.get_int("content-fit")
+    : Gtk.ContentFit.CONTAIN;
 let mute = extSettings ? extSettings.get_boolean("mute") : false;
 let nohide = false;
 let videoPath = extSettings ? extSettings.get_string("video-path") : "";
@@ -83,6 +84,7 @@ const HanabiRenderer = GObject.registerClass(
             });
 
             this._hanabiWindows = [];
+            this._pictures = [];
             this._sharedPaintable = null;
             this._gstImplName = "";
             this._setupGst();
@@ -122,6 +124,11 @@ const HanabiRenderer = GObject.registerClass(
                         volume = settings.get_int(key) / 100.0;
                         this.setVolume(volume);
                         break;
+                    case "content-fit":
+                        contentFit = settings.get_int(key);
+                        this._pictures.forEach((picture) =>
+                            picture.set_content_fit(contentFit)
+                        );
                 }
             });
         }
@@ -279,10 +286,13 @@ const HanabiRenderer = GObject.registerClass(
 
         _getWidgetFromSharedPaintable() {
             if (this._sharedPaintable) {
-                return new Gtk.Picture({
-                    paintable: this._sharedPaintable,
-                    content_fit: contentFitMode,
-                });
+                this._pictures.push(
+                    new Gtk.Picture({
+                        paintable: this._sharedPaintable,
+                        content_fit: contentFit,
+                    })
+                );
+                return this._pictures.at(-1);
             }
             return null;
         }
