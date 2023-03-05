@@ -444,6 +444,23 @@ const HanabiRendererWindow = GObject.registerClass(
                 title,
             });
 
+            // Load CSS with custom style
+            let cssProvider = new Gtk.CssProvider();
+            cssProvider.load_from_file(
+                Gio.File.new_for_path(
+                    GLib.build_filenamev([codePath, "stylesheet.css"])
+                )
+            );
+
+            Gtk.StyleContext.add_provider_for_display(
+                Gdk.Display.get_default(),
+                cssProvider,
+                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            );
+
+            // this._windowContext = this.get_style_context();
+            // this._windowContext.add_class("desktopwindow");
+
             this.set_child(widget);
             if (!windowed) this.fullscreen_on_monitor(gdkMonitor);
         }
