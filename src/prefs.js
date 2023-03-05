@@ -89,6 +89,12 @@ function fillPreferencesWindow(window) {
     );
     prefsRowBoolean(
         developerGroup,
+        "Force gtk4paintablesink",
+        "force-gtk4paintablesink",
+        "Force use of gtk4paintablesink for video playback"
+    );
+    prefsRowBoolean(
+        developerGroup,
         "Force GtkMediaFile",
         "force-mediafile",
         "Force use of GtkMediaFile for video playback"

@@ -38,6 +38,9 @@ if (settingsSchemaSource.lookup(extSchemaId, false)) {
 }
 
 const isDebugMode = extSettings ? extSettings.get_boolean("debug-mode") : true;
+const forceGtk4PaintableSink = extSettings
+    ? extSettings.get_boolean("force-gtk4paintablesink")
+    : false;
 const forceMediaFile = extSettings
     ? extSettings.get_boolean("force-mediafile")
     : false;
@@ -249,11 +252,14 @@ const HanabiRenderer = GObject.registerClass(
 
                 if (!widget) {
                     if (!forceMediaFile && haveGstPlay) {
-                        // Try to find "clappersink" for best performance
-                        let sink = Gst.ElementFactory.make(
-                            "clappersink",
-                            "clappersink"
-                        );
+                        let sink = null;
+                        if (!forceGtk4PaintableSink) {
+                            // Try to find "clappersink" for best performance
+                            sink = Gst.ElementFactory.make(
+                                "clappersink",
+                                "clappersink"
+                            );
+                        }
 
                         // Try "gtk4paintablesink" from gstreamer-rs plugins as 2nd best choice
                         if (!sink)

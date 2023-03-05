@@ -56,6 +56,12 @@
             <description>Use new stateless Nvidia decoders</description>
         </key>
 
+        <key name="force-gtk4paintablesink" type="b">
+            <default>false</default>
+            <summary>Force gtk4paintablesink</summary>
+            <description>Force use of gtk4paintablesink for video playback</description>
+        </key>
+
         <key name="force-mediafile" type="b">
             <default>false</default>
             <summary>Force GtkMediaFile</summary>
