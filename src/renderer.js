@@ -311,17 +311,22 @@ const HanabiRenderer = GObject.registerClass(
             let widget = null;
 
             if (sink.widget) {
-                // Workaround for clappersink.
-                // We use a Gtk.Box here to piggyback the sink.widget from clappersink,
-                // otherwise the sink.widget will spawn a window for itself.
-                // This workaround is only needed for the first window.
-                this._sharedPaintable = sink.widget.paintable;
-                const box = new Gtk.Box();
-                box.append(sink.widget);
-                box.append(this._getWidgetFromSharedPaintable());
-                // Hide the sink.widget to show our Gtk.Picture only
-                sink.widget.hide();
-                widget = box;
+                if (sink.widget instanceof Gtk.Picture) {
+                    // Workaround for clappersink.
+                    // We use a Gtk.Box here to piggyback the sink.widget from clappersink,
+                    // otherwise the sink.widget will spawn a window for itself.
+                    // This workaround is only needed for the first window.
+                    this._sharedPaintable = sink.widget.paintable;
+                    const box = new Gtk.Box();
+                    box.append(sink.widget);
+                    box.append(this._getWidgetFromSharedPaintable());
+                    // Hide the sink.widget to show our Gtk.Picture only
+                    sink.widget.hide();
+                    widget = box;
+                } else {
+                    // Just in case clappersink doesn't use GtkPicture internally anymore
+                    widget = sink.widget;
+                }
             } else if (sink.paintable) {
                 this._sharedPaintable = sink.paintable;
                 widget = this._getWidgetFromSharedPaintable();
