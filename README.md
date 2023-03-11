@@ -37,7 +37,7 @@ git clone https://github.com/jeffshee/gnome-ext-hanabi.git
 
 ```
 cd gnome-ext-hanabi/src
-./install.sh
+./run.sh install
 ```
 
 3. Restart GNOME Shell
@@ -56,14 +56,14 @@ gnome-extensions disable hanabi-extension@jeffshee.github.io
    The GTK4 media backend is not pre-installed on some distributions (such as PopOS).
 
     To install the backend:  
-    `sudo apt install libgtk-4-media-gstreamer`
+     `sudo apt install libgtk-4-media-gstreamer`
 
 2. High CPU usage during video playback (proprietary NVIDIA)  
    Your hardware acceleration may not work properly, see this [issue](https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/-/issues/1478).
 
     To delete the GStreamer cache:  
-    `rm -rf ~/.cache/gstreamer-1.0/`  
-    After that, check if `gst-inspect-1.0 nvcodec` reports all its features.
+     `rm -rf ~/.cache/gstreamer-1.0/`  
+     After that, check if `gst-inspect-1.0 nvcodec` reports all its features.
 
 ### Optimization
 
