@@ -210,6 +210,7 @@ function prefsRowInt(
     });
     const spin = new Gtk.SpinButton({
         adjustment: adjustment,
+        valign: Gtk.Align.CENTER,
     });
 
     row.add_suffix(spin);
