@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const { Adw, Gio, Gtk, GObject } = imports.gi;
+const { Adw, Gio, Gtk } = imports.gi;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -30,7 +30,7 @@ function fillPreferencesWindow(window) {
     prefsRowVideoPath(window, generalGroup);
     prefsRowBoolean(generalGroup, "Mute audio", "mute", "");
     prefsRowInt(generalGroup, "Audio volume", "volume", "", 0, 100, 1, 10);
-    prefsRowWallpaperFitMode(generalGroup);
+    prefsRowFitMode(generalGroup);
 
     const pauseGroup = new Adw.PreferencesGroup({ title: "Auto pause" });
     // page.add(pauseGroup);
@@ -149,8 +149,8 @@ function prefsRowVideoPath(window, prefsGroup) {
     });
 }
 
-function prefsRowWallpaperFitMode(prefsGroup) {
-    const title = "Wallpaper fit mode";
+function prefsRowFitMode(prefsGroup) {
+    const title = "Fit mode";
     const tooltip = `
     <b>Fill</b>: Stretch the wallpaper to fill the monitor.
     <b>Contain</b>: Scale the wallpaper to fit the monitor (keep aspect ratio).
@@ -161,31 +161,24 @@ function prefsRowWallpaperFitMode(prefsGroup) {
         "io.github.jeffshee.hanabi-extension"
     );
 
-    const row = new Adw.ActionRow({ title });
+    const items = Gtk.StringList.new([
+        "Fill",
+        "Contain",
+        "Cover",
+        "Scale-down",
+    ]);
+
+    const row = new Adw.ComboRow({
+        title,
+        model: items,
+        selected: settings.get_int("content-fit"),
+    });
+    row.set_tooltip_markup(tooltip);
     prefsGroup.add(row);
 
-    const items = ["Fill", "Contain", "Cover", "Scale-down"];
-    const store = new Gtk.ListStore();
-    store.set_column_types([GObject.TYPE_STRING]);
-    items.forEach(function (item) {
-        store.set(store.append(), [0], [item]);
+    row.connect("notify::selected", () => {
+        settings.set_int("content-fit", row.selected);
     });
-
-    let combo_box = new Gtk.ComboBox({
-        model: store,
-        active: settings.get_int("content-fit"),
-    });
-    let cell_renderer_text = new Gtk.CellRendererText();
-    combo_box.pack_start(cell_renderer_text, true);
-    combo_box.add_attribute(cell_renderer_text, "text", 0);
-    combo_box.set_tooltip_markup(tooltip);
-
-    combo_box.connect("changed", function () {
-        let active = combo_box.get_active();
-        settings.set_int("content-fit", active);
-    });
-
-    row.add_suffix(combo_box);
 }
 
 function prefsRowInt(
