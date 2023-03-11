@@ -20,6 +20,10 @@ const { Adw, Gio, Gtk } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
+const settings = ExtensionUtils.getSettings(
+    "io.github.jeffshee.hanabi-extension"
+);
+
 function init() {}
 
 function fillPreferencesWindow(window) {
@@ -28,29 +32,30 @@ function fillPreferencesWindow(window) {
     const generalGroup = new Adw.PreferencesGroup({ title: "General" });
     page.add(generalGroup);
     prefsRowVideoPath(window, generalGroup);
-    prefsRowBoolean(generalGroup, "Mute audio", "mute");
-    prefsVolume(generalGroup);
+    prefsRowFitMode(generalGroup);
+    prefsRowBoolean(generalGroup, "Mute Audio", "mute", "");
+    prefsRowInt(generalGroup, "Volume Level", "volume", "", 0, 100, 1, 10);
 
-    const pauseGroup = new Adw.PreferencesGroup({ title: "Auto pause" });
+    // const pauseGroup = new Adw.PreferencesGroup({ title: "Auto Pause" });
     // page.add(pauseGroup);
-    prefsRowBoolean(
-        pauseGroup,
-        "Pause on fullscreen",
-        "pause-on-fullscreen",
-        "Pause playback when there is a fullscreen window"
-    );
-    prefsRowBoolean(
-        pauseGroup,
-        "Pause on maximize",
-        "pause-on-maximize",
-        "Pause playback when there is a maximized window"
-    );
-    prefsRowBoolean(
-        pauseGroup,
-        "Pause on battery",
-        "pause-on-battery",
-        "Pause playback when device is on battery"
-    );
+    // prefsRowBoolean(
+    //     pauseGroup,
+    //     "Pause on Fullscreen",
+    //     "pause-on-fullscreen",
+    //     "Pause playback when there is a fullscreen window"
+    // );
+    // prefsRowBoolean(
+    //     pauseGroup,
+    //     "Pause on Maximize",
+    //     "pause-on-maximize",
+    //     "Pause playback when there is a maximized window"
+    // );
+    // prefsRowBoolean(
+    //     pauseGroup,
+    //     "Pause on Battery",
+    //     "pause-on-battery",
+    //     "Pause playback when device is on battery"
+    // );
 
     const experimentalGroup = new Adw.PreferencesGroup({
         title: "Experimental",
@@ -58,33 +63,95 @@ function fillPreferencesWindow(window) {
     page.add(experimentalGroup);
     prefsRowBoolean(
         experimentalGroup,
-        "Debug mode",
-        "debug-mode",
-        "Print debug messages to log"
-    );
-    prefsRowBoolean(
-        experimentalGroup,
-        "Experimental VA plugin",
+        "Experimental VA Plugin",
         "enable-va",
         "Enable VA decoders which improve performance for Intel/AMD Wayland users"
     );
     prefsRowBoolean(
         experimentalGroup,
-        "Nvidia stateless decoders",
+        "NVIDIA Stateless Decoders",
         "enable-nvsl",
-        "Use new stateless Nvidia decoders"
+        "Use new stateless NVIDIA decoders"
     );
+
+    const developerGroup = new Adw.PreferencesGroup({ title: "Developer" });
+    page.add(developerGroup);
+    prefsRowBoolean(
+        developerGroup,
+        "Debug Mode",
+        "debug-mode",
+        "Print debug messages to log"
+    );
+    prefsRowBoolean(
+        developerGroup,
+        "Force gtk4paintablesink",
+        "force-gtk4paintablesink",
+        "Force use of gtk4paintablesink for video playback"
+    );
+    prefsRowBoolean(
+        developerGroup,
+        "Force GtkMediaFile",
+        "force-mediafile",
+        "Force use of GtkMediaFile for video playback"
+    );
+
     // Add our page to the window
     window.add(page);
 }
 
-function prefsRowVideoPath(window, prefsGroup) {
-    const title = "Video path";
-    const key = "video-path";
+function prefsRowBoolean(prefsGroup, title, key, subtitle) {
+    // Create a new preferences row
+    const row = new Adw.ActionRow({ title, subtitle });
+    prefsGroup.add(row);
 
-    const settings = ExtensionUtils.getSettings(
-        "io.github.jeffshee.hanabi-extension"
-    );
+    // Create the switch and bind its value to the key
+    const toggle = new Gtk.Switch({
+        active: settings.get_boolean(key),
+        valign: Gtk.Align.CENTER,
+    });
+    settings.bind(key, toggle, "active", Gio.SettingsBindFlags.DEFAULT);
+
+    // Add the switch to the row
+    row.add_suffix(toggle);
+    row.activatable_widget = toggle;
+}
+
+function prefsRowInt(
+    prefsGroup,
+    title,
+    key,
+    subtitle,
+    lower,
+    upper,
+    step_increment,
+    page_increment
+) {
+    const row = new Adw.ActionRow({ title, subtitle });
+    prefsGroup.add(row);
+
+    const adjustment = new Gtk.Adjustment({
+        lower,
+        upper,
+        step_increment,
+        page_increment,
+        value: settings.get_int(key),
+    });
+
+    adjustment.connect("value-changed", () => {
+        settings.set_int(key, adjustment.value);
+    });
+
+    const spin = new Gtk.SpinButton({
+        adjustment: adjustment,
+        valign: Gtk.Align.CENTER,
+    });
+
+    row.add_suffix(spin);
+}
+
+function prefsRowVideoPath(window, prefsGroup) {
+    const title = "Video Path";
+    const key = "video-path";
 
     let path = settings.get_string(key);
     const row = new Adw.ActionRow({
@@ -132,52 +199,33 @@ function prefsRowVideoPath(window, prefsGroup) {
     });
 }
 
-function prefsVolume(prefsGroup) {
-    const title = "Audio volume";
-    const key = "volume";
+function prefsRowFitMode(prefsGroup) {
+    const title = "Fit Mode";
+    const subtitle = "Control how wallpaper fits within the monitor";
+    const tooltip = `
+    <b>Fill</b>: Stretch the wallpaper to fill the monitor.
+    <b>Contain</b>: Scale the wallpaper to fit the monitor (keep aspect ratio).
+    <b>Cover</b>: Scale the wallpaper to cover the monitor (keep aspect ratio).
+    <b>Scale-down</b>: Scale down the wallpaper to fit the monitor if needed, otherwise keep its original size.
+    `;
 
-    const settings = ExtensionUtils.getSettings(
-        "io.github.jeffshee.hanabi-extension"
-    );
+    const items = Gtk.StringList.new([
+        "Fill",
+        "Contain",
+        "Cover",
+        "Scale-down",
+    ]);
 
-    const row = new Adw.ActionRow({ title: title });
+    const row = new Adw.ComboRow({
+        title,
+        subtitle,
+        model: items,
+        selected: settings.get_int("content-fit"),
+    });
+    row.set_tooltip_markup(tooltip);
     prefsGroup.add(row);
 
-    const adjustment = new Gtk.Adjustment({
-        lower: 0,
-        upper: 100,
-        step_increment: 1,
-        page_increment: 10,
-        value: settings.get_int(key),
+    row.connect("notify::selected", () => {
+        settings.set_int("content-fit", row.selected);
     });
-    adjustment.connect("value-changed", () => {
-        settings.set_int(key, adjustment.value);
-    });
-    const spin = new Gtk.SpinButton({
-        adjustment: adjustment,
-    });
-
-    row.add_suffix(spin);
-}
-
-function prefsRowBoolean(prefsGroup, title, key, subtitle = "") {
-    // Use the same GSettings schema as in `extension.js`
-    const settings = ExtensionUtils.getSettings(
-        "io.github.jeffshee.hanabi-extension"
-    );
-
-    // Create a new preferences row
-    const row = new Adw.ActionRow({ title: title, subtitle: subtitle });
-    prefsGroup.add(row);
-
-    // Create the switch and bind its value to the key
-    const toggle = new Gtk.Switch({
-        active: settings.get_boolean(key),
-        valign: Gtk.Align.CENTER,
-    });
-    settings.bind(key, toggle, "active", Gio.SettingsBindFlags.DEFAULT);
-
-    // Add the switch to the row
-    row.add_suffix(toggle);
-    row.activatable_widget = toggle;
 }

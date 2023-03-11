@@ -314,10 +314,22 @@ var LiveWallpaper = GObject.registerClass(
 
             if (window_actors && window_actors.length === 0) return null;
 
-            // Find renderer by `applicationId`.
-            let renderer = window_actors.find((window) =>
-                window.meta_window.title?.includes(applicationId)
-            );
+            // Find renderers by `applicationId`.
+            const findRendererForMonitor = (index) => {
+                return window_actors.find(
+                    (window) =>
+                        window.meta_window.title?.includes(applicationId) &&
+                        window.meta_window.title?.endsWith(
+                            `|${index.toString()}`
+                        )
+                );
+            };
+
+            // The renderer for this monitor. If it's not found, try using the primary monitor one.
+            let renderer =
+                findRendererForMonitor(this._monitorIndex) ??
+                findRendererForMonitor(0);
+
             if (renderer) {
                 return renderer.meta_window;
             }

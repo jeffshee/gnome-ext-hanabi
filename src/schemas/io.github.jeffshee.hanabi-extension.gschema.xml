@@ -1,61 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
     <schema id="io.github.jeffshee.hanabi-extension" path="/io/github/jeffshee/hanabi-extension/">
-
         <key name="video-path" type="s">
             <default>''</default>
-            <summary>Video path</summary>
+            <summary>Video Path</summary>
             <description>Video path</description>
         </key>
 
         <key name="mute" type="b">
             <default>false</default>
-            <summary>Mute audio</summary>
-            <description>Mute audio</description>
+            <summary>Mute Audio</summary>
         </key>
 
         <key name="volume" type="i">
             <range min="0" max="100" />
             <default>50</default>
-            <summary>Audio volume</summary>
-            <description>Audio volume</description>
+            <summary>Volume Level</summary>
         </key>
 
         <key name="pause-on-fullscreen" type="b">
             <default>false</default>
-            <summary>Pause on fullscreen</summary>
+            <summary>Pause on Fullscreen</summary>
             <description>Pause playback when there is a fullscreen window</description>
         </key>
 
         <key name="pause-on-maximize" type="b">
             <default>false</default>
-            <summary>Pause on maximize</summary>
+            <summary>Pause on Maximize</summary>
             <description>Pause playback when there is a maximized window</description>
         </key>
 
         <key name="pause-on-battery" type="b">
             <default>false</default>
-            <summary>Pause on battery</summary>
+            <summary>Pause on Battery</summary>
             <description>Pause playback when device is on battery</description>
         </key>
 
         <key name="debug-mode" type="b">
             <default>false</default>
-            <summary>Debug mode</summary>
+            <summary>Debug Mode</summary>
             <description>Print debug messages to log</description>
         </key>
 
         <key name="enable-va" type="b">
             <default>false</default>
-            <summary>Experimental VA plugin</summary>
+            <summary>Experimental VA Plugin</summary>
             <description>Enable VA decoders which improve performance for Intel/AMD Wayland users</description>
         </key>
 
         <key name="enable-nvsl" type="b">
             <default>false</default>
-            <summary>Nvidia stateless decoders</summary>
-            <description>Use new stateless Nvidia decoders</description>
+            <summary>NVIDIA Stateless Decoders</summary>
+            <description>Use new stateless NVIDIA decoders</description>
         </key>
 
+        <key name="force-gtk4paintablesink" type="b">
+            <default>false</default>
+            <summary>Force gtk4paintablesink</summary>
+            <description>Force use of gtk4paintablesink for video playback</description>
+        </key>
+
+        <key name="force-mediafile" type="b">
+            <default>false</default>
+            <summary>Force GtkMediaFile</summary>
+            <description>Force use of GtkMediaFile for video playback</description>
+        </key>
+
+        <key name="content-fit" type="i">
+            <range min="0" max="3" />
+            <default>1</default>
+            <summary>GtkPicture content-fit</summary>
+            <description>Control how content fits within the GtkPicture</description>
+        </key>
     </schema>
 </schemalist>
