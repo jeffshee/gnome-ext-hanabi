@@ -10,6 +10,7 @@ sources = [
   'renderer.js',
   'roundedCornersEffect.js',
   'stylesheet.css',
+  'hanabi-symbolic.svg',
 ]
 
 extra_sources = ['../LICENSE']
