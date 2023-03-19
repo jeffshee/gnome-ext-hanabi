@@ -23,9 +23,11 @@
  * Without them, I don't know how to get started.
  */
 
-const { Meta, Gio, GLib } = imports.gi;
+const { Meta, Gio, GLib, St } = imports.gi;
 
 const Main = imports.ui.main;
+const PanelMenu = imports.ui.panelMenu;
+const PopupMenu = imports.ui.popupMenu;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Config = imports.misc.config;
@@ -46,6 +48,14 @@ const getDebugMode = () => {
     return extSettings.get_boolean("debug-mode");
 };
 
+const getMute = () => {
+    return extSettings.get_boolean("mute");
+};
+
+const setMute = (mute) => {
+    return extSettings.set_boolean("mute", mute);
+};
+
 function debug(...args) {
     if (getDebugMode()) log(...args);
 }
@@ -55,6 +65,51 @@ let data = {};
 
 class Extension {
     enable() {
+        // Panel menu
+        const indicatorName = `${Me.metadata.name} Indicator`;
+        this._indicator = new PanelMenu.Button(0.0, indicatorName, false);
+
+        const menu = new PopupMenu.PopupMenu(
+            this._indicator, // sourceActor
+            0.5, // arrowAlignment
+            St.Side.BOTTOM // arrowSide
+        );
+
+        const muteAudio = new PopupMenu.PopupMenuItem(
+            getMute() ? "Unmute Audio" : "Mute Audio"
+        );
+        muteAudio.connect("activate", () => {
+            setMute(!getMute());
+        });
+        extSettings?.connect("changed", (settings, key) => {
+            if (key === "mute") {
+                muteAudio.label.set_text(
+                    getMute() ? "Unmute Audio" : "Mute Audio"
+                );
+            }
+        });
+        menu.addMenuItem(muteAudio);
+
+        menu.addAction("Preferences", () => {
+            ExtensionUtils.openPrefs();
+        });
+
+        this._indicator.setMenu(menu);
+
+        const icon = new St.Icon({
+            gicon: Gio.icon_new_for_string(
+                GLib.build_filenamev([
+                    ExtensionUtils.getCurrentExtension().path,
+                    "hanabi-symbolic.svg",
+                ])
+            ),
+            style_class: "system-status-icon",
+        });
+
+        this._indicator.add_child(icon);
+
+        Main.panel.addToStatusArea(indicatorName, this._indicator);
+
         if (!data.GnomeShellOverride) {
             data.GnomeShellOverride =
                 new GnomeShellOverride.GnomeShellOverride();
@@ -78,6 +133,9 @@ class Extension {
     }
 
     disable() {
+        this._indicator.destroy();
+        this._indicator = null;
+
         data.isEnabled = false;
         killCurrentProcess();
         data.GnomeShellOverride.disable();
