@@ -1,0 +1,12 @@
+rules:
+  no-unused-vars:
+    - error
+    - vars: local
+      varsIgnorePattern: (^unused|_$)
+      argsIgnorePattern: ^(unused|_)
+  # Don't enforce these checks for now
+  jsdoc/require-jsdoc: warn
+  jsdoc/require-param: warn
+  jsdoc/require-param-description: warn
+  jsdoc/require-param-name: warn
+  jsdoc/require-param-type: warn
