@@ -4,6 +4,11 @@ rules:
     - vars: local
       varsIgnorePattern: (^unused|_$)
       argsIgnorePattern: ^(unused|_)
+  camelcase:
+    - error
+    - properties: never
+      # Allow camelcase for `new_` function (replacement)
+      allow: [^vfunc_, ^on_, ^new_]
   # Don't enforce these checks for now
   jsdoc/require-jsdoc: warn
   jsdoc/require-param: warn
