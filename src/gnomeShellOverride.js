@@ -91,9 +91,9 @@ var GnomeShellOverride = class {
          *
          * Also, `Main.screenShield` will be `null` when the user doesn't use gnome shell locking.
          */
-        if (Main.screenShield?._dialog?._updateBackgrounds != null) {
+        if (Main.screenShield?._dialog?._updateBackgrounds != null)
             Main.screenShield._dialog._updateBackgrounds();
-        }
+
 
         /**
          * WorkspaceBackground has its own bgManager,
@@ -307,21 +307,21 @@ var LiveWallpaper = GObject.registerClass(
         }
 
         _getRenderer() {
-            let window_actors;
+            let windowActors;
             if (replaceData['old_get_window_actors']) {
                 // `get_window_actors` is replaced.
-                window_actors = global.get_window_actors(false);
+                windowActors = global.get_window_actors(false);
             } else {
-                window_actors = global.get_window_actors();
+                windowActors = global.get_window_actors();
             }
 
-            if (window_actors && window_actors.length === 0)
+            if (windowActors && windowActors.length === 0)
                 return null;
 
             // Find renderers by `applicationId`.
-            const findRendererForMonitor = (index) => {
-                return window_actors.find(
-                    (window) =>
+            const findRendererForMonitor = index => {
+                return windowActors.find(
+                    window =>
                         window.meta_window.title?.includes(applicationId) &&
                         window.meta_window.title?.endsWith(
                             `|${index.toString()}`
@@ -334,9 +334,9 @@ var LiveWallpaper = GObject.registerClass(
                 findRendererForMonitor(this._monitorIndex) ??
                 findRendererForMonitor(0);
 
-            if (renderer) {
+            if (renderer)
                 return renderer.meta_window;
-            }
+
             return null;
         }
 
@@ -413,6 +413,8 @@ function new_createBackgroundActor() {
 /**
  * This removes the renderer from the window actor list.
  * Use `false` as the argument to bypass this behavior.
+ *
+ * @param hideRenderer
  */
 function new_get_window_actors(hideRenderer = true) {
     let windowActors = replaceData.old_get_window_actors[0].call(this);
@@ -428,6 +430,8 @@ function new_get_window_actors(hideRenderer = true) {
 
 /**
  * These remove the renderer's window preview in overview.
+ *
+ * @param window
  */
 function new_Workspace__isOverviewWindow(window) {
     let isRenderer = window.title?.includes(applicationId);
@@ -438,6 +442,10 @@ function new_Workspace__isOverviewWindow(window) {
         : replaceData.old_Workspace__isOverviewWindow[0].apply(this, [window]);
 }
 
+/**
+ *
+ * @param window
+ */
 function new_WorkspaceThumbnail__isOverviewWindow(window) {
     let isRenderer = window.title?.includes(applicationId);
     if (getDebugMode() && isRenderer)
@@ -451,6 +459,9 @@ function new_WorkspaceThumbnail__isOverviewWindow(window) {
 
 /**
  * This remove the renderer icon from altTab and ctrlAltTab(?).
+ *
+ * @param type
+ * @param workspace
  */
 function new_get_tab_list(type, workspace) {
     let metaWindows = replaceData.old_get_tab_list[0].apply(this, [
@@ -458,7 +469,7 @@ function new_get_tab_list(type, workspace) {
         workspace,
     ]);
     let result = metaWindows.filter(
-        meta_window => !meta_window.title?.includes(applicationId)
+        metaWindow => !metaWindow.title?.includes(applicationId)
     );
     if (getDebugMode() && !compareArrays(result, metaWindows))
         markAsEffective('new_get_tab_list');
@@ -498,6 +509,9 @@ function new_updateBorderRadius() {
     this._bgManager.videoActor.setRoundedClipRadius(radius);
 }
 
+/**
+ *
+ */
 function new_updateRoundedClipBounds() {
     replaceData.old__updateRoundedClipBounds[0].call(this);
 

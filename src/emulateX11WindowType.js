@@ -155,13 +155,13 @@ class ManageWindow {
                     global.log(`Exception ${e.message}.\n${e.stack}`);
                 }
                 try {
-                    let extra_chars = title
+                    let extraChars = title
                         .substring(pos + 2 + applicationId.length)
                         .trim()
                         .toUpperCase();
-                    let break_flag = false;
-                    for (let char of extra_chars) {
-                        if (break_flag)
+                    let breakFlag = false;
+                    for (let char of extraChars) {
+                        if (breakFlag)
                             break;
                         switch (char) {
                         case 'B':
@@ -190,7 +190,7 @@ class ManageWindow {
                             this._keepUnminimized = false;
                             break;
                         case '|':
-                            break_flag = true;
+                            breakFlag = true;
                             break;
                         }
                     }

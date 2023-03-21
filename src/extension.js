@@ -48,16 +48,12 @@ const getVideoPath = () => {
 };
 
 const getMute = () => {
-    return extSettings.get_boolean("mute");
+    return extSettings.get_boolean('mute');
 };
 
-const setMute = (mute) => {
-    return extSettings.set_boolean("mute", mute);
+const setMute = mute => {
+    return extSettings.set_boolean('mute', mute);
 };
-
-function debug(...args) {
-    if (getDebugMode()) log(...args);
-}
 
 // This object will contain all the global variables
 let data = {};
@@ -75,21 +71,21 @@ class Extension {
         );
 
         const muteAudio = new PopupMenu.PopupMenuItem(
-            getMute() ? "Unmute Audio" : "Mute Audio"
+            getMute() ? 'Unmute Audio' : 'Mute Audio'
         );
-        muteAudio.connect("activate", () => {
+        muteAudio.connect('activate', () => {
             setMute(!getMute());
         });
-        extSettings?.connect("changed", (settings, key) => {
-            if (key === "mute") {
+        extSettings?.connect('changed', (settings, key) => {
+            if (key === 'mute') {
                 muteAudio.label.set_text(
-                    getMute() ? "Unmute Audio" : "Mute Audio"
+                    getMute() ? 'Unmute Audio' : 'Mute Audio'
                 );
             }
         });
         menu.addMenuItem(muteAudio);
 
-        menu.addAction("Preferences", () => {
+        menu.addAction('Preferences', () => {
             ExtensionUtils.openPrefs();
         });
 
@@ -99,10 +95,10 @@ class Extension {
             gicon: Gio.icon_new_for_string(
                 GLib.build_filenamev([
                     ExtensionUtils.getCurrentExtension().path,
-                    "hanabi-symbolic.svg",
+                    'hanabi-symbolic.svg',
                 ])
             ),
-            style_class: "system-status-icon",
+            style_class: 'system-status-icon',
         });
 
         this._indicator.add_child(icon);
@@ -141,6 +137,9 @@ class Extension {
     }
 }
 
+/**
+ *
+ */
 function init() {
     data.isEnabled = false;
     data.launchRendererId = 0;
@@ -164,6 +163,8 @@ function init() {
 
 /**
  * The true code that configures everything and launches the renderer
+ *
+ * @param removeId
  */
 function innerEnable(removeId) {
     if (removeId) {
@@ -338,10 +339,10 @@ function launchRenderer() {
  *                               so, if this parameter isn't passed, the app can assume that it is running under X11.
  */
 var LaunchSubprocess = class {
-    constructor(flags, process_id, cmd_parameter) {
+    constructor(flags, processId, cmdParameter) {
         this._isX11 = !Meta.is_wayland_compositor();
-        this._process_id = process_id;
-        this._cmd_parameter = cmd_parameter;
+        this._process_id = processId;
+        this._cmd_parameter = cmdParameter;
         this._UUID = null;
         this._flags =
             flags |

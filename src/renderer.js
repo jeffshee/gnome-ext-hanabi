@@ -17,9 +17,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-imports.gi.versions.Gtk = "4.0";
-imports.gi.versions.GdkX11 = "4.0";
-const { GObject, Gtk, Gio, GLib, Gdk, GdkX11, Gst, GstAudio } = imports.gi;
+imports.gi.versions.Gtk = '4.0';
+imports.gi.versions.GdkX11 = '4.0';
+const {GObject, Gtk, Gio, GLib, Gdk, GdkX11, Gst, GstAudio} = imports.gi;
 
 let GstPlay = null;
 // GstPlay is available from GStreamer 1.20+
@@ -36,22 +36,22 @@ const settingsSchemaSource = Gio.SettingsSchemaSource.get_default();
 if (settingsSchemaSource.lookup(extSchemaId, false))
     extSettings = Gio.Settings.new(extSchemaId);
 
-const isDebugMode = extSettings ? extSettings.get_boolean("debug-mode") : true;
+const isDebugMode = extSettings ? extSettings.get_boolean('debug-mode') : true;
 const forceGtk4PaintableSink = extSettings
-    ? extSettings.get_boolean("force-gtk4paintablesink")
+    ? extSettings.get_boolean('force-gtk4paintablesink')
     : false;
 const forceMediaFile = extSettings
-    ? extSettings.get_boolean("force-mediafile")
+    ? extSettings.get_boolean('force-mediafile')
     : false;
 
 const isEnableVADecoders = extSettings
-    ? extSettings.get_boolean("enable-va")
+    ? extSettings.get_boolean('enable-va')
     : false;
 const isEnableNvSl = extSettings
-    ? extSettings.get_boolean("enable-nvsl")
+    ? extSettings.get_boolean('enable-nvsl')
     : false;
 
-let codePath = "";
+let codePath = '';
 /**
  * Gtk.ContentFit
  * https://gjs-docs.gnome.org/gtk40~4.0/gtk.contentfit
@@ -61,15 +61,19 @@ let codePath = "";
  * SCALE_DOWN=3 (centered+scaled)
  */
 let contentFit = extSettings
-    ? extSettings.get_int("content-fit")
+    ? extSettings.get_int('content-fit')
     : Gtk.ContentFit.CONTAIN;
-let mute = extSettings ? extSettings.get_boolean("mute") : false;
+let mute = extSettings ? extSettings.get_boolean('mute') : false;
 let nohide = false;
-let videoPath = extSettings ? extSettings.get_string("video-path") : "";
-let volume = extSettings ? extSettings.get_int("volume") / 100.0 : 0.5;
-let windowDimension = { width: 1920, height: 1080 };
+let videoPath = extSettings ? extSettings.get_string('video-path') : '';
+let volume = extSettings ? extSettings.get_int('volume') / 100.0 : 0.5;
+let windowDimension = {width: 1920, height: 1080};
 let windowed = false;
 
+/**
+ *
+ * @param {...any} args
+ */
 function debug(...args) {
     if (isDebugMode)
         print(...args);
@@ -77,7 +81,7 @@ function debug(...args) {
 
 const HanabiRenderer = GObject.registerClass(
     {
-        GTypeName: "HanabiRenderer",
+        GTypeName: 'HanabiRenderer',
     },
     class HanabiRenderer extends Gtk.Application {
         constructor() {
@@ -89,49 +93,51 @@ const HanabiRenderer = GObject.registerClass(
             this._hanabiWindows = [];
             this._pictures = [];
             this._sharedPaintable = null;
-            this._gstImplName = "";
+            this._gstImplName = '';
             this._setupGst();
 
-            this.connect("activate", (app) => {
+            this.connect('activate', app => {
                 this._display = Gdk.Display.get_default();
-                this._monitors = [...this._display?.get_monitors()];
+                this._monitors = this._display ? [...this._display.get_monitors()] : [];
 
                 let activeWindow = app.activeWindow;
                 if (!activeWindow) {
                     this._buildUI();
-                    this._hanabiWindows.forEach((window) => {
+                    this._hanabiWindows.forEach(window => {
                         window.present();
                     });
                 }
             });
 
-            this.connect("command-line", (app, commandLine) => {
+            this.connect('command-line', (app, commandLine) => {
                 const argv = commandLine.get_arguments();
                 if (this._parseArgs(argv)) {
                     this.activate();
                     commandLine.set_exit_status(0);
-                } else commandLine.set_exit_status(1);
+                } else {
+                    commandLine.set_exit_status(1);
+                }
             });
 
-            extSettings?.connect("changed", (settings, key) => {
+            extSettings?.connect('changed', (settings, key) => {
                 switch (key) {
-                    case "video-path":
-                        videoPath = settings.get_string(key);
-                        this.setFilePath(videoPath);
-                        break;
-                    case "mute":
-                        mute = settings.get_boolean(key);
-                        this.setMute(mute);
-                        break;
-                    case "volume":
-                        volume = settings.get_int(key) / 100.0;
-                        this.setVolume(volume);
-                        break;
-                    case "content-fit":
-                        contentFit = settings.get_int(key);
-                        this._pictures.forEach((picture) =>
-                            picture.set_content_fit(contentFit)
-                        );
+                case 'video-path':
+                    videoPath = settings.get_string(key);
+                    this.setFilePath(videoPath);
+                    break;
+                case 'mute':
+                    mute = settings.get_boolean(key);
+                    this.setMute(mute);
+                    break;
+                case 'volume':
+                    volume = settings.get_int(key) / 100.0;
+                    this.setVolume(volume);
+                    break;
+                case 'content-fit':
+                    contentFit = settings.get_int(key);
+                    this._pictures.forEach(picture =>
+                        picture.set_content_fit(contentFit)
+                    );
                 }
             });
         }
@@ -141,61 +147,62 @@ const HanabiRenderer = GObject.registerClass(
             for (const arg of argv) {
                 if (!lastCommand) {
                     switch (arg) {
-                        case "-M":
-                        case "--mute":
-                            mute = true;
-                            debug(`mute = ${mute}`);
-                            break;
-                        case "-N":
-                        case "--nohide":
-                            // Launch renderer in standalone mode without hiding
-                            nohide = true;
-                            debug(`nohide = ${nohide}`);
-                            break;
-                        case "-W":
-                        case "--windowed":
-                        case "-P":
-                        case "--codepath":
-                        case "-F":
-                        case "--filepath":
-                        case "-V":
-                        case "--volume":
-                            lastCommand = arg;
-                            break;
-                        default:
-                            print(`Argument ${arg} not recognized. Aborting.`);
-                            return false;
+                    case '-M':
+                    case '--mute':
+                        mute = true;
+                        debug(`mute = ${mute}`);
+                        break;
+                    case '-N':
+                    case '--nohide':
+                        // Launch renderer in standalone mode without hiding
+                        nohide = true;
+                        debug(`nohide = ${nohide}`);
+                        break;
+                    case '-W':
+                    case '--windowed':
+                    case '-P':
+                    case '--codepath':
+                    case '-F':
+                    case '--filepath':
+                    case '-V':
+                    case '--volume':
+                        lastCommand = arg;
+                        break;
+                    default:
+                        print(`Argument ${arg} not recognized. Aborting.`);
+                        return false;
                     }
                     continue;
                 }
                 switch (lastCommand) {
-                    case "-W":
-                    case "--windowed":
-                        windowed = true;
-                        let data = arg.split(":");
-                        windowDimension = {
-                            width: parseInt(data[0]),
-                            height: parseInt(data[1]),
-                        };
-                        debug(
-                            `windowed = ${windowed}, windowConfig = ${windowDimension}`
-                        );
-                        break;
-                    case "-P":
-                    case "--codepath":
-                        codePath = arg;
-                        debug(`codepath = ${codePath}`);
-                        break;
-                    case "-F":
-                    case "--filepath":
-                        videoPath = arg;
-                        debug(`filepath = ${videoPath}`);
-                        break;
-                    case "-V":
-                    case "--volume":
-                        volume = Math.max(0.0, Math.min(1.0, parseFloat(arg)));
-                        debug(`volume = ${volume}`);
-                        break;
+                case '-W':
+                case '--windowed': {
+                    windowed = true;
+                    let data = arg.split(':');
+                    windowDimension = {
+                        width: parseInt(data[0]),
+                        height: parseInt(data[1]),
+                    };
+                    debug(
+                        `windowed = ${windowed}, windowConfig = ${windowDimension}`
+                    );
+                    break;
+                }
+                case '-P':
+                case '--codepath':
+                    codePath = arg;
+                    debug(`codepath = ${codePath}`);
+                    break;
+                case '-F':
+                case '--filepath':
+                    videoPath = arg;
+                    debug(`filepath = ${videoPath}`);
+                    break;
+                case '-V':
+                case '--volume':
+                    volume = Math.max(0.0, Math.min(1.0, parseFloat(arg)));
+                    debug(`volume = ${volume}`);
+                    break;
                 }
                 lastCommand = null;
             }
@@ -206,7 +213,7 @@ const HanabiRenderer = GObject.registerClass(
             // Software libav decoders have "primary" rank, set Nvidia higher
             // to use NVDEC hardware acceleration
             this._setPluginDecodersRank(
-                "nvcodec",
+                'nvcodec',
                 Gst.Rank.PRIMARY + 1,
                 isEnableNvSl
             );
@@ -214,7 +221,7 @@ const HanabiRenderer = GObject.registerClass(
             // Legacy "vaapidecodebin" have rank "primary + 2",
             // we need to set VA higher then that to be used
             if (isEnableVADecoders)
-                this._setPluginDecodersRank("va", Gst.Rank.PRIMARY + 3);
+                this._setPluginDecodersRank('va', Gst.Rank.PRIMARY + 3);
         }
 
         _setPluginDecodersRank(pluginName, rank, useStateless = false) {
@@ -225,18 +232,20 @@ const HanabiRenderer = GObject.registerClass(
                 const featureName = feature.get_name();
 
                 if (
-                    !featureName.endsWith("dec") &&
-                    !featureName.endsWith("postproc")
+                    !featureName.endsWith('dec') &&
+                    !featureName.endsWith('postproc')
                 )
                     continue;
 
-                const isStateless = featureName.includes("sl");
+                const isStateless = featureName.includes('sl');
 
-                if (isStateless != useStateless) continue;
+                if (isStateless !== useStateless)
+                    continue;
 
                 const oldRank = feature.get_rank();
 
-                if (rank == oldRank) continue;
+                if (rank === oldRank)
+                    continue;
 
                 feature.set_rank(rank);
                 debug(`changed rank: ${oldRank} -> ${rank} for ${featureName}`);
@@ -248,7 +257,8 @@ const HanabiRenderer = GObject.registerClass(
                 let widget = this._getWidgetFromSharedPaintable();
 
                 // Avoid creating another instance if we couldn't get the shared paintable
-                if (index > 0 && !widget) return;
+                if (index > 0 && !widget)
+                    return;
 
                 if (!widget) {
                     if (!forceMediaFile && haveGstPlay) {
@@ -256,24 +266,25 @@ const HanabiRenderer = GObject.registerClass(
                         if (!forceGtk4PaintableSink) {
                             // Try to find "clappersink" for best performance
                             sink = Gst.ElementFactory.make(
-                                "clappersink",
-                                "clappersink"
+                                'clappersink',
+                                'clappersink'
                             );
                         }
 
                         // Try "gtk4paintablesink" from gstreamer-rs plugins as 2nd best choice
-                        if (!sink)
+                        if (!sink) {
                             sink = Gst.ElementFactory.make(
-                                "gtk4paintablesink",
-                                "gtk4paintablesink"
+                                'gtk4paintablesink',
+                                'gtk4paintablesink'
                             );
-
-                        if (sink) {
-                            widget = this._getWidgetFromSink(sink);
                         }
+
+                        if (sink)
+                            widget = this._getWidgetFromSink(sink);
                     }
 
-                    if (!widget) widget = this._getGtkStockWidget();
+                    if (!widget)
+                        widget = this._getGtkStockWidget();
                 }
 
                 const window = new HanabiRendererWindow(
@@ -332,7 +343,8 @@ const HanabiRenderer = GObject.registerClass(
                 widget = this._getWidgetFromSharedPaintable();
             }
 
-            if (!widget) return null;
+            if (!widget)
+                return null;
 
             this._play = GstPlay.Play.new(
                 GstPlay.PlayVideoOverlayVideoRenderer.new_with_sink(null, sink)
@@ -340,18 +352,18 @@ const HanabiRenderer = GObject.registerClass(
             this._adapter = GstPlay.PlaySignalAdapter.new(this._play);
 
             // Loop video
-            this._adapter.connect("end-of-stream", (adapter) =>
+            this._adapter.connect('end-of-stream', adapter =>
                 adapter.play.seek(0)
             );
 
             // Error handling
-            this._adapter.connect("warning", (adapter, err) => logError(err));
-            this._adapter.connect("error", (adapter, err) => logError(err));
+            this._adapter.connect('warning', (adapter, err) => logError(err));
+            this._adapter.connect('error', (adapter, err) => logError(err));
 
             // Set the volume and mute after paused state, otherwise it won't work.
             // Use paused or greater, as some states might be skipped.
             let stateSignal = this._adapter.connect(
-                "state-changed",
+                'state-changed',
                 (adapter, state) => {
                     if (state >= GstPlay.PlayState.PAUSED) {
                         this.setVolume(volume);
@@ -372,7 +384,7 @@ const HanabiRenderer = GObject.registerClass(
         }
 
         _getGtkStockWidget() {
-            this._gstImplName = "GtkMediaFile";
+            this._gstImplName = 'GtkMediaFile';
 
             // The constructor of MediaFile doesn't work in gjs.
             // Have to call the `new_for_xxx` function here.
@@ -381,7 +393,7 @@ const HanabiRenderer = GObject.registerClass(
                 loop: true,
             });
             // Set the volume and mute after prepared, otherwise it won't work.
-            this._media.connect("notify::prepared", () => {
+            this._media.connect('notify::prepared', () => {
                 this.setVolume(volume);
                 this.setMute(mute);
             });
@@ -398,35 +410,40 @@ const HanabiRenderer = GObject.registerClass(
          * These workarounds are needed because get_volume() and get_muted() can be wrong in some cases.
          * If the current value is equal to the new value, the changes will be skipped.
          * Avoid this behavior by resetting the current value to null before setting the new value.
+         *
+         * @param _volume
          */
-        setVolume(volume) {
+        setVolume(_volume) {
             const player = this._play != null ? this._play : this._media;
 
             // GstPlay uses linear volume
             if (this._play) {
-                volume = GstAudio.StreamVolume.convert_volume(
+                _volume = GstAudio.StreamVolume.convert_volume(
                     GstAudio.StreamVolumeFormat.CUBIC,
                     GstAudio.StreamVolumeFormat.LINEAR,
-                    volume
+                    _volume
                 );
             }
 
-            if (player.volume == volume) player.volume = null;
-            player.volume = volume;
+            if (player.volume === _volume)
+                player.volume = null;
+            player.volume = _volume;
         }
 
-        setMute(mute) {
+        setMute(_mute) {
             if (this._play) {
-                if (this._play.mute == mute) this._play.mute = !mute;
-                this._play.mute = mute;
+                if (this._play.mute === _mute)
+                    this._play.mute = !_mute;
+                this._play.mute = _mute;
             } else if (this._media) {
-                if (this._media.muted == mute) this._media.muted = !mute;
-                this._media.muted = mute;
+                if (this._media.muted === _mute)
+                    this._media.muted = !_mute;
+                this._media.muted = _mute;
             }
         }
 
-        setFilePath(filePath) {
-            const file = Gio.File.new_for_path(filePath);
+        setFilePath(_videoPath) {
+            const file = Gio.File.new_for_path(_videoPath);
             if (this._play) {
                 this._play.set_uri(file.get_uri());
                 this._play.play();
@@ -443,13 +460,13 @@ const HanabiRenderer = GObject.registerClass(
 
 const HanabiRendererWindow = GObject.registerClass(
     {
-        GTypeName: "HanabiRendererWindow",
+        GTypeName: 'HanabiRendererWindow',
     },
     class HanabiRendererWindow extends Gtk.ApplicationWindow {
         constructor(application, title, widget, gdkMonitor) {
             super({
                 application,
-                decorated: nohide ? true : false,
+                decorated: !!nohide,
                 default_height: windowDimension.height,
                 default_width: windowDimension.width,
                 title,
@@ -459,7 +476,7 @@ const HanabiRendererWindow = GObject.registerClass(
             let cssProvider = new Gtk.CssProvider();
             cssProvider.load_from_file(
                 Gio.File.new_for_path(
-                    GLib.build_filenamev([codePath, "stylesheet.css"])
+                    GLib.build_filenamev([codePath, 'stylesheet.css'])
                 )
             );
 
@@ -473,7 +490,8 @@ const HanabiRendererWindow = GObject.registerClass(
             // this._windowContext.add_class("desktopwindow");
 
             this.set_child(widget);
-            if (!windowed) this.fullscreen_on_monitor(gdkMonitor);
+            if (!windowed)
+                this.fullscreen_on_monitor(gdkMonitor);
         }
     }
 );
