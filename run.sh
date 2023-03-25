@@ -21,7 +21,7 @@ elif [ "$1" == "uninstall" ]; then
     gnome-extensions uninstall "$UUID"
 elif [ "$1" == "renderer" ]; then
     shift
-    ./renderer.js "$@"
+    ./src/renderer.js "$@"
 elif [ "$1" == "log" ]; then
     journalctl -f -o cat /usr/bin/gnome-shell
 elif [ "$1" == "help" ]; then

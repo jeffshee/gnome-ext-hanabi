@@ -1,67 +1,37 @@
-project('hanabi-extension',
-  meson_version: '>= 0.40.0'
+metaconf = configuration_data()
+metaconf.set('settings_schema', schema)
+metaconf.set('uuid', uuid)
+metaconf.set('version', meson.project_version())
+
+configure_file(
+  input: 'metadata.json.in',
+  output: 'metadata.json',
+  configuration: metaconf,
+  install_dir: install_dir
 )
 
 sources = [
-  'extension.js',
   'emulateX11WindowType.js',
+  'extension.js',
   'gnomeShellOverride.js',
+  'hanabi-symbolic.svg',
   'prefs.js',
   'renderer.js',
   'roundedCornersEffect.js',
   'stylesheet.css',
-  'hanabi-symbolic.svg',
 ]
 
-extra_sources = ['../LICENSE']
-
-uuid = 'hanabi-extension@jeffshee.github.io'
-
-shell_versions = ['42', '43']
-
-schemas = ['io.github.jeffshee.hanabi-extension']
-
-## Global
-# datadir = get_option('datadir')
-# extensions_dir = join_paths(datadir, 'gnome-shell', 'extensions')
-# schema_dir = join_paths(datadir, 'glib-2.0', 'schemas')
-
-## Local
-prefix = get_option('prefix')
-datadir = join_paths(prefix, get_option('datadir'))
-schema_dir = join_paths(datadir, 'glib-2.0', 'schemas')
-extensions_dir = join_paths(prefix, 'share', 'gnome-shell', 'extensions')
-
-have_schemas = schemas.length() > 0
-
-metaconf = configuration_data()
-metaconf.set('uuid', uuid)
-metaconf.set('shell_versions', '", "'.join(shell_versions))
-if have_schemas
-  metaconf.set('settings_schema', schemas[0])
-endif
-
-meta = [
-  configure_file(
-    input: 'metadata.json.in',
-    output: 'metadata.json',
-    configuration: metaconf
-  )
+extra_sources = [
+  '../LICENSE',
 ]
 
-install_data(sources + extra_sources + meta,
-  install_dir: join_paths(extensions_dir, uuid)
+install_data(sources + extra_sources, install_dir: install_dir)
+
+install_data('schemas/@0@.gschema.xml'.format(schema),
+  install_dir: schema_dir
 )
 
-foreach s : schemas
-  install_data('schemas/@0@.gschema.xml'.format(s),
-    install_dir: schema_dir
-  )
-endforeach
-
-if have_schemas
-  meson.add_install_script('meson-postinstall.sh')
-endif
+meson.add_install_script('meson-postinstall.sh')
 
 extension_tool = find_program('gnome-extensions', required: false)
 if extension_tool.found()
