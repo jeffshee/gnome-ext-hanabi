@@ -21,11 +21,13 @@
  * Modified by Jeff Shee, for Hanabi extension.
  */
 
-const { GLib, Shell, Meta } = imports.gi;
+/* exported EmulateX11WindowType */
+
+const {GLib, Meta} = imports.gi;
 const Main = imports.ui.main;
 
 // Use applicationId to differentiate between hanabi and DING.
-const applicationId = "io.github.jeffshee.hanabi-renderer";
+const applicationId = 'io.github.jeffshee.hanabi-renderer';
 
 class ManageWindow {
     /* This class is added to each managed window, and it's used to
@@ -60,54 +62,50 @@ class ManageWindow {
         this._signalIDs = [];
         this._changedStatusCB = changedStatusCB;
         this._signalIDs.push(
-            window.connect_after("raised", () => {
-                if (this._keepAtBottom && !this._keepAtTop) {
+            window.connect_after('raised', () => {
+                if (this._keepAtBottom && !this._keepAtTop)
                     this._window.lower();
-                }
-                if (this._keepMinimized) {
+
+                if (this._keepMinimized)
                     this._window.minimize();
-                }
             })
         );
         this._signalIDs.push(
-            window.connect("position-changed", () => {
-                if (this._fixed && this._x !== null && this._y !== null) {
+            window.connect('position-changed', () => {
+                if (this._fixed && this._x !== null && this._y !== null)
                     this._window.move_frame(true, this._x, this._y);
-                }
             })
         );
         this._signalIDs.push(
-            window.connect("notify::title", () => {
+            window.connect('notify::title', () => {
                 this._parseTitle();
             })
         );
         this._signalIDs.push(
-            window.connect("notify::above", () => {
-                if (this._keepAtBottom && this._window.above) {
+            window.connect('notify::above', () => {
+                if (this._keepAtBottom && this._window.above)
                     this._window.unmake_above();
-                }
             })
         );
         this._signalIDs.push(
-            window.connect("notify::minimized", () => {
-                if (this._keepUnminimized && this._window.minimized) {
+            window.connect('notify::minimized', () => {
+                if (this._keepUnminimized && this._window.minimized)
                     this._window.unminimize();
-                }
-                if (this._keepMinimized && !this._window.minimized) {
+
+                if (this._keepMinimized && !this._window.minimized)
                     this._window.minimize();
-                }
             })
         );
         this._parseTitle();
     }
 
     disconnect() {
-        for (let signalID of this._signalIDs) {
+        for (let signalID of this._signalIDs)
             this._window.disconnect(signalID);
-        }
-        if (this._keepAtTop) {
+
+        if (this._keepAtTop)
             this._window.unmake_above();
-        }
+
         this._window = null;
         this._waylandClient = null;
     }
@@ -129,27 +127,26 @@ class ManageWindow {
         this._keepMinimized = false;
         let title = this._window.get_title();
         if (title !== null) {
-            if (title.length > 0 && title[title.length - 1] === " ") {
-                if (title.length > 1 && title[title.length - 2] === " ") {
-                    title = "@!HTD";
-                } else {
-                    title = "@!H";
-                }
+            if (title.length > 0 && title[title.length - 1] === ' ') {
+                if (title.length > 1 && title[title.length - 2] === ' ')
+                    title = '@!HTD';
+                else
+                    title = '@!H';
             }
             let pos = title.search(`@${applicationId}!`);
             if (pos !== -1) {
-                let pos2 = title.search(";", pos);
+                let pos2 = title.search(';', pos);
                 let coords;
                 if (pos2 !== -1) {
                     coords = title
                         .substring(pos + 2 + applicationId.length, pos2)
                         .trim()
-                        .split(",");
+                        .split(',');
                 } else {
                     coords = title
                         .substring(pos + 2 + applicationId.length)
                         .trim()
-                        .split(",");
+                        .split(',');
                 }
                 try {
                     this._x = parseInt(coords[0]);
@@ -158,42 +155,43 @@ class ManageWindow {
                     global.log(`Exception ${e.message}.\n${e.stack}`);
                 }
                 try {
-                    let extra_chars = title
+                    let extraChars = title
                         .substring(pos + 2 + applicationId.length)
                         .trim()
                         .toUpperCase();
-                    let break_flag = false;
-                    for (let char of extra_chars) {
-                        if (break_flag) break;
+                    let breakFlag = false;
+                    for (let char of extraChars) {
+                        if (breakFlag)
+                            break;
                         switch (char) {
-                            case "B":
-                                this._keepAtBottom = true;
-                                this._keepAtTop = false;
-                                break;
-                            case "T":
-                                this._keepAtTop = true;
-                                this._keepAtBottom = false;
-                                break;
-                            case "D":
-                                this._showInAllDesktops = true;
-                                break;
-                            case "H":
-                                this._hideFromWindowList = true;
-                                break;
-                            case "F":
-                                this._fixed = true;
-                                break;
-                            case "U":
-                                this._keepUnminimized = true;
-                                this._keepMinimized = false;
-                                break;
-                            case "M":
-                                this._keepMinimized = true;
-                                this._keepUnminimized = false;
-                                break;
-                            case "|":
-                                break_flag = true;
-                                break;
+                        case 'B':
+                            this._keepAtBottom = true;
+                            this._keepAtTop = false;
+                            break;
+                        case 'T':
+                            this._keepAtTop = true;
+                            this._keepAtBottom = false;
+                            break;
+                        case 'D':
+                            this._showInAllDesktops = true;
+                            break;
+                        case 'H':
+                            this._hideFromWindowList = true;
+                            break;
+                        case 'F':
+                            this._fixed = true;
+                            break;
+                        case 'U':
+                            this._keepUnminimized = true;
+                            this._keepMinimized = false;
+                            break;
+                        case 'M':
+                            this._keepMinimized = true;
+                            this._keepUnminimized = false;
+                            break;
+                        case '|':
+                            breakFlag = true;
+                            break;
                         }
                     }
                 } catch (e) {
@@ -201,25 +199,23 @@ class ManageWindow {
                 }
             }
             if (!this._isX11 && this._waylandClient) {
-                if (this._hideFromWindowList) {
+                if (this._hideFromWindowList)
                     this._waylandClient.hide_from_window_list(this._window);
-                } else {
+                else
                     this._waylandClient.show_in_window_list(this._window);
-                }
             }
-            if (this._keepAtTop != keepAtTop) {
-                if (this._keepAtTop) {
+            if (this._keepAtTop !== keepAtTop) {
+                if (this._keepAtTop)
                     this._window.make_above();
-                } else {
+                else
                     this._window.unmake_above();
-                }
             }
-            if (this._keepAtBottom) {
+            if (this._keepAtBottom)
                 this._window.lower();
-            }
-            if (this._fixed && this._x !== null && this._y !== null) {
+
+            if (this._fixed && this._x !== null && this._y !== null)
                 this._window.move_frame(true, this._x, this._y);
-            }
+
             this._changedStatusCB(this);
         }
     }
@@ -228,13 +224,11 @@ class ManageWindow {
         if (checkWorkspace && this._showInAllDesktops) {
             let currentWorkspace =
                 global.workspace_manager.get_active_workspace();
-            if (!this._window.located_on_workspace(currentWorkspace)) {
+            if (!this._window.located_on_workspace(currentWorkspace))
                 this._window.change_workspace(currentWorkspace);
-            }
         }
-        if (this._keepAtBottom) {
+        if (this._keepAtBottom)
             this._window.lower();
-        }
     }
 
     get hideFromWindowList() {
@@ -263,45 +257,43 @@ var EmulateX11WindowType = class {
     set_wayland_client(client) {
         this._waylandClient = client;
         for (let window of this._windowList) {
-            if (window.customJS_hanabi) {
+            if (window.customJS_hanabi)
                 window.customJS_hanabi.set_wayland_client(this._waylandClient);
-            }
         }
     }
 
     enable() {
         this._idMap = global.window_manager.connect_after(
-            "map",
+            'map',
             (obj, windowActor) => {
                 let window = windowActor.get_meta_window();
                 if (
                     this._waylandClient &&
                     this._waylandClient.query_window_belongs_to(window)
-                ) {
+                )
                     this.addWindow(window);
-                }
+
                 if (this._isX11) {
                     let appid = window.get_gtk_application_id();
-                    let windowpid = window.get_pid();
-                    let mypid = this._waylandClient.query_pid_of_program();
-                    if (appid == applicationId && windowpid == mypid) {
+                    let windowpid = window.get_pid(); // return type is number
+                    let mypid = this._waylandClient.query_pid_of_program(); // return type is string
+                    if (appid === applicationId && windowpid === parseInt(mypid))
                         this.addWindow(window, windowActor);
-                    }
                 }
                 this._refreshWindows(false);
             }
         );
         this._idDestroy = global.window_manager.connect_after(
-            "destroy",
+            'destroy',
             (wm, windowActor) => {
                 // if a window is closed, ensure that the desktop doesn't receive the focus
                 let window = windowActor.get_meta_window();
                 if (
                     window &&
                     window.get_window_type() >= Meta.WindowType.DROPDOWN_MENU
-                ) {
+                )
                     return;
-                }
+
                 this._refreshWindows(true);
             }
         );
@@ -309,7 +301,7 @@ var EmulateX11WindowType = class {
            this implements the same functionality
          */
         this._switchWorkspaceId = global.window_manager.connect(
-            "switch-workspace",
+            'switch-workspace',
             () => {
                 this._refreshWindows(true);
             }
@@ -318,11 +310,11 @@ var EmulateX11WindowType = class {
         /* But in Overview mode it is paramount to not change the workspace to emulate
            "stick", or the windows will appear
          */
-        this._showingId = Main.overview.connect("showing", () => {
+        this._showingId = Main.overview.connect('showing', () => {
             this._enableRefresh = false;
         });
 
-        this._hidingId = Main.overview.connect("hiding", () => {
+        this._hidingId = Main.overview.connect('hiding', () => {
             this._enableRefresh = true;
             this._refreshWindows(true);
         });
@@ -333,9 +325,9 @@ var EmulateX11WindowType = class {
             GLib.source_remove(this._activate_window_ID);
             this._activate_window_ID = null;
         }
-        for (let window of this._windowList) {
+        for (let window of this._windowList)
             this._clearWindow(window);
-        }
+
         this._windowList.clear();
 
         // disconnect signals
@@ -375,10 +367,10 @@ var EmulateX11WindowType = class {
         );
         this._windowList.add(window);
         window.customJS_hanabi.unmanagedID = window.connect(
-            "unmanaged",
-            (window) => {
-                this._clearWindow(window);
-                this._windowList.delete(window);
+            'unmanaged',
+            _window => {
+                this._clearWindow(_window);
+                this._windowList.delete(_window);
             }
         );
     }
@@ -393,9 +385,9 @@ var EmulateX11WindowType = class {
         if (!this._activate_window_ID) {
             this._activate_window_ID = GLib.idle_add(GLib.PRIORITY_LOW, () => {
                 if (this._enableRefresh) {
-                    for (let window of this._windowList) {
+                    for (let window of this._windowList)
                         window.customJS_hanabi.refreshState(checkWorkspace);
-                    }
+
                     if (checkWorkspace) {
                         // activate the top-most window
                         let windows = global.display.get_tab_list(

@@ -23,7 +23,10 @@
  * Without them, I don't know how to get started.
  */
 
-const { Meta, Gio, GLib, St } = imports.gi;
+
+/* exported init */
+
+const {Meta, Gio, GLib, St} = imports.gi;
 
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
@@ -37,28 +40,20 @@ const EmulateX11 = Me.imports.emulateX11WindowType;
 const GnomeShellOverride = Me.imports.gnomeShellOverride;
 
 const extSettings = ExtensionUtils.getSettings(
-    "io.github.jeffshee.hanabi-extension"
+    'io.github.jeffshee.hanabi-extension'
 );
 
 const getVideoPath = () => {
-    return extSettings.get_string("video-path");
-};
-
-const getDebugMode = () => {
-    return extSettings.get_boolean("debug-mode");
+    return extSettings.get_string('video-path');
 };
 
 const getMute = () => {
-    return extSettings.get_boolean("mute");
+    return extSettings.get_boolean('mute');
 };
 
-const setMute = (mute) => {
-    return extSettings.set_boolean("mute", mute);
+const setMute = mute => {
+    return extSettings.set_boolean('mute', mute);
 };
-
-function debug(...args) {
-    if (getDebugMode()) log(...args);
-}
 
 // This object will contain all the global variables
 let data = {};
@@ -76,21 +71,21 @@ class Extension {
         );
 
         const muteAudio = new PopupMenu.PopupMenuItem(
-            getMute() ? "Unmute Audio" : "Mute Audio"
+            getMute() ? 'Unmute Audio' : 'Mute Audio'
         );
-        muteAudio.connect("activate", () => {
+        muteAudio.connect('activate', () => {
             setMute(!getMute());
         });
-        extSettings?.connect("changed", (settings, key) => {
-            if (key === "mute") {
+        extSettings?.connect('changed', (settings, key) => {
+            if (key === 'mute') {
                 muteAudio.label.set_text(
-                    getMute() ? "Unmute Audio" : "Mute Audio"
+                    getMute() ? 'Unmute Audio' : 'Mute Audio'
                 );
             }
         });
         menu.addMenuItem(muteAudio);
 
-        menu.addAction("Preferences", () => {
+        menu.addAction('Preferences', () => {
             ExtensionUtils.openPrefs();
         });
 
@@ -100,10 +95,10 @@ class Extension {
             gicon: Gio.icon_new_for_string(
                 GLib.build_filenamev([
                     ExtensionUtils.getCurrentExtension().path,
-                    "hanabi-symbolic.svg",
+                    'hanabi-symbolic.svg',
                 ])
             ),
-            style_class: "system-status-icon",
+            style_class: 'system-status-icon',
         });
 
         this._indicator.add_child(icon);
@@ -115,14 +110,13 @@ class Extension {
                 new GnomeShellOverride.GnomeShellOverride();
         }
 
-        if (!data.x11Manager) {
+        if (!data.x11Manager)
             data.x11Manager = new EmulateX11.EmulateX11WindowType();
-        }
 
         // If the desktop is still starting up, wait until it is ready
         if (Main.layoutManager._startingUp) {
             data.startupPreparedId = Main.layoutManager.connect(
-                "startup-complete",
+                'startup-complete',
                 () => {
                     innerEnable(true);
                 }
@@ -143,12 +137,15 @@ class Extension {
     }
 }
 
+/**
+ *
+ */
 function init() {
     data.isEnabled = false;
     data.launchRendererId = 0;
     data.currentProcess = null;
     data.reloadTime = 100;
-    data.GnomeShellVersion = parseInt(Config.PACKAGE_VERSION.split(".")[0]);
+    data.GnomeShellVersion = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
     data.GnomeShellOverride = null;
     data.x11Manager = null;
@@ -166,6 +163,8 @@ function init() {
 
 /**
  * The true code that configures everything and launches the renderer
+ *
+ * @param removeId
  */
 function innerEnable(removeId) {
     if (removeId) {
@@ -177,9 +176,8 @@ function innerEnable(removeId) {
     data.x11Manager.enable();
 
     data.isEnabled = true;
-    if (data.launchRendererId) {
+    if (data.launchRendererId)
         GLib.source_remove(data.launchRendererId);
-    }
 
     launchRenderer();
 }
@@ -219,45 +217,44 @@ function killCurrentProcess() {
  * It requires the /proc virtual filesystem, but doesn't fail if it doesn't exist.
  */
 function doKillAllOldRendererProcesses() {
-    let procFolder = Gio.File.new_for_path("/proc");
-    if (!procFolder.query_exists(null)) {
+    let procFolder = Gio.File.new_for_path('/proc');
+    if (!procFolder.query_exists(null))
         return;
-    }
 
     let fileEnum = procFolder.enumerate_children(
-        "standard::*",
+        'standard::*',
         Gio.FileQueryInfoFlags.NONE,
         null
     );
     let info;
     while ((info = fileEnum.next_file(null))) {
         let filename = info.get_name();
-        if (!filename) {
+        if (!filename)
             break;
-        }
-        let processPath = GLib.build_filenamev(["/proc", filename, "cmdline"]);
+
+        let processPath = GLib.build_filenamev(['/proc', filename, 'cmdline']);
         let processUser = Gio.File.new_for_path(processPath);
-        if (!processUser.query_exists(null)) {
+        if (!processUser.query_exists(null))
             continue;
-        }
-        let [binaryData, etag] = processUser.load_bytes(null);
-        let contents = "";
+
+        let [binaryData, etag_] = processUser.load_bytes(null);
+        let contents = '';
         let readData = binaryData.get_data();
         for (let i = 0; i < readData.length; i++) {
-            if (readData[i] < 32) {
-                contents += " ";
-            } else {
+            if (readData[i] < 32)
+                contents += ' ';
+            else
                 contents += String.fromCharCode(readData[i]);
-            }
         }
         let path =
-            "gjs " +
-            GLib.build_filenamev([
-                ExtensionUtils.getCurrentExtension().path,
-                "renderer.js",
-            ]);
+            `gjs ${
+                GLib.build_filenamev([
+                    ExtensionUtils.getCurrentExtension().path,
+                    'renderer',
+                    'renderer.js',
+                ])}`;
         if (contents.startsWith(path)) {
-            let proc = new Gio.Subprocess({ argv: ["/bin/kill", filename] });
+            let proc = new Gio.Subprocess({argv: ['/bin/kill', filename]});
             proc.init(null);
             proc.wait(null);
         }
@@ -272,26 +269,26 @@ function doKillAllOldRendererProcesses() {
 function launchRenderer() {
     // Launch prefs window for first-time user
     let videoPath = getVideoPath();
-    if (videoPath === "") {
+    if (videoPath === '')
         ExtensionUtils.openPrefs();
-    }
 
     data.reloadTime = 100;
     let argv = [];
     argv.push(
         GLib.build_filenamev([
             ExtensionUtils.getCurrentExtension().path,
-            "renderer.js",
+            'renderer',
+            'renderer.js',
         ])
     );
     // The path. Allows the program to find translations, settings and modules.
-    argv.push("-P");
+    argv.push('-P');
     argv.push(ExtensionUtils.getCurrentExtension().path);
     // The video path.
-    argv.push("-F");
+    argv.push('-F');
     argv.push(videoPath);
 
-    data.currentProcess = new LaunchSubprocess(0, "Hanabi", "-U");
+    data.currentProcess = new LaunchSubprocess(0, 'Hanabi', '-U');
     data.currentProcess.set_cwd(GLib.get_home_dir());
     data.currentProcess.spawnv(argv);
     data.x11Manager.set_wayland_client(data.currentProcess);
@@ -302,24 +299,23 @@ function launchRenderer() {
      * too fast if it has a bug that makes it fail continuously, avoiding filling the journal too fast.
      */
     data.currentProcess.subprocess.wait_async(null, (obj, res) => {
-        let b = obj.wait_finish(res);
-        if (!data.currentProcess || obj !== data.currentProcess.subprocess) {
+        obj.wait_finish(res);
+        if (!data.currentProcess || obj !== data.currentProcess.subprocess)
             return;
-        }
+
         if (obj.get_if_exited()) {
             let retval = obj.get_exit_status();
-            if (retval != 0) {
+            if (retval !== 0)
                 data.reloadTime = 1000;
-            }
         } else {
             data.reloadTime = 1000;
         }
         data.currentProcess = null;
         data.x11Manager.set_wayland_client(null);
         if (data.isEnabled) {
-            if (data.launchRendererId) {
+            if (data.launchRendererId)
                 GLib.source_remove(data.launchRendererId);
-            }
+
             data.launchRendererId = GLib.timeout_add(
                 GLib.PRIORITY_DEFAULT,
                 data.reloadTime,
@@ -345,20 +341,20 @@ function launchRenderer() {
  *                               so, if this parameter isn't passed, the app can assume that it is running under X11.
  */
 var LaunchSubprocess = class {
-    constructor(flags, process_id, cmd_parameter) {
+    constructor(flags, processId, cmdParameter) {
         this._isX11 = !Meta.is_wayland_compositor();
-        this._process_id = process_id;
-        this._cmd_parameter = cmd_parameter;
+        this._process_id = processId;
+        this._cmd_parameter = cmdParameter;
         this._UUID = null;
         this._flags =
             flags |
             Gio.SubprocessFlags.STDOUT_PIPE |
             Gio.SubprocessFlags.STDERR_MERGE;
         this.cancellable = new Gio.Cancellable();
-        this._launcher = new Gio.SubprocessLauncher({ flags: this._flags });
+        this._launcher = new Gio.SubprocessLauncher({flags: this._flags});
         if (!this._isX11) {
             this._waylandClient = Meta.WaylandClient.new(this._launcher);
-            if (Config.PACKAGE_VERSION == "3.38.0") {
+            if (Config.PACKAGE_VERSION === '3.38.0') {
                 // workaround for bug in 3.38.0
                 this._launcher.ref();
             }
@@ -368,15 +364,15 @@ var LaunchSubprocess = class {
     }
 
     spawnv(argv) {
-        if (!this._isX11) {
+        if (!this._isX11)
             this.subprocess = this._waylandClient.spawnv(global.display, argv);
-        } else {
+        else
             this.subprocess = this._launcher.spawnv(argv);
-        }
+
         // This is for GLib 2.68 or greater
-        if (this._launcher.close) {
+        if (this._launcher.close)
             this._launcher.close();
-        }
+
         this._launcher = null;
         if (this.subprocess) {
             /**
@@ -403,16 +399,17 @@ var LaunchSubprocess = class {
     }
 
     read_output() {
-        if (!this._dataInputStream) {
+        if (!this._dataInputStream)
             return;
-        }
+
         this._dataInputStream.read_line_async(
             GLib.PRIORITY_DEFAULT,
             this.cancellable,
             (object, res) => {
                 try {
                     const [output, length] = object.read_line_finish_utf8(res);
-                    if (length) print(`${this._process_id}: ${output}`);
+                    if (length)
+                        print(`${this._process_id}: ${output}`);
                 } catch (e) {
                     if (e.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
                         return;
@@ -427,15 +424,16 @@ var LaunchSubprocess = class {
 
     /**
      * Queries whether the passed window belongs to the launched subprocess or not.
+     *
      * @param {MetaWindow} window The window to check.
      */
     query_window_belongs_to(window) {
-        if (this._isX11) {
+        if (this._isX11)
             return false;
-        }
-        if (!this.process_running) {
+
+        if (!this.process_running)
             return false;
-        }
+
         try {
             return this._waylandClient.owns_window(window);
         } catch (e) {
@@ -444,20 +442,19 @@ var LaunchSubprocess = class {
     }
 
     query_pid_of_program() {
-        if (!this.process_running) return false;
+        if (!this.process_running)
+            return false;
 
         return this.subprocess.get_identifier();
     }
 
     show_in_window_list(window) {
-        if (!this._isX11 && this.process_running) {
+        if (!this._isX11 && this.process_running)
             this._waylandClient.show_in_window_list(window);
-        }
     }
 
     hide_from_window_list(window) {
-        if (!this._isX11 && this.process_running) {
+        if (!this._isX11 && this.process_running)
             this._waylandClient.hide_from_window_list(window);
-        }
     }
 };

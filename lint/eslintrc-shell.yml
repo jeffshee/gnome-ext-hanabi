@@ -1,0 +1,14 @@
+# https://gitlab.gnome.org/GNOME/gnome-shell-extensions/tree/main/lint
+
+rules:
+  camelcase:
+    - error
+    - properties: never
+      allow: [^vfunc_, ^on_]
+  consistent-return: error
+  eqeqeq:
+    - error
+    - smart
+  prefer-arrow-callback: error
+globals:
+  global: readonly

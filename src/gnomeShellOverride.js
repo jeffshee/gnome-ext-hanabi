@@ -15,7 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const { Clutter, GLib, GObject, Meta, St, Shell, Graphene } = imports.gi;
+
+/* exported GnomeShellOverride */
+
+const {Clutter, GLib, GObject, Meta, St, Shell, Graphene} = imports.gi;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Background = imports.ui.background;
@@ -27,28 +30,29 @@ const Util = imports.misc.util;
 const Me = ExtensionUtils.getCurrentExtension();
 const RoundedCornersEffect = Me.imports.roundedCornersEffect;
 
-const applicationId = "io.github.jeffshee.hanabi-renderer";
+const applicationId = 'io.github.jeffshee.hanabi-renderer';
 const extSettings = ExtensionUtils.getSettings(
-    "io.github.jeffshee.hanabi-extension"
+    'io.github.jeffshee.hanabi-extension'
 );
 
 const getDebugMode = () => {
-    return extSettings.get_boolean("debug-mode");
+    return extSettings.get_boolean('debug-mode');
 };
 
 const debug = (...args) => {
-    if (getDebugMode()) log("[Hanabi]", ...args);
+    if (getDebugMode())
+        log('[Hanabi]', ...args);
 };
 
 /**
  * A quick check to see if the override is actually doing something.
  */
 const effectiveOverrides = new Set();
-const markAsEffective = (overrideName) => {
+const markAsEffective = overrideName => {
     if (!effectiveOverrides.has(overrideName)) {
         effectiveOverrides.add(overrideName);
         debug(
-            `Effective overrides: ${Array.from(effectiveOverrides).join(", ")}`
+            `Effective overrides: ${Array.from(effectiveOverrides).join(', ')}`
         );
     }
 };
@@ -72,7 +76,7 @@ var GnomeShellOverride = class {
     }
 
     _reloadBackgrounds() {
-        runningWallpaperActors.forEach((actor) => actor.destroy());
+        runningWallpaperActors.forEach(actor => actor.destroy());
         runningWallpaperActors.clear();
 
         Main.layoutManager._updateBackgrounds();
@@ -87,9 +91,9 @@ var GnomeShellOverride = class {
          *
          * Also, `Main.screenShield` will be `null` when the user doesn't use gnome shell locking.
          */
-        if (Main.screenShield?._dialog?._updateBackgrounds != null) {
+        if (Main.screenShield?._dialog?._updateBackgrounds != null)
             Main.screenShield._dialog._updateBackgrounds();
-        }
+
 
         /**
          * WorkspaceBackground has its own bgManager,
@@ -102,56 +106,55 @@ var GnomeShellOverride = class {
         // Live wallpaper
         this.replaceMethod(
             Background.BackgroundManager,
-            "_createBackgroundActor",
+            '_createBackgroundActor',
             new_createBackgroundActor
         );
 
         // Rounded corner
         this.replaceMethod(
             Workspace.WorkspaceBackground,
-            "_updateBorderRadius",
+            '_updateBorderRadius',
             new_updateBorderRadius
         );
 
         this.replaceMethod(
             Workspace.WorkspaceBackground,
-            "_updateRoundedClipBounds",
+            '_updateRoundedClipBounds',
             new_updateRoundedClipBounds
         );
 
         // Hiding mechanism
         this.replaceMethod(
             Shell.Global,
-            "get_window_actors",
+            'get_window_actors',
             new_get_window_actors
         );
 
         this.replaceMethod(
             Workspace.Workspace,
-            "_isOverviewWindow",
+            '_isOverviewWindow',
             new_Workspace__isOverviewWindow,
-            "Workspace"
+            'Workspace'
         );
 
         this.replaceMethod(
             WorkspaceThumbnail.WorkspaceThumbnail,
-            "_isOverviewWindow",
+            '_isOverviewWindow',
             new_WorkspaceThumbnail__isOverviewWindow,
-            "WorkspaceThumbnail"
+            'WorkspaceThumbnail'
         );
 
-        this.replaceMethod(Meta.Display, "get_tab_list", new_get_tab_list);
+        this.replaceMethod(Meta.Display, 'get_tab_list', new_get_tab_list);
 
-        this.replaceMethod(Shell.AppSystem, "get_running", new_get_running);
+        this.replaceMethod(Shell.AppSystem, 'get_running', new_get_running);
 
         this._reloadBackgrounds();
     }
 
     disable() {
         for (let value of Object.values(replaceData)) {
-            if (value[0]) {
+            if (value[0])
                 value[1].prototype[value[2]] = value[0];
-            }
         }
 
         replaceData = {};
@@ -168,21 +171,21 @@ var GnomeShellOverride = class {
      *
      * @param {class} className The class where to replace the method
      * @param {string} methodName The method to replace
-     * @param {function} functionToCall The function to call as the replaced method
+     * @param {Function} functionToCall The function to call as the replaced method
      * @param {string} [classId] an extra ID to identify the stored method when two
      *                           methods with the same name are replaced in
      *                           two different classes
      */
     replaceMethod(className, methodName, functionToCall, classId) {
         if (classId) {
-            replaceData["old_" + classId + "_" + methodName] = [
+            replaceData[`old_${classId}_${methodName}`] = [
                 className.prototype[methodName],
                 className,
                 methodName,
                 classId,
             ];
         } else {
-            replaceData["old_" + methodName] = [
+            replaceData[`old_${methodName}`] = [
                 className.prototype[methodName],
                 className,
                 methodName,
@@ -216,7 +219,7 @@ var LiveWallpaper = GObject.registerClass(
             this._backgroundActor = backgroundActor;
             this._monitorIndex = backgroundActor.monitor;
             this._display = backgroundActor.meta_display;
-            let { height, width } =
+            let {height, width} =
                 Main.layoutManager.monitors[this._monitorIndex];
             this._monitorHeight = height;
             this._monitorWidth = width;
@@ -224,7 +227,7 @@ var LiveWallpaper = GObject.registerClass(
             this._metaBackgroundGroup.add_child(this);
             this._wallpaper = null;
 
-            this.connect("destroy", this._onDestroy.bind(this));
+            this.connect('destroy', this._onDestroy.bind(this));
             this._applyWallpaper();
 
             this._roundedCornersEffect =
@@ -256,7 +259,7 @@ var LiveWallpaper = GObject.registerClass(
             ]);
 
             runningWallpaperActors.add(this);
-            debug("LiveWallpaper created");
+            debug('LiveWallpaper created');
         }
 
         setRoundedClipRadius(radius) {
@@ -272,7 +275,7 @@ var LiveWallpaper = GObject.registerClass(
                     rect.origin.y,
                     rect.origin.x + rect.size.width,
                     rect.origin.y + rect.size.height,
-                ].map((e) => {
+                ].map(e => {
                     return e * this._monitorScale;
                 })
             );
@@ -282,7 +285,7 @@ var LiveWallpaper = GObject.registerClass(
             this._wallpaper = new Clutter.Actor({
                 layout_manager: new Shell.WindowPreviewLayout(),
                 // The point around which the scaling and rotation transformations occur.
-                pivot_point: new Graphene.Point({ x: 0.5, y: 0.5 }),
+                pivot_point: new Graphene.Point({x: 0.5, y: 0.5}),
             });
 
             let renderer = this._getRenderer();
@@ -290,7 +293,7 @@ var LiveWallpaper = GObject.registerClass(
                 this._wallpaper.layout_manager.add_window(renderer);
             } else {
                 debug(
-                    "renderer == null, retry `_applyWallpaper()` after 100ms"
+                    'renderer == null, retry `_applyWallpaper()` after 100ms'
                 );
                 GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
                     this._applyWallpaper();
@@ -304,20 +307,21 @@ var LiveWallpaper = GObject.registerClass(
         }
 
         _getRenderer() {
-            let window_actors;
-            if (replaceData["old_get_window_actors"]) {
+            let windowActors;
+            if (replaceData['old_get_window_actors']) {
                 // `get_window_actors` is replaced.
-                window_actors = global.get_window_actors(false);
+                windowActors = global.get_window_actors(false);
             } else {
-                window_actors = global.get_window_actors();
+                windowActors = global.get_window_actors();
             }
 
-            if (window_actors && window_actors.length === 0) return null;
+            if (windowActors && windowActors.length === 0)
+                return null;
 
             // Find renderers by `applicationId`.
-            const findRendererForMonitor = (index) => {
-                return window_actors.find(
-                    (window) =>
+            const findRendererForMonitor = index => {
+                return windowActors.find(
+                    window =>
                         window.meta_window.title?.includes(applicationId) &&
                         window.meta_window.title?.endsWith(
                             `|${index.toString()}`
@@ -330,14 +334,15 @@ var LiveWallpaper = GObject.registerClass(
                 findRendererForMonitor(this._monitorIndex) ??
                 findRendererForMonitor(0);
 
-            if (renderer) {
+            if (renderer)
                 return renderer.meta_window;
-            }
+
             return null;
         }
 
         _resize() {
-            if (!this._wallpaper || this._wallpaper.width === 0) return;
+            if (!this._wallpaper || this._wallpaper.width === 0)
+                return;
 
             /**
              * Only `allocation.get_height()` works fine so far. The `allocation.get_width()` gives weird result for some reasons.
@@ -365,7 +370,8 @@ var LiveWallpaper = GObject.registerClass(
         vfunc_allocate(box) {
             super.vfunc_allocate(box);
 
-            if (this._laterId) return;
+            if (this._laterId)
+                return;
 
             this._laterId = Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
                 this._resize();
@@ -376,13 +382,13 @@ var LiveWallpaper = GObject.registerClass(
         }
 
         _onDestroy() {
-            if (this._laterId) {
+            if (this._laterId)
                 Meta.later_remove(this._laterId);
-            }
+
             this._laterId = 0;
 
             runningWallpaperActors.delete(this);
-            debug("LiveWallpaper destroyed");
+            debug('LiveWallpaper destroyed');
         }
     }
 );
@@ -399,54 +405,63 @@ function new_createBackgroundActor() {
         replaceData.old__createBackgroundActor[0].call(this);
     // We need to pass radius to actors, so save a ref in bgManager.
     this.videoActor = new LiveWallpaper(backgroundActor);
-    getDebugMode() && markAsEffective("new_createBackgroundActor");
+    if (getDebugMode())
+        markAsEffective('new_createBackgroundActor');
     return backgroundActor;
 }
 
 /**
  * This removes the renderer from the window actor list.
  * Use `false` as the argument to bypass this behavior.
+ *
+ * @param hideRenderer
  */
 function new_get_window_actors(hideRenderer = true) {
     let windowActors = replaceData.old_get_window_actors[0].call(this);
     let result = hideRenderer
         ? windowActors.filter(
-              (window) => !window.meta_window.title?.includes(applicationId)
-          )
+            window => !window.meta_window.title?.includes(applicationId)
+        )
         : windowActors;
-    getDebugMode() &&
-        !compareArrays(result, windowActors) &&
-        markAsEffective("new_get_window_actors");
+    if (getDebugMode() && !compareArrays(result, windowActors))
+        markAsEffective('new_get_window_actors');
     return result;
 }
 
 /**
  * These remove the renderer's window preview in overview.
+ *
+ * @param window
  */
 function new_Workspace__isOverviewWindow(window) {
     let isRenderer = window.title?.includes(applicationId);
-    getDebugMode() &&
-        isRenderer &&
-        markAsEffective("new_Workspace__isOverviewWindow");
+    if (getDebugMode() && isRenderer)
+        markAsEffective('new_Workspace__isOverviewWindow');
     return isRenderer
         ? false
         : replaceData.old_Workspace__isOverviewWindow[0].apply(this, [window]);
 }
 
+/**
+ *
+ * @param window
+ */
 function new_WorkspaceThumbnail__isOverviewWindow(window) {
     let isRenderer = window.title?.includes(applicationId);
-    getDebugMode() &&
-        isRenderer &&
-        markAsEffective("new_WorkspaceThumbnail__isOverviewWindow");
+    if (getDebugMode() && isRenderer)
+        markAsEffective('new_WorkspaceThumbnail__isOverviewWindow');
     return isRenderer
         ? false
         : replaceData.old_WorkspaceThumbnail__isOverviewWindow[0].apply(this, [
-              window,
-          ]);
+            window,
+        ]);
 }
 
 /**
  * This remove the renderer icon from altTab and ctrlAltTab(?).
+ *
+ * @param type
+ * @param workspace
  */
 function new_get_tab_list(type, workspace) {
     let metaWindows = replaceData.old_get_tab_list[0].apply(this, [
@@ -454,11 +469,10 @@ function new_get_tab_list(type, workspace) {
         workspace,
     ]);
     let result = metaWindows.filter(
-        (meta_window) => !meta_window.title?.includes(applicationId)
+        metaWindow => !metaWindow.title?.includes(applicationId)
     );
-    getDebugMode() &&
-        !compareArrays(result, metaWindows) &&
-        markAsEffective("new_get_tab_list");
+    if (getDebugMode() && !compareArrays(result, metaWindows))
+        markAsEffective('new_get_tab_list');
     return result;
 }
 
@@ -468,25 +482,26 @@ function new_get_tab_list(type, workspace) {
 function new_get_running() {
     let runningApps = replaceData.old_get_running[0].call(this);
     let result = runningApps.filter(
-        (app) =>
+        app =>
             !app
                 .get_windows()
-                .some((window) => window.title?.includes(applicationId))
+                .some(window => window.title?.includes(applicationId))
     );
-    getDebugMode() &&
-        !compareArrays(result, runningApps) &&
-        markAsEffective("new_get_running");
+    if (getDebugMode() && !compareArrays(result, runningApps))
+        markAsEffective('new_get_running');
     return result;
 }
 
-// WorkspaceBackground has its own bgManager, the rounded corner is made by
-// passing value to MetaBackgroundContent, we don't have content, but could do
-// the same to actor.
+/**
+ * WorkspaceBackground has its own bgManager, the rounded corner is made by
+ * passing value to MetaBackgroundContent, we don't have content, but could do
+ * the same to actor.
+ */
 function new_updateBorderRadius() {
     replaceData.old__updateBorderRadius[0].call(this);
 
     // Basically a copy of the original function.
-    const { scaleFactor } = St.ThemeContext.get_for_stage(global.stage);
+    const {scaleFactor} = St.ThemeContext.get_for_stage(global.stage);
     const cornerRadius =
         scaleFactor * Workspace.BACKGROUND_CORNER_RADIUS_PIXELS;
 
@@ -494,6 +509,9 @@ function new_updateBorderRadius() {
     this._bgManager.videoActor.setRoundedClipRadius(radius);
 }
 
+/**
+ *
+ */
 function new_updateRoundedClipBounds() {
     replaceData.old__updateRoundedClipBounds[0].call(this);
 
