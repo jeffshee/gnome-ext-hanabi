@@ -4,7 +4,8 @@
   "settings-schema": "@settings_schema@",
   "shell-version": [
     "42",
-    "43"
+    "43",
+    "44"
   ],
   "url": "https://github.com/jeffshee/gnome-ext-hanabi",
   "uuid": "@uuid@",
