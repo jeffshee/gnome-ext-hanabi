@@ -33,10 +33,10 @@ Nevertheless, the procedure is here for anyone who wants to experiment with Hana
 git clone https://github.com/jeffshee/gnome-ext-hanabi.git
 ```
 
-2. Run the installation script (Require `meson` and `ninja-build`)
+2. Run the installation script (Require `meson`)
 
 ```
-cd gnome-ext-hanabi/src
+cd gnome-ext-hanabi
 ./run.sh install
 ```
 
@@ -55,15 +55,15 @@ gnome-extensions disable hanabi-extension@jeffshee.github.io
 1. The video doesn't play / The extension is enabled but nothing happens  
    The GTK4 media backend is not pre-installed on some distributions (such as PopOS).
 
-    To install the backend:  
-     `sudo apt install libgtk-4-media-gstreamer`
+   To install the backend:  
+    `sudo apt install libgtk-4-media-gstreamer`
 
 2. High CPU usage during video playback (proprietary NVIDIA)  
    Your hardware acceleration may not work properly, see this [issue](https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/-/issues/1478).
 
-    To delete the GStreamer cache:  
-     `rm -rf ~/.cache/gstreamer-1.0/`  
-     After that, check if `gst-inspect-1.0 nvcodec` reports all its features.
+   To delete the GStreamer cache:  
+    `rm -rf ~/.cache/gstreamer-1.0/`  
+    After that, check if `gst-inspect-1.0 nvcodec` reports all its features.
 
 ### Optimization
 
@@ -74,11 +74,11 @@ For this to work, Clapper must be installed **from the package manager and not f
 <details>
   <summary>Performance comparison</summary>
 
--   With `clappersink`
-    ![](https://user-images.githubusercontent.com/25530920/190872365-f1cefa30-6e11-40e4-bf99-1b79c3790d6b.png)
+- With `clappersink`
+  ![](https://user-images.githubusercontent.com/25530920/190872365-f1cefa30-6e11-40e4-bf99-1b79c3790d6b.png)
 
--   Without `clappersink` (Use `Gtk.MediaFile` as fallback)
-    ![](https://user-images.githubusercontent.com/25530920/190872366-7fce5703-2310-4c68-81c7-f17a8a15019f.png)
+- Without `clappersink` (Use `Gtk.MediaFile` as fallback)
+  ![](https://user-images.githubusercontent.com/25530920/190872366-7fce5703-2310-4c68-81c7-f17a8a15019f.png)
 
 </details>
 
