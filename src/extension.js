@@ -250,6 +250,7 @@ function doKillAllOldRendererProcesses() {
             `gjs ${
                 GLib.build_filenamev([
                     ExtensionUtils.getCurrentExtension().path,
+                    'renderer',
                     'renderer.js',
                 ])}`;
         if (contents.startsWith(path)) {
@@ -276,6 +277,7 @@ function launchRenderer() {
     argv.push(
         GLib.build_filenamev([
             ExtensionUtils.getCurrentExtension().path,
+            'renderer',
             'renderer.js',
         ])
     );

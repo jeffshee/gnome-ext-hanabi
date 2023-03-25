@@ -16,16 +16,21 @@ sources = [
   'gnomeShellOverride.js',
   'hanabi-symbolic.svg',
   'prefs.js',
-  'renderer.js',
   'roundedCornersEffect.js',
-  'stylesheet.css',
 ]
 
 extra_sources = [
   '../LICENSE',
 ]
 
+renderer = [
+  'renderer/renderer.js',
+  'renderer/stylesheet.css',
+]
+
 install_data(sources + extra_sources, install_dir: install_dir)
+
+install_data(renderer, install_dir: join_paths(install_dir, 'renderer'))
 
 install_data('schemas/@0@.gschema.xml'.format(schema),
   install_dir: schema_dir

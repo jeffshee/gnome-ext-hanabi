@@ -476,7 +476,7 @@ const HanabiRendererWindow = GObject.registerClass(
             let cssProvider = new Gtk.CssProvider();
             cssProvider.load_from_file(
                 Gio.File.new_for_path(
-                    GLib.build_filenamev([codePath, 'stylesheet.css'])
+                    GLib.build_filenamev([codePath, 'renderer', 'stylesheet.css'])
                 )
             );
 
