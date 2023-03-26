@@ -19,7 +19,7 @@
 
 imports.gi.versions.Gtk = '4.0';
 imports.gi.versions.GdkX11 = '4.0';
-const {GObject, Gtk, Gio, GLib, Gdk, GdkX11, Gst, GstAudio} = imports.gi;
+const {GObject, Gtk, Gio, GLib, Gdk, GdkX11, Gst} = imports.gi;
 
 let GstPlay = null;
 // GstPlay is available from GStreamer 1.20+
@@ -27,6 +27,16 @@ try {
     GstPlay = imports.gi.GstPlay;
 } catch (e) {}
 const haveGstPlay = GstPlay !== null;
+
+let GstAudio = null;
+// Might not pre-installed on some distributions
+try {
+    GstAudio = imports.gi.GstAudio;
+} catch (e) {}
+const haveGstAudio = GstAudio !== null;
+
+// ContentFit is available from Gtk 4.8+
+const haveContentFit = Gtk.get_minor_version() >= 8;
 
 const applicationId = 'io.github.jeffshee.hanabi-renderer';
 
@@ -51,18 +61,13 @@ const isEnableNvSl = extSettings
     ? extSettings.get_boolean('enable-nvsl')
     : false;
 
-let codePath = '';
-/**
- * Gtk.ContentFit
- * https://gjs-docs.gnome.org/gtk40~4.0/gtk.contentfit
- * FILL=0 (stretched)
- * CONTAIN=1 (scaled)
- * COVER=2 (zoom)
- * SCALE_DOWN=3 (centered+scaled)
- */
-let contentFit = extSettings
-    ? extSettings.get_int('content-fit')
-    : Gtk.ContentFit.CONTAIN;
+let codePath = 'src';
+let contentFit = null;
+if (haveContentFit) {
+    contentFit = extSettings
+        ? extSettings.get_int('content-fit')
+        : Gtk.ContentFit.CONTAIN;
+}
 let mute = extSettings ? extSettings.get_boolean('mute') : false;
 let nohide = false;
 let videoPath = extSettings ? extSettings.get_string('video-path') : '';
@@ -134,6 +139,8 @@ const HanabiRenderer = GObject.registerClass(
                     this.setVolume(volume);
                     break;
                 case 'content-fit':
+                    if (!haveContentFit)
+                        return;
                     contentFit = settings.get_int(key);
                     this._pictures.forEach(picture =>
                         picture.set_content_fit(contentFit)
@@ -303,12 +310,12 @@ const HanabiRenderer = GObject.registerClass(
 
         _getWidgetFromSharedPaintable() {
             if (this._sharedPaintable) {
-                this._pictures.push(
-                    new Gtk.Picture({
-                        paintable: this._sharedPaintable,
-                        content_fit: contentFit,
-                    })
-                );
+                const picture = new Gtk.Picture({
+                    paintable: this._sharedPaintable,
+                });
+                if (haveContentFit)
+                    picture.set_content_fit(contentFit);
+                this._pictures.push(picture);
                 return this._pictures.at(-1);
             }
             return null;
@@ -418,11 +425,15 @@ const HanabiRenderer = GObject.registerClass(
 
             // GstPlay uses linear volume
             if (this._play) {
-                _volume = GstAudio.StreamVolume.convert_volume(
-                    GstAudio.StreamVolumeFormat.CUBIC,
-                    GstAudio.StreamVolumeFormat.LINEAR,
-                    _volume
-                );
+                if (haveGstAudio) {
+                    _volume = GstAudio.StreamVolume.convert_volume(
+                        GstAudio.StreamVolumeFormat.CUBIC,
+                        GstAudio.StreamVolumeFormat.LINEAR,
+                        _volume
+                    );
+                } else {
+                    _volume = Math.pow(_volume, 3);
+                }
             }
 
             if (player.volume === _volume)
@@ -485,9 +496,6 @@ const HanabiRendererWindow = GObject.registerClass(
                 cssProvider,
                 Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
             );
-
-            // this._windowContext = this.get_style_context();
-            // this._windowContext.add_class("desktopwindow");
 
             this.set_child(widget);
             if (!windowed)
