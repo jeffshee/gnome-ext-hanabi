@@ -359,7 +359,9 @@ var LiveWallpaper = GObject.registerClass(
             if (this._laterId)
                 return;
 
-            this._laterId = Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
+            const laters = global.compositor?.get_laters();
+            const metaLaterAdd = laters ? laters.add : Meta.later_add;
+            this._laterId = metaLaterAdd(Meta.LaterType.BEFORE_REDRAW, () => {
                 this._resize();
 
                 this._laterId = 0;
@@ -368,8 +370,10 @@ var LiveWallpaper = GObject.registerClass(
         }
 
         _onDestroy() {
+            const laters = global.compositor?.get_laters();
+            const metaLaterRemove = laters ? laters.remove : Meta.later_remove;
             if (this._laterId)
-                Meta.later_remove(this._laterId);
+                metaLaterRemove(this._laterId);
 
             this._laterId = 0;
 
