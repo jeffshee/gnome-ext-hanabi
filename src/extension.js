@@ -353,7 +353,7 @@ var LaunchSubprocess = class {
         this.cancellable = new Gio.Cancellable();
         this._launcher = new Gio.SubprocessLauncher({flags: this._flags});
         if (!this._isX11) {
-            this._waylandClient = Meta.WaylandClient.new(this._launcher);
+            this._waylandClient = data.GnomeShellVersion > 43 ? Meta.WaylandClient.new(global.context, this._launcher) : Meta.WaylandClient.new(this._launcher);
             if (Config.PACKAGE_VERSION === '3.38.0') {
                 // workaround for bug in 3.38.0
                 this._launcher.ref();
