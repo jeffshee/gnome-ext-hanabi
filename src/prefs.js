@@ -21,6 +21,8 @@ const {Adw, Gio, Gtk} = imports.gi;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 
+const haveContentFit = Gtk.get_minor_version() >= 8;
+
 const settings = ExtensionUtils.getSettings(
     'io.github.jeffshee.hanabi-extension'
 );
@@ -260,7 +262,13 @@ function prefsRowFitMode(prefsGroup) {
         model: items,
         selected: settings.get_int('content-fit'),
     });
-    row.set_tooltip_markup(tooltip);
+
+    if (haveContentFit) {
+        row.set_tooltip_markup(tooltip);
+    } else {
+        row.set_tooltip_markup('This feature requires Gtk 4.8 or above');
+        row.set_sensitive(false);
+    }
     prefsGroup.add(row);
 
     row.connect('notify::selected', () => {
