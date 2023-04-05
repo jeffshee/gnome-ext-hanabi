@@ -50,7 +50,11 @@ If the GNOME shell keeps crashing, you can try to disable the extension using tt
 gnome-extensions disable hanabi-extension@jeffshee.github.io
 ```
 
-### Known issues
+### Distro-specific guide
+
+[Guide for Pop!\_OS 22.04](docs/popos-22-04.md)
+
+### Troubleshooting
 
 1. The video doesn't play / The extension is enabled but nothing happens  
    The GTK4 media backend is not pre-installed on some distributions (such as PopOS).
