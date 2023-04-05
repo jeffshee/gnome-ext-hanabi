@@ -45,6 +45,6 @@ sudo meson install -C builddir
 
 Reference: [https://github.com/Rafostar/clapper](https://github.com/Rafostar/clapper)
 
-## 5. Install Hanabi Gnome Extensions
+## 5. Install Hanabi Extension
 
 Refer to the README
