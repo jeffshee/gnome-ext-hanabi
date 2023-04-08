@@ -203,28 +203,22 @@ var LiveWallpaper = GObject.registerClass(
         _init(backgroundActor) {
             super._init({
                 layout_manager: new Clutter.BinLayout(),
-                //
-                x: backgroundActor.x,
-                y: backgroundActor.y,
-                width: backgroundActor.width,
-                height: backgroundActor.height,
                 // Layout manager will allocate extra space for the actor, if possible.
                 x_expand: true,
                 y_expand: true,
-                // backgroundActor's z_position is 0. Positive values = nearer to the user.
-                z_position: backgroundActor.z_position + 1,
                 opacity: 0,
             });
 
             this._backgroundActor = backgroundActor;
             this._monitorIndex = backgroundActor.monitor;
+            this._backgroundActor.layout_manager = new Clutter.BinLayout();
+            this._backgroundActor.add_child(this);
+
             this._display = backgroundActor.meta_display;
             let {height, width} =
                 Main.layoutManager.monitors[this._monitorIndex];
             this._monitorHeight = height;
             this._monitorWidth = width;
-            this._metaBackgroundGroup = backgroundActor.get_parent();
-            this._metaBackgroundGroup.add_child(this);
             this._wallpaper = null;
 
             this.connect('destroy', this._onDestroy.bind(this));
@@ -360,11 +354,6 @@ var LiveWallpaper = GObject.registerClass(
                 duration: Background.FADE_ANIMATION_TIME,
                 mode: Clutter.AnimationMode.EASE_OUT_QUAD,
             });
-            this._backgroundActor.ease({
-                opacity: visible ? 0 : 255,
-                duration: Background.FADE_ANIMATION_TIME,
-                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-            });
         }
 
         vfunc_allocate(box) {
@@ -397,6 +386,7 @@ var LiveWallpaper = GObject.registerClass(
             this._laterId = 0;
 
             runningWallpaperActors.delete(this);
+            this._backgroundActor.layout_manager = null;
             debug('LiveWallpaper destroyed');
         }
     }
