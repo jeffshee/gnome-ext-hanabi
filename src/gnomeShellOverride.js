@@ -195,42 +195,56 @@ var GnomeShellOverride = class {
     }
 };
 
-/**
- * The widget that holds the window preview of the renderer.
- */
-var LiveWallpaper = GObject.registerClass(
-    class LiveWallpaper extends St.Widget {
-        _init(backgroundActor) {
-            super._init({
-                layout_manager: new Clutter.BinLayout(),
-                // Layout manager will allocate extra space for the actor, if possible.
-                x_expand: true,
-                y_expand: true,
-                opacity: 0,
-            });
+var HanabiBackgroundContent = GObject.registerClass({
+    Implements: [Clutter.Content],
+},
+class HanabiBackgroundContent extends Meta.BackgroundContent {
+    constructor(...args) {
+        super(...args);
+        debug('HanabiBackgroundContent created.');
+        this._hide = false;
+    }
 
-            this._backgroundActor = backgroundActor;
-            this._monitorIndex = backgroundActor.monitor;
-            this._backgroundActor.layout_manager = new Clutter.BinLayout();
-            this._backgroundActor.add_child(this);
+    get hide() {
+        return this._hide;
+    }
 
-            this._display = backgroundActor.meta_display;
-            let {height, width} =
-                Main.layoutManager.monitors[this._monitorIndex];
-            this._monitorHeight = height;
-            this._monitorWidth = width;
+    set hide(value) {
+        this._hide = value;
+    }
+
+    vfunc_paint_content(...args) {
+        if (!this._hide)
+            super.vfunc_paint_content(...args);
+    }
+}
+);
+
+var HanabiBackgroundActor = GObject.registerClass(
+    class HanabiBackgroundActor extends Meta.BackgroundActor {
+        constructor(...args) {
+            super(...args);
+            debug('HanabiBackgroundActor created.');
+            this.content = new HanabiBackgroundContent({meta_display: this.meta_display});
+            this.layout_manager = new Clutter.BinLayout();
+
+            this._renderer = null;
             this._wallpaper = null;
 
+            runningWallpaperActors.add(this);
             this.connect('destroy', this._onDestroy.bind(this));
             this._applyWallpaper();
 
-            this._roundedCornersEffect =
-                new RoundedCornersEffect.RoundedCornersEffect();
-            this.add_effect(this._roundedCornersEffect);
 
-            this._monitorScale = this._display.get_monitor_scale(
-                this._monitorIndex
-            );
+            const {height, width, geometry_scale: scale} =
+            Main.layoutManager.monitors[this.monitor];
+            this._monitorWidth = width;
+            this._monitorHeight = height;
+            this._monitorScale = scale;
+
+            this._roundedCornersEffect =
+            new RoundedCornersEffect.RoundedCornersEffect();
+            this.add_effect(this._roundedCornersEffect);
 
             this.setRoundedClipRadius(0.0);
             const rect = new Graphene.Rect();
@@ -239,21 +253,11 @@ var LiveWallpaper = GObject.registerClass(
             rect.size.width = this._monitorWidth;
             rect.size.height = this._monitorHeight;
             this.setRoundedClipBounds(rect);
-            // TODO: Not sure if monitorScale is needed.
-            // What is this? Well, OpenGL texture coordinates are [0.0, 1.0],
-            // but we do bound and radius calculation with pixels, so we need a
-            // way to convert coordinates into pixels.
-            // NOTE: I currently don't know why, but I need monitor width and
-            // height here, not actor width and height, one reason maybe that
-            // our actor actually takes the whole screen and we use monitor
-            // width and height in the bound rect.
+
             this._roundedCornersEffect.setPixelStep([
                 1.0 / this._monitorWidth,
                 1.0 / this._monitorHeight,
             ]);
-
-            runningWallpaperActors.add(this);
-            debug('LiveWallpaper created');
         }
 
         setRoundedClipRadius(radius) {
@@ -276,18 +280,21 @@ var LiveWallpaper = GObject.registerClass(
         }
 
         _applyWallpaper() {
-            this._wallpaper = new Clutter.Actor({
-                layout_manager: new Shell.WindowPreviewLayout(),
-                // The point around which the scaling and rotation transformations occur.
-                pivot_point: new Graphene.Point({x: 0.5, y: 0.5}),
-            });
-
             let renderer = this._getRenderer();
             if (renderer) {
-                this._wallpaper.layout_manager.add_window(renderer);
+                this._wallpaper = new Clutter.Actor({
+                    layout_manager: new Shell.WindowPreviewLayout(),
+                    // The point around which the scaling and rotation transformations occur.
+                    pivot_point: new Graphene.Point({x: 0.5, y: 0.5}),
+                    // Layout manager will allocate extra space for the actor, if possible.
+                    // x_expand: true,
+                    // y_expand: true,
+                    opacity: 0,
+                });
+                this._wallpaper.layout_manager.add_window(renderer.meta_window);
             } else {
                 debug(
-                    'renderer == null, retry `_applyWallpaper()` after 100ms'
+                    'Hanabi renderer isn\'t ready yet. Retry after 100ms.'
                 );
                 GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
                     this._applyWallpaper();
@@ -297,41 +304,30 @@ var LiveWallpaper = GObject.registerClass(
             }
 
             this.add_child(this._wallpaper);
-            this._fade();
+            this.showWallpaper();
         }
 
         _getRenderer() {
-            let windowActors;
-            if (replaceData['old_get_window_actors']) {
-                // `get_window_actors` is replaced.
+            let windowActors = [];
+            if (replaceData['old_get_window_actors'])
                 windowActors = global.get_window_actors(false);
-            } else {
+            else
                 windowActors = global.get_window_actors();
-            }
 
-            if (windowActors && windowActors.length === 0)
-                return null;
-
-            // Find renderers by `applicationId`.
-            const findRendererForMonitor = index => {
+            // Find renderer by `applicationId` and monitor index.
+            const findRenderer = monitor => {
                 return windowActors.find(
                     window =>
                         window.meta_window.title?.includes(applicationId) &&
                         window.meta_window.title?.endsWith(
-                            `|${index.toString()}`
+                            `|${monitor}`
                         )
                 );
             };
 
-            // The renderer for this monitor. If it's not found, try using the primary monitor one.
-            let renderer =
-                findRendererForMonitor(this._monitorIndex) ??
-                findRendererForMonitor(0);
+            let renderer = findRenderer(this.monitor);
 
-            if (renderer)
-                return renderer.meta_window;
-
-            return null;
+            return renderer ? renderer : null;
         }
 
         _resize() {
@@ -343,14 +339,33 @@ var LiveWallpaper = GObject.registerClass(
              * As a workaround, we calculate the scale based on the height, then use it to calculate width.
              * It is safe to assume that the ratio of wallpaper is a constant (e.g. 16:9) in our case.
              */
-            let scale = this.allocation.get_height() / this._monitorHeight;
+            const scale = this.allocation.get_height() / this._monitorHeight;
             this._wallpaper.height = this._monitorHeight * scale;
             this._wallpaper.width = this._monitorWidth * scale;
         }
 
-        _fade(visible = true) {
-            this.ease({
-                opacity: visible ? 255 : 0,
+        // setEmptyBackground() {
+        //     const color = Clutter.Color.new(0, 0, 0);
+        //     const background = new Meta.Background({meta_display: this.meta_display});
+        //     background.set_color(color);
+        //     this.content.background = background;
+        // }
+
+        showWallpaper() {
+            debug('Show wallpaper.');
+            this._wallpaper.ease({
+                opacity: 255,
+                duration: Background.FADE_ANIMATION_TIME,
+                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            });
+            this.content.hide = true;
+        }
+
+        hideWallpaper() {
+            debug('Hide wallpaper.');
+            this.content.hide = false;
+            this._wallpaper.ease({
+                opacity: 0,
                 duration: Background.FADE_ANIMATION_TIME,
                 mode: Clutter.AnimationMode.EASE_OUT_QUAD,
             });
@@ -365,7 +380,6 @@ var LiveWallpaper = GObject.registerClass(
             const laterType = Meta.LaterType.BEFORE_REDRAW;
             const sourceFunction = () => {
                 this._resize();
-
                 this._laterId = 0;
                 return GLib.SOURCE_REMOVE;
             };
@@ -386,11 +400,209 @@ var LiveWallpaper = GObject.registerClass(
             this._laterId = 0;
 
             runningWallpaperActors.delete(this);
-            this._backgroundActor.layout_manager = null;
-            debug('LiveWallpaper destroyed');
+            debug('HanabiBackgroundActor destroyed.');
         }
     }
 );
+
+
+// /**
+//  * The widget that holds the window preview of the renderer.
+//  */
+// var LiveWallpaper = GObject.registerClass(
+//     class LiveWallpaper extends St.Widget {
+//         _init(backgroundActor) {
+//             super._init({
+//                 layout_manager: new Clutter.BinLayout(),
+//                 // Layout manager will allocate extra space for the actor, if possible.
+//                 x_expand: true,
+//                 y_expand: true,
+//                 opacity: 0,
+//             });
+
+//             this._backgroundActor = backgroundActor;
+//             this._monitorIndex = backgroundActor.monitor;
+//             this._backgroundActor.layout_manager = new Clutter.BinLayout();
+//             this._backgroundActor.add_child(this);
+
+//             this._display = backgroundActor.meta_display;
+//             let {height, width} =
+//                 Main.layoutManager.monitors[this._monitorIndex];
+//             this._monitorHeight = height;
+//             this._monitorWidth = width;
+//             this._wallpaper = null;
+
+//             this.connect('destroy', this._onDestroy.bind(this));
+//             this._applyWallpaper();
+
+//             this._roundedCornersEffect =
+//                 new RoundedCornersEffect.RoundedCornersEffect();
+//             this.add_effect(this._roundedCornersEffect);
+
+//             this._monitorScale = this._display.get_monitor_scale(
+//                 this._monitorIndex
+//             );
+
+//             this.setRoundedClipRadius(0.0);
+//             const rect = new Graphene.Rect();
+//             rect.origin.x = 0;
+//             rect.origin.y = 0;
+//             rect.size.width = this._monitorWidth;
+//             rect.size.height = this._monitorHeight;
+//             this.setRoundedClipBounds(rect);
+//             // TODO: Not sure if monitorScale is needed.
+//             // What is this? Well, OpenGL texture coordinates are [0.0, 1.0],
+//             // but we do bound and radius calculation with pixels, so we need a
+//             // way to convert coordinates into pixels.
+//             // NOTE: I currently don't know why, but I need monitor width and
+//             // height here, not actor width and height, one reason maybe that
+//             // our actor actually takes the whole screen and we use monitor
+//             // width and height in the bound rect.
+//             this._roundedCornersEffect.setPixelStep([
+//                 1.0 / this._monitorWidth,
+//                 1.0 / this._monitorHeight,
+//             ]);
+
+//             runningWallpaperActors.add(this);
+//             debug('LiveWallpaper created');
+//         }
+
+//         setRoundedClipRadius(radius) {
+//             this._roundedCornersEffect.setClipRadius(
+//                 radius * this._monitorScale
+//             );
+//         }
+
+//         setRoundedClipBounds(rect) {
+//             this._roundedCornersEffect.setBounds(
+//                 [
+//                     rect.origin.x,
+//                     rect.origin.y,
+//                     rect.origin.x + rect.size.width,
+//                     rect.origin.y + rect.size.height,
+//                 ].map(e => {
+//                     return e * this._monitorScale;
+//                 })
+//             );
+//         }
+
+//         _applyWallpaper() {
+//             this._wallpaper = new Clutter.Actor({
+//                 layout_manager: new Shell.WindowPreviewLayout(),
+//                 // The point around which the scaling and rotation transformations occur.
+//                 pivot_point: new Graphene.Point({x: 0.5, y: 0.5}),
+//             });
+
+//             let renderer = this._getRenderer();
+//             if (renderer) {
+//                 this._wallpaper.layout_manager.add_window(renderer);
+//             } else {
+//                 debug(
+//                     'renderer == null, retry `_applyWallpaper()` after 100ms'
+//                 );
+//                 GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
+//                     this._applyWallpaper();
+//                     return false;
+//                 });
+//                 return;
+//             }
+
+//             this.add_child(this._wallpaper);
+//             this._fade();
+//         }
+
+//         _getRenderer() {
+//             let windowActors;
+//             if (replaceData['old_get_window_actors']) {
+//                 // `get_window_actors` is replaced.
+//                 windowActors = global.get_window_actors(false);
+//             } else {
+//                 windowActors = global.get_window_actors();
+//             }
+
+//             if (windowActors && windowActors.length === 0)
+//                 return null;
+
+//             // Find renderers by `applicationId`.
+//             const findRendererForMonitor = index => {
+//                 return windowActors.find(
+//                     window =>
+//                         window.meta_window.title?.includes(applicationId) &&
+//                         window.meta_window.title?.endsWith(
+//                             `|${index.toString()}`
+//                         )
+//                 );
+//             };
+
+//             // The renderer for this monitor. If it's not found, try using the primary monitor one.
+//             let renderer =
+//                 findRendererForMonitor(this._monitorIndex) ??
+//                 findRendererForMonitor(0);
+
+//             if (renderer)
+//                 return renderer.meta_window;
+
+//             return null;
+//         }
+
+//         _resize() {
+//             if (!this._wallpaper || this._wallpaper.width === 0)
+//                 return;
+
+//             /**
+//              * Only `allocation.get_height()` works fine so far. The `allocation.get_width()` gives weird result for some reasons.
+//              * As a workaround, we calculate the scale based on the height, then use it to calculate width.
+//              * It is safe to assume that the ratio of wallpaper is a constant (e.g. 16:9) in our case.
+//              */
+//             let scale = this.allocation.get_height() / this._monitorHeight;
+//             this._wallpaper.height = this._monitorHeight * scale;
+//             this._wallpaper.width = this._monitorWidth * scale;
+//         }
+
+//         _fade(visible = true) {
+//             this.ease({
+//                 opacity: visible ? 255 : 0,
+//                 duration: Background.FADE_ANIMATION_TIME,
+//                 mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+//             });
+//         }
+
+//         vfunc_allocate(box) {
+//             super.vfunc_allocate(box);
+
+//             if (this._laterId)
+//                 return;
+
+//             const laterType = Meta.LaterType.BEFORE_REDRAW;
+//             const sourceFunction = () => {
+//                 this._resize();
+
+//                 this._laterId = 0;
+//                 return GLib.SOURCE_REMOVE;
+//             };
+//             const laters = global.compositor?.get_laters();
+//             if (laters)
+//                 laters.add(laterType, sourceFunction);
+//             else
+//                 Meta.later_add(laterType, sourceFunction);
+//         }
+
+//         _onDestroy() {
+//             const laters = global.compositor?.get_laters();
+//             if (laters)
+//                 laters.remove(this._laterId);
+//             else
+//                 Meta.later_remove(this._laterId);
+
+//             this._laterId = 0;
+
+//             runningWallpaperActors.delete(this);
+//             this._backgroundActor.layout_manager = null;
+//             debug('LiveWallpaper destroyed');
+//         }
+//     }
+// );
+
 
 /**
  * New functions used to replace the gnome shell functions are defined below.
@@ -399,14 +611,76 @@ var LiveWallpaper = GObject.registerClass(
 /**
  * This creates the LiveWallpaper widget.
  */
+// function new_createBackgroundActor() {
+//     const backgroundActor =
+//          replaceData.old__createBackgroundActor[0].call(this);
+//     // // We need to pass radius to actors, so save a ref in bgManager.
+//     this.videoActor = new LiveWallpaper(backgroundActor);
+//     this.videoActor = new HanabiBackgroundActor();
+//     if (getDebugMode())
+//         markAsEffective('new_createBackgroundActor');
+//     return backgroundActor;
+// }
 function new_createBackgroundActor() {
-    const backgroundActor =
-        replaceData.old__createBackgroundActor[0].call(this);
-    // We need to pass radius to actors, so save a ref in bgManager.
-    this.videoActor = new LiveWallpaper(backgroundActor);
     if (getDebugMode())
         markAsEffective('new_createBackgroundActor');
-    return backgroundActor;
+    let background = this._backgroundSource.getBackground(this._monitorIndex);
+    this.backgroundActor = new HanabiBackgroundActor({
+        meta_display: global.display,
+        monitor: this._monitorIndex,
+        request_mode: this._useContentSize
+            ? Clutter.RequestMode.CONTENT_SIZE
+            : Clutter.RequestMode.HEIGHT_FOR_WIDTH,
+        x_expand: !this._useContentSize,
+        y_expand: !this._useContentSize,
+    });
+    this.backgroundActor.content.set({
+        background,
+        vignette: this._vignette,
+        vignette_sharpness: 0.5,
+        brightness: 0.5,
+    });
+
+    this._container.add_child(this.backgroundActor);
+
+    if (this._controlPosition) {
+        let monitor = this._layoutManager.monitors[this._monitorIndex];
+        this.backgroundActor.set_position(monitor.x, monitor.y);
+        this._container.set_child_below_sibling(this.backgroundActor, null);
+    }
+
+    let changeSignalId = background.connect('bg-changed', () => {
+        background.disconnect(changeSignalId);
+        changeSignalId = null;
+        this._updateBackgroundActor();
+    });
+
+    let loadedSignalId;
+    if (background.isLoaded) {
+        GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
+            this.emit('loaded');
+            return GLib.SOURCE_REMOVE;
+        });
+    } else {
+        loadedSignalId = background.connect('loaded', () => {
+            background.disconnect(loadedSignalId);
+            loadedSignalId = null;
+            this.emit('loaded');
+        });
+    }
+
+    this.backgroundActor.connect('destroy', () => {
+        if (changeSignalId)
+            background.disconnect(changeSignalId);
+
+        if (loadedSignalId)
+            background.disconnect(loadedSignalId);
+
+        if (this.backgroundActor.loadedSignalId)
+            background.disconnect(this.backgroundActor.loadedSignalId);
+    });
+
+    return this.backgroundActor;
 }
 
 /**
@@ -505,7 +779,7 @@ function new_updateBorderRadius() {
         scaleFactor * Workspace.BACKGROUND_CORNER_RADIUS_PIXELS;
 
     const radius = Util.lerp(0, cornerRadius, this._stateAdjustment.value);
-    this._bgManager.videoActor.setRoundedClipRadius(radius);
+    this._bgManager.backgroundActor.setRoundedClipRadius(radius);
 }
 
 /**
@@ -523,5 +797,5 @@ function new_updateRoundedClipBounds() {
     rect.size.width = this._workarea.width;
     rect.size.height = this._workarea.height;
 
-    this._bgManager.videoActor.setRoundedClipBounds(rect);
+    this._bgManager.backgroundActor.setRoundedClipBounds(rect);
 }
