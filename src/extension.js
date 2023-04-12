@@ -60,7 +60,30 @@ let data = {};
 
 class Extension {
     enable() {
-        // Panel menu
+        this._isPlaying = false;
+
+        /**
+         * Dbus
+         */
+        const dbusXml = `
+        <node>
+            <interface name="io.github.jeffshee.HanabiRenderer">
+                <method name="setPlay"/>
+                <method name="setPause"/>
+                <property name="isPlaying" type="b" access="read"/>
+                <signal name="isPlayingChanged">
+                    <arg name="isPlaying" type="b"/>
+                </signal>
+            </interface>
+        </node>`;
+
+        const rendererProxy = Gio.DBusProxy.makeProxyWrapper(dbusXml);
+        this.proxy = rendererProxy(Gio.DBus.session,
+            'io.github.jeffshee.HanabiRenderer', '/io/github/jeffshee/HanabiRenderer');
+
+        /**
+         * Panel menu
+         */
         const indicatorName = `${Me.metadata.name} Indicator`;
         this._indicator = new PanelMenu.Button(0.0, indicatorName, false);
 
@@ -69,25 +92,6 @@ class Extension {
             0.5, // arrowAlignment
             St.Side.BOTTOM // arrowSide
         );
-
-        const muteAudio = new PopupMenu.PopupMenuItem(
-            getMute() ? 'Unmute Audio' : 'Mute Audio'
-        );
-        muteAudio.connect('activate', () => {
-            setMute(!getMute());
-        });
-        extSettings?.connect('changed', (settings, key) => {
-            if (key === 'mute') {
-                muteAudio.label.set_text(
-                    getMute() ? 'Unmute Audio' : 'Mute Audio'
-                );
-            }
-        });
-        menu.addMenuItem(muteAudio);
-
-        menu.addAction('Preferences', () => {
-            ExtensionUtils.openPrefs();
-        });
 
         this._indicator.setMenu(menu);
 
@@ -105,6 +109,74 @@ class Extension {
 
         Main.panel.addToStatusArea(indicatorName, this._indicator);
 
+        /**
+         * Play/Pause
+         */
+        const playPause = new PopupMenu.PopupMenuItem(
+            this._isPlaying ? 'Pause' : 'Play'
+        );
+
+        playPause.connect('activate', () => {
+            this.proxy.call(
+                this._isPlaying ? 'setPause' : 'setPlay',
+                null,
+                Gio.DBusCallFlags.NO_AUTO_START,
+                -1,
+                null,
+                null
+            );
+        }
+        );
+
+        Gio.DBus.session.signal_subscribe(
+            'io.github.jeffshee.HanabiRenderer',
+            'io.github.jeffshee.HanabiRenderer',
+            'isPlayingChanged',
+            '/io/github/jeffshee/HanabiRenderer',
+            null,
+            Gio.DBusSignalFlags.NONE,
+            (conn, sender, objPath, iface, signal, params) => {
+                this._isPlaying = params.get_child_value(0).get_boolean();
+                playPause.label.set_text(
+                    this._isPlaying ? 'Pause' : 'Play'
+                );
+            }
+        );
+
+        menu.addMenuItem(playPause);
+
+        /**
+         * Mute/unmute audio
+         */
+        const muteAudio = new PopupMenu.PopupMenuItem(
+            getMute() ? 'Unmute Audio' : 'Mute Audio'
+        );
+
+        muteAudio.connect('activate', () => {
+            setMute(!getMute());
+        });
+
+        extSettings?.connect('changed', (settings, key) => {
+            if (key === 'mute') {
+                muteAudio.label.set_text(
+                    getMute() ? 'Unmute Audio' : 'Mute Audio'
+                );
+            }
+        });
+
+        menu.addMenuItem(muteAudio);
+
+        /**
+         * Preferences
+         */
+        menu.addAction('Preferences', () => {
+            ExtensionUtils.openPrefs();
+        });
+
+
+        /**
+         * Other overrides
+         */
         if (!data.GnomeShellOverride) {
             data.GnomeShellOverride =
                 new GnomeShellOverride.GnomeShellOverride();

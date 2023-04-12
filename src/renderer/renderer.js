@@ -99,6 +99,7 @@ const HanabiRenderer = GObject.registerClass(
             this._pictures = [];
             this._sharedPaintable = null;
             this._gstImplName = '';
+            this._isPlaying = false;
             this._setupGst();
 
             this.connect('activate', app => {
@@ -148,7 +149,7 @@ const HanabiRenderer = GObject.registerClass(
                 }
             });
 
-            this._startDbusService();
+            this._exportDbus();
         }
 
         _parseArgs(argv) {
@@ -387,7 +388,7 @@ const HanabiRenderer = GObject.registerClass(
             const file = Gio.File.new_for_path(videoPath);
             this._play.set_uri(file.get_uri());
 
-            this._play.play();
+            this.setPlay();
 
             return widget;
         }
@@ -410,57 +411,36 @@ const HanabiRenderer = GObject.registerClass(
             this._sharedPaintable = this._media;
             const widget = this._getWidgetFromSharedPaintable();
 
-            this._media.play();
+            this.setPlay();
 
             return widget;
         }
 
-        _startDbusService() {
+        _exportDbus() {
             const dbusXml = `
             <node>
                 <interface name="io.github.jeffshee.HanabiRenderer">
-                    <method name="Play"/>
-                    <method name="Pause"/>
-                    <property name="IsPlaying" type="b" access="read"/>
-                    <signal name="IsPlayingChanged">
-                        <arg name="IsPlaying" type="b"/>
+                    <method name="setPlay"/>
+                    <method name="setPause"/>
+                    <property name="isPlaying" type="b" access="read"/>
+                    <signal name="isPlayingChanged">
+                        <arg name="isPlaying" type="b"/>
                     </signal>
                 </interface>
             </node>`;
 
-            const parentThis = this;
-            class DbusService {
-                Play = () => parentThis.setPlay();
-                Pause = () => parentThis.setPause();
-                get IsPlaying() {
-                    return true;
-                }
-            }
-
-            // These must be declared here, otherwise the interface will be terminated shortly
-            let serviceImplementation = null;
-            let serviceInterface = null;
-
-            const onBusAcquired = (connection, _name) => {
-                serviceImplementation = new DbusService();
-                serviceInterface = Gio.DBusExportedObject.wrapJSObject(
-                    dbusXml,
-                    serviceImplementation
-                );
-                serviceInterface.export(
-                    connection,
-                    '/io/github/jeffshee/HanabiRenderer'
-                );
-            };
-
-            this.dbusId = Gio.bus_own_name(
-                Gio.BusType.SESSION,
-                'io.github.jeffshee.HanabiRenderer',
-                Gio.BusNameOwnerFlags.NONE,
-                onBusAcquired,
-                null,
-                null
+            this._dbus = Gio.DBusExportedObject.wrapJSObject(
+                dbusXml,
+                this
             );
+            this._dbus.export(
+                Gio.DBus.session,
+                '/io/github/jeffshee/HanabiRenderer'
+            );
+        }
+
+        _unexportDbus() {
+            this._dbus.unexport();
         }
 
 
@@ -508,14 +488,13 @@ const HanabiRenderer = GObject.registerClass(
             const file = Gio.File.new_for_path(_videoPath);
             if (this._play) {
                 this._play.set_uri(file.get_uri());
-                this._play.play();
             } else if (this._media) {
                 // Reset the stream when switching the file,
                 // otherwise `play()` is not playing for some reason.
                 this._media.stream_unprepared();
                 this._media.file = file;
-                this._media.play();
             }
+            this.setPlay();
         }
 
         setPlay() {
@@ -523,6 +502,8 @@ const HanabiRenderer = GObject.registerClass(
                 this._play.play();
             else
                 this._media?.play();
+            this._isPlaying = true;
+            this._dbus.emit_signal('isPlayingChanged', new GLib.Variant('(b)', [true]));
         }
 
         setPause() {
@@ -530,6 +511,12 @@ const HanabiRenderer = GObject.registerClass(
                 this._play.pause();
             else
                 this._media?.pause();
+            this._isPlaying = false;
+            this._dbus.emit_signal('isPlayingChanged', new GLib.Variant('(b)', [false]));
+        }
+
+        get isPlaying() {
+            return this._isPlaying;
         }
     }
 );
