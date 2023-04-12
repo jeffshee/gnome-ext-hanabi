@@ -100,6 +100,7 @@ const HanabiRenderer = GObject.registerClass(
             this._sharedPaintable = null;
             this._gstImplName = '';
             this._isPlaying = false;
+            this._exportDbus();
             this._setupGst();
 
             this.connect('activate', app => {
@@ -148,8 +149,6 @@ const HanabiRenderer = GObject.registerClass(
                     );
                 }
             });
-
-            this._exportDbus();
         }
 
         _parseArgs(argv) {
@@ -367,8 +366,8 @@ const HanabiRenderer = GObject.registerClass(
             );
 
             // Error handling
-            this._adapter.connect('warning', (adapter, err) => logError(err));
-            this._adapter.connect('error', (adapter, err) => logError(err));
+            this._adapter.connect('warning', (_adapter, err) => logError(err));
+            this._adapter.connect('error', (_adapter, err) => logError(err));
 
             // Set the volume and mute after paused state, otherwise it won't work.
             // Use paused or greater, as some states might be skipped.
@@ -382,6 +381,15 @@ const HanabiRenderer = GObject.registerClass(
                         this._adapter.disconnect(stateSignal);
                         stateSignal = null;
                     }
+                }
+            );
+            // Monitor playing state.
+            this._adapter.connect(
+                'state-changed',
+                (adapter, state) => {
+                    // Monitor playing state.
+                    this._isPlaying = state === GstPlay.PlayState.PLAYING;
+                    this._dbus.emit_signal('isPlayingChanged', new GLib.Variant('(b)', [this._isPlaying]));
                 }
             );
 
@@ -406,6 +414,11 @@ const HanabiRenderer = GObject.registerClass(
             this._media.connect('notify::prepared', () => {
                 this.setVolume(volume);
                 this.setMute(mute);
+            });
+            // Monitor playing state.
+            this._media.connect('notify::playing', media => {
+                this._isPlaying = media.get_playing();
+                this._dbus.emit_signal('isPlayingChanged', new GLib.Variant('(b)', [this._isPlaying]));
             });
 
             this._sharedPaintable = this._media;
@@ -500,19 +513,15 @@ const HanabiRenderer = GObject.registerClass(
         setPlay() {
             if (this._play)
                 this._play.play();
-            else
-                this._media?.play();
-            this._isPlaying = true;
-            this._dbus.emit_signal('isPlayingChanged', new GLib.Variant('(b)', [true]));
+            else if (this._media)
+                this._media.play();
         }
 
         setPause() {
             if (this._play)
                 this._play.pause();
-            else
-                this._media?.pause();
-            this._isPlaying = false;
-            this._dbus.emit_signal('isPlayingChanged', new GLib.Variant('(b)', [false]));
+            else if (this._media)
+                this._media.pause();
         }
 
         get isPlaying() {
