@@ -118,25 +118,20 @@ class Extension {
 
         playPause.connect('activate', () => {
             this.proxy.call(
-                this._isPlaying ? 'setPause' : 'setPlay',
-                null,
-                Gio.DBusCallFlags.NO_AUTO_START,
-                -1,
-                null,
-                null
+                this._isPlaying ? 'setPause' : 'setPlay', // method_name
+                null, // parameters
+                Gio.DBusCallFlags.NO_AUTO_START, // flags
+                -1, // timeout_msec
+                null, // cancellable
+                null // callback
             );
         }
         );
 
-        Gio.DBus.session.signal_subscribe(
-            'io.github.jeffshee.HanabiRenderer',
-            'io.github.jeffshee.HanabiRenderer',
+        this.proxy.connectSignal(
             'isPlayingChanged',
-            '/io/github/jeffshee/HanabiRenderer',
-            null,
-            Gio.DBusSignalFlags.NONE,
-            (conn, sender, objPath, iface, signal, params) => {
-                this._isPlaying = params.get_child_value(0).get_boolean();
+            (_proxy, _sender, [isPlaying]) => {
+                this._isPlaying = isPlaying;
                 playPause.label.set_text(
                     this._isPlaying ? 'Pause' : 'Play'
                 );
