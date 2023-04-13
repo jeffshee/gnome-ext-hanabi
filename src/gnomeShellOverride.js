@@ -30,7 +30,7 @@ const Util = imports.misc.util;
 const Me = ExtensionUtils.getCurrentExtension();
 const RoundedCornersEffect = Me.imports.roundedCornersEffect;
 
-const applicationId = 'io.github.jeffshee.hanabi-renderer';
+const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const extSettings = ExtensionUtils.getSettings(
     'io.github.jeffshee.hanabi-extension'
 );
@@ -215,7 +215,6 @@ var LiveWallpaper = GObject.registerClass(
                 z_position: backgroundActor.z_position + 1,
                 opacity: 0,
             });
-
             this._backgroundActor = backgroundActor;
             this._monitorIndex = backgroundActor.monitor;
             this._display = backgroundActor.meta_display;
@@ -282,18 +281,16 @@ var LiveWallpaper = GObject.registerClass(
         }
 
         _applyWallpaper() {
-            this._wallpaper = new Clutter.Actor({
-                layout_manager: new Shell.WindowPreviewLayout(),
-                // The point around which the scaling and rotation transformations occur.
-                pivot_point: new Graphene.Point({x: 0.5, y: 0.5}),
-            });
-
             let renderer = this._getRenderer();
             if (renderer) {
-                this._wallpaper.layout_manager.add_window(renderer);
+                this._wallpaper = new Clutter.Clone({
+                    source: renderer,
+                    // The point around which the scaling and rotation transformations occur.
+                    pivot_point: new Graphene.Point({x: 0.5, y: 0.5}),
+                });
             } else {
                 debug(
-                    'renderer == null, retry `_applyWallpaper()` after 100ms'
+                    'Hanabi renderer isn\'t ready yet. Retry after 100ms.'
                 );
                 GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
                     this._applyWallpaper();
@@ -307,37 +304,26 @@ var LiveWallpaper = GObject.registerClass(
         }
 
         _getRenderer() {
-            let windowActors;
-            if (replaceData['old_get_window_actors']) {
-                // `get_window_actors` is replaced.
+            let windowActors = [];
+            if (replaceData['old_get_window_actors'])
                 windowActors = global.get_window_actors(false);
-            } else {
+            else
                 windowActors = global.get_window_actors();
-            }
 
-            if (windowActors && windowActors.length === 0)
-                return null;
-
-            // Find renderers by `applicationId`.
-            const findRendererForMonitor = index => {
+            // Find renderer by `applicationId` and monitor index.
+            const findRenderer = monitor => {
                 return windowActors.find(
                     window =>
                         window.meta_window.title?.includes(applicationId) &&
                         window.meta_window.title?.endsWith(
-                            `|${index.toString()}`
+                            `|${monitor}`
                         )
                 );
             };
 
-            // The renderer for this monitor. If it's not found, try using the primary monitor one.
-            let renderer =
-                findRendererForMonitor(this._monitorIndex) ??
-                findRendererForMonitor(0);
+            let renderer = findRenderer(this._monitorIndex);
 
-            if (renderer)
-                return renderer.meta_window;
-
-            return null;
+            return renderer ? renderer : null;
         }
 
         _resize() {

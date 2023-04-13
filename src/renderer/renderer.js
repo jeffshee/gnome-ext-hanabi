@@ -38,7 +38,7 @@ const haveGstAudio = GstAudio !== null;
 // ContentFit is available from Gtk 4.8+
 const haveContentFit = Gtk.get_minor_version() >= 8;
 
-const applicationId = 'io.github.jeffshee.hanabi-renderer';
+const applicationId = 'io.github.jeffshee.HanabiRenderer';
 
 let extSettings = null;
 const extSchemaId = 'io.github.jeffshee.hanabi-extension';
@@ -99,6 +99,8 @@ const HanabiRenderer = GObject.registerClass(
             this._pictures = [];
             this._sharedPaintable = null;
             this._gstImplName = '';
+            this._isPlaying = false;
+            this._exportDbus();
             this._setupGst();
 
             this.connect('activate', app => {
@@ -364,8 +366,8 @@ const HanabiRenderer = GObject.registerClass(
             );
 
             // Error handling
-            this._adapter.connect('warning', (adapter, err) => logError(err));
-            this._adapter.connect('error', (adapter, err) => logError(err));
+            this._adapter.connect('warning', (_adapter, err) => logError(err));
+            this._adapter.connect('error', (_adapter, err) => logError(err));
 
             // Set the volume and mute after paused state, otherwise it won't work.
             // Use paused or greater, as some states might be skipped.
@@ -381,11 +383,20 @@ const HanabiRenderer = GObject.registerClass(
                     }
                 }
             );
+            // Monitor playing state.
+            this._adapter.connect(
+                'state-changed',
+                (adapter, state) => {
+                    // Monitor playing state.
+                    this._isPlaying = state === GstPlay.PlayState.PLAYING;
+                    this._dbus.emit_signal('isPlayingChanged', new GLib.Variant('(b)', [this._isPlaying]));
+                }
+            );
 
             const file = Gio.File.new_for_path(videoPath);
             this._play.set_uri(file.get_uri());
 
-            this._play.play();
+            this.setPlay();
 
             return widget;
         }
@@ -404,14 +415,47 @@ const HanabiRenderer = GObject.registerClass(
                 this.setVolume(volume);
                 this.setMute(mute);
             });
+            // Monitor playing state.
+            this._media.connect('notify::playing', media => {
+                this._isPlaying = media.get_playing();
+                this._dbus.emit_signal('isPlayingChanged', new GLib.Variant('(b)', [this._isPlaying]));
+            });
 
             this._sharedPaintable = this._media;
             const widget = this._getWidgetFromSharedPaintable();
 
-            this._media.play();
+            this.setPlay();
 
             return widget;
         }
+
+        _exportDbus() {
+            const dbusXml = `
+            <node>
+                <interface name="io.github.jeffshee.HanabiRenderer">
+                    <method name="setPlay"/>
+                    <method name="setPause"/>
+                    <property name="isPlaying" type="b" access="read"/>
+                    <signal name="isPlayingChanged">
+                        <arg name="isPlaying" type="b"/>
+                    </signal>
+                </interface>
+            </node>`;
+
+            this._dbus = Gio.DBusExportedObject.wrapJSObject(
+                dbusXml,
+                this
+            );
+            this._dbus.export(
+                Gio.DBus.session,
+                '/io/github/jeffshee/HanabiRenderer'
+            );
+        }
+
+        _unexportDbus() {
+            this._dbus.unexport();
+        }
+
 
         /**
          * These workarounds are needed because get_volume() and get_muted() can be wrong in some cases.
@@ -457,14 +501,31 @@ const HanabiRenderer = GObject.registerClass(
             const file = Gio.File.new_for_path(_videoPath);
             if (this._play) {
                 this._play.set_uri(file.get_uri());
-                this._play.play();
             } else if (this._media) {
                 // Reset the stream when switching the file,
                 // otherwise `play()` is not playing for some reason.
                 this._media.stream_unprepared();
                 this._media.file = file;
-                this._media.play();
             }
+            this.setPlay();
+        }
+
+        setPlay() {
+            if (this._play)
+                this._play.play();
+            else if (this._media)
+                this._media.play();
+        }
+
+        setPause() {
+            if (this._play)
+                this._play.pause();
+            else if (this._media)
+                this._media.pause();
+        }
+
+        get isPlaying() {
+            return this._isPlaying;
         }
     }
 );
