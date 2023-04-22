@@ -359,16 +359,25 @@ var LiveWallpaper = GObject.registerClass(
             if (this._laterId)
                 return;
 
-            this._laterId = Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
+            const laterType = Meta.LaterType.BEFORE_REDRAW;
+            const sourceFunction = () => {
                 this._resize();
 
                 this._laterId = 0;
                 return GLib.SOURCE_REMOVE;
-            });
+            };
+            const laters = global.compositor?.get_laters();
+            if (laters)
+                laters.add(laterType, sourceFunction);
+            else
+                Meta.later_add(laterType, sourceFunction);
         }
 
         _onDestroy() {
-            if (this._laterId)
+            const laters = global.compositor?.get_laters();
+            if (laters)
+                laters.remove(this._laterId);
+            else
                 Meta.later_remove(this._laterId);
 
             this._laterId = 0;
