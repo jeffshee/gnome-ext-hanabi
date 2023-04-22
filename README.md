@@ -10,10 +10,8 @@ If you like my project, please consider buying me a coffee!! (⁎˃ ꇴ ˂⁎)�
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/jeffshee)
 
-Also please don't forget to click that star button! 🌟  
+Also please don't forget to hit that star button! 🌟  
 Your support is truly appreciated!
-
-Work in Progress 🌱
 
 ## Demo 📽️
 
@@ -22,10 +20,16 @@ Please click on the image to view <i>(redirect to YouTube)</i>
 [![](https://i3.ytimg.com/vi/BWjXl4h9_BA/maxresdefault.jpg)](https://www.youtube.com/watch?v=BWjXl4h9_BA)
 [Wallpaper used in demo](https://www.youtube.com/watch?v=2pBj0RKN3Y8)
 
-## Experimenting 🧪
+## GNOME Shell Support
 
-Note that the Hanabi extension is not even close to alpha quality.  
-Nevertheless, the procedure is here for anyone who wants to experiment with Hanabi extension.
+| Version | Status |
+| :-----: | :----: |
+|   ≤41   |   ⛔   |
+|   42    |   ✅   |
+|   43    |   ✅   |
+|   44    |   🚧   |
+
+## Installation
 
 1. Clone the repo
 
@@ -43,12 +47,6 @@ cd gnome-ext-hanabi
 3. Restart GNOME Shell
 4. Enable the Hanabi extension
 5. Choose your video wallpaper in the extension preference window
-
-If the GNOME shell keeps crashing, you can try to disable the extension using tty (Ctrl+Alt+F3):
-
-```
-gnome-extensions disable hanabi-extension@jeffshee.github.io
-```
 
 ### Distro-specific guide
 
@@ -69,6 +67,12 @@ gnome-extensions disable hanabi-extension@jeffshee.github.io
     `rm -rf ~/.cache/gstreamer-1.0/`  
     After that, check if `gst-inspect-1.0 nvcodec` reports all its features.
 
+3. The GNOME Shell keeps crashing after enabling Hanabi, help!  
+   You can try to disable the extension from tty (Ctrl+Alt+F3):
+   ```
+   gnome-extensions disable hanabi-extension@jeffshee.github.io
+   ```
+
 ### Optimization
 
 Hanabi extension can utilize `clappersink` from [Clapper](https://github.com/Rafostar/clapper) for the best performance if installed.
@@ -81,7 +85,7 @@ For this to work, Clapper must be installed **from the package manager and not f
 - With `clappersink`
   ![](https://user-images.githubusercontent.com/25530920/190872365-f1cefa30-6e11-40e4-bf99-1b79c3790d6b.png)
 
-- Without `clappersink` (Use `Gtk.MediaFile` as fallback)
+- Without `clappersink` (Using `Gtk.MediaFile` as default fallback)
   ![](https://user-images.githubusercontent.com/25530920/190872366-7fce5703-2310-4c68-81c7-f17a8a15019f.png)
 
 </details>
@@ -89,7 +93,7 @@ For this to work, Clapper must be installed **from the package manager and not f
 ## Please!! 🙏
 
 Collaboration is welcome! Let's make it better together~  
-Feel free to open an issue if you have any problem or suggestions 🤗
+Feel free to open an issue if you have any problems or suggestions 🤗
 
 ## Contributors ✨
 
