@@ -29,9 +29,8 @@ const Main = imports.ui.main;
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 
 class ManagedWindow {
-    constructor(window, waylandClient) {
+    constructor(window) {
         this._window = window;
-        this._waylandClient = waylandClient;
         this._signals = [];
         this._states = {
             position: [0, 0],
@@ -120,11 +119,6 @@ class ManagedWindow {
         });
 
         this._window = null;
-        this._waylandClient = null;
-    }
-
-    set_wayland_client(client) {
-        this._waylandClient = client;
     }
 }
 
@@ -137,10 +131,6 @@ var WindowManager = class {
 
     set_wayland_client(client) {
         this._waylandClient = client;
-        this._windows.forEach(window => {
-            if (window.managed)
-                window.managed.set_wayland_client(this._waylandClient);
-        });
     }
 
     enable() {
@@ -178,10 +168,7 @@ var WindowManager = class {
             window = window.get_meta_window();
         }
 
-        window.managed = new ManagedWindow(
-            window,
-            this._waylandClient
-        );
+        window.managed = new ManagedWindow(window);
         this._windows.add(window);
         window.managed._unmanagedId = window.connect(
             'unmanaged',
