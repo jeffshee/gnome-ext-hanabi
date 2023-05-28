@@ -17,6 +17,7 @@ sources = [
   'hanabi-symbolic.svg',
   'prefs.js',
   'roundedCornersEffect.js',
+  'wallpaper.js',
   'windowManager.js'
 ]
 
