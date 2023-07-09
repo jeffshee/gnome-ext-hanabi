@@ -27,7 +27,9 @@ Please click on the image to view <i>(redirect to YouTube)</i>
 |   ≤41   |   ⛔   |
 |   42    |   ✅   |
 |   43    |   ✅   |
-|   44    |   🚧   |
+|   44    |   ✅   |
+
+See also the section [Troubleshooting](#troubleshooting), for version-specific known issues.
 
 ## Installation
 
@@ -69,9 +71,14 @@ cd gnome-ext-hanabi
 
 3. The GNOME Shell keeps crashing after enabling Hanabi, help!  
    You can try to disable the extension from tty (Ctrl+Alt+F3):
+
    ```
    gnome-extensions disable hanabi-extension@jeffshee.github.io
    ```
+
+4. The video covers several UI components of GNOME Shell, such as topbar, panel, DING's desktop icons, etc.  
+   Affects: GNOME 44, and possibly GNOME 43.  
+   The cause of the issue is still unknown. However, it consistently occurs after a shell restart (reboot or re-login). Switching the workspace (Ctrl + Alt + ⬅ or ➡) somehow temporarily fixes the issue until the next shell restart.
 
 ### Optimization
 
