@@ -211,6 +211,8 @@ class Extension {
  *
  */
 function init() {
+    ExtensionUtils.initTranslations(Me.metadata.uuid);
+
     data.isEnabled = false;
     data.launchRendererId = 0;
     data.currentProcess = null;
