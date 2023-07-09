@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-09 18:23+0900\n"
+"POT-Creation-Date: 2023-07-09 18:39+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -112,10 +112,6 @@ msgstr ""
 
 #: src/prefs.js:218 src/prefs.js:234
 msgid "Open"
-msgstr ""
-
-#: src/prefs.js:225
-msgid "Current"
 msgstr ""
 
 #: src/prefs.js:251
