@@ -222,7 +222,7 @@ function prefsRowVideoPath(window, prefsGroup) {
             if (responseId === Gtk.ResponseType.ACCEPT) {
                 let _path = dialog.get_file().get_path();
                 settings.set_string(key, _path);
-                row.subtitle = `${_('Current')}: ${_path !== '' ? _path : _('None')}`;
+                row.subtitle = `${_path !== '' ? _path : _('None')}`;
             }
             dialog.destroy();
         });
