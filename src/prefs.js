@@ -258,10 +258,10 @@ function prefsRowFitMode(prefsGroup) {
     `);
 
     const items = Gtk.StringList.new([
-        'Fill',
-        'Contain',
-        'Cover',
-        'Scale-down',
+        _('Fill'),
+        _('Contain'),
+        _('Cover'),
+        _('Scale-down'),
     ]);
 
     const row = new Adw.ComboRow({

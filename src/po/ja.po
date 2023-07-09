@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-09 18:39+0900\n"
-"PO-Revision-Date: 2023-07-09 18:47+0900\n"
+"POT-Creation-Date: 2023-07-09 19:34+0900\n"
+"PO-Revision-Date: 2023-07-09 19:39+0900\n"
 "Last-Translator: Jeff Shee <jeffshee8969@gmail.com>\n"
 "Language-Team: \n"
 "Language: ja\n"
@@ -145,6 +145,22 @@ msgstr ""
 "    <b>Scale-down</b>: モニターに合わせて壁紙をスケールダウンします。\n"
 "\t壁紙のサイズがモニターより小さい場合は元のサイズを維持します。\n"
 "    "
+
+#: src/prefs.js:261
+msgid "Fill"
+msgstr "Fill"
+
+#: src/prefs.js:262
+msgid "Contain"
+msgstr "Contain"
+
+#: src/prefs.js:263
+msgid "Cover"
+msgstr "Cover"
+
+#: src/prefs.js:264
+msgid "Scale-down"
+msgstr "Scale-down"
 
 #: src/prefs.js:277
 msgid "This feature requires Gtk 4.8 or above"

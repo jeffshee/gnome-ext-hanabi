@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-09 18:39+0900\n"
+"POT-Creation-Date: 2023-07-09 19:34+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -133,6 +133,22 @@ msgid ""
 "    <b>Scale-down</b>: Scale down the wallpaper to fit the monitor if "
 "needed, otherwise keep its original size.\n"
 "    "
+msgstr ""
+
+#: src/prefs.js:261
+msgid "Fill"
+msgstr ""
+
+#: src/prefs.js:262
+msgid "Contain"
+msgstr ""
+
+#: src/prefs.js:263
+msgid "Cover"
+msgstr ""
+
+#: src/prefs.js:264
+msgid "Scale-down"
 msgstr ""
 
 #: src/prefs.js:277
