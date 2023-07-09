@@ -11,6 +11,7 @@ If you like my project, please consider buying me a coffee!! (⁎˃ ꇴ ˂⁎)�
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/jeffshee)
 
 Also please don't forget to hit that star button! 🌟  
+Feel free to open an issue for problems or suggestions 🤗  
 Your support is truly appreciated!
 
 ## Demo 📽️
@@ -97,12 +98,12 @@ For this to work, Clapper must be installed **from the package manager and not f
 
 </details>
 
-## Please!! 🙏
+## Get involved 🚀
 
-Collaboration is welcome! Let's make it better together~  
-Feel free to open an issue if you have any problems or suggestions 🤗
+Contributors are welcome! Let's make Hanabi extension better together~  
+If you're interested in translating, please help by working with the pot files located in the `src/po` directory.
 
-## Contributors ✨
+### Contributors ✨
 
 <a href="https://github.com/jeffshee/gnome-ext-hanabi/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=jeffshee/gnome-ext-hanabi" />
