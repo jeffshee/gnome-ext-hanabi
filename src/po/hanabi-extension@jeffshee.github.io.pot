@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-02 00:40+0900\n"
+"POT-Creation-Date: 2023-07-09 18:23+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,96 +17,116 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: prefs.js:50
-msgid "General"
+#: src/extension.js:124 src/extension.js:144
+msgid "Pause"
 msgstr ""
 
-#: prefs.js:54
+#: src/extension.js:124 src/extension.js:144
+msgid "Play"
+msgstr ""
+
+#: src/extension.js:155 src/extension.js:165
+msgid "Unmute Audio"
+msgstr ""
+
+#: src/extension.js:155 src/extension.js:165 src/prefs.js:54
 msgid "Mute Audio"
 msgstr ""
 
-#: prefs.js:55
+#: src/extension.js:175
+msgid "Preferences"
+msgstr ""
+
+#: src/prefs.js:50
+msgid "General"
+msgstr ""
+
+#: src/prefs.js:55
 msgid "Volume Level"
 msgstr ""
 
-#: prefs.js:79
+#: src/prefs.js:79
 msgid "Experimental"
 msgstr ""
 
-#: prefs.js:84
+#: src/prefs.js:84
 msgid "Experimental VA Plugin"
 msgstr ""
 
-#: prefs.js:86
+#: src/prefs.js:86
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
 
-#: prefs.js:90
+#: src/prefs.js:90
 msgid "NVIDIA Stateless Decoders"
 msgstr ""
 
-#: prefs.js:92
+#: src/prefs.js:92
 msgid "Use new stateless NVIDIA decoders"
 msgstr ""
 
-#: prefs.js:95
+#: src/prefs.js:95
 msgid "Developer"
 msgstr ""
 
-#: prefs.js:99
+#: src/prefs.js:99
 msgid "Debug Mode"
 msgstr ""
 
-#: prefs.js:101
+#: src/prefs.js:101
 msgid "Print debug messages to log"
 msgstr ""
 
-#: prefs.js:105
+#: src/prefs.js:105
 msgid "Force gtk4paintablesink"
 msgstr ""
 
-#: prefs.js:107
+#: src/prefs.js:107
 msgid "Force use of gtk4paintablesink for video playback"
 msgstr ""
 
-#: prefs.js:111
+#: src/prefs.js:111
 msgid "Force GtkMediaFile"
 msgstr ""
 
-#: prefs.js:113
+#: src/prefs.js:113
 msgid "Force use of GtkMediaFile for video playback"
 msgstr ""
 
-#: prefs.js:194
+#: src/prefs.js:194
 msgid "Video Path"
 msgstr ""
 
-#: prefs.js:200 prefs.js:225
+#: src/prefs.js:200 src/prefs.js:225
 msgid "None"
 msgstr ""
 
-#: prefs.js:212
+#: src/prefs.js:212
 msgid "Open File"
 msgstr ""
 
-#: prefs.js:217
+#: src/prefs.js:217
 msgid "Cancel"
 msgstr ""
 
-#: prefs.js:218 prefs.js:234
+#: src/prefs.js:218 src/prefs.js:234
 msgid "Open"
 msgstr ""
 
-#: prefs.js:251
+#: src/prefs.js:225
+msgid "Current"
+msgstr ""
+
+#: src/prefs.js:251
 msgid "Fit Mode"
 msgstr ""
 
-#: prefs.js:252
+#: src/prefs.js:252
 msgid "Control how wallpaper fits within the monitor"
 msgstr ""
 
-#: prefs.js:253
+#: src/prefs.js:253
 msgid ""
 "\n"
 "    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
@@ -119,7 +139,6 @@ msgid ""
 "    "
 msgstr ""
 
-
-#: prefs.js:277
+#: src/prefs.js:277
 msgid "This feature requires Gtk 4.8 or above"
 msgstr ""
