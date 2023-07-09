@@ -1,0 +1,131 @@
+# Gnome Shell Extension - Hanabi
+# Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
+# This file is distributed under the same license as the gnome-ext-hanabi package.
+# Jeff Shee <jeffshee8969@gmail.com>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-07-02 00:40+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Jeff Shee <jeffshee8969@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: prefs.js:50
+msgid "General"
+msgstr "一般"
+
+#: prefs.js:54
+msgid "Mute Audio"
+msgstr "音声をミュート"
+
+#: prefs.js:55
+msgid "Volume Level"
+msgstr "音量"
+
+#: prefs.js:79
+msgid "Experimental"
+msgstr "実験的機能"
+
+#: prefs.js:84
+msgid "Experimental VA Plugin"
+msgstr "実験的VAプラグイン"
+
+#: prefs.js:86
+msgid ""
+"Enable VA decoders which improve performance for Intel/AMD Wayland users"
+msgstr ""
+"パフォーマンスを向上させるためのVAデコーダを有効にします\n（Intel/AMD Waylandユーザー向け）"
+
+#: prefs.js:90
+msgid "NVIDIA Stateless Decoders"
+msgstr "NVIDIAステートレスデコーダ"
+
+#: prefs.js:92
+msgid "Use new stateless NVIDIA decoders"
+msgstr "新たに実装されたステートレスNVIDIAデコーダを使用します"
+
+#: prefs.js:95
+msgid "Developer"
+msgstr "開発者向けオプション"
+
+#: prefs.js:99
+msgid "Debug Mode"
+msgstr "デバッグモード"
+
+#: prefs.js:101
+msgid "Print debug messages to log"
+msgstr "デバッグメッセージをログに出力します"
+
+#: prefs.js:105
+msgid "Force gtk4paintablesink"
+msgstr "gtk4paintablesink優先"
+
+#: prefs.js:107
+msgid "Force use of gtk4paintablesink for video playback"
+msgstr "動画再生にgtk4paintablesinkを優先的に使用します"
+
+#: prefs.js:111
+msgid "Force GtkMediaFile"
+msgstr "GtkMediaFile優先"
+
+#: prefs.js:113
+msgid "Force use of GtkMediaFile for video playback"
+msgstr "動画再生にGtkMediaFileを優先的に使用します"
+
+#: prefs.js:194
+msgid "Video Path"
+msgstr "動画ファイルのパス"
+
+#: prefs.js:200 prefs.js:225
+msgid "None"
+msgstr "なし"
+
+#: prefs.js:212
+msgid "Open File"
+msgstr "ファイルを開く"
+
+#: prefs.js:217
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: prefs.js:218 prefs.js:234
+msgid "Open"
+msgstr "開く"
+
+#: prefs.js:251
+msgid "Fit Mode"
+msgstr "フィットモード"
+
+#: prefs.js:252
+msgid "Control how wallpaper fits within the monitor"
+msgstr "壁紙をモニターにフィットする方法を設定します"
+
+#: prefs.js:253
+msgid ""
+"\n"
+"    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
+"    <b>Contain</b>: Scale the wallpaper to fit the monitor (keep aspect "
+"ratio).\n"
+"    <b>Cover</b>: Scale the wallpaper to cover the monitor (keep aspect "
+"ratio).\n"
+"    <b>Scale-down</b>: Scale down the wallpaper to fit the monitor if "
+"needed, otherwise keep its original size.\n"
+"    "
+msgstr ""
+"\n"
+"    <b>Fill</b>: 壁紙をモニター全体に広げます。\n"
+"    <b>Contain</b>: 壁紙をモニターに合わせてスケーリングします。\n\t（レターボックス、アスペクト比を保持）\n"
+"    <b>Cover</b>: 壁紙をモニターに合わせてスケールします。\n\t（切り取り、アスペクト比を保持）\n"
+"    <b>Scale-down</b>: モニターに合わせて壁紙をスケールダウンします。\n\t壁紙のサイズがモニターより小さい場合は元のサイズを維持します。\n"
+"    "
+
+#: prefs.js:277
+msgid "This feature requires Gtk 4.8 or above"
+msgstr "この機能を使用するには、Gtk 4.8以上が必要です"
