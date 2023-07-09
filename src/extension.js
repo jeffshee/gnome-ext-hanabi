@@ -36,7 +36,10 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Config = imports.misc.config;
 
 const Me = ExtensionUtils.getCurrentExtension();
-const EmulateX11 = Me.imports.emulateX11WindowType;
+// const EmulateX11 = Me.imports.emulateX11WindowType;
+const {WindowManager} = Me.imports.windowManager;
+const {LaunchSubprocess} = Me.imports.launcher;
+
 const GnomeShellOverride = Me.imports.gnomeShellOverride;
 
 const extSettings = ExtensionUtils.getSettings(
@@ -177,8 +180,8 @@ class Extension {
                 new GnomeShellOverride.GnomeShellOverride();
         }
 
-        if (!data.x11Manager)
-            data.x11Manager = new EmulateX11.EmulateX11WindowType();
+        if (!data.manager)
+            data.manager = new WindowManager();
 
         // If the desktop is still starting up, wait until it is ready
         if (Main.layoutManager._startingUp) {
@@ -200,7 +203,7 @@ class Extension {
         data.isEnabled = false;
         killCurrentProcess();
         data.GnomeShellOverride.disable();
-        data.x11Manager.disable();
+        data.manager.disable();
     }
 }
 
@@ -215,7 +218,7 @@ function init() {
     data.GnomeShellVersion = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
     data.GnomeShellOverride = null;
-    data.x11Manager = null;
+    data.manager = null;
 
     /**
      * Ensures that there aren't "rogue" processes.
@@ -240,7 +243,7 @@ function innerEnable(removeId) {
     }
 
     data.GnomeShellOverride.enable();
-    data.x11Manager.enable();
+    data.manager.enable();
 
     data.isEnabled = true;
     if (data.launchRendererId)
@@ -355,10 +358,10 @@ function launchRenderer() {
     argv.push('-F');
     argv.push(videoPath);
 
-    data.currentProcess = new LaunchSubprocess(0, 'Hanabi', '-U');
+    data.currentProcess = new LaunchSubprocess();
     data.currentProcess.set_cwd(GLib.get_home_dir());
     data.currentProcess.spawnv(argv);
-    data.x11Manager.set_wayland_client(data.currentProcess);
+    data.manager.set_wayland_client(data.currentProcess);
 
     /**
      * If the renderer dies, wait 100ms and relaunch it, unless the exit status is different than zero,
@@ -378,7 +381,7 @@ function launchRenderer() {
             data.reloadTime = 1000;
         }
         data.currentProcess = null;
-        data.x11Manager.set_wayland_client(null);
+        data.manager.set_wayland_client(null);
         if (data.isEnabled) {
             if (data.launchRendererId)
                 GLib.source_remove(data.launchRendererId);
@@ -395,133 +398,3 @@ function launchRenderer() {
         }
     });
 }
-
-/**
- * This class encapsulates the code to launch a subprocess that can detect whether a window belongs to it.
- * It only accepts to do it under Wayland, because under X11 there is no need to do these tricks.
- *
- * It is compatible with https://gitlab.gnome.org/GNOME/mutter/merge_requests/754 to simplify the code.
- *
- * @param {int} flags Flags for the SubprocessLauncher class
- * @param {string} process_id An string id for the debug output
- * @param {string} cmd_parameter A command line parameter to pass when running. It will be passed only under Wayland,
- *                               so, if this parameter isn't passed, the app can assume that it is running under X11.
- */
-var LaunchSubprocess = class {
-    constructor(flags, processId, cmdParameter) {
-        this._isX11 = !Meta.is_wayland_compositor();
-        this._process_id = processId;
-        this._cmd_parameter = cmdParameter;
-        this._UUID = null;
-        this._flags =
-            flags |
-            Gio.SubprocessFlags.STDOUT_PIPE |
-            Gio.SubprocessFlags.STDERR_MERGE;
-        this.cancellable = new Gio.Cancellable();
-        this._launcher = new Gio.SubprocessLauncher({flags: this._flags});
-        if (!this._isX11) {
-            this._waylandClient = data.GnomeShellVersion > 43 ? Meta.WaylandClient.new(global.context, this._launcher) : Meta.WaylandClient.new(this._launcher);
-            if (Config.PACKAGE_VERSION === '3.38.0') {
-                // workaround for bug in 3.38.0
-                this._launcher.ref();
-            }
-        }
-        this.subprocess = null;
-        this.process_running = false;
-    }
-
-    spawnv(argv) {
-        if (!this._isX11)
-            this.subprocess = this._waylandClient.spawnv(global.display, argv);
-        else
-            this.subprocess = this._launcher.spawnv(argv);
-
-        // This is for GLib 2.68 or greater
-        if (this._launcher.close)
-            this._launcher.close();
-
-        this._launcher = null;
-        if (this.subprocess) {
-            /**
-             * It reads STDOUT and STDERR and sends it to the journal using global.log().
-             * This allows to have any error from the renderer in the same journal than other extensions.
-             * Every line from the renderer is prepended with the "process_id" parameter sent in the constructor.
-             */
-            this._dataInputStream = Gio.DataInputStream.new(
-                this.subprocess.get_stdout_pipe()
-            );
-            this.read_output();
-            this.subprocess.wait_async(this.cancellable, () => {
-                this.process_running = false;
-                this._dataInputStream = null;
-                this.cancellable = null;
-            });
-            this.process_running = true;
-        }
-        return this.subprocess;
-    }
-
-    set_cwd(cwd) {
-        this._launcher.set_cwd(cwd);
-    }
-
-    read_output() {
-        if (!this._dataInputStream)
-            return;
-
-        this._dataInputStream.read_line_async(
-            GLib.PRIORITY_DEFAULT,
-            this.cancellable,
-            (object, res) => {
-                try {
-                    const [output, length] = object.read_line_finish_utf8(res);
-                    if (length)
-                        print(`${this._process_id}: ${output}`);
-                } catch (e) {
-                    if (e.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
-                        return;
-
-                    logError(e, `${this._process_id}_Error`);
-                }
-
-                this.read_output();
-            }
-        );
-    }
-
-    /**
-     * Queries whether the passed window belongs to the launched subprocess or not.
-     *
-     * @param {MetaWindow} window The window to check.
-     */
-    query_window_belongs_to(window) {
-        if (this._isX11)
-            return false;
-
-        if (!this.process_running)
-            return false;
-
-        try {
-            return this._waylandClient.owns_window(window);
-        } catch (e) {
-            return false;
-        }
-    }
-
-    query_pid_of_program() {
-        if (!this.process_running)
-            return false;
-
-        return this.subprocess.get_identifier();
-    }
-
-    show_in_window_list(window) {
-        if (!this._isX11 && this.process_running)
-            this._waylandClient.show_in_window_list(window);
-    }
-
-    hide_from_window_list(window) {
-        if (!this._isX11 && this.process_running)
-            this._waylandClient.hide_from_window_list(window);
-    }
-};

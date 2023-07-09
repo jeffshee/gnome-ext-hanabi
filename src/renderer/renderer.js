@@ -74,6 +74,7 @@ let videoPath = extSettings ? extSettings.get_string('video-path') : '';
 let volume = extSettings ? extSettings.get_int('volume') / 100.0 : 0.5;
 let windowDimension = {width: 1920, height: 1080};
 let windowed = false;
+let fullscreened = true;
 
 /**
  *
@@ -296,11 +297,18 @@ const HanabiRenderer = GObject.registerClass(
                         widget = this._getGtkStockWidget();
                 }
 
+                const geometry = gdkMonitor.get_geometry();
+                const state = {
+                    position: [geometry.x, geometry.y],
+                    keepAtBottom: true,
+                    keepMinimized: true,
+                    keepPosition: true,
+                };
                 const window = new HanabiRendererWindow(
                     this,
                     nohide
                         ? `Hanabi Renderer #${index} (using ${this._gstImplName})`
-                        : `@${applicationId}!0,0;BM|${index}`,
+                        : `@${applicationId}!${JSON.stringify(state)}|${index}`,
                     widget,
                     gdkMonitor
                 );
@@ -559,8 +567,15 @@ const HanabiRendererWindow = GObject.registerClass(
             );
 
             this.set_child(widget);
-            if (!windowed)
-                this.fullscreen_on_monitor(gdkMonitor);
+            if (!windowed) {
+                if (fullscreened) {
+                    this.fullscreen_on_monitor(gdkMonitor);
+                } else {
+                    const geometry = gdkMonitor.get_geometry();
+                    const [width, height] = [geometry.width, geometry.height];
+                    this.set_size_request(width, height);
+                }
+            }
         }
     }
 );

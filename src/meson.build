@@ -11,12 +11,14 @@ configure_file(
 )
 
 sources = [
-  'emulateX11WindowType.js',
   'extension.js',
   'gnomeShellOverride.js',
+  'launcher.js',
   'hanabi-symbolic.svg',
   'prefs.js',
   'roundedCornersEffect.js',
+  'wallpaper.js',
+  'windowManager.js'
 ]
 
 extra_sources = [
