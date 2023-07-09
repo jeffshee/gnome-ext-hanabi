@@ -1,6 +1,7 @@
 # Hanabi extension
 experimental
 src/video.*
+.build
 
 # Logs
 logs

@@ -9,7 +9,7 @@ uuid = 'hanabi-extension@jeffshee.github.io'
 
 prefix = get_option('prefix')
 datadir = join_paths(prefix, get_option('datadir'))
-extensions_dir = join_paths(prefix, 'share', 'gnome-shell', 'extensions')
+extensions_dir = join_paths(datadir, 'gnome-shell', 'extensions')
 install_dir = join_paths(extensions_dir, uuid)
 
 schema = 'io.github.jeffshee.hanabi-extension'

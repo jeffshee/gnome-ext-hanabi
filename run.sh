@@ -3,12 +3,8 @@
 UUID="hanabi-extension@jeffshee.github.io"
 
 if [ "$1" == "install" ]; then
-    rm -rf ~/.local/share/gnome-shell/extensions/"$UUID"/*
     rm -rf .build
-    mkdir .build
-    meson --prefix=$HOME/.local/ .build
-    ninja -C .build install
-    rm -rf .build
+    meson setup .build --prefix=$HOME/.local/ && ninja -C .build install
 elif [ "$1" == "enable" ]; then
     gnome-extensions enable "$UUID"
 elif [ "$1" == "disable" ]; then
