@@ -27,6 +27,7 @@
 /* exported init */
 
 const {Meta, Gio, GLib, St} = imports.gi;
+const Gettext = imports.gettext;
 
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
@@ -45,6 +46,10 @@ const GnomeShellOverride = Me.imports.gnomeShellOverride;
 const extSettings = ExtensionUtils.getSettings(
     'io.github.jeffshee.hanabi-extension'
 );
+
+const Domain = Gettext.domain(Me.metadata.uuid);
+const _ = Domain.gettext;
+const ngettext = Domain.ngettext;
 
 const getVideoPath = () => {
     return extSettings.get_string('video-path');
@@ -116,7 +121,7 @@ class Extension {
          * Play/Pause
          */
         const playPause = new PopupMenu.PopupMenuItem(
-            this._isPlaying ? 'Pause' : 'Play'
+            this._isPlaying ? _('Pause') : _('Play')
         );
 
         playPause.connect('activate', () => {
@@ -136,7 +141,7 @@ class Extension {
             (_proxy, _sender, [isPlaying]) => {
                 this._isPlaying = isPlaying;
                 playPause.label.set_text(
-                    this._isPlaying ? 'Pause' : 'Play'
+                    this._isPlaying ? _('Pause') : _('Play')
                 );
             }
         );
@@ -147,7 +152,7 @@ class Extension {
          * Mute/unmute audio
          */
         const muteAudio = new PopupMenu.PopupMenuItem(
-            getMute() ? 'Unmute Audio' : 'Mute Audio'
+            getMute() ? _('Unmute Audio') : _('Mute Audio')
         );
 
         muteAudio.connect('activate', () => {
@@ -157,7 +162,7 @@ class Extension {
         extSettings?.connect('changed', (settings, key) => {
             if (key === 'mute') {
                 muteAudio.label.set_text(
-                    getMute() ? 'Unmute Audio' : 'Mute Audio'
+                    getMute() ? _('Unmute Audio') : _('Mute Audio')
                 );
             }
         });
@@ -167,7 +172,7 @@ class Extension {
         /**
          * Preferences
          */
-        menu.addAction('Preferences', () => {
+        menu.addAction(_('Preferences'), () => {
             ExtensionUtils.openPrefs();
         });
 

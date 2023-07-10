@@ -4,5 +4,5 @@ i18n.gettext(
 		'--sort-by-file',
 		'--from-code=UTF-8'
 	],
-	install_dir: install_dir / 'locale'
+	install_dir: join_paths(install_dir, 'locale')
 )
