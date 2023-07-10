@@ -1,0 +1,168 @@
+# Gnome Shell Extension - Hanabi
+# Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
+# This file is distributed under the same license as the gnome-ext-hanabi package.
+# Seikm, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-07-09 19:34+0900\n"
+"PO-Revision-Date: 2023-07-09 23:15-0300\n"
+"Last-Translator: Seikm\n"
+"Language-Team: \n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.3.2\n"
+
+#: src/extension.js:124 src/extension.js:144
+msgid "Pause"
+msgstr "Pausar"
+
+#: src/extension.js:124 src/extension.js:144
+msgid "Play"
+msgstr "Reproduzir"
+
+#: src/extension.js:155 src/extension.js:165
+msgid "Unmute Audio"
+msgstr "Ligar Som"
+
+#: src/extension.js:155 src/extension.js:165 src/prefs.js:54
+msgid "Mute Audio"
+msgstr "Desligar Som"
+
+#: src/extension.js:175
+msgid "Preferences"
+msgstr "Preferências"
+
+#: src/prefs.js:50
+msgid "General"
+msgstr "Geral"
+
+#: src/prefs.js:55
+msgid "Volume Level"
+msgstr "Volume do Som"
+
+#: src/prefs.js:79
+msgid "Experimental"
+msgstr "Opções Experimentais"
+
+#: src/prefs.js:84
+msgid "Experimental VA Plugin"
+msgstr "Plugin VA Experimental"
+
+#: src/prefs.js:86
+msgid ""
+"Enable VA decoders which improve performance for Intel/AMD Wayland users"
+msgstr ""
+"Habilitar decodificadores VA que melhoram o desempenho para usuários de "
+"Wayland com Intel/AMD"
+
+#: src/prefs.js:90
+msgid "NVIDIA Stateless Decoders"
+msgstr "Decodificadores sem estado da NVIDIA"
+
+#: src/prefs.js:92
+msgid "Use new stateless NVIDIA decoders"
+msgstr "Utilizar os novos decodificadores sem estado da NVIDIA"
+
+#: src/prefs.js:95
+msgid "Developer"
+msgstr "Opções para Desenvolvedores"
+
+#: src/prefs.js:99
+msgid "Debug Mode"
+msgstr "Modo de Depuração"
+
+#: src/prefs.js:101
+msgid "Print debug messages to log"
+msgstr "Enviar mensagens de depuração para o registro (Debug)"
+
+#: src/prefs.js:105
+msgid "Force gtk4paintablesink"
+msgstr "Forçar gtk4paintablesink"
+
+#: src/prefs.js:107
+msgid "Force use of gtk4paintablesink for video playback"
+msgstr "Forçar o uso do gtk4paintablesink para a reprodução dos vídeos"
+
+#: src/prefs.js:111
+msgid "Force GtkMediaFile"
+msgstr "Forçar GtkMediaFile"
+
+#: src/prefs.js:113
+msgid "Force use of GtkMediaFile for video playback"
+msgstr "Forçar o uso do GtkMediaFile para a reprodução dos vídeos"
+
+#: src/prefs.js:194
+msgid "Video Path"
+msgstr "Localização do Vídeo"
+
+#: src/prefs.js:200 src/prefs.js:225
+msgid "None"
+msgstr "Nenhum"
+
+#: src/prefs.js:212
+msgid "Open File"
+msgstr "Abrir Arquivo"
+
+#: src/prefs.js:217
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/prefs.js:218 src/prefs.js:234
+msgid "Open"
+msgstr "Abrir"
+
+#: src/prefs.js:251
+msgid "Fit Mode"
+msgstr "Ajuste do Papel de Parede"
+
+#: src/prefs.js:252
+msgid "Control how wallpaper fits within the monitor"
+msgstr "Modificar como o papel de parede se ajusta no seu monitor"
+
+#: src/prefs.js:253
+msgid ""
+"\n"
+"    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
+"    <b>Contain</b>: Scale the wallpaper to fit the monitor (keep aspect "
+"ratio).\n"
+"    <b>Cover</b>: Scale the wallpaper to cover the monitor (keep aspect "
+"ratio).\n"
+"    <b>Scale-down</b>: Scale down the wallpaper to fit the monitor if "
+"needed, otherwise keep its original size.\n"
+"    "
+msgstr ""
+"\n"
+"    <b>Preencher</b>: Estica o papel de parede para preencher o monitor por "
+"completo.\n"
+"    <b>Conter</b>: Dimensiona o papel de parede para caber no monitor (não "
+"modifica a proporção).\n"
+"    <b>Cobrir</b>: Dimensiona o papel de parede para cobrir o monitor (não "
+"modifica a proporção).\n"
+"    <b>Diminuir</b>: Caso não couber, diminui o tamanho do papel de parede "
+"para caber no monitor.\n"
+"    "
+
+#: src/prefs.js:261
+msgid "Fill"
+msgstr "Preencher"
+
+#: src/prefs.js:262
+msgid "Contain"
+msgstr "Conter"
+
+#: src/prefs.js:263
+msgid "Cover"
+msgstr "Cobrir"
+
+#: src/prefs.js:264
+msgid "Scale-down"
+msgstr "Diminuir"
+
+#: src/prefs.js:277
+msgid "This feature requires Gtk 4.8 or above"
+msgstr "Essa funcionalidade precisa de GTK 4.8 ou alguma versão superior"
