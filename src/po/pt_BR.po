@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-07-09 19:34+0900\n"
-"PO-Revision-Date: 2023-07-09 23:02-0300\n"
+"PO-Revision-Date: 2023-07-09 23:15-0300\n"
 "Last-Translator: Seikm\n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -19,17 +19,15 @@ msgstr ""
 
 #: src/extension.js:124 src/extension.js:144
 msgid "Pause"
-msgstr ""
+msgstr "Pausar"
 
 #: src/extension.js:124 src/extension.js:144
 msgid "Play"
-msgstr ""
+msgstr "Reproduzir"
 
 #: src/extension.js:155 src/extension.js:165
-#, fuzzy
-#| msgid "Mute Audio"
 msgid "Unmute Audio"
-msgstr "Desligar Som"
+msgstr "Ligar Som"
 
 #: src/extension.js:155 src/extension.js:165 src/prefs.js:54
 msgid "Mute Audio"
@@ -37,7 +35,7 @@ msgstr "Desligar Som"
 
 #: src/extension.js:175
 msgid "Preferences"
-msgstr ""
+msgstr "Preferências"
 
 #: src/prefs.js:50
 msgid "General"
@@ -151,20 +149,20 @@ msgstr ""
 
 #: src/prefs.js:261
 msgid "Fill"
-msgstr ""
+msgstr "Preencher"
 
 #: src/prefs.js:262
 msgid "Contain"
-msgstr ""
+msgstr "Conter"
 
 #: src/prefs.js:263
 msgid "Cover"
-msgstr ""
+msgstr "Cobrir"
 
 #: src/prefs.js:264
 msgid "Scale-down"
-msgstr ""
+msgstr "Diminuir"
 
 #: src/prefs.js:277
 msgid "This feature requires Gtk 4.8 or above"
-msgstr "Essa funcionalidade precisa GTK 4.8 ou alguma versão superior"
+msgstr "Essa funcionalidade precisa de GTK 4.8 ou alguma versão superior"
