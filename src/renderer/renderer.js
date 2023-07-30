@@ -61,7 +61,7 @@ const isEnableNvSl = extSettings
     ? extSettings.get_boolean('enable-nvsl')
     : false;
 
-let codePath = 'src';
+let codePath = GLib.build_filenamev([GLib.get_user_data_dir(), 'gnome-shell', 'extensions', 'hanabi-extension@jeffshee.github.io']);
 let contentFit = null;
 if (haveContentFit) {
     contentFit = extSettings
@@ -102,7 +102,6 @@ const HanabiRenderer = GObject.registerClass(
             this._gstImplName = '';
             this._isPlaying = false;
             this._exportDbus();
-            this._setupGst();
 
             this.connect('activate', app => {
                 this._display = Gdk.Display.get_default();
@@ -110,6 +109,7 @@ const HanabiRenderer = GObject.registerClass(
 
                 let activeWindow = app.activeWindow;
                 if (!activeWindow) {
+                    this._setupGst();
                     this._buildUI();
                     this._hanabiWindows.forEach(window => {
                         window.present();
@@ -220,6 +220,19 @@ const HanabiRenderer = GObject.registerClass(
         }
 
         _setupGst() {
+            // Scan path for GStreamer plugins
+            const registry = Gst.Registry.get();
+            const pluginsPath = GLib.build_filenamev([codePath, 'lib', 'gstreamer-1.0']);
+            const registryChanged = registry.scan_path(pluginsPath);
+            debug(`registry changed: ${registryChanged}`);
+
+            // Plugins to check
+            const plugins = ['clapper', 'cef', 'gtk4'];
+            plugins.forEach(name => {
+                const isFound = registry.find_plugin(name) !== null;
+                debug(`plugin ${name} is available: ${isFound}`);
+            });
+
             // Software libav decoders have "primary" rank, set Nvidia higher
             // to use NVDEC hardware acceleration
             this._setPluginDecodersRank(
@@ -401,8 +414,10 @@ const HanabiRenderer = GObject.registerClass(
                 }
             );
 
-            const file = Gio.File.new_for_path(videoPath);
-            this._play.set_uri(file.get_uri());
+            // const file = Gio.File.new_for_path(videoPath);
+            // this._play.set_uri(file.get_uri());
+            // TODO
+            this._play.set_uri('web+https://www.google.com');
 
             this.setPlay();
 
@@ -508,7 +523,9 @@ const HanabiRenderer = GObject.registerClass(
         setFilePath(_videoPath) {
             const file = Gio.File.new_for_path(_videoPath);
             if (this._play) {
-                this._play.set_uri(file.get_uri());
+                // this._play.set_uri(file.get_uri());
+                // TODO
+                this._play.set_uri('web+https://www.google.com');
             } else if (this._media) {
                 // Reset the stream when switching the file,
                 // otherwise `play()` is not playing for some reason.
