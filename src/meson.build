@@ -41,3 +41,5 @@ install_data('schemas/@0@.gschema.xml'.format(schema),
 subdir('po')
 
 meson.add_install_script(meson.project_source_root() / 'build-aux' / 'meson-postinstall.sh')
+
+meson.add_install_script(meson.project_source_root() / 'build-aux' / 'build-plugins.sh', install_dir)
