@@ -7,15 +7,32 @@
             <description>Video path</description>
         </key>
 
+     <key name="website-path" type="s">
+            <default>''</default>
+            <summary>Website Path</summary>
+            <description>Website path</description>
+        </key>
+
         <key name="mute" type="b">
             <default>false</default>
             <summary>Mute Audio</summary>
+        </key>
+
+           <key name="gpu-mode" type="b">
+            <default>true</default>
+            <summary>Choose whether chrome uses GPU for hardware acceleration</summary>
         </key>
 
         <key name="volume" type="i">
             <range min="0" max="100" />
             <default>50</default>
             <summary>Volume Level</summary>
+        </key>
+
+         <key name="fps" type="i">
+            <range min="0" max="144" />
+            <default>30</default>
+            <summary>Frames per second</summary>
         </key>
 
         <key name="pause-on-fullscreen" type="b">
@@ -72,5 +89,13 @@
             <summary>GtkPicture content-fit</summary>
             <description>Control how content fits within the GtkPicture</description>
         </key>
+
+          <key name="wallpaper-mode" type="i">
+            <range min="0" max="2" />
+            <default>0</default>
+            <summary>Choose media to display as wallpaper</summary>
+            <description>Choose between a video, a local html or an online website</description>
+        </key>
+
     </schema>
 </schemalist>
