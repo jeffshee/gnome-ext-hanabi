@@ -14,6 +14,10 @@ Also please don't forget to hit that star button! 🌟
 Feel free to open an issue for problems or suggestions 🤗  
 Your support is truly appreciated!
 
+## Join our Discord!
+
+[![](https://dcbadge.vercel.app/api/server/mP7yg4gX7g?compact=true)](https://discord.gg/mP7yg4gX7g)
+
 ## Demo 📽️
 
 Please click on the image to view <i>(redirect to YouTube)</i>
