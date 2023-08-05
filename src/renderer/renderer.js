@@ -76,6 +76,9 @@ let windowDimension = {width: 1920, height: 1080};
 let windowed = false;
 let fullscreened = true;
 
+// TODO for testing only!
+let forceWebsite = true;
+
 /**
  *
  * @param {...any} args
@@ -414,10 +417,13 @@ const HanabiRenderer = GObject.registerClass(
                 }
             );
 
-            // const file = Gio.File.new_for_path(videoPath);
-            // this._play.set_uri(file.get_uri());
             // TODO
-            this._play.set_uri('web+https://www.google.com');
+            if (forceWebsite) {
+                this._play.set_uri('web+https://www.google.com');
+            } else {
+                const file = Gio.File.new_for_path(videoPath);
+                this._play.set_uri(file.get_uri());
+            }
 
             this.setPlay();
 
@@ -523,9 +529,11 @@ const HanabiRenderer = GObject.registerClass(
         setFilePath(_videoPath) {
             const file = Gio.File.new_for_path(_videoPath);
             if (this._play) {
-                // this._play.set_uri(file.get_uri());
                 // TODO
-                this._play.set_uri('web+https://www.google.com');
+                if (forceWebsite)
+                    this._play.set_uri('web+https://www.google.com');
+                else
+                    this._play.set_uri(file.get_uri());
             } else if (this._media) {
                 // Reset the stream when switching the file,
                 // otherwise `play()` is not playing for some reason.
