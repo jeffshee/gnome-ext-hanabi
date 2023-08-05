@@ -30,3 +30,6 @@ node_modules/
 
 # Translation binaries
 *.mo
+
+# Cache
+GPUCache/*

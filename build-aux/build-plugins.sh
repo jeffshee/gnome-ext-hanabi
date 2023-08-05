@@ -2,7 +2,7 @@
 
 GSTCEFSRC_REPO="https://github.com/centricular/gstcefsrc.git"
 GST_PLUGIN_RS_REPO="https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs.git"
-GST_PLUGIN_RS_REPO_TAG="0.10.11"
+GST_PLUGIN_RS_REPO_BRANCH="0.10"
 
 if [ -z "$1" ]; then
     echo "Error: Prefix not specified."
@@ -19,7 +19,7 @@ cmake --install . --prefix="$PREFIX/lib/gstreamer-1.0"
 cd ..
 
 # gst-plugin-gtk4
-git clone --depth 1 $GST_PLUGIN_RS_REPO -b $GST_PLUGIN_RS_REPO_TAG
+git clone --depth 1 $GST_PLUGIN_RS_REPO -b $GST_PLUGIN_RS_REPO_BRANCH
 cd gst-plugins-rs || exit 1
 cargo install cargo-c
 cargo cbuild -p gst-plugin-gtk4
