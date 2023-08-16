@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2022 Jeff Shee (jeffshee8969@gmail.com)
+ * Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
