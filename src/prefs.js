@@ -49,7 +49,8 @@ function fillPreferencesWindow(window) {
     const page = new Adw.PreferencesPage();
     const generalGroup = new Adw.PreferencesGroup({title: _('General')});
     page.add(generalGroup);
-    prefsRowVideoPath(window, generalGroup);
+    //different options drop down
+    prefsRowWallpaperMode(generalGroup);
     prefsRowFitMode(generalGroup);
     prefsRowBoolean(generalGroup, _('Mute Audio'), 'mute', '');
     prefsRowInt(generalGroup, _('Volume Level'), 'volume', '', 0, 100, 1, 10);
@@ -67,13 +68,32 @@ function fillPreferencesWindow(window) {
     //     "Pause on Maximize",
     //     "pause-on-maximize",
     //     "Pause playback when there is a maximized window"
-    // );
+    // );prefsRowFitMode
     // prefsRowBoolean(
     //     pauseGroup,
     //     "Pause on Battery",
     //     "pause-on-battery",
     //     "Pause playback when device is on battery"
     // );
+
+
+    const videoGroup = new Adw.PreferencesGroup({title: _('Video Settings')});
+    page.add(videoGroup);
+    prefsRowVideoPath(window, videoGroup);
+
+
+    const websiteGroup = new Adw.PreferencesGroup({title: _('Website Settings')});
+    page.add(websiteGroup);
+    //website settings
+    prefsRowWebsitePath(window, websiteGroup);
+    prefsRowBoolean(
+        websiteGroup,
+        _('Enable GPU'),
+        'gpu-mode',
+        _('This enables chrome to use GPU acceleration')
+    );
+    prefsRowInt(websiteGroup, _('Frames Per Second (FPS)'), 'fps', '', 0, 144, 1, 10);
+
 
     const experimentalGroup = new Adw.PreferencesGroup({
         title: _('Experimental'),
@@ -281,5 +301,89 @@ function prefsRowFitMode(prefsGroup) {
 
     row.connect('notify::selected', () => {
         settings.set_int('content-fit', row.selected);
+    });
+}
+
+
+function prefsRowWallpaperMode(prefsGroup) {
+    const title = _('Wallpaper Mode');
+    const subtitle = _('Choose whether a video or a website is displayed as your wallpaper');
+    const tooltip = _(`
+    <b>Video</b>: Displays a video as your wallpaper.
+    <b>Local file</b>: Displays a local html file as your wallpaper .
+    <b>Online Website</b>: Displays a live online website as your wallpaper.
+    `);
+
+    const items = Gtk.StringList.new([
+        _('Video'),
+        _('Local Website'),
+        _('Online Websiten (URL)'),
+    ]);
+
+    const row = new Adw.ComboRow({
+        title,
+        subtitle,
+        model: items,
+        selected: settings.get_int('wallpaper-mode'),
+    });
+
+    prefsGroup.add(row);
+
+    row.connect('notify::selected', () => {
+        settings.set_int('wallpaper-mode', row.selected);
+    });
+}
+
+
+function prefsRowWebsitePath(window, prefsGroup) {
+    const title = _('Website Path');
+    const key = 'website-path';
+
+    let path = settings.get_string(key);
+    const row = new Adw.ActionRow({
+        title,
+        subtitle: `${path !== '' ? path : _('None')}`,
+    });
+    prefsGroup.add(row);
+
+    /**
+     *
+     */
+    function createDialog() {
+        let fileFilter = new Gtk.FileFilter();
+        fileFilter.add_mime_type('text/*');
+
+        let fileChooser = new Gtk.FileChooserDialog({
+            title: _('Open File'),
+            action: Gtk.FileChooserAction.OPEN,
+        });
+        fileChooser.set_modal(true);
+        fileChooser.set_transient_for(window);
+        fileChooser.add_button(_('Cancel'), Gtk.ResponseType.CANCEL);
+        fileChooser.add_button(_('Open'), Gtk.ResponseType.ACCEPT);
+        fileChooser.add_filter(fileFilter);
+
+        fileChooser.connect('response', (dialog, responseId) => {
+            if (responseId === Gtk.ResponseType.ACCEPT) {
+                let _path = dialog.get_file().get_path();
+                settings.set_string(key, _path);
+                row.subtitle = `${_path !== '' ? _path : _('None')}`;
+            }
+            dialog.destroy();
+        });
+        return fileChooser;
+    }
+
+    let button = new Adw.ButtonContent({
+        icon_name: 'document-open-symbolic',
+        label: _('Open'),
+    });
+
+    row.activatable_widget = button;
+    row.add_suffix(button);
+
+    row.connect('activated', () => {
+        let dialog = createDialog();
+        dialog.show();
     });
 }
