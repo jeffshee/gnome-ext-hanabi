@@ -71,6 +71,11 @@ const getStartupDelay = () => {
 let data = {};
 
 class Extension {
+    constructor() {
+        // https://github.com/fthx/no-overview/blob/main/extension.js
+        this.old_hasOverview = Main.sessionMode.hasOverview;
+    }
+
     enable() {
         this._isPlaying = false;
 
@@ -184,6 +189,19 @@ class Extension {
         /**
          * Other overrides
          */
+
+        // Disable startup animation (workaround for issue #65)
+        if (!Main.layoutManager._startingUp)
+            return;
+
+        Main.sessionMode.hasOverview = false;
+        Main.layoutManager.connect('startup-complete', () => {
+            Main.sessionMode.hasOverview = this.old_hasOverview;
+        });
+        // handle Ubuntu's method
+        if (Main.layoutManager.startInOverview)
+            Main.layoutManager.startInOverview = false;
+
         if (!data.GnomeShellOverride) {
             data.GnomeShellOverride =
                 new GnomeShellOverride.GnomeShellOverride();
@@ -216,6 +234,7 @@ class Extension {
         this._indicator = null;
 
         data.isEnabled = false;
+        Main.sessionMode.hasOverview = this.old_hasOverview;
         killCurrentProcess();
         data.GnomeShellOverride.disable();
         data.manager.disable();
