@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-09 19:34+0900\n"
-"PO-Revision-Date: 2023-07-09 19:39+0900\n"
+"POT-Creation-Date: 2023-08-26 16:10+0900\n"
+"PO-Revision-Date: 2023-08-26 16:17+0900\n"
 "Last-Translator: Jeff Shee <jeffshee8969@gmail.com>\n"
 "Language-Team: \n"
 "Language: ja\n"
@@ -17,23 +17,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.3.2\n"
 
-#: src/extension.js:124 src/extension.js:144
+#: src/extension.js:133 src/extension.js:153
 msgid "Pause"
 msgstr "一時停止"
 
-#: src/extension.js:124 src/extension.js:144
+#: src/extension.js:133 src/extension.js:153
 msgid "Play"
 msgstr "再生"
 
-#: src/extension.js:155 src/extension.js:165
+#: src/extension.js:164 src/extension.js:174
 msgid "Unmute Audio"
 msgstr "音声のミュートを解除"
 
-#: src/extension.js:155 src/extension.js:165 src/prefs.js:54
+#: src/extension.js:164 src/extension.js:174 src/prefs.js:54
 msgid "Mute Audio"
 msgstr "音声をミュート"
 
-#: src/extension.js:175
+#: src/extension.js:184
 msgid "Preferences"
 msgstr "設定"
 
@@ -96,35 +96,46 @@ msgstr "GtkMediaFileを優先"
 msgid "Force use of GtkMediaFile for video playback"
 msgstr "動画再生にGtkMediaFileを優先的に使用します"
 
-#: src/prefs.js:194
+#: src/prefs.js:115
+msgid "Startup delay"
+msgstr "起動遅延"
+
+#: src/prefs.js:115
+msgid ""
+"Add a startup delay (in milliseconds) to mitigate compatibility issues with "
+"other extensions"
+msgstr ""
+"他の拡張機能との相性問題を解消するために、起動を少し遅らせます（ミリ秒単位）"
+
+#: src/prefs.js:195
 msgid "Video Path"
 msgstr "動画ファイルのパス"
 
-#: src/prefs.js:200 src/prefs.js:225
+#: src/prefs.js:201 src/prefs.js:226
 msgid "None"
 msgstr "なし"
 
-#: src/prefs.js:212
+#: src/prefs.js:213
 msgid "Open File"
 msgstr "ファイルを開く"
 
-#: src/prefs.js:217
+#: src/prefs.js:218
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: src/prefs.js:218 src/prefs.js:234
+#: src/prefs.js:219 src/prefs.js:235
 msgid "Open"
 msgstr "開く"
 
-#: src/prefs.js:251
+#: src/prefs.js:252
 msgid "Fit Mode"
 msgstr "フィットモード"
 
-#: src/prefs.js:252
+#: src/prefs.js:253
 msgid "Control how wallpaper fits within the monitor"
 msgstr "壁紙をモニターにフィットする方法を設定します"
 
-#: src/prefs.js:253
+#: src/prefs.js:254
 msgid ""
 "\n"
 "    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
@@ -146,22 +157,22 @@ msgstr ""
 "\t壁紙のサイズがモニターより小さい場合は元のサイズを維持します。\n"
 "    "
 
-#: src/prefs.js:261
+#: src/prefs.js:262
 msgid "Fill"
 msgstr "Fill"
 
-#: src/prefs.js:262
+#: src/prefs.js:263
 msgid "Contain"
 msgstr "Contain"
 
-#: src/prefs.js:263
+#: src/prefs.js:264
 msgid "Cover"
 msgstr "Cover"
 
-#: src/prefs.js:264
+#: src/prefs.js:265
 msgid "Scale-down"
 msgstr "Scale-down"
 
-#: src/prefs.js:277
+#: src/prefs.js:278
 msgid "This feature requires Gtk 4.8 or above"
 msgstr "この機能を使用するには、Gtk 4.8以上が必要です"
