@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-09 19:34+0900\n"
+"POT-Creation-Date: 2023-08-26 16:10+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,23 +17,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/extension.js:124 src/extension.js:144
+#: src/extension.js:133 src/extension.js:153
 msgid "Pause"
 msgstr ""
 
-#: src/extension.js:124 src/extension.js:144
+#: src/extension.js:133 src/extension.js:153
 msgid "Play"
 msgstr ""
 
-#: src/extension.js:155 src/extension.js:165
+#: src/extension.js:164 src/extension.js:174
 msgid "Unmute Audio"
 msgstr ""
 
-#: src/extension.js:155 src/extension.js:165 src/prefs.js:54
+#: src/extension.js:164 src/extension.js:174 src/prefs.js:54
 msgid "Mute Audio"
 msgstr ""
 
-#: src/extension.js:175
+#: src/extension.js:184
 msgid "Preferences"
 msgstr ""
 
@@ -94,35 +94,45 @@ msgstr ""
 msgid "Force use of GtkMediaFile for video playback"
 msgstr ""
 
-#: src/prefs.js:194
+#: src/prefs.js:115
+msgid "Startup delay"
+msgstr ""
+
+#: src/prefs.js:115
+msgid ""
+"Add a startup delay (in milliseconds) to mitigate compatibility issues with "
+"other extensions"
+msgstr ""
+
+#: src/prefs.js:195
 msgid "Video Path"
 msgstr ""
 
-#: src/prefs.js:200 src/prefs.js:225
+#: src/prefs.js:201 src/prefs.js:226
 msgid "None"
 msgstr ""
 
-#: src/prefs.js:212
+#: src/prefs.js:213
 msgid "Open File"
 msgstr ""
 
-#: src/prefs.js:217
+#: src/prefs.js:218
 msgid "Cancel"
 msgstr ""
 
-#: src/prefs.js:218 src/prefs.js:234
+#: src/prefs.js:219 src/prefs.js:235
 msgid "Open"
 msgstr ""
 
-#: src/prefs.js:251
+#: src/prefs.js:252
 msgid "Fit Mode"
 msgstr ""
 
-#: src/prefs.js:252
+#: src/prefs.js:253
 msgid "Control how wallpaper fits within the monitor"
 msgstr ""
 
-#: src/prefs.js:253
+#: src/prefs.js:254
 msgid ""
 "\n"
 "    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
@@ -135,22 +145,22 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/prefs.js:261
+#: src/prefs.js:262
 msgid "Fill"
 msgstr ""
 
-#: src/prefs.js:262
+#: src/prefs.js:263
 msgid "Contain"
 msgstr ""
 
-#: src/prefs.js:263
+#: src/prefs.js:264
 msgid "Cover"
 msgstr ""
 
-#: src/prefs.js:264
+#: src/prefs.js:265
 msgid "Scale-down"
 msgstr ""
 
-#: src/prefs.js:277
+#: src/prefs.js:278
 msgid "This feature requires Gtk 4.8 or above"
 msgstr ""
