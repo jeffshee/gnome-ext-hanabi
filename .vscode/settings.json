@@ -17,5 +17,11 @@
   "editor.formatOnSave": true,
 
   "eslint.validate": ["javascript"],
-  "eslint.format.enable": true
+  "eslint.format.enable": true,
+  "grammarly.selectors": [
+    {
+      "language": "markdown",
+      "scheme": "file"
+    }
+  ]
 }

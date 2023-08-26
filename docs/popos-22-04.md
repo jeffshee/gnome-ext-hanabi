@@ -12,7 +12,6 @@ sudo apt update && sudo apt upgrade
 
 ```bash
 sudo apt install -y ubuntu-restricted-extras
-sudo apt install -y gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-plugins-good libavcodec-extra gstreamer1.0-libav chromium-codecs-ffmpeg-extra libdvd-pkg
 ```
 
 Reference: [https://support.system76.com/articles/codecs/](https://support.system76.com/articles/codecs/)
@@ -20,8 +19,8 @@ Reference: [https://support.system76.com/articles/codecs/](https://support.syste
 ## 3. Install dependencies
 
 ```bash
-# Meson
-sudo apt install meson
+# Build time dependencies (Git, Meson)
+sudo apt install git meson
 
 # GTK4 media backend
 sudo apt install libgtk-4-media-gstreamer

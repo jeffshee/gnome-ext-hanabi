@@ -89,7 +89,7 @@ cd gnome-ext-hanabi
 
 Hanabi extension can utilize `clappersink` from [Clapper](https://github.com/Rafostar/clapper) for the best performance if installed.
 
-For this to work, Clapper must be installed **from the package manager and not from Flatpak**.
+For this to work, Clapper must be installed **from the package manager and not from Flatpak/Snap**.
 
 <details>
   <summary>Performance comparison</summary>
