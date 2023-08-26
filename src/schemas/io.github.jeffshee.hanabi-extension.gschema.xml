@@ -72,5 +72,13 @@
             <summary>GtkPicture content-fit</summary>
             <description>Control how content fits within the GtkPicture</description>
         </key>
+
+        <key name="startup-delay" type="i">
+            <range min="0" max="10000" />
+            <default>1000</default>
+            <summary>Startup delay</summary>
+            <description>Add a startup delay (in milliseconds) to mitigate compatibility issues with
+                other extensions</description>
+        </key>
     </schema>
 </schemalist>

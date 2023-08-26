@@ -112,6 +112,7 @@ function fillPreferencesWindow(window) {
         'force-mediafile',
         _('Force use of GtkMediaFile for video playback')
     );
+    prefsRowInt(developerGroup, _('Startup delay'), 'startup-delay', _('Add a startup delay (in milliseconds) to mitigate compatibility issues with other extensions'), 0, 10000, 100, 500);
 
     // Add our page to the window
     window.add(page);

@@ -63,6 +63,10 @@ const setMute = mute => {
     return extSettings.set_boolean('mute', mute);
 };
 
+const getStartupDelay = () => {
+    return extSettings.get_int('startup-delay');
+};
+
 // This object will contain all the global variables
 let data = {};
 
@@ -193,11 +197,17 @@ class Extension {
             data.startupPreparedId = Main.layoutManager.connect(
                 'startup-complete',
                 () => {
-                    innerEnable(true);
+                    GLib.timeout_add(GLib.PRIORITY_DEFAULT, getStartupDelay(), () => {
+                        innerEnable(true);
+                        return false;
+                    });
                 }
             );
         } else {
-            innerEnable(false);
+            GLib.timeout_add(GLib.PRIORITY_DEFAULT, getStartupDelay(), () => {
+                innerEnable(false);
+                return false;
+            });
         }
     }
 
