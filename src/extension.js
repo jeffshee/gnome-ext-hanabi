@@ -191,16 +191,15 @@ class Extension {
          */
 
         // Disable startup animation (workaround for issue #65)
-        if (!Main.layoutManager._startingUp)
-            return;
-
-        Main.sessionMode.hasOverview = false;
-        Main.layoutManager.connect('startup-complete', () => {
-            Main.sessionMode.hasOverview = this.old_hasOverview;
-        });
-        // handle Ubuntu's method
-        if (Main.layoutManager.startInOverview)
-            Main.layoutManager.startInOverview = false;
+        if (Main.layoutManager._startingUp) {
+            Main.sessionMode.hasOverview = false;
+            Main.layoutManager.connect('startup-complete', () => {
+                Main.sessionMode.hasOverview = this.old_hasOverview;
+            });
+            // handle Ubuntu's method
+            if (Main.layoutManager.startInOverview)
+                Main.layoutManager.startInOverview = false;
+        }
 
         if (!data.GnomeShellOverride) {
             data.GnomeShellOverride =
