@@ -88,12 +88,10 @@ var LaunchSubprocess = class {
                     const [output, length] = object.read_line_finish_utf8(res);
                     if (length)
                         console.log(`Hanabi: (renderer) ${output}`);
-                        // const filtered = output.includes('Hanabi:') ? output.substring(output.indexOf('Hanabi:')) : output;
-                        // console.log(filtered);
                 } catch (e) {
                     if (e.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
                         return;
-                    console.trace(e);
+                    console.trace(`Hanabi: ${e}`);
                 }
 
                 this.read_output();
@@ -116,7 +114,7 @@ var LaunchSubprocess = class {
         try {
             return this._waylandClient.owns_window(window);
         } catch (e) {
-            console.trace(e);
+            console.trace(`Hanabi: ${e}`);
             return false;
         }
     }

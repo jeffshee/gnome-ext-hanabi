@@ -96,7 +96,7 @@ class ManagedWindow {
                 const newState = JSON.parse(json);
                 this._states = {...this._states, ...newState};
             } catch (e) {
-                console.trace(e);
+                console.trace(`Hanabi: ${e}`);
             }
         }
         this._refresh();
