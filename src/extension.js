@@ -67,6 +67,10 @@ const getStartupDelay = () => {
     return extSettings.get_int('startup-delay');
 };
 
+const getDebugMode = () => {
+    return extSettings.get_boolean('debug-mode');
+};
+
 // This object will contain all the global variables
 let data = {};
 
@@ -77,6 +81,15 @@ class Extension {
     }
 
     enable() {
+        /**
+         * Debug Mode:
+         * Set `GLib.log_set_debug_enabled` to true if debug mode is enabled.
+         * However, do nothing when debug mode is disabled,
+         * as other extensions might set it to true.
+         */
+        if (getDebugMode())
+            GLib.log_set_debug_enabled(true);
+
         this._isPlaying = false;
 
         /**

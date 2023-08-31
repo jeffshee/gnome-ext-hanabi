@@ -35,15 +35,6 @@ const extSettings = ExtensionUtils.getSettings(
     'io.github.jeffshee.hanabi-extension'
 );
 
-const getDebugMode = () => {
-    return extSettings.get_boolean('debug-mode');
-};
-
-const debug = (...args) => {
-    if (getDebugMode())
-        log('[Hanabi]', ...args);
-};
-
 /**
  * The widget that holds the window preview of the renderer.
  */
@@ -106,7 +97,7 @@ var LiveWallpaper = GObject.registerClass(
                 1.0 / this._monitorHeight,
             ]);
 
-            debug('LiveWallpaper created');
+            console.debug('LiveWallpaper created');
         }
 
         setRoundedClipRadius(radius) {
@@ -140,7 +131,7 @@ var LiveWallpaper = GObject.registerClass(
                     this._wallpaper = null;
                 });
             } else {
-                debug(
+                console.debug(
                     'Hanabi renderer isn\'t ready yet. Retry after 100ms.'
                 );
                 GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
@@ -188,7 +179,7 @@ var LiveWallpaper = GObject.registerClass(
              * It is safe to assume that the ratio of wallpaper is a constant (e.g. 16:9) in our case.
              */
             let scale = this.allocation.get_height() / this._monitorHeight;
-            debug(this._monitorHeight * scale, this._monitorWidth * scale);
+            console.debug(this._monitorHeight * scale, this._monitorWidth * scale);
             this._wallpaper.height = this._monitorHeight * scale;
             this._wallpaper.width = this._monitorWidth * scale;
         }
@@ -234,7 +225,7 @@ var LiveWallpaper = GObject.registerClass(
                 Meta.later_remove(this._laterId);
 
             this._laterId = 0;
-            debug('LiveWallpaper destroyed');
+            console.debug('LiveWallpaper destroyed');
         }
     }
 );

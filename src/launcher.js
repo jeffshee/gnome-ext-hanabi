@@ -87,7 +87,9 @@ var LaunchSubprocess = class {
                 try {
                     const [output, length] = object.read_line_finish_utf8(res);
                     if (length)
-                        console.log(output);
+                        console.log(`Hanabi: (renderer) ${output}`);
+                        // const filtered = output.includes('Hanabi:') ? output.substring(output.indexOf('Hanabi:')) : output;
+                        // console.log(filtered);
                 } catch (e) {
                     if (e.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
                         return;
