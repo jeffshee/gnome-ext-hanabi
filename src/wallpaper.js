@@ -120,37 +120,37 @@ var LiveWallpaper = GObject.registerClass(
         }
 
         _applyWallpaper() {
-            let renderer = this._getRenderer();
-            if (renderer) {
-                this._wallpaper = new Clutter.Clone({
-                    source: renderer,
-                    // The point around which the scaling and rotation transformations occur.
-                    pivot_point: new Graphene.Point({x: 0.5, y: 0.5}),
-                });
-                this._wallpaper.connect('destroy', () => {
-                    this._wallpaper = null;
-                });
-            } else {
-                console.debug(
-                    'Hanabi renderer isn\'t ready yet. Retry after 100ms.'
-                );
-                GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
-                    this._applyWallpaper();
-                    return false;
-                });
-                return;
-            }
+            console.log('Hanabi: Waiting for Hanabi renderer...');
+            const operation = () => {
+                const renderer = this._getRenderer();
+                if (renderer) {
+                    console.log('Hanabi: Hanabi renderer found.');
+                    this._wallpaper = new Clutter.Clone({
+                        source: renderer,
+                        // The point around which the scaling and rotation transformations occur.
+                        pivot_point: new Graphene.Point({x: 0.5, y: 0.5}),
+                    });
+                    this._wallpaper.connect('destroy', () => {
+                        this._wallpaper = null;
+                    });
+                    this.add_child(this._wallpaper);
+                    this._fade();
 
-            this.add_child(this._wallpaper);
-            this._fade();
+                    // Stop the timeout.
+                    return false;
+                } else {
+                    // Keep waiting.
+                    return true;
+                }
+            };
+
+            // Perform intial operation without timeout
+            if (operation())
+                GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, operation);
         }
 
         _getRenderer() {
             let windowActors = [];
-            // if (replaceData['old_get_window_actors'])
-            //     windowActors = global.get_window_actors(false);
-            // else
-            //     windowActors = global.get_window_actors();
             windowActors = global.get_window_actors(false);
 
             // Find renderer by `applicationId` and monitor index.
