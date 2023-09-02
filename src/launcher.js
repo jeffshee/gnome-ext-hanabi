@@ -24,7 +24,16 @@
 /* exported LaunchSubprocess */
 
 const {Meta, Gio, GLib, St} = imports.gi;
+
 const Config = imports.misc.config;
+const ExtensionUtils = imports.misc.extensionUtils;
+
+const Me = ExtensionUtils.getCurrentExtension();
+const Logger = Me.imports.logger;
+
+const logger = new Logger.Logger();
+const rendererLogger = new Logger.Logger('renderer');
+
 
 var LaunchSubprocess = class {
     constructor(flags = Gio.SubprocessFlags.NONE) {
@@ -87,11 +96,11 @@ var LaunchSubprocess = class {
                 try {
                     const [output, length] = object.read_line_finish_utf8(res);
                     if (length)
-                        console.log(output);
+                        rendererLogger.log(output);
                 } catch (e) {
                     if (e.matches(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
                         return;
-                    console.trace(e);
+                    logger.trace(e);
                 }
 
                 this.read_output();
@@ -114,7 +123,7 @@ var LaunchSubprocess = class {
         try {
             return this._waylandClient.owns_window(window);
         } catch (e) {
-            console.trace(e);
+            logger.trace(e);
             return false;
         }
     }

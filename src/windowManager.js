@@ -25,8 +25,13 @@
 
 const {GLib, Meta} = imports.gi;
 const Main = imports.ui.main;
+const ExtensionUtils = imports.misc.extensionUtils;
+
+const Me = ExtensionUtils.getCurrentExtension();
+const Logger = Me.imports.logger;
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
+const logger = new Logger.Logger();
 
 class ManagedWindow {
     constructor(window) {
@@ -48,7 +53,6 @@ class ManagedWindow {
         this._signals.push(
             // TODO: `connect` or `connect_after`?
             window.connect_after('shown', () => {
-                // TODO: Not being called?
                 if (this._states.keepMinimized)
                     this._window.minimize();
             })
@@ -96,7 +100,7 @@ class ManagedWindow {
                 const newState = JSON.parse(json);
                 this._states = {...this._states, ...newState};
             } catch (e) {
-                console.trace(e);
+                logger.trace(e);
             }
         }
         this._refresh();

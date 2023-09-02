@@ -76,9 +76,14 @@
         <key name="startup-delay" type="i">
             <range min="0" max="10000" />
             <default>1000</default>
-            <summary>Startup delay</summary>
+            <summary>Startup Delay</summary>
             <description>Add a startup delay (in milliseconds) to mitigate compatibility issues with
                 other extensions</description>
+        </key>
+
+        <key name="show-panel-menu" type="b">
+            <default>true</default>
+            <summary>Show Panel Menu</summary>
         </key>
     </schema>
 </schemalist>

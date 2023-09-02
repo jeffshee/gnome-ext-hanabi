@@ -20,47 +20,21 @@
 
 const {Clutter, GLib, GObject, Meta, St, Shell, Graphene} = imports.gi;
 
-const ExtensionUtils = imports.misc.extensionUtils;
 const Background = imports.ui.background;
 const Main = imports.ui.main;
 const Workspace = imports.ui.workspace;
 const WorkspaceThumbnail = imports.ui.workspaceThumbnail;
+
+const ExtensionUtils = imports.misc.extensionUtils;
 const Util = imports.misc.util;
 
 const Me = ExtensionUtils.getCurrentExtension();
-const RoundedCornersEffect = Me.imports.roundedCornersEffect;
-const {LiveWallpaper} = Me.imports.wallpaper;
+const Wallpaper = Me.imports.wallpaper;
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const extSettings = ExtensionUtils.getSettings(
     'io.github.jeffshee.hanabi-extension'
 );
-
-const getDebugMode = () => {
-    return extSettings.get_boolean('debug-mode');
-};
-
-const debug = (...args) => {
-    if (getDebugMode())
-        log('[Hanabi]', ...args);
-};
-
-/**
- * A quick check to see if the override is actually doing something.
- */
-const effectiveOverrides = new Set();
-const markAsEffective = overrideName => {
-    if (!effectiveOverrides.has(overrideName)) {
-        effectiveOverrides.add(overrideName);
-        debug(
-            `Effective overrides: ${Array.from(effectiveOverrides).join(', ')}`
-        );
-    }
-};
-
-const compareArrays = (arr1, arr2) =>
-    arr1.length === arr2.length &&
-    arr1.every((element, index) => element === arr2[index]);
 
 var replaceData = {};
 const runningWallpaperActors = new Set();
@@ -207,13 +181,11 @@ function new_createBackgroundActor() {
     const backgroundActor =
         replaceData.old__createBackgroundActor[0].call(this);
     // We need to pass radius to actors, so save a ref in bgManager.
-    this.videoActor = new LiveWallpaper(backgroundActor);
+    this.videoActor = new Wallpaper.LiveWallpaper(backgroundActor);
     runningWallpaperActors.add(this.videoActor);
     this.videoActor.connect('destroy', actor => {
         runningWallpaperActors.delete(actor);
     });
-    if (getDebugMode())
-        markAsEffective('new_createBackgroundActor');
     return backgroundActor;
 }
 
@@ -230,8 +202,6 @@ function new_get_window_actors(hideRenderer = true) {
             window => !window.meta_window.title?.includes(applicationId)
         )
         : windowActors;
-    if (getDebugMode() && !compareArrays(result, windowActors))
-        markAsEffective('new_get_window_actors');
     return result;
 }
 
@@ -242,8 +212,6 @@ function new_get_window_actors(hideRenderer = true) {
  */
 function new_Workspace__isOverviewWindow(window) {
     let isRenderer = window.title?.includes(applicationId);
-    if (getDebugMode() && isRenderer)
-        markAsEffective('new_Workspace__isOverviewWindow');
     return isRenderer
         ? false
         : replaceData.old_Workspace__isOverviewWindow[0].apply(this, [window]);
@@ -255,8 +223,6 @@ function new_Workspace__isOverviewWindow(window) {
  */
 function new_WorkspaceThumbnail__isOverviewWindow(window) {
     let isRenderer = window.title?.includes(applicationId);
-    if (getDebugMode() && isRenderer)
-        markAsEffective('new_WorkspaceThumbnail__isOverviewWindow');
     return isRenderer
         ? false
         : replaceData.old_WorkspaceThumbnail__isOverviewWindow[0].apply(this, [
@@ -278,8 +244,6 @@ function new_get_tab_list(type, workspace) {
     let result = metaWindows.filter(
         metaWindow => !metaWindow.title?.includes(applicationId)
     );
-    if (getDebugMode() && !compareArrays(result, metaWindows))
-        markAsEffective('new_get_tab_list');
     return result;
 }
 
@@ -294,8 +258,6 @@ function new_get_running() {
                 .get_windows()
                 .some(window => window.title?.includes(applicationId))
     );
-    if (getDebugMode() && !compareArrays(result, runningApps))
-        markAsEffective('new_get_running');
     return result;
 }
 
@@ -307,7 +269,6 @@ function new_get_running() {
 function new_updateBorderRadius() {
     replaceData.old__updateBorderRadius[0].call(this);
 
-    // Basically a copy of the original function.
     const {scaleFactor} = St.ThemeContext.get_for_stage(global.stage);
     const cornerRadius =
         scaleFactor * Workspace.BACKGROUND_CORNER_RADIUS_PIXELS;
@@ -322,7 +283,6 @@ function new_updateBorderRadius() {
 function new_updateRoundedClipBounds() {
     replaceData.old__updateRoundedClipBounds[0].call(this);
 
-    // Basically a copy of the original function.
     const monitor = Main.layoutManager.monitors[this._monitorIndex];
 
     const rect = new Graphene.Rect();

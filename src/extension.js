@@ -15,176 +15,56 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/**
- * Special thanks to the black magic of DING extension.
- * Especially the ManageWindow class that gives superpower to Wayland windows.
- * That is one of the most crucial parts for this extension to work.
- * Also, the replaceMethod function is very convenient and helpful.
- * Without them, I don't know how to get started.
- */
-
-
 /* exported init */
 
-const {Meta, Gio, GLib, St} = imports.gi;
+const {Meta, Gio, GLib} = imports.gi;
 const Gettext = imports.gettext;
 
 const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
 
-const ExtensionUtils = imports.misc.extensionUtils;
 const Config = imports.misc.config;
+const ExtensionUtils = imports.misc.extensionUtils;
 
 const Me = ExtensionUtils.getCurrentExtension();
-// const EmulateX11 = Me.imports.emulateX11WindowType;
-const {WindowManager} = Me.imports.windowManager;
-const {LaunchSubprocess} = Me.imports.launcher;
-
 const GnomeShellOverride = Me.imports.gnomeShellOverride;
+const Launcher = Me.imports.launcher;
+const WindowManager = Me.imports.windowManager;
+const PanelMenu = Me.imports.panelMenu;
 
 const extSettings = ExtensionUtils.getSettings(
     'io.github.jeffshee.hanabi-extension'
 );
 
-const Domain = Gettext.domain(Me.metadata.uuid);
-const _ = Domain.gettext;
-const ngettext = Domain.ngettext;
-
 const getVideoPath = () => {
     return extSettings.get_string('video-path');
 };
 
-const getMute = () => {
-    return extSettings.get_boolean('mute');
-};
-
-const setMute = mute => {
-    return extSettings.set_boolean('mute', mute);
+const getShowPanelMenu = () => {
+    return extSettings.get_boolean('show-panel-menu');
 };
 
 const getStartupDelay = () => {
     return extSettings.get_int('startup-delay');
 };
 
-// This object will contain all the global variables
 let data = {};
 
 class Extension {
     constructor() {
-        // https://github.com/fthx/no-overview/blob/main/extension.js
         this.old_hasOverview = Main.sessionMode.hasOverview;
     }
 
     enable() {
-        this._isPlaying = false;
+        this.panelMenu = new PanelMenu.HanabiPanelMenu();
+        if (getShowPanelMenu())
+            this.panelMenu.enable();
 
-        /**
-         * Dbus
-         */
-        const dbusXml = `
-        <node>
-            <interface name="io.github.jeffshee.HanabiRenderer">
-                <method name="setPlay"/>
-                <method name="setPause"/>
-                <property name="isPlaying" type="b" access="read"/>
-                <signal name="isPlayingChanged">
-                    <arg name="isPlaying" type="b"/>
-                </signal>
-            </interface>
-        </node>`;
-
-        const rendererProxy = Gio.DBusProxy.makeProxyWrapper(dbusXml);
-        this.proxy = rendererProxy(Gio.DBus.session,
-            'io.github.jeffshee.HanabiRenderer', '/io/github/jeffshee/HanabiRenderer');
-
-        /**
-         * Panel menu
-         */
-        const indicatorName = `${Me.metadata.name} Indicator`;
-        this._indicator = new PanelMenu.Button(0.0, indicatorName, false);
-
-        const menu = new PopupMenu.PopupMenu(
-            this._indicator, // sourceActor
-            0.5, // arrowAlignment
-            St.Side.BOTTOM // arrowSide
-        );
-
-        this._indicator.setMenu(menu);
-
-        const icon = new St.Icon({
-            gicon: Gio.icon_new_for_string(
-                GLib.build_filenamev([
-                    ExtensionUtils.getCurrentExtension().path,
-                    'hanabi-symbolic.svg',
-                ])
-            ),
-            style_class: 'system-status-icon',
+        extSettings?.connect('changed::show-panel-menu', () => {
+            if (getShowPanelMenu())
+                this.panelMenu.enable();
+            else
+                this.panelMenu.disable();
         });
-
-        this._indicator.add_child(icon);
-
-        Main.panel.addToStatusArea(indicatorName, this._indicator);
-
-        /**
-         * Play/Pause
-         */
-        const playPause = new PopupMenu.PopupMenuItem(
-            this._isPlaying ? _('Pause') : _('Play')
-        );
-
-        playPause.connect('activate', () => {
-            this.proxy.call(
-                this._isPlaying ? 'setPause' : 'setPlay', // method_name
-                null, // parameters
-                Gio.DBusCallFlags.NO_AUTO_START, // flags
-                -1, // timeout_msec
-                null, // cancellable
-                null // callback
-            );
-        }
-        );
-
-        this.proxy.connectSignal(
-            'isPlayingChanged',
-            (_proxy, _sender, [isPlaying]) => {
-                this._isPlaying = isPlaying;
-                playPause.label.set_text(
-                    this._isPlaying ? _('Pause') : _('Play')
-                );
-            }
-        );
-
-        menu.addMenuItem(playPause);
-
-        /**
-         * Mute/unmute audio
-         */
-        const muteAudio = new PopupMenu.PopupMenuItem(
-            getMute() ? _('Unmute Audio') : _('Mute Audio')
-        );
-
-        muteAudio.connect('activate', () => {
-            setMute(!getMute());
-        });
-
-        extSettings?.connect('changed', (settings, key) => {
-            if (key === 'mute') {
-                muteAudio.label.set_text(
-                    getMute() ? _('Unmute Audio') : _('Mute Audio')
-                );
-            }
-        });
-
-        menu.addMenuItem(muteAudio);
-
-        /**
-         * Preferences
-         */
-        menu.addAction(_('Preferences'), () => {
-            ExtensionUtils.openPrefs();
-        });
-
 
         /**
          * Other overrides
@@ -207,7 +87,7 @@ class Extension {
         }
 
         if (!data.manager)
-            data.manager = new WindowManager();
+            data.manager = new WindowManager.WindowManager();
 
         // If the desktop is still starting up, wait until it is ready
         if (Main.layoutManager._startingUp) {
@@ -229,8 +109,8 @@ class Extension {
     }
 
     disable() {
-        this._indicator.destroy();
-        this._indicator = null;
+        if (getShowPanelMenu())
+            this.panelMenu.disable();
 
         data.isEnabled = false;
         Main.sessionMode.hasOverview = this.old_hasOverview;
@@ -393,7 +273,7 @@ function launchRenderer() {
     argv.push('-F');
     argv.push(videoPath);
 
-    data.currentProcess = new LaunchSubprocess();
+    data.currentProcess = new Launcher.LaunchSubprocess();
     data.currentProcess.set_cwd(GLib.get_home_dir());
     data.currentProcess.spawnv(argv);
     data.manager.set_wayland_client(data.currentProcess);

@@ -21,10 +21,9 @@ const {Adw, Gio, Gtk} = imports.gi;
 const Gettext = imports.gettext;
 
 const ExtensionUtils = imports.misc.extensionUtils;
+
 const Me = ExtensionUtils.getCurrentExtension();
-
 const haveContentFit = Gtk.get_minor_version() >= 8;
-
 const settings = ExtensionUtils.getSettings(
     'io.github.jeffshee.hanabi-extension'
 );
@@ -53,27 +52,7 @@ function fillPreferencesWindow(window) {
     prefsRowFitMode(generalGroup);
     prefsRowBoolean(generalGroup, _('Mute Audio'), 'mute', '');
     prefsRowInt(generalGroup, _('Volume Level'), 'volume', '', 0, 100, 1, 10);
-
-    // const pauseGroup = new Adw.PreferencesGroup({ title: "Auto Pause" });
-    // page.add(pauseGroup);
-    // prefsRowBoolean(
-    //     pauseGroup,
-    //     "Pause on Fullscreen",
-    //     "pause-on-fullscreen",
-    //     "Pause playback when there is a fullscreen window"
-    // );
-    // prefsRowBoolean(
-    //     pauseGroup,
-    //     "Pause on Maximize",
-    //     "pause-on-maximize",
-    //     "Pause playback when there is a maximized window"
-    // );
-    // prefsRowBoolean(
-    //     pauseGroup,
-    //     "Pause on Battery",
-    //     "pause-on-battery",
-    //     "Pause playback when device is on battery"
-    // );
+    prefsRowBoolean(generalGroup, _('Show Panel Menu'), 'show-panel-menu', '');
 
     const experimentalGroup = new Adw.PreferencesGroup({
         title: _('Experimental'),
@@ -112,7 +91,7 @@ function fillPreferencesWindow(window) {
         'force-mediafile',
         _('Force use of GtkMediaFile for video playback')
     );
-    prefsRowInt(developerGroup, _('Startup delay'), 'startup-delay', _('Add a startup delay (in milliseconds) to mitigate compatibility issues with other extensions'), 0, 10000, 100, 500);
+    prefsRowInt(developerGroup, _('Startup Delay'), 'startup-delay', _('Add a startup delay (in milliseconds) to mitigate compatibility issues with other extensions'), 0, 10000, 100, 500);
 
     // Add our page to the window
     window.add(page);

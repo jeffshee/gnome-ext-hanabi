@@ -46,7 +46,6 @@ const settingsSchemaSource = Gio.SettingsSchemaSource.get_default();
 if (settingsSchemaSource.lookup(extSchemaId, false))
     extSettings = Gio.Settings.new(extSchemaId);
 
-const isDebugMode = extSettings ? extSettings.get_boolean('debug-mode') : true;
 const forceGtk4PaintableSink = extSettings
     ? extSettings.get_boolean('force-gtk4paintablesink')
     : false;
@@ -75,15 +74,8 @@ let volume = extSettings ? extSettings.get_int('volume') / 100.0 : 0.5;
 let windowDimension = {width: 1920, height: 1080};
 let windowed = false;
 let fullscreened = true;
+let isDebugMode = extSettings ? extSettings.get_boolean('debug-mode') : true;
 
-/**
- *
- * @param {...any} args
- */
-function debug(...args) {
-    if (isDebugMode)
-        print(...args);
-}
 
 const HanabiRenderer = GObject.registerClass(
     {
@@ -95,6 +87,8 @@ const HanabiRenderer = GObject.registerClass(
                 application_id: applicationId,
                 flags: Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
             });
+
+            GLib.log_set_debug_enabled(isDebugMode);
 
             this._hanabiWindows = [];
             this._pictures = [];
@@ -148,6 +142,11 @@ const HanabiRenderer = GObject.registerClass(
                     this._pictures.forEach(picture =>
                         picture.set_content_fit(contentFit)
                     );
+                    break;
+                case 'debug-mode':
+                    isDebugMode = settings.get_boolean(key);
+                    GLib.log_set_debug_enabled(isDebugMode);
+                    break;
                 }
             });
         }
@@ -160,13 +159,13 @@ const HanabiRenderer = GObject.registerClass(
                     case '-M':
                     case '--mute':
                         mute = true;
-                        debug(`mute = ${mute}`);
+                        console.debug(`mute = ${mute}`);
                         break;
                     case '-N':
                     case '--nohide':
                         // Launch renderer in standalone mode without hiding
                         nohide = true;
-                        debug(`nohide = ${nohide}`);
+                        console.debug(`nohide = ${nohide}`);
                         break;
                     case '-W':
                     case '--windowed':
@@ -179,7 +178,7 @@ const HanabiRenderer = GObject.registerClass(
                         lastCommand = arg;
                         break;
                     default:
-                        print(`Argument ${arg} not recognized. Aborting.`);
+                        console.error(`Argument ${arg} not recognized. Aborting.`);
                         return false;
                     }
                     continue;
@@ -193,7 +192,7 @@ const HanabiRenderer = GObject.registerClass(
                         width: parseInt(data[0]),
                         height: parseInt(data[1]),
                     };
-                    debug(
+                    console.debug(
                         `windowed = ${windowed}, windowConfig = ${windowDimension}`
                     );
                     break;
@@ -201,17 +200,17 @@ const HanabiRenderer = GObject.registerClass(
                 case '-P':
                 case '--codepath':
                     codePath = arg;
-                    debug(`codepath = ${codePath}`);
+                    console.debug(`codepath = ${codePath}`);
                     break;
                 case '-F':
                 case '--filepath':
                     videoPath = arg;
-                    debug(`filepath = ${videoPath}`);
+                    console.debug(`filepath = ${videoPath}`);
                     break;
                 case '-V':
                 case '--volume':
                     volume = Math.max(0.0, Math.min(1.0, parseFloat(arg)));
-                    debug(`volume = ${volume}`);
+                    console.debug(`volume = ${volume}`);
                     break;
                 }
                 lastCommand = null;
@@ -258,7 +257,7 @@ const HanabiRenderer = GObject.registerClass(
                     continue;
 
                 feature.set_rank(rank);
-                debug(`changed rank: ${oldRank} -> ${rank} for ${featureName}`);
+                console.debug(`changed rank: ${oldRank} -> ${rank} for ${featureName}`);
             }
         }
 
@@ -315,7 +314,7 @@ const HanabiRenderer = GObject.registerClass(
 
                 this._hanabiWindows.push(window);
             });
-            debug(`using ${this._gstImplName} for video output`);
+            console.log(`using ${this._gstImplName} for video output`);
         }
 
         _getWidgetFromSharedPaintable() {
@@ -374,8 +373,8 @@ const HanabiRenderer = GObject.registerClass(
             );
 
             // Error handling
-            this._adapter.connect('warning', (_adapter, err) => logError(err));
-            this._adapter.connect('error', (_adapter, err) => logError(err));
+            this._adapter.connect('warning', (_adapter, err) => console.warn(err));
+            this._adapter.connect('error', (_adapter, err) => console.error(err));
 
             // Set the volume and mute after paused state, otherwise it won't work.
             // Use paused or greater, as some states might be skipped.
