@@ -97,8 +97,6 @@ var LiveWallpaper = GObject.registerClass(
                 1.0 / this._monitorWidth,
                 1.0 / this._monitorHeight,
             ]);
-
-            logger.debug('LiveWallpaper created');
         }
 
         setRoundedClipRadius(radius) {
@@ -121,11 +119,10 @@ var LiveWallpaper = GObject.registerClass(
         }
 
         _applyWallpaper() {
-            logger.debug('Waiting for Hanabi renderer...');
+            logger.debug('Applying wallpaper...');
             const operation = () => {
                 const renderer = this._getRenderer();
                 if (renderer) {
-                    logger.debug('Hanabi renderer found.');
                     this._wallpaper = new Clutter.Clone({
                         source: renderer,
                         // The point around which the scaling and rotation transformations occur.
@@ -136,7 +133,7 @@ var LiveWallpaper = GObject.registerClass(
                     });
                     this.add_child(this._wallpaper);
                     this._fade();
-
+                    logger.debug('Wallpaper applied');
                     // Stop the timeout.
                     return false;
                 } else {
@@ -180,7 +177,6 @@ var LiveWallpaper = GObject.registerClass(
              * It is safe to assume that the ratio of wallpaper is a constant (e.g. 16:9) in our case.
              */
             let scale = this.allocation.get_height() / this._monitorHeight;
-            logger.debug(`${this._monitorHeight * scale}, ${this._monitorWidth * scale}`);
             this._wallpaper.height = this._monitorHeight * scale;
             this._wallpaper.width = this._monitorWidth * scale;
         }
@@ -226,7 +222,6 @@ var LiveWallpaper = GObject.registerClass(
                 Meta.later_remove(this._laterId);
 
             this._laterId = 0;
-            logger.debug('LiveWallpaper destroyed');
         }
     }
 );
