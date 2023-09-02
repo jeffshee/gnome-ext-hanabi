@@ -33,14 +33,13 @@ const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 
-const ExtensionUtils = imports.misc.extensionUtils;
 const Config = imports.misc.config;
+const ExtensionUtils = imports.misc.extensionUtils;
 
 const Me = ExtensionUtils.getCurrentExtension();
-const {WindowManager} = Me.imports.windowManager;
-const {LaunchSubprocess} = Me.imports.launcher;
-
 const GnomeShellOverride = Me.imports.gnomeShellOverride;
+const Launcher = Me.imports.launcher;
+const WindowManager = Me.imports.windowManager;
 
 const extSettings = ExtensionUtils.getSettings(
     'io.github.jeffshee.hanabi-extension'
@@ -206,7 +205,7 @@ class Extension {
         }
 
         if (!data.manager)
-            data.manager = new WindowManager();
+            data.manager = new WindowManager.WindowManager();
 
         // If the desktop is still starting up, wait until it is ready
         if (Main.layoutManager._startingUp) {
@@ -392,7 +391,7 @@ function launchRenderer() {
     argv.push('-F');
     argv.push(videoPath);
 
-    data.currentProcess = new LaunchSubprocess();
+    data.currentProcess = new Launcher.LaunchSubprocess();
     data.currentProcess.set_cwd(GLib.get_home_dir());
     data.currentProcess.spawnv(argv);
     data.manager.set_wayland_client(data.currentProcess);

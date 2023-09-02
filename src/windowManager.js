@@ -28,10 +28,10 @@ const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 
 const Me = ExtensionUtils.getCurrentExtension();
-const {Logger} = Me.imports.logger;
+const Logger = Me.imports.logger;
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
-const logger = new Logger();
+const logger = new Logger.Logger();
 
 class ManagedWindow {
     constructor(window) {

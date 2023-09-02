@@ -20,15 +20,16 @@
 
 const {Clutter, GLib, GObject, Meta, St, Shell, Graphene} = imports.gi;
 
-const ExtensionUtils = imports.misc.extensionUtils;
 const Background = imports.ui.background;
 const Main = imports.ui.main;
 const Workspace = imports.ui.workspace;
 const WorkspaceThumbnail = imports.ui.workspaceThumbnail;
+
+const ExtensionUtils = imports.misc.extensionUtils;
 const Util = imports.misc.util;
 
 const Me = ExtensionUtils.getCurrentExtension();
-const {LiveWallpaper} = Me.imports.wallpaper;
+const Wallpaper = Me.imports.wallpaper;
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const extSettings = ExtensionUtils.getSettings(
@@ -180,7 +181,7 @@ function new_createBackgroundActor() {
     const backgroundActor =
         replaceData.old__createBackgroundActor[0].call(this);
     // We need to pass radius to actors, so save a ref in bgManager.
-    this.videoActor = new LiveWallpaper(backgroundActor);
+    this.videoActor = new Wallpaper.LiveWallpaper(backgroundActor);
     runningWallpaperActors.add(this.videoActor);
     this.videoActor.connect('destroy', actor => {
         runningWallpaperActors.delete(actor);

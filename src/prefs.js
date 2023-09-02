@@ -21,10 +21,9 @@ const {Adw, Gio, Gtk} = imports.gi;
 const Gettext = imports.gettext;
 
 const ExtensionUtils = imports.misc.extensionUtils;
+
 const Me = ExtensionUtils.getCurrentExtension();
-
 const haveContentFit = Gtk.get_minor_version() >= 8;
-
 const settings = ExtensionUtils.getSettings(
     'io.github.jeffshee.hanabi-extension'
 );

@@ -20,22 +20,21 @@
 
 const {Clutter, GLib, GObject, Meta, St, Shell, Graphene} = imports.gi;
 
-const ExtensionUtils = imports.misc.extensionUtils;
 const Background = imports.ui.background;
+const ExtensionUtils = imports.misc.extensionUtils;
 const Main = imports.ui.main;
 const Workspace = imports.ui.workspace;
 const WorkspaceThumbnail = imports.ui.workspaceThumbnail;
-const Util = imports.misc.util;
 
 const Me = ExtensionUtils.getCurrentExtension();
 const RoundedCornersEffect = Me.imports.roundedCornersEffect;
-const {Logger} = Me.imports.logger;
+const Logger = Me.imports.logger;
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const extSettings = ExtensionUtils.getSettings(
     'io.github.jeffshee.hanabi-extension'
 );
-const logger = new Logger();
+const logger = new Logger.Logger();
 
 /**
  * The widget that holds the window preview of the renderer.

@@ -24,13 +24,15 @@
 /* exported LaunchSubprocess */
 
 const {Meta, Gio, GLib, St} = imports.gi;
+
 const Config = imports.misc.config;
 const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const {Logger} = Me.imports.logger;
 
-const logger = new Logger();
-const rendererLogger = new Logger('renderer');
+const Me = ExtensionUtils.getCurrentExtension();
+const Logger = Me.imports.logger;
+
+const logger = new Logger.Logger();
+const rendererLogger = new Logger.Logger('renderer');
 
 
 var LaunchSubprocess = class {
