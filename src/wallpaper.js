@@ -29,11 +29,13 @@ const Util = imports.misc.util;
 
 const Me = ExtensionUtils.getCurrentExtension();
 const RoundedCornersEffect = Me.imports.roundedCornersEffect;
+const {Logger} = Me.imports.logger;
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const extSettings = ExtensionUtils.getSettings(
     'io.github.jeffshee.hanabi-extension'
 );
+const logger = new Logger();
 
 /**
  * The widget that holds the window preview of the renderer.
@@ -97,7 +99,7 @@ var LiveWallpaper = GObject.registerClass(
                 1.0 / this._monitorHeight,
             ]);
 
-            console.debug('Hanabi: LiveWallpaper created');
+            logger.debug('LiveWallpaper created');
         }
 
         setRoundedClipRadius(radius) {
@@ -120,11 +122,11 @@ var LiveWallpaper = GObject.registerClass(
         }
 
         _applyWallpaper() {
-            console.debug('Hanabi: Waiting for Hanabi renderer...');
+            logger.debug('Waiting for Hanabi renderer...');
             const operation = () => {
                 const renderer = this._getRenderer();
                 if (renderer) {
-                    console.debug('Hanabi: Hanabi renderer found.');
+                    logger.debug('Hanabi renderer found.');
                     this._wallpaper = new Clutter.Clone({
                         source: renderer,
                         // The point around which the scaling and rotation transformations occur.
@@ -179,7 +181,7 @@ var LiveWallpaper = GObject.registerClass(
              * It is safe to assume that the ratio of wallpaper is a constant (e.g. 16:9) in our case.
              */
             let scale = this.allocation.get_height() / this._monitorHeight;
-            console.debug(`Hanabi: ${this._monitorHeight * scale}, ${this._monitorWidth * scale}`);
+            logger.debug(`${this._monitorHeight * scale}, ${this._monitorWidth * scale}`);
             this._wallpaper.height = this._monitorHeight * scale;
             this._wallpaper.width = this._monitorWidth * scale;
         }
@@ -225,7 +227,7 @@ var LiveWallpaper = GObject.registerClass(
                 Meta.later_remove(this._laterId);
 
             this._laterId = 0;
-            console.debug('Hanabi: LiveWallpaper destroyed');
+            logger.debug('LiveWallpaper destroyed');
         }
     }
 );

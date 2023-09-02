@@ -28,7 +28,6 @@ const WorkspaceThumbnail = imports.ui.workspaceThumbnail;
 const Util = imports.misc.util;
 
 const Me = ExtensionUtils.getCurrentExtension();
-const RoundedCornersEffect = Me.imports.roundedCornersEffect;
 const {LiveWallpaper} = Me.imports.wallpaper;
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';

@@ -46,7 +46,6 @@ const settingsSchemaSource = Gio.SettingsSchemaSource.get_default();
 if (settingsSchemaSource.lookup(extSchemaId, false))
     extSettings = Gio.Settings.new(extSchemaId);
 
-const isDebugMode = extSettings ? extSettings.get_boolean('debug-mode') : true;
 const forceGtk4PaintableSink = extSettings
     ? extSettings.get_boolean('force-gtk4paintablesink')
     : false;
@@ -75,6 +74,7 @@ let volume = extSettings ? extSettings.get_int('volume') / 100.0 : 0.5;
 let windowDimension = {width: 1920, height: 1080};
 let windowed = false;
 let fullscreened = true;
+let isDebugMode = extSettings ? extSettings.get_boolean('debug-mode') : true;
 
 
 const HanabiRenderer = GObject.registerClass(
@@ -88,8 +88,7 @@ const HanabiRenderer = GObject.registerClass(
                 flags: Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
             });
 
-            if (isDebugMode)
-                GLib.log_set_debug_enabled(true);
+            GLib.log_set_debug_enabled(isDebugMode);
 
             this._hanabiWindows = [];
             this._pictures = [];
@@ -143,6 +142,11 @@ const HanabiRenderer = GObject.registerClass(
                     this._pictures.forEach(picture =>
                         picture.set_content_fit(contentFit)
                     );
+                    break;
+                case 'debug-mode':
+                    isDebugMode = settings.get_boolean(key);
+                    GLib.log_set_debug_enabled(isDebugMode);
+                    break;
                 }
             });
         }
@@ -310,7 +314,7 @@ const HanabiRenderer = GObject.registerClass(
 
                 this._hanabiWindows.push(window);
             });
-            console.debug(`using ${this._gstImplName} for video output`);
+            console.log(`using ${this._gstImplName} for video output`);
         }
 
         _getWidgetFromSharedPaintable() {

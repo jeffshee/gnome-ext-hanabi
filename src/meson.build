@@ -14,6 +14,7 @@ sources = [
   'extension.js',
   'gnomeShellOverride.js',
   'launcher.js',
+  'logger.js',
   'hanabi-symbolic.svg',
   'prefs.js',
   'roundedCornersEffect.js',

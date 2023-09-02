@@ -25,8 +25,13 @@
 
 const {GLib, Meta} = imports.gi;
 const Main = imports.ui.main;
+const ExtensionUtils = imports.misc.extensionUtils;
+
+const Me = ExtensionUtils.getCurrentExtension();
+const {Logger} = Me.imports.logger;
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
+const logger = new Logger();
 
 class ManagedWindow {
     constructor(window) {
@@ -96,7 +101,7 @@ class ManagedWindow {
                 const newState = JSON.parse(json);
                 this._states = {...this._states, ...newState};
             } catch (e) {
-                console.trace(`Hanabi: ${e}`);
+                logger.trace(e);
             }
         }
         this._refresh();
