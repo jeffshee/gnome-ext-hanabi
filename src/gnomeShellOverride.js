@@ -269,7 +269,6 @@ function new_get_running() {
 function new_updateBorderRadius() {
     replaceData.old__updateBorderRadius[0].call(this);
 
-    // Basically a copy of the original function.
     const {scaleFactor} = St.ThemeContext.get_for_stage(global.stage);
     const cornerRadius =
         scaleFactor * Workspace.BACKGROUND_CORNER_RADIUS_PIXELS;
@@ -284,7 +283,6 @@ function new_updateBorderRadius() {
 function new_updateRoundedClipBounds() {
     replaceData.old__updateRoundedClipBounds[0].call(this);
 
-    // Basically a copy of the original function.
     const monitor = Main.layoutManager.monitors[this._monitorIndex];
 
     const rect = new Graphene.Rect();

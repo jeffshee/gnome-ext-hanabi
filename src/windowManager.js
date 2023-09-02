@@ -53,7 +53,6 @@ class ManagedWindow {
         this._signals.push(
             // TODO: `connect` or `connect_after`?
             window.connect_after('shown', () => {
-                // TODO: Not being called?
                 if (this._states.keepMinimized)
                     this._window.minimize();
             })

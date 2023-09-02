@@ -53,27 +53,6 @@ function fillPreferencesWindow(window) {
     prefsRowBoolean(generalGroup, _('Mute Audio'), 'mute', '');
     prefsRowInt(generalGroup, _('Volume Level'), 'volume', '', 0, 100, 1, 10);
 
-    // const pauseGroup = new Adw.PreferencesGroup({ title: "Auto Pause" });
-    // page.add(pauseGroup);
-    // prefsRowBoolean(
-    //     pauseGroup,
-    //     "Pause on Fullscreen",
-    //     "pause-on-fullscreen",
-    //     "Pause playback when there is a fullscreen window"
-    // );
-    // prefsRowBoolean(
-    //     pauseGroup,
-    //     "Pause on Maximize",
-    //     "pause-on-maximize",
-    //     "Pause playback when there is a maximized window"
-    // );
-    // prefsRowBoolean(
-    //     pauseGroup,
-    //     "Pause on Battery",
-    //     "pause-on-battery",
-    //     "Pause playback when device is on battery"
-    // );
-
     const experimentalGroup = new Adw.PreferencesGroup({
         title: _('Experimental'),
     });

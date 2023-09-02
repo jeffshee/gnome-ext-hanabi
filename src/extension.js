@@ -15,15 +15,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/**
- * Special thanks to the black magic of DING extension.
- * Especially the ManageWindow class that gives superpower to Wayland windows.
- * That is one of the most crucial parts for this extension to work.
- * Also, the replaceMethod function is very convenient and helpful.
- * Without them, I don't know how to get started.
- */
-
-
 /* exported init */
 
 const {Meta, Gio, GLib, St} = imports.gi;
@@ -65,12 +56,10 @@ const getStartupDelay = () => {
     return extSettings.get_int('startup-delay');
 };
 
-// This object will contain all the global variables
 let data = {};
 
 class Extension {
     constructor() {
-        // https://github.com/fthx/no-overview/blob/main/extension.js
         this.old_hasOverview = Main.sessionMode.hasOverview;
     }
 
