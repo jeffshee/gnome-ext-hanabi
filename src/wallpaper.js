@@ -41,8 +41,8 @@ const logger = new Logger.Logger();
  */
 var LiveWallpaper = GObject.registerClass(
     class LiveWallpaper extends St.Widget {
-        _init(backgroundActor) {
-            super._init({
+        constructor(backgroundActor) {
+            super({
                 layout_manager: new Clutter.BinLayout(),
                 //
                 x: backgroundActor.x,
