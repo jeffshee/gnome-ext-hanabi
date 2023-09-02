@@ -39,6 +39,10 @@ const getVideoPath = () => {
     return extSettings.get_string('video-path');
 };
 
+const getShowPanelMenu = () => {
+    return extSettings.get_boolean('show-panel-menu');
+};
+
 const getStartupDelay = () => {
     return extSettings.get_int('startup-delay');
 };
@@ -51,9 +55,16 @@ class Extension {
     }
 
     enable() {
-        this._isPlaying = false;
         this.panelMenu = new PanelMenu.HanabiPanelMenu();
-        this.panelMenu.enable();
+        if (getShowPanelMenu())
+            this.panelMenu.enable();
+
+        extSettings?.connect('changed::show-panel-menu', () => {
+            if (getShowPanelMenu())
+                this.panelMenu.enable();
+            else
+                this.panelMenu.disable();
+        });
 
         /**
          * Other overrides
@@ -98,7 +109,8 @@ class Extension {
     }
 
     disable() {
-        this.panelMenu.disable();
+        if (getShowPanelMenu())
+            this.panelMenu.disable();
 
         data.isEnabled = false;
         Main.sessionMode.hasOverview = this.old_hasOverview;

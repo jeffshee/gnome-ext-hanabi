@@ -52,6 +52,7 @@ function fillPreferencesWindow(window) {
     prefsRowFitMode(generalGroup);
     prefsRowBoolean(generalGroup, _('Mute Audio'), 'mute', '');
     prefsRowInt(generalGroup, _('Volume Level'), 'volume', '', 0, 100, 1, 10);
+    prefsRowBoolean(generalGroup, _('Show Panel Menu'), 'show-panel-menu', '');
 
     const experimentalGroup = new Adw.PreferencesGroup({
         title: _('Experimental'),
@@ -90,7 +91,7 @@ function fillPreferencesWindow(window) {
         'force-mediafile',
         _('Force use of GtkMediaFile for video playback')
     );
-    prefsRowInt(developerGroup, _('Startup delay'), 'startup-delay', _('Add a startup delay (in milliseconds) to mitigate compatibility issues with other extensions'), 0, 10000, 100, 500);
+    prefsRowInt(developerGroup, _('Startup Delay'), 'startup-delay', _('Add a startup delay (in milliseconds) to mitigate compatibility issues with other extensions'), 0, 10000, 100, 500);
 
     // Add our page to the window
     window.add(page);

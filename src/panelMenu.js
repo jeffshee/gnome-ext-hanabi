@@ -45,6 +45,8 @@ const setMute = mute => {
 
 var HanabiPanelMenu = class HanabiPanelMenu {
     constructor() {
+        this._isPlaying = false;
+
         // DBus
         const dbusXml = `
         <node>
