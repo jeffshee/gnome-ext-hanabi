@@ -15,15 +15,16 @@ sources = [
   'gnomeShellOverride.js',
   'launcher.js',
   'logger.js',
-  'hanabi-symbolic.svg',
+  'panelMenu.js',
   'prefs.js',
   'roundedCornersEffect.js',
   'wallpaper.js',
-  'windowManager.js'
+  'windowManager.js',
 ]
 
 extra_sources = [
   '../LICENSE',
+  'assets/hanabi-symbolic.svg',
 ]
 
 renderer = [
