@@ -57,7 +57,8 @@ cd gnome-ext-hanabi
 
 ### Distro-specific guide
 
-[Guide for Pop!\_OS 22.04](docs/popos-22-04.md)
+- [Guide for Pop!\_OS 22.04](docs/popos-22-04.md)
+- [Guide for Ubuntu 23.04](docs/ubuntu-23-04.md)
 
 ### Troubleshooting
 
@@ -75,15 +76,11 @@ cd gnome-ext-hanabi
     After that, check if `gst-inspect-1.0 nvcodec` reports all its features.
 
 3. The GNOME Shell keeps crashing after enabling Hanabi, help!  
-   You can try to disable the extension from tty (Ctrl+Alt+F3):
+   You can try to disable the extension from tty ( <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>F3</kbd> ):
 
    ```
    gnome-extensions disable hanabi-extension@jeffshee.github.io
    ```
-
-4. The video covers several UI components of GNOME Shell, such as topbar, panel, DING's desktop icons, etc.  
-   Affects: GNOME 44, and possibly GNOME 43.  
-   The cause of the issue is still unknown. However, it consistently occurs after a shell restart (reboot or re-login). Switching the workspace (Ctrl + Alt + ⬅ or ➡) somehow temporarily fixes the issue until the next shell restart.
 
 ### Optimization
 
@@ -105,7 +102,13 @@ For this to work, Clapper must be installed **from the package manager and not f
 ## Get involved 🚀
 
 Contributors are welcome! Let's make Hanabi extension better together~  
-If you're interested in translating, please help by working with the pot files located in the `src/po` directory.
+If you're interested in translating, you can help on [Hosted Weblate](https://hosted.weblate.org/projects/gnome-ext-hanabi/gnome-ext-hanabi/).
+
+### Translation status
+
+[![Translation status](https://hosted.weblate.org/widget/gnome-ext-hanabi/gnome-ext-hanabi/svg-badge.svg)](https://hosted.weblate.org/engage/gnome-ext-hanabi/)
+
+[![Translation status](https://hosted.weblate.org/widget/gnome-ext-hanabi/gnome-ext-hanabi/multi-auto.svg)](https://hosted.weblate.org/engage/gnome-ext-hanabi/)
 
 ### Contributors ✨
 
