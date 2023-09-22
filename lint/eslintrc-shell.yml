@@ -1,4 +1,7 @@
 # https://gitlab.gnome.org/GNOME/gnome-shell-extensions/tree/main/lint
+# SPDX-FileCopyrightText: 2019 Florian Müllner <fmuellner@gnome.org>
+#
+# SPDX-License-Identifier: MIT OR LGPL-2.0-or-later
 
 rules:
   camelcase:
@@ -12,3 +15,5 @@ rules:
   prefer-arrow-callback: error
 globals:
   global: readonly
+parserOptions:
+  sourceType: module
