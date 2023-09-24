@@ -16,9 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/* exported RoundedCornersEffect */
-
-const {GObject, Shell} = imports.gi;
+import GObject from 'gi://GObject';
+import Shell from 'gi://Shell';
 
 // This shader is copied from Mutter project.
 // See <https://gitlab.gnome.org/GNOME/mutter/-/blob/main/src/compositor/meta-background-content.c>.
@@ -69,6 +68,7 @@ const fragmentShaderDeclarations = [
     '  return outer_radius - sqrt (dist_squared);                             \n',
     '}                                                                        \n',
 ].join('');
+
 const fragmentShaderCode = [
     'vec2 texture_coord;                                                      \n',
     '                                                                         \n',
@@ -78,9 +78,7 @@ const fragmentShaderCode = [
 ].join('');
 
 // A naive pipeline that just updates uniforms.
-// TODO: It should be better if we save input value and check whether they are
-// the same with previous values before passing into shaders.
-var RoundedCornersEffect = GObject.registerClass(
+export const RoundedCornersEffect = GObject.registerClass(
     class RoundedCornersEffect extends Shell.GLSLEffect {
         vfunc_build_pipeline() {
             this.add_glsl_snippet(

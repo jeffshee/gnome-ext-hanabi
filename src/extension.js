@@ -15,301 +15,240 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/* exported init */
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-const {Meta, Gio, GLib} = imports.gi;
-const Gettext = imports.gettext;
+import * as GnomeShellOverride from './gnomeShellOverride.js';
+import * as Launcher from './launcher.js';
+import * as WindowManager from './windowManager.js';
+import * as PanelMenu from './panelMenu.js';
 
-const Main = imports.ui.main;
+export default class HanabiExtension extends Extension {
+    constructor(metadata) {
+        super(metadata);
+        this.isEnabled = false;
+        this.launchRendererId = 0;
+        this.currentProcess = null;
+        this.reloadTime = 100;
 
-const Config = imports.misc.config;
-const ExtensionUtils = imports.misc.extensionUtils;
-
-const Me = ExtensionUtils.getCurrentExtension();
-const GnomeShellOverride = Me.imports.gnomeShellOverride;
-const Launcher = Me.imports.launcher;
-const WindowManager = Me.imports.windowManager;
-const PanelMenu = Me.imports.panelMenu;
-
-const extSettings = ExtensionUtils.getSettings(
-    'io.github.jeffshee.hanabi-extension'
-);
-
-const getVideoPath = () => {
-    return extSettings.get_string('video-path');
-};
-
-const getShowPanelMenu = () => {
-    return extSettings.get_boolean('show-panel-menu');
-};
-
-const getStartupDelay = () => {
-    return extSettings.get_int('startup-delay');
-};
-
-let data = {};
-
-class Extension {
-    constructor() {
-        this.old_hasOverview = Main.sessionMode.hasOverview;
+        /**
+         * This is a safeguard measure for the case of Gnome Shell being relaunched
+         *  (for example, under X11, with Alt+F2 and R), to kill any old renderer process.
+         */
+        this.killAllProcesses();
     }
 
     enable() {
-        this.panelMenu = new PanelMenu.HanabiPanelMenu();
-        if (getShowPanelMenu())
+        this.settings = this.getSettings();
+
+        /**
+         * Panel Menu
+         */
+        this.panelMenu = new PanelMenu.HanabiPanelMenu(this);
+        if (this.settings.get_boolean('show-panel-menu'))
             this.panelMenu.enable();
 
-        extSettings?.connect('changed::show-panel-menu', () => {
-            if (getShowPanelMenu())
+        this.settings.connect('changed::show-panel-menu', () => {
+            if (this.settings.get_boolean('show-panel-menu'))
                 this.panelMenu.enable();
             else
                 this.panelMenu.disable();
         });
 
         /**
-         * Other overrides
+         * Disable startup animation (Workaround for issue #65)
          */
+        this.old_hasOverview = Main.sessionMode.hasOverview;
 
-        // Disable startup animation (workaround for issue #65)
         if (Main.layoutManager._startingUp) {
             Main.sessionMode.hasOverview = false;
             Main.layoutManager.connect('startup-complete', () => {
                 Main.sessionMode.hasOverview = this.old_hasOverview;
             });
-            // handle Ubuntu's method
+            // Handle Ubuntu's method
             if (Main.layoutManager.startInOverview)
                 Main.layoutManager.startInOverview = false;
         }
 
-        if (!data.GnomeShellOverride) {
-            data.GnomeShellOverride =
-                new GnomeShellOverride.GnomeShellOverride();
-        }
-
-        if (!data.manager)
-            data.manager = new WindowManager.WindowManager();
+        /**
+         * Other overrides
+         */
+        this.override = new GnomeShellOverride.GnomeShellOverride();
+        this.manager = new WindowManager.WindowManager();
 
         // If the desktop is still starting up, wait until it is ready
         if (Main.layoutManager._startingUp) {
-            data.startupPreparedId = Main.layoutManager.connect(
+            this.startupCompleteId = Main.layoutManager.connect(
                 'startup-complete',
                 () => {
-                    GLib.timeout_add(GLib.PRIORITY_DEFAULT, getStartupDelay(), () => {
-                        innerEnable(true);
+                    GLib.timeout_add(GLib.PRIORITY_DEFAULT, this.settings.get_int('startup-delay'), () => {
+                        Main.layoutManager.disconnect(this.startupCompleteId);
+                        this.startupCompleteId = null;
+                        this.innerEnable();
                         return false;
                     });
                 }
             );
         } else {
-            GLib.timeout_add(GLib.PRIORITY_DEFAULT, getStartupDelay(), () => {
-                innerEnable(false);
+            GLib.timeout_add(GLib.PRIORITY_DEFAULT, this.settings.get_int('startup-delay'), () => {
+                this.innerEnable();
                 return false;
             });
         }
     }
 
+    innerEnable() {
+        this.override.enable();
+        this.manager.enable();
+
+        this.isEnabled = true;
+        if (this.launchRendererId)
+            GLib.source_remove(this.launchRendererId);
+
+        this.launchRenderer();
+    }
+
+    launchRenderer() {
+        // Launch preferences dialog for first-time user
+        let videoPath = this.settings.get_string('video-path');
+        // TODO: check if the path is exist or not instead
+        if (videoPath === '')
+            this.openPreferences();
+
+        this.reloadTime = 100;
+        const argv = [];
+        argv.push(
+            GLib.build_filenamev([
+                this.path,
+                'renderer',
+                'renderer.js',
+            ])
+        );
+        // TODO: recheck `-P` argument
+        argv.push('-P', this.path);
+        argv.push('-F', videoPath);
+
+        this.currentProcess = new Launcher.LaunchSubprocess();
+        this.currentProcess.set_cwd(GLib.get_home_dir());
+        this.currentProcess.spawnv(argv);
+        this.manager.set_wayland_client(this.currentProcess);
+
+        /**
+         * If the renderer dies, wait 100ms and relaunch it, unless the exit status is different than zero,
+         * in which case it will wait one second. This is done this way to avoid relaunching the renderer
+         * too fast if it has a bug that makes it fail continuously, avoiding filling the journal too fast.
+         */
+        this.currentProcess.subprocess.wait_async(null, (obj, res) => {
+            obj.wait_finish(res);
+            if (!this.currentProcess || obj !== this.currentProcess.subprocess)
+                return;
+
+            if (obj.get_if_exited()) {
+                let retval = obj.get_exit_status();
+                if (retval !== 0)
+                    this.reloadTime = 1000;
+            } else {
+                this.reloadTime = 1000;
+            }
+            this.currentProcess = null;
+            this.manager.set_wayland_client(null);
+            if (this.isEnabled) {
+                if (this.launchRendererId)
+                    GLib.source_remove(this.launchRendererId);
+
+                this.launchRendererId = GLib.timeout_add(
+                    GLib.PRIORITY_DEFAULT,
+                    this.reloadTime,
+                    () => {
+                        this.launchRendererId = 0;
+                        this.launchRenderer();
+                        return false;
+                    }
+                );
+            }
+        });
+    }
+
     disable() {
-        if (getShowPanelMenu())
-            this.panelMenu.disable();
-
-        data.isEnabled = false;
+        this.settings = null;
+        this.panelMenu.disable();
         Main.sessionMode.hasOverview = this.old_hasOverview;
-        killCurrentProcess();
-        data.GnomeShellOverride.disable();
-        data.manager.disable();
-    }
-}
+        this.override.disable();
+        this.manager.disable();
 
-/**
- *
- */
-function init() {
-    ExtensionUtils.initTranslations(Me.metadata.uuid);
-
-    data.isEnabled = false;
-    data.launchRendererId = 0;
-    data.currentProcess = null;
-    data.reloadTime = 100;
-    data.GnomeShellVersion = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
-
-    data.GnomeShellOverride = null;
-    data.manager = null;
-
-    /**
-     * Ensures that there aren't "rogue" processes.
-     * This is a safeguard measure for the case of Gnome Shell being relaunched
-     *  (for example, under X11, with Alt+F2 and R), to kill any old renderer instance.
-     * That's why it must be here, in init(), and not in enable() or disable()
-     * (disable already guarantees thag the current instance is killed).
-     */
-    doKillAllOldRendererProcesses();
-    return new Extension();
-}
-
-/**
- * The true code that configures everything and launches the renderer
- *
- * @param removeId
- */
-function innerEnable(removeId) {
-    if (removeId) {
-        Main.layoutManager.disconnect(data.startupPreparedId);
-        data.startupPreparedId = null;
+        this.isEnabled = false;
+        this.killCurrentProcess();
     }
 
-    data.GnomeShellOverride.enable();
-    data.manager.enable();
+    killCurrentProcess() {
+        // If a reload was pending, kill it and schedule a new reload.
+        if (this.launchRendererId) {
+            GLib.source_remove(this.launchRendererId);
+            this.launchRendererId = 0;
+            if (this.isEnabled) {
+                this.launchRendererId = GLib.timeout_add(
+                    GLib.PRIORITY_DEFAULT,
+                    this.reloadTime,
+                    () => {
+                        this.launchRendererId = 0;
+                        this.launchRenderer();
+                        return false;
+                    }
+                );
+            }
+        }
 
-    data.isEnabled = true;
-    if (data.launchRendererId)
-        GLib.source_remove(data.launchRendererId);
-
-    launchRenderer();
-}
-
-/**
- * Kills the current renderer
- */
-function killCurrentProcess() {
-    // If a reload was pending, kill it and program a new reload
-    if (data.launchRendererId) {
-        GLib.source_remove(data.launchRendererId);
-        data.launchRendererId = 0;
-        if (data.isEnabled) {
-            data.launchRendererId = GLib.timeout_add(
-                GLib.PRIORITY_DEFAULT,
-                data.reloadTime,
-                () => {
-                    data.launchRendererId = 0;
-                    launchRenderer();
-                    return false;
-                }
-            );
+        // Kill the renderer. It will be reloaded automatically.
+        if (this.currentProcess && this.currentProcess.subprocess) {
+            this.currentProcess.cancellable.cancel();
+            this.currentProcess.subprocess.send_signal(15);
         }
     }
 
-    // kill the renderer. It will be reloaded automatically.
-    if (data.currentProcess && data.currentProcess.subprocess) {
-        data.currentProcess.cancellable.cancel();
-        data.currentProcess.subprocess.send_signal(15);
-    }
-}
-
-/**
- * This function checks all the processes in the system,
- * and kills those that are a desktop manager from the current user (but not others).
- * This allows to avoid having several ones in case gnome shell resets, or other odd cases.
- * It requires the /proc virtual filesystem, but doesn't fail if it doesn't exist.
- */
-function doKillAllOldRendererProcesses() {
-    let procFolder = Gio.File.new_for_path('/proc');
-    if (!procFolder.query_exists(null))
-        return;
-
-    let fileEnum = procFolder.enumerate_children(
-        'standard::*',
-        Gio.FileQueryInfoFlags.NONE,
-        null
-    );
-    let info;
-    while ((info = fileEnum.next_file(null))) {
-        let filename = info.get_name();
-        if (!filename)
-            break;
-
-        let processPath = GLib.build_filenamev(['/proc', filename, 'cmdline']);
-        let processUser = Gio.File.new_for_path(processPath);
-        if (!processUser.query_exists(null))
-            continue;
-
-        let [binaryData, etag_] = processUser.load_bytes(null);
-        let contents = '';
-        let readData = binaryData.get_data();
-        for (let i = 0; i < readData.length; i++) {
-            if (readData[i] < 32)
-                contents += ' ';
-            else
-                contents += String.fromCharCode(readData[i]);
-        }
-        let path =
-            `gjs ${
-                GLib.build_filenamev([
-                    ExtensionUtils.getCurrentExtension().path,
-                    'renderer',
-                    'renderer.js',
-                ])}`;
-        if (contents.startsWith(path)) {
-            let proc = new Gio.Subprocess({argv: ['/bin/kill', filename]});
-            proc.init(null);
-            proc.wait(null);
-        }
-    }
-}
-
-/**
- * Launches the renderer, passing to it the path where it is stored and the video path to play.
- * It also monitors it, to relaunch it in case it dies or is killed.
- * Finally, it reads STDOUT and STDERR and redirects them to the journal, to help to debug it.
- */
-function launchRenderer() {
-    // Launch prefs window for first-time user
-    let videoPath = getVideoPath();
-    if (videoPath === '')
-        ExtensionUtils.openPrefs();
-
-    data.reloadTime = 100;
-    let argv = [];
-    argv.push(
-        GLib.build_filenamev([
-            ExtensionUtils.getCurrentExtension().path,
-            'renderer',
-            'renderer.js',
-        ])
-    );
-    // The path. Allows the program to find translations, settings and modules.
-    argv.push('-P');
-    argv.push(ExtensionUtils.getCurrentExtension().path);
-    // The video path.
-    argv.push('-F');
-    argv.push(videoPath);
-
-    data.currentProcess = new Launcher.LaunchSubprocess();
-    data.currentProcess.set_cwd(GLib.get_home_dir());
-    data.currentProcess.spawnv(argv);
-    data.manager.set_wayland_client(data.currentProcess);
-
-    /**
-     * If the renderer dies, wait 100ms and relaunch it, unless the exit status is different than zero,
-     * in which case it will wait one second. This is done this way to avoid relaunching the renderer
-     * too fast if it has a bug that makes it fail continuously, avoiding filling the journal too fast.
-     */
-    data.currentProcess.subprocess.wait_async(null, (obj, res) => {
-        obj.wait_finish(res);
-        if (!data.currentProcess || obj !== data.currentProcess.subprocess)
+    killAllProcesses() {
+        let procFolder = Gio.File.new_for_path('/proc');
+        if (!procFolder.query_exists(null))
             return;
 
-        if (obj.get_if_exited()) {
-            let retval = obj.get_exit_status();
-            if (retval !== 0)
-                data.reloadTime = 1000;
-        } else {
-            data.reloadTime = 1000;
-        }
-        data.currentProcess = null;
-        data.manager.set_wayland_client(null);
-        if (data.isEnabled) {
-            if (data.launchRendererId)
-                GLib.source_remove(data.launchRendererId);
+        let fileEnum = procFolder.enumerate_children(
+            'standard::*',
+            Gio.FileQueryInfoFlags.NONE,
+            null
+        );
+        let info;
+        while ((info = fileEnum.next_file(null))) {
+            let filename = info.get_name();
+            if (!filename)
+                break;
 
-            data.launchRendererId = GLib.timeout_add(
-                GLib.PRIORITY_DEFAULT,
-                data.reloadTime,
-                () => {
-                    data.launchRendererId = 0;
-                    launchRenderer();
-                    return false;
-                }
-            );
+            let processPath = GLib.build_filenamev(['/proc', filename, 'cmdline']);
+            let processUser = Gio.File.new_for_path(processPath);
+            if (!processUser.query_exists(null))
+                continue;
+
+            let [binaryData, etag_] = processUser.load_bytes(null);
+            let contents = '';
+            let readData = binaryData.get_data();
+            for (let i = 0; i < readData.length; i++) {
+                if (readData[i] < 32)
+                    contents += ' ';
+                else
+                    contents += String.fromCharCode(readData[i]);
+            }
+            let path =
+                `gjs ${
+                    GLib.build_filenamev([
+                        this.path,
+                        'renderer',
+                        'renderer.js',
+                    ])}`;
+            if (contents.startsWith(path)) {
+                let proc = new Gio.Subprocess({argv: ['/bin/kill', filename]});
+                proc.init(null);
+                proc.wait(null);
+            }
         }
-    });
+    }
 }

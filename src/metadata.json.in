@@ -1,11 +1,10 @@
 {
   "description": "Live Wallpaper for GNOME\n\nHanabi 花火【はなび】(n) fireworks\n( ・ω・)o─━・*:'・:・゜'・:※",
+  "gettext-domain": "@uuid@",
   "name": "Hanabi Extension",
   "settings-schema": "@settings_schema@",
   "shell-version": [
-    "42",
-    "43",
-    "44"
+    "45"
   ],
   "url": "https://github.com/jeffshee/gnome-ext-hanabi",
   "uuid": "@uuid@",

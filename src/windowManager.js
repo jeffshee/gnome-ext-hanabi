@@ -21,14 +21,9 @@
  * ManageWindow and EmulateX11WindowType in the DING extension.
  */
 
-/* exported WindowManager */
+import Meta from 'gi://Meta';
 
-const {GLib, Meta} = imports.gi;
-const Main = imports.ui.main;
-const ExtensionUtils = imports.misc.extensionUtils;
-
-const Me = ExtensionUtils.getCurrentExtension();
-const Logger = Me.imports.logger;
+import * as Logger from './logger.js';
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const logger = new Logger.Logger();
@@ -126,7 +121,7 @@ class ManagedWindow {
     }
 }
 
-var WindowManager = class {
+export class WindowManager {
     constructor() {
         this._isX11 = !Meta.is_wayland_compositor();
         this._windows = new Set();
@@ -188,4 +183,4 @@ var WindowManager = class {
         window.managed.disconnect();
         window.managed = null;
     }
-};
+}

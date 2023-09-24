@@ -18,8 +18,7 @@
  */
 
 imports.gi.versions.Gtk = '4.0';
-imports.gi.versions.GdkX11 = '4.0';
-const {GObject, Gtk, Gio, GLib, Gdk, GdkX11, Gst} = imports.gi;
+const {GObject, Gtk, Gio, GLib, Gdk, Gst} = imports.gi;
 
 let GstPlay = null;
 // GstPlay is available from GStreamer 1.20+

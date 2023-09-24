@@ -15,26 +15,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import Gio from 'gi://Gio';
 
-/* exported Logger */
+const schemaId = 'io.github.jeffshee.hanabi-extension';
+const logPrefix = 'Hanabi:';
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-
-var Logger = class Logger {
+export class Logger {
     constructor(opt = undefined) {
-        const extSchemaId = 'io.github.jeffshee.hanabi-extension';
-        const debugModeKey = 'debug-mode';
-        const extSettings = ExtensionUtils.getSettings(extSchemaId);
-        const logPrefix = 'Hanabi:';
+        const settingsSchemaSource = Gio.SettingsSchemaSource.get_default();
+        if (settingsSchemaSource.lookup(schemaId, false))
+            this._settings = Gio.Settings.new(schemaId);
 
         this.logPrefix = logPrefix;
         this.logOpt = opt;
-        this.isDebugMode = extSettings ? extSettings.get_boolean(debugModeKey) : false;
+        this.isDebugMode = this._settings ? this._settings.get_boolean('debug-mode') : false;
 
-        extSettings?.connect('changed', (settings, key) => {
-            if (key === debugModeKey)
-                this.isDebugMode = settings.get_boolean(debugModeKey);
+        this._settings?.connect('changed::debug-mode', () => {
+            this.isDebugMode = this._settings.get_boolean('debug-mode');
         });
     }
 
@@ -71,4 +68,4 @@ var Logger = class Logger {
     trace(...args) {
         console.trace(...this._processArgs(args));
     }
-};
+}

@@ -15,31 +15,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import Clutter from 'gi://Clutter';
+import GLib from 'gi://GLib';
+import GObject from 'gi://GObject';
+import Meta from 'gi://Meta';
+import St from 'gi://St';
+import Graphene from 'gi://Graphene';
 
-/* exported LiveWallpaper */
+import * as Background from 'resource:///org/gnome/shell/ui/background.js';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-const {Clutter, GLib, GObject, Meta, St, Shell, Graphene} = imports.gi;
-
-const Background = imports.ui.background;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Main = imports.ui.main;
-const Workspace = imports.ui.workspace;
-const WorkspaceThumbnail = imports.ui.workspaceThumbnail;
-
-const Me = ExtensionUtils.getCurrentExtension();
-const RoundedCornersEffect = Me.imports.roundedCornersEffect;
-const Logger = Me.imports.logger;
+import * as Logger from './logger.js';
+import * as RoundedCornersEffect from './roundedCornersEffect.js';
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
-const extSettings = ExtensionUtils.getSettings(
-    'io.github.jeffshee.hanabi-extension'
-);
 const logger = new Logger.Logger();
 
 /**
  * The widget that holds the window preview of the renderer.
  */
-var LiveWallpaper = GObject.registerClass(
+export const LiveWallpaper = GObject.registerClass(
     class LiveWallpaper extends St.Widget {
         constructor(backgroundActor) {
             super({
@@ -52,7 +47,7 @@ var LiveWallpaper = GObject.registerClass(
                 // Layout manager will allocate extra space for the actor, if possible.
                 x_expand: true,
                 y_expand: true,
-                // backgroundActor's z_position is 0. Positive values = nearer to the user.
+                // Larger value = nearer to the user.
                 z_position: backgroundActor.z_position + 1,
                 opacity: 0,
             });
@@ -85,14 +80,6 @@ var LiveWallpaper = GObject.registerClass(
             rect.size.width = this._monitorWidth;
             rect.size.height = this._monitorHeight;
             this.setRoundedClipBounds(rect);
-            // TODO: Not sure if monitorScale is needed.
-            // What is this? Well, OpenGL texture coordinates are [0.0, 1.0],
-            // but we do bound and radius calculation with pixels, so we need a
-            // way to convert coordinates into pixels.
-            // NOTE: I currently don't know why, but I need monitor width and
-            // height here, not actor width and height, one reason maybe that
-            // our actor actually takes the whole screen and we use monitor
-            // width and height in the bound rect.
             this._roundedCornersEffect.setPixelStep([
                 1.0 / this._monitorWidth,
                 1.0 / this._monitorHeight,
@@ -112,9 +99,7 @@ var LiveWallpaper = GObject.registerClass(
                     rect.origin.y,
                     rect.origin.x + rect.size.width,
                     rect.origin.y + rect.size.height,
-                ].map(e => {
-                    return e * this._monitorScale;
-                })
+                ].map(e => e * this._monitorScale)
             );
         }
 
