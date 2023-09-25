@@ -132,11 +132,11 @@ export class HanabiPanelMenu {
     }
 
     _getMute() {
-        this._settings.get_boolean('mute');
+        return this._settings.get_boolean('mute');
     }
 
     _setMute(mute) {
-        this._settings.set_boolean('mute', mute);
+        return this._settings.set_boolean('mute', mute);
     }
 
 
