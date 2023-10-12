@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: 2023-07-09 23:15-0300\n"
+"PO-Revision-Date: 2023-10-12 04:02-0300\n"
 "Last-Translator: Seikm\n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -31,7 +31,7 @@ msgstr "Volume do Som"
 
 #: src/prefs.js:55
 msgid "Show Panel Menu"
-msgstr ""
+msgstr "Mostrar Menu de Painel"
 
 #: src/prefs.js:58
 msgid "Experimental"
@@ -86,13 +86,15 @@ msgstr "Forçar o uso do GtkMediaFile para a reprodução dos vídeos"
 
 #: src/prefs.js:94
 msgid "Startup Delay"
-msgstr ""
+msgstr "Atraso de inicialização"
 
 #: src/prefs.js:94
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
+"Adicionar atraso de inicialização (em milissegundos) para impedir problemas "
+"com outras extensões"
 
 #: src/prefs.js:174
 msgid "Video Path"
