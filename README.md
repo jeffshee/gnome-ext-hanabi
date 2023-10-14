@@ -33,6 +33,7 @@ Please click on the image to view <i>(redirect to YouTube)</i>
 |   42    |   ✅   |
 |   43    |   ✅   |
 |   44    |   ✅   |
+|   45    |   🚧   |
 
 See also the section [Troubleshooting](#troubleshooting), for version-specific known issues.
 
@@ -55,10 +56,10 @@ cd gnome-ext-hanabi
 4. Enable the Hanabi extension
 5. Choose your video wallpaper in the extension preference window
 
-### Distro-specific guide
+### Distro-specific Guides
 
-- [Guide for Pop!\_OS 22.04](docs/popos-22-04.md)
-- [Guide for Ubuntu 23.04](docs/ubuntu-23-04.md)
+- [Installation Guide for Pop!\_OS 22.04](docs/popos-22-04.md)
+- [Installation Guide for Ubuntu 23.04](docs/ubuntu-23-04.md)
 
 ### Troubleshooting
 
@@ -99,12 +100,17 @@ For this to work, Clapper must be installed **from the package manager and not f
 
 </details>
 
-## Get involved 🚀
+## Advanced Customization
+
+For more advanced customization, learn how to write scripts for Hanabi extension!  
+Check out the [scripting guide](docs/scripting.md) for detailed instructions and examples.
+
+## Get Involved 🚀
 
 Contributors are welcome! Let's make Hanabi extension better together~  
 If you're interested in translating, you can help on [Hosted Weblate](https://hosted.weblate.org/projects/gnome-ext-hanabi/gnome-ext-hanabi/).
 
-### Translation status
+### Translation Status
 
 [![Translation status](https://hosted.weblate.org/widget/gnome-ext-hanabi/gnome-ext-hanabi/svg-badge.svg)](https://hosted.weblate.org/engage/gnome-ext-hanabi/)
 

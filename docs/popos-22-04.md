@@ -1,4 +1,4 @@
-# Guide for Pop!\_OS 22.04
+# Installation Guide for Pop!\_OS 22.04
 
 _Note: Pop!\_OS has a heavily customized GNOME Shell, your mileage may vary._
 
