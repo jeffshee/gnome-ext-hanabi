@@ -1,4 +1,4 @@
-# Guide for Ubuntu 23.04
+# Installation Guide for Ubuntu 23.04
 
 ## 1. System update (recommended)
 
