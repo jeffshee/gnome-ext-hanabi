@@ -192,7 +192,7 @@ export class WindowManager {
             'unmanaged',
             _window => {
                 this._clearWindow(_window);
-                this._windowList.delete(_window);
+                this._windows.delete(_window);
             }
         );
     }
