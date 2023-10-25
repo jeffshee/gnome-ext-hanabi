@@ -77,22 +77,20 @@ var AutoPause = class {
             metaWindow => !metaWindow.title?.includes(applicationId) && !metaWindow.minimized
         );
 
-        let monitors = Main.layoutManager.monitors;
-        let maximizedWindows = metaWindows.filter(metaWindow => metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH);
-        let fullscreenWindows = metaWindows.filter(metaWindow => metaWindow.fullscreen);
-        let maximizedOrFullscreenWindows = maximizedWindows.concat(fullscreenWindows);
+        const monitors = Main.layoutManager.monitors;
 
-        this._states.maximizedOnAnyMonitor = maximizedWindows.length !== 0;
-        this._states.fullscreenOnAnyMonitor = fullscreenWindows.length !== 0;
-        if (monitors.length === 1) {
-            this._states.maximizedOrFullscreenOnAllMonitors = this._states.maximizedOnAnyMonitor || this._states.fullscreenOnAnyMonitor;
-        } else {
-            this._states.maximizedOrFullscreenOnAllMonitors = monitors.every(
-                monitor => maximizedOrFullscreenWindows.some(
-                    metaWindow => metaWindow.get_monitor() === monitor.index
-                )
-            );
-        }
+        this._states.maximizedOnAnyMonitor = metaWindows.some(metaWindow => metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH);
+        this._states.fullscreenOnAnyMonitor = metaWindows.some(metaWindow => metaWindow.fullscreen);
+
+        const monitorsWithMaximizedOrFullscreen = metaWindows.reduce((acc, metaWindow) => {
+            if (metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH || metaWindow.fullscreen)
+                acc[metaWindow.get_monitor()] = true;
+            return acc;
+        }, {});
+
+        this._states.maximizedOrFullscreenOnAllMonitors = monitors.every(
+            monitor => monitorsWithMaximizedOrFullscreen[monitor.index]
+        );
 
         logger.log(this._states);
 
