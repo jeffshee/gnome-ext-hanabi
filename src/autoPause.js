@@ -16,6 +16,7 @@
  */
 
 const {Meta, Gio} = imports.gi;
+const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 
 const Me = ExtensionUtils.getCurrentExtension();
@@ -29,8 +30,11 @@ var AutoPause = class {
         this._workspaces = new Set();
         this._windows = new Set();
         this._active_workspace = null;
-        this.maximized = false;
-        this.fullscreen = false;
+        this._states = {
+            maximizedOnAnyMonitor: false,
+            fullscreenOnAnyMonitor: false,
+            maximizedOrFullscreenOnAllMonitors: false,
+        };
 
         // DBus
         const dbusXml = `
@@ -68,16 +72,32 @@ var AutoPause = class {
     }
 
     update() {
+        // Filter out renderer windows and minimized windows
         let metaWindows = this._active_workspace.list_windows().filter(
-            metaWindow => !metaWindow.title?.includes(applicationId)
+            metaWindow => !metaWindow.title?.includes(applicationId) && !metaWindow.minimized
         );
 
-        this.maximized = metaWindows.some(metaWindow => !metaWindow.minimized && metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH);
-        this.fullscreen = metaWindows.some(metaWindow => !metaWindow.minimized && metaWindow.fullscreen);
-        logger.log(`maximized: ${this.maximized}, fullscreen: ${this.fullscreen}`);
+        let monitors = Main.layoutManager.monitors;
+        let maximizedWindows = metaWindows.filter(metaWindow => metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH);
+        let fullscreenWindows = metaWindows.filter(metaWindow => metaWindow.fullscreen);
+        let maximizedOrFullscreenWindows = maximizedWindows.concat(fullscreenWindows);
+
+        this._states.maximizedOnAnyMonitor = maximizedWindows.length !== 0;
+        this._states.fullscreenOnAnyMonitor = fullscreenWindows.length !== 0;
+        if (monitors.length === 1) {
+            this._states.maximizedOrFullscreenOnAllMonitors = this._states.maximizedOnAnyMonitor || this._states.fullscreenOnAnyMonitor;
+        } else {
+            this._states.maximizedOrFullscreenOnAllMonitors = monitors.every(
+                monitor => maximizedOrFullscreenWindows.some(
+                    metaWindow => metaWindow.get_monitor() === monitor.index
+                )
+            );
+        }
+
+        logger.log(this._states);
 
         this.proxy.call(
-            this.maximized || this.fullscreen ? 'setPause' : 'setPlay', // method_name
+            this._states.maximizedOrFullscreenOnAllMonitors ? 'setPause' : 'setPlay', // method_name
             null, // parameters
             Gio.DBusCallFlags.NO_AUTO_START, // flags
             -1, // timeout_msec
