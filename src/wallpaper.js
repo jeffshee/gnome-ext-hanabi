@@ -108,13 +108,6 @@ export const LiveWallpaper = GObject.registerClass(
             const operation = () => {
                 const renderer = this._getRenderer();
                 if (renderer) {
-                    // TODO: WIP MetaSurfaceContainerActorWayland bug workaround
-                    let surfaceContainer = renderer.get_children().find(
-                        child => GObject.type_name(child) === 'MetaSurfaceContainerActorWayland'
-                    );
-                    if (surfaceContainer)
-                        surfaceContainer.set_position(0, 0);
-
                     this._wallpaper = new Clutter.Clone({
                         source: renderer,
                         // The point around which the scaling and rotation transformations occur.

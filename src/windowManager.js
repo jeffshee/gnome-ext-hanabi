@@ -22,6 +22,8 @@
  */
 
 import Meta from 'gi://Meta';
+import GLib from 'gi://GLib';
+import GObject from 'gi://GObject';
 
 import * as Logger from './logger.js';
 
@@ -83,6 +85,20 @@ class ManagedWindow {
                 }
             })
         );
+
+        // Workaround a weird behavior in MetaSurfaceContainerActorWayland,
+        // which sets the position x, y to (child_actor_width - surfaces_width)/2, (child_actor_height - surfaces_height)/2 when the window is minimized.
+        // Ref: https://gitlab.gnome.org/GNOME/mutter/-/blob/b59fb7c08c7e8c7f5de493602154e4341f867835/src/compositor/meta-window-actor-wayland.c#L526
+        let windowActor = window.get_compositor_private();
+        let surfaceContainer = windowActor.get_children().find(
+            child => GObject.type_name(child) === 'MetaSurfaceContainerActorWayland'
+        );
+        if (surfaceContainer) {
+            this._notifyPositionId = surfaceContainer.connect('notify::position', () => {
+                surfaceContainer.set_position(0, 0);
+            });
+        }
+
         this._parseTitle();
     }
 
@@ -113,6 +129,9 @@ class ManagedWindow {
     }
 
     disconnect() {
+        if (this._notifyPositionId)
+            GLib.source_remove(this._notifyPositionId);
+
         this._signals.forEach(signal => {
             this._window.disconnect(signal);
         });
