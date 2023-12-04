@@ -7,116 +7,119 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-12-05 16:03+0000\n"
+"Last-Translator: MomentQYC <zixipersonal@gmail.com>\n"
+"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
+"gnome-ext-hanabi/gnome-ext-hanabi/zh_Hans/>\n"
 "Language: zh_Hans\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.3-dev\n"
 
 #: src/prefs.js:49
 msgid "General"
-msgstr ""
+msgstr "一般设置"
 
 #: src/prefs.js:53 src/panelMenu.js:121 src/panelMenu.js:131
 msgid "Mute Audio"
-msgstr ""
+msgstr "静音"
 
 #: src/prefs.js:54
 msgid "Volume Level"
-msgstr ""
+msgstr "音量"
 
 #: src/prefs.js:55
 msgid "Show Panel Menu"
-msgstr ""
+msgstr "显示面板菜单"
 
 #: src/prefs.js:58
 msgid "Experimental"
-msgstr ""
+msgstr "实验性"
 
 #: src/prefs.js:63
 msgid "Experimental VA Plugin"
-msgstr ""
+msgstr "实验性 VA 插件"
 
 #: src/prefs.js:65
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
-msgstr ""
+msgstr "启用 VA 解码器以提高英特尔/AMD Wayland 用户的性能"
 
 #: src/prefs.js:69
 msgid "NVIDIA Stateless Decoders"
-msgstr ""
+msgstr "NVIDIA 无状态解码器"
 
 #: src/prefs.js:71
 msgid "Use new stateless NVIDIA decoders"
-msgstr ""
+msgstr "使用新的 NVIDIA 无状态解码器"
 
 #: src/prefs.js:74
 msgid "Developer"
-msgstr ""
+msgstr "开发者"
 
 #: src/prefs.js:78
 msgid "Debug Mode"
-msgstr ""
+msgstr "调试模式"
 
 #: src/prefs.js:80
 msgid "Print debug messages to log"
-msgstr ""
+msgstr "将调试信息打印到日志中"
 
 #: src/prefs.js:84
 msgid "Force gtk4paintablesink"
-msgstr ""
+msgstr "强制使用 gtk4paintablesink"
 
 #: src/prefs.js:86
 msgid "Force use of gtk4paintablesink for video playback"
-msgstr ""
+msgstr "强制使用 gtk4paintablesink 播放视频"
 
 #: src/prefs.js:90
 msgid "Force GtkMediaFile"
-msgstr ""
+msgstr "强制使用 GtkMediaFile"
 
 #: src/prefs.js:92
 msgid "Force use of GtkMediaFile for video playback"
-msgstr ""
+msgstr "强制使用 GtkMediaFile 播放视频"
 
 #: src/prefs.js:94
 msgid "Startup Delay"
-msgstr ""
+msgstr "启动延迟"
 
 #: src/prefs.js:94
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
-msgstr ""
+msgstr "增加启动延迟（以毫秒为单位）以减少与其它扩展的兼容性问题"
 
 #: src/prefs.js:174
 msgid "Video Path"
-msgstr ""
+msgstr "视频路径"
 
 #: src/prefs.js:180 src/prefs.js:205
 msgid "None"
-msgstr ""
+msgstr "无"
 
 #: src/prefs.js:192
 msgid "Open File"
-msgstr ""
+msgstr "打开文件"
 
 #: src/prefs.js:197
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #: src/prefs.js:198 src/prefs.js:214
 msgid "Open"
-msgstr ""
+msgstr "打开"
 
 #: src/prefs.js:231
 msgid "Fit Mode"
-msgstr ""
+msgstr "适应模式"
 
 #: src/prefs.js:232
 msgid "Control how wallpaper fits within the monitor"
-msgstr ""
+msgstr "控制壁纸在显示器内的贴合方式"
 
 #: src/prefs.js:233
 msgid ""
@@ -130,39 +133,45 @@ msgid ""
 "needed, otherwise keep its original size.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>填充</b>：拉伸壁纸以填满显示器。\n"
+"    <b>包含</b>：缩放壁纸以适应显示器（保持宽高比）。\n"
+"    <b>覆盖</b>：缩放壁纸以覆盖显示器（保持宽高比）。\n"
+"    <b>缩放</b>：必要时缩放壁纸以适应显示器，否则保持原始大小。\n"
+"    "
 
 #: src/prefs.js:241
 msgid "Fill"
-msgstr ""
+msgstr "填充"
 
 #: src/prefs.js:242
 msgid "Contain"
-msgstr ""
+msgstr "包含"
 
 #: src/prefs.js:243
 msgid "Cover"
-msgstr ""
+msgstr "覆盖"
 
 #: src/prefs.js:244
 msgid "Scale-down"
-msgstr ""
+msgstr "缩减"
 
 #: src/prefs.js:257
 msgid "This feature requires Gtk 4.8 or above"
-msgstr ""
+msgstr "此功能需要 Gtk 4.8 或更高版本"
 
 #: src/panelMenu.js:92 src/panelMenu.js:112
 msgid "Pause"
-msgstr ""
+msgstr "暂停"
 
 #: src/panelMenu.js:92 src/panelMenu.js:112
 msgid "Play"
-msgstr ""
+msgstr "播放"
 
 #: src/panelMenu.js:121 src/panelMenu.js:131
 msgid "Unmute Audio"
-msgstr ""
+msgstr "取消静音"
 
 #: src/panelMenu.js:139
 msgid "Preferences"
-msgstr ""
+msgstr "偏好设置"
