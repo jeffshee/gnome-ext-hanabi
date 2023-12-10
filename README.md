@@ -66,7 +66,7 @@ cd gnome-ext-hanabi
 
 ### Distro-specific Guides
 
-- [Installation Guide for Pop!\_OS 22.04](docs/popos-22-04.md)
+- [Installation Guide for Ubuntu/Pop!\_OS 22.04](docs/ubuntu-22-04.md)
 - [Installation Guide for Ubuntu 23.04](docs/ubuntu-23-04.md)
 
 ### Troubleshooting
