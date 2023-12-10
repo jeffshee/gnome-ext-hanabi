@@ -21,14 +21,11 @@
  * ManageWindow and EmulateX11WindowType in the DING extension.
  */
 
-/* exported WindowManager */
+import Meta from 'gi://Meta';
+import GLib from 'gi://GLib';
+import GObject from 'gi://GObject';
 
-const {GLib, Meta} = imports.gi;
-const Main = imports.ui.main;
-const ExtensionUtils = imports.misc.extensionUtils;
-
-const Me = ExtensionUtils.getCurrentExtension();
-const Logger = Me.imports.logger;
+import * as Logger from './logger.js';
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const logger = new Logger.Logger();
@@ -88,6 +85,20 @@ class ManagedWindow {
                 }
             })
         );
+
+        // Workaround a weird behavior in MetaSurfaceContainerActorWayland,
+        // which sets the position x, y to (child_actor_width - surfaces_width)/2, (child_actor_height - surfaces_height)/2 when the window is minimized.
+        // Ref: https://gitlab.gnome.org/GNOME/mutter/-/blob/b59fb7c08c7e8c7f5de493602154e4341f867835/src/compositor/meta-window-actor-wayland.c#L526
+        let windowActor = window.get_compositor_private();
+        let surfaceContainer = windowActor.get_children().find(
+            child => GObject.type_name(child) === 'MetaSurfaceContainerActorWayland'
+        );
+        if (surfaceContainer) {
+            this._notifyPositionId = surfaceContainer.connect('notify::position', () => {
+                surfaceContainer.set_position(0, 0);
+            });
+        }
+
         this._parseTitle();
     }
 
@@ -118,6 +129,9 @@ class ManagedWindow {
     }
 
     disconnect() {
+        if (this._notifyPositionId)
+            GLib.source_remove(this._notifyPositionId);
+
         this._signals.forEach(signal => {
             this._window.disconnect(signal);
         });
@@ -126,7 +140,7 @@ class ManagedWindow {
     }
 }
 
-var WindowManager = class {
+export class WindowManager {
     constructor() {
         this._isX11 = !Meta.is_wayland_compositor();
         this._windows = new Set();
@@ -188,4 +202,4 @@ var WindowManager = class {
         window.managed.disconnect();
         window.managed = null;
     }
-};
+}

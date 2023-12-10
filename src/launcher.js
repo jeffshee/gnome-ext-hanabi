@@ -21,23 +21,17 @@
  * LaunchSubprocess in the DING extension.
  */
 
-/* exported LaunchSubprocess */
+import Meta from 'gi://Meta';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 
-const {Meta, Gio, GLib, St} = imports.gi;
-
-const Config = imports.misc.config;
-const ExtensionUtils = imports.misc.extensionUtils;
-
-const Me = ExtensionUtils.getCurrentExtension();
-const Logger = Me.imports.logger;
+import * as Logger from './logger.js';
 
 const logger = new Logger.Logger();
 const rendererLogger = new Logger.Logger('renderer');
 
-
-var LaunchSubprocess = class {
+export class LaunchSubprocess {
     constructor(flags = Gio.SubprocessFlags.NONE) {
-        this._gnomeShellVersion = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
         this._isX11 = !Meta.is_wayland_compositor();
 
         this._flags =
@@ -48,7 +42,7 @@ var LaunchSubprocess = class {
         this.cancellable = new Gio.Cancellable();
         this._launcher = new Gio.SubprocessLauncher({flags: this._flags});
         if (!this._isX11)
-            this._waylandClient = this._gnomeShellVersion > 43 ? Meta.WaylandClient.new(global.context, this._launcher) : Meta.WaylandClient.new(this._launcher);
+            this._waylandClient = Meta.WaylandClient.new(global.context, this._launcher);
 
         this.subprocess = null;
         this.running = false;
@@ -145,4 +139,4 @@ var LaunchSubprocess = class {
         if (!this._isX11 && this.running)
             this._waylandClient.hide_from_window_list(window);
     }
-};
+}

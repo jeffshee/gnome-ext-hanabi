@@ -33,7 +33,7 @@ Please click on the image to view <i>(redirect to YouTube)</i>
 |   42    |   ✅   |
 |   43    |   ✅   |
 |   44    |   ✅   |
-|   45    |   🚧   |
+|   45    |   ✅   |
 
 See also the section [Troubleshooting](#troubleshooting), for version-specific known issues.
 
@@ -41,8 +41,16 @@ See also the section [Troubleshooting](#troubleshooting), for version-specific k
 
 1. Clone the repo
 
+- **For GNOME 45**
+
 ```
 git clone https://github.com/jeffshee/gnome-ext-hanabi.git
+```
+
+- **For GNOME 44 and earlier**
+
+```
+git clone https://github.com/jeffshee/gnome-ext-hanabi.git -b legacy
 ```
 
 2. Run the installation script (Require `meson`)
@@ -58,7 +66,7 @@ cd gnome-ext-hanabi
 
 ### Distro-specific Guides
 
-- [Installation Guide for Pop!\_OS 22.04](docs/popos-22-04.md)
+- [Installation Guide for Ubuntu/Pop!\_OS 22.04](docs/ubuntu-22-04.md)
 - [Installation Guide for Ubuntu 23.04](docs/ubuntu-23-04.md)
 
 ### Troubleshooting

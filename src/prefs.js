@@ -17,94 +17,87 @@
 
 /* exported init fillPreferencesWindow */
 
-const {Adw, Gio, Gtk} = imports.gi;
-const Gettext = imports.gettext;
+import Adw from 'gi://Adw';
+import Gio from 'gi://Gio';
+import Gtk from 'gi://Gtk';
 
-const ExtensionUtils = imports.misc.extensionUtils;
+import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-const Me = ExtensionUtils.getCurrentExtension();
 const haveContentFit = Gtk.get_minor_version() >= 8;
-const settings = ExtensionUtils.getSettings(
-    'io.github.jeffshee.hanabi-extension'
-);
 
-const Domain = Gettext.domain(Me.metadata.uuid);
-const _ = Domain.gettext;
-const ngettext = Domain.ngettext;
+export default class HanabiExtensionPreferences extends ExtensionPreferences {
+    fillPreferencesWindow(window) {
+        window._settings = this.getSettings();
 
-/**
- *
- */
-function init() {
-    ExtensionUtils.initTranslations(Me.metadata.uuid);
+        // Create a preferences page and group
+        const page = new Adw.PreferencesPage();
+        const generalGroup = new Adw.PreferencesGroup({title: _('General')});
+        page.add(generalGroup);
+        prefsRowVideoPath(window, generalGroup);
+        prefsRowFitMode(window, generalGroup);
+        prefsRowBoolean(window, generalGroup, _('Mute Audio'), 'mute', '');
+        prefsRowInt(window, generalGroup, _('Volume Level'), 'volume', '', 0, 100, 1, 10);
+        prefsRowBoolean(window, generalGroup, _('Show Panel Menu'), 'show-panel-menu', '');
+
+        const experimentalGroup = new Adw.PreferencesGroup({
+            title: _('Experimental'),
+        });
+        page.add(experimentalGroup);
+        prefsRowBoolean(
+            window,
+            experimentalGroup,
+            _('Experimental VA Plugin'),
+            'enable-va',
+            _('Enable VA decoders which improve performance for Intel/AMD Wayland users')
+        );
+        prefsRowBoolean(
+            window,
+            experimentalGroup,
+            _('NVIDIA Stateless Decoders'),
+            'enable-nvsl',
+            _('Use new stateless NVIDIA decoders')
+        );
+
+        const developerGroup = new Adw.PreferencesGroup({title: _('Developer')});
+        page.add(developerGroup);
+        prefsRowBoolean(
+            window,
+            developerGroup,
+            _('Debug Mode'),
+            'debug-mode',
+            _('Print debug messages to log')
+        );
+        prefsRowBoolean(
+            window,
+            developerGroup,
+            _('Force gtk4paintablesink'),
+            'force-gtk4paintablesink',
+            _('Force use of gtk4paintablesink for video playback')
+        );
+        prefsRowBoolean(
+            window,
+            developerGroup,
+            _('Force GtkMediaFile'),
+            'force-mediafile',
+            _('Force use of GtkMediaFile for video playback')
+        );
+        prefsRowInt(window, developerGroup, _('Startup Delay'), 'startup-delay', _('Add a startup delay (in milliseconds) to mitigate compatibility issues with other extensions'), 0, 10000, 100, 500);
+
+        // Add our page to the window
+        window.add(page);
+    }
 }
 
 /**
  *
- * @param window
+ * @param {Adw.PreferencesWindow} window AdwPreferencesWindow
+ * @param {Adw.PreferencesGroup} prefsGroup AdwPreferencesGroup
+ * @param {string} title Setting title
+ * @param {string} key Setting key
+ * @param {string} subtitle Setting subtitle
  */
-function fillPreferencesWindow(window) {
-    // Create a preferences page and group
-    const page = new Adw.PreferencesPage();
-    const generalGroup = new Adw.PreferencesGroup({title: _('General')});
-    page.add(generalGroup);
-    prefsRowVideoPath(window, generalGroup);
-    prefsRowFitMode(generalGroup);
-    prefsRowBoolean(generalGroup, _('Mute Audio'), 'mute', '');
-    prefsRowInt(generalGroup, _('Volume Level'), 'volume', '', 0, 100, 1, 10);
-    prefsRowBoolean(generalGroup, _('Show Panel Menu'), 'show-panel-menu', '');
-
-    const experimentalGroup = new Adw.PreferencesGroup({
-        title: _('Experimental'),
-    });
-    page.add(experimentalGroup);
-    prefsRowBoolean(
-        experimentalGroup,
-        _('Experimental VA Plugin'),
-        'enable-va',
-        _('Enable VA decoders which improve performance for Intel/AMD Wayland users')
-    );
-    prefsRowBoolean(
-        experimentalGroup,
-        _('NVIDIA Stateless Decoders'),
-        'enable-nvsl',
-        _('Use new stateless NVIDIA decoders')
-    );
-
-    const developerGroup = new Adw.PreferencesGroup({title: _('Developer')});
-    page.add(developerGroup);
-    prefsRowBoolean(
-        developerGroup,
-        _('Debug Mode'),
-        'debug-mode',
-        _('Print debug messages to log')
-    );
-    prefsRowBoolean(
-        developerGroup,
-        _('Force gtk4paintablesink'),
-        'force-gtk4paintablesink',
-        _('Force use of gtk4paintablesink for video playback')
-    );
-    prefsRowBoolean(
-        developerGroup,
-        _('Force GtkMediaFile'),
-        'force-mediafile',
-        _('Force use of GtkMediaFile for video playback')
-    );
-    prefsRowInt(developerGroup, _('Startup Delay'), 'startup-delay', _('Add a startup delay (in milliseconds) to mitigate compatibility issues with other extensions'), 0, 10000, 100, 500);
-
-    // Add our page to the window
-    window.add(page);
-}
-
-/**
- *
- * @param prefsGroup
- * @param title
- * @param key
- * @param subtitle
- */
-function prefsRowBoolean(prefsGroup, title, key, subtitle) {
+function prefsRowBoolean(window, prefsGroup, title, key, subtitle) {
+    const settings = window._settings;
     // Create a new preferences row
     const row = new Adw.ActionRow({title, subtitle});
     prefsGroup.add(row);
@@ -123,16 +116,18 @@ function prefsRowBoolean(prefsGroup, title, key, subtitle) {
 
 /**
  *
- * @param prefsGroup
- * @param title
- * @param key
- * @param subtitle
- * @param lower
- * @param upper
- * @param stepIncrement
- * @param pageIncrement
+ * @param {Adw.PreferencesWindow} window AdwPreferencesWindow
+ * @param {Adw.PreferencesGroup} prefsGroup AdwPreferencesGroup
+ * @param {string} title Setting title
+ * @param {string} key Setting key
+ * @param {string} subtitle Setting subtitle
+ * @param {number} lower GtkAdjustment lower
+ * @param {number} upper GtkAdjustment upper
+ * @param {number} stepIncrement GtkAdjustment step_increment
+ * @param {number} pageIncrement GtkAdjustment page_increment
  */
 function prefsRowInt(
+    window,
     prefsGroup,
     title,
     key,
@@ -142,6 +137,7 @@ function prefsRowInt(
     stepIncrement,
     pageIncrement
 ) {
+    const settings = window._settings;
     const row = new Adw.ActionRow({title, subtitle});
     prefsGroup.add(row);
 
@@ -167,10 +163,11 @@ function prefsRowInt(
 
 /**
  *
- * @param window
- * @param prefsGroup
+ * @param {Adw.PreferencesWindow} window AdwPreferencesWindow
+ * @param {Adw.PreferencesGroup} prefsGroup AdwPreferencesGroup
  */
 function prefsRowVideoPath(window, prefsGroup) {
+    const settings = window._settings;
     const title = _('Video Path');
     const key = 'video-path';
 
@@ -182,7 +179,7 @@ function prefsRowVideoPath(window, prefsGroup) {
     prefsGroup.add(row);
 
     /**
-     *
+     * Video file chooser
      */
     function createDialog() {
         let fileFilter = new Gtk.FileFilter();
@@ -225,9 +222,11 @@ function prefsRowVideoPath(window, prefsGroup) {
 
 /**
  *
- * @param prefsGroup
+ * @param {Adw.PreferencesWindow} window AdwPreferencesWindow
+ * @param {Adw.PreferencesGroup} prefsGroup AdwPreferencesGroup
  */
-function prefsRowFitMode(prefsGroup) {
+function prefsRowFitMode(window, prefsGroup) {
+    const settings = window._settings;
     const title = _('Fit Mode');
     const subtitle = _('Control how wallpaper fits within the monitor');
     const tooltip = _(`

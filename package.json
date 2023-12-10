@@ -8,6 +8,6 @@
   "license": "GPL-3.0-or-later",
   "devDependencies": {
     "eslint": "^8.34.0",
-    "eslint-plugin-jsdoc": "^39.8.0"
+    "eslint-plugin-jsdoc": "^46.9.0"
   }
 }

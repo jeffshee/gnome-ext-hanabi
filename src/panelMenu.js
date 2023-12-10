@@ -15,36 +15,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/* exported PanelMenu */
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import St from 'gi://St';
 
-const {Gio, GLib, St} = imports.gi;
-const Gettext = imports.gettext;
+import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
+import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
-const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
+export class HanabiPanelMenu {
+    constructor(extension) {
+        this.isEnabled = false;
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-
-const extSettings = ExtensionUtils.getSettings(
-    'io.github.jeffshee.hanabi-extension'
-);
-
-const Domain = Gettext.domain(Me.metadata.uuid);
-const _ = Domain.gettext;
-const ngettext = Domain.ngettext;
-
-const getMute = () => {
-    return extSettings.get_boolean('mute');
-};
-
-const setMute = mute => {
-    return extSettings.set_boolean('mute', mute);
-};
-
-var HanabiPanelMenu = class HanabiPanelMenu {
-    constructor() {
+        this._extension = extension;
+        this._settings = extension.getSettings();
         this._isPlaying = false;
 
         // DBus
@@ -65,13 +50,16 @@ var HanabiPanelMenu = class HanabiPanelMenu {
     }
 
     enable() {
+        if (this.isEnabled)
+            return;
+
         // Indicator
-        const indicatorName = `${Me.metadata.name} Indicator`;
+        const indicatorName = `${this._extension.metadata.name} Indicator`;
         this.indicator = new PanelMenu.Button(0.0, indicatorName, false);
         const icon = new St.Icon({
             gicon: Gio.icon_new_for_string(
                 GLib.build_filenamev([
-                    ExtensionUtils.getCurrentExtension().path,
+                    this._extension.path,
                     'hanabi-symbolic.svg',
                 ])
             ),
@@ -89,7 +77,7 @@ var HanabiPanelMenu = class HanabiPanelMenu {
 
         Main.panel.addToStatusArea(indicatorName, this.indicator);
 
-        // PlayPause
+        // Play Pause
         const playPause = new PopupMenu.PopupMenuItem(
             this._isPlaying ? _('Pause') : _('Play')
         );
@@ -118,32 +106,45 @@ var HanabiPanelMenu = class HanabiPanelMenu {
 
         menu.addMenuItem(playPause);
 
-        // MuteUnmute
+        // Mute Unmute
         const muteAudio = new PopupMenu.PopupMenuItem(
-            getMute() ? _('Unmute Audio') : _('Mute Audio')
+            this._getMute() ? _('Unmute Audio') : _('Mute Audio')
         );
 
         muteAudio.connect('activate', () => {
-            setMute(!getMute());
+            this._setMute(!this._getMute());
         });
 
-        extSettings?.connect('changed', (settings, key) => {
-            if (key === 'mute') {
-                muteAudio.label.set_text(
-                    getMute() ? _('Unmute Audio') : _('Mute Audio')
-                );
-            }
+        this._settings.connect('changed::mute', () => {
+            muteAudio.label.set_text(
+                this._getMute() ? _('Unmute Audio') : _('Mute Audio')
+            );
         });
 
         menu.addMenuItem(muteAudio);
 
         // Preferences
         menu.addAction(_('Preferences'), () => {
-            ExtensionUtils.openPrefs();
+            this._extension.openPreferences();
         });
+
+        this.isEnabled = true;
     }
 
-    disable() {
-        this.indicator.destroy();
+    _getMute() {
+        return this._settings.get_boolean('mute');
     }
-};
+
+    _setMute(mute) {
+        return this._settings.set_boolean('mute', mute);
+    }
+
+
+    disable() {
+        if (!this.isEnabled)
+            return;
+
+        this.indicator.destroy();
+        this.isEnabled = false;
+    }
+}
