@@ -7,116 +7,125 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-12-18 01:08+0000\n"
+"Last-Translator: gfbdrgng <hnaofegnp@hldrive.com>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
+"gnome-ext-hanabi/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.3\n"
 
 #: src/prefs.js:49
 msgid "General"
-msgstr ""
+msgstr "Общий"
 
 #: src/prefs.js:53 src/panelMenu.js:121 src/panelMenu.js:131
 msgid "Mute Audio"
-msgstr ""
+msgstr "Отключить звук"
 
 #: src/prefs.js:54
 msgid "Volume Level"
-msgstr ""
+msgstr "Уровень громкости"
 
 #: src/prefs.js:55
 msgid "Show Panel Menu"
-msgstr ""
+msgstr "Показать панель Меню"
 
 #: src/prefs.js:58
 msgid "Experimental"
-msgstr ""
+msgstr "Экспериментальный"
 
 #: src/prefs.js:63
 msgid "Experimental VA Plugin"
-msgstr ""
+msgstr "Экспериментальный плагин VA"
 
 #: src/prefs.js:65
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
+"Включите декодеры VA, которые повышают производительность для пользователей "
+"Intel/AMD Wayland"
 
 #: src/prefs.js:69
 msgid "NVIDIA Stateless Decoders"
-msgstr ""
+msgstr "Безэтапные декодеры NVIDIA"
 
 #: src/prefs.js:71
 msgid "Use new stateless NVIDIA decoders"
-msgstr ""
+msgstr "Используйте новые декодеры NVIDIA без статических данных"
 
 #: src/prefs.js:74
 msgid "Developer"
-msgstr ""
+msgstr "Разработчик"
 
 #: src/prefs.js:78
 msgid "Debug Mode"
-msgstr ""
+msgstr "Режим отладки"
 
 #: src/prefs.js:80
 msgid "Print debug messages to log"
-msgstr ""
+msgstr "Печать отладочных сообщений в журнал"
 
 #: src/prefs.js:84
 msgid "Force gtk4paintablesink"
-msgstr ""
+msgstr "Усилие gtk4paintablesink"
 
 #: src/prefs.js:86
 msgid "Force use of gtk4paintablesink for video playback"
 msgstr ""
+"Принудительное использование gtk4paintablesink для воспроизведения видео"
 
 #: src/prefs.js:90
 msgid "Force GtkMediaFile"
-msgstr ""
+msgstr "Сила GtkMediaFile"
 
 #: src/prefs.js:92
 msgid "Force use of GtkMediaFile for video playback"
-msgstr ""
+msgstr "Принудительное использование GtkMediaFile для воспроизведения видео"
 
 #: src/prefs.js:94
 msgid "Startup Delay"
-msgstr ""
+msgstr "Задержка запуска"
 
 #: src/prefs.js:94
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
+"Добавьте задержку при запуске (в миллисекундах), чтобы уменьшить проблемы "
+"совместимости с другими расширениями"
 
 #: src/prefs.js:174
 msgid "Video Path"
-msgstr ""
+msgstr "Видео Путь"
 
 #: src/prefs.js:180 src/prefs.js:205
 msgid "None"
-msgstr ""
+msgstr "Нет"
 
 #: src/prefs.js:192
 msgid "Open File"
-msgstr ""
+msgstr "Открытый файл"
 
 #: src/prefs.js:197
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #: src/prefs.js:198 src/prefs.js:214
 msgid "Open"
-msgstr ""
+msgstr "Открыть"
 
 #: src/prefs.js:231
 msgid "Fit Mode"
-msgstr ""
+msgstr "Режим"
 
 #: src/prefs.js:232
 msgid "Control how wallpaper fits within the monitor"
-msgstr ""
+msgstr "Контроль того, как обои вписываются в монитор"
 
 #: src/prefs.js:233
 msgid ""
@@ -130,39 +139,48 @@ msgid ""
 "needed, otherwise keep its original size.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Fill</b>: Потяните обои, чтобы заполнить монитор.\n"
+"<b> Масштабируйте обои, чтобы соответствовать монитору (соотношение сторон)."
+"\n"
+"<b> Масштабируйте обои, чтобы покрыть монитор (соотношение сторон).\n"
+"<b>Scale-down</b>: Положите на обои вниз, чтобы при необходимости уместить "
+"монитор, в противном случае сохраняйте его первоначальный размер.\n"
+".\n"
+"    "
 
 #: src/prefs.js:241
 msgid "Fill"
-msgstr ""
+msgstr "Заполните"
 
 #: src/prefs.js:242
 msgid "Contain"
-msgstr ""
+msgstr "Контейнер"
 
 #: src/prefs.js:243
 msgid "Cover"
-msgstr ""
+msgstr "Крышка"
 
 #: src/prefs.js:244
 msgid "Scale-down"
-msgstr ""
+msgstr "Сокращение масштаба"
 
 #: src/prefs.js:257
 msgid "This feature requires Gtk 4.8 or above"
-msgstr ""
+msgstr "Эта функция требует Gtk 4.8 или выше"
 
 #: src/panelMenu.js:92 src/panelMenu.js:112
 msgid "Pause"
-msgstr ""
+msgstr "Приостановить"
 
 #: src/panelMenu.js:92 src/panelMenu.js:112
 msgid "Play"
-msgstr ""
+msgstr "Играть"
 
 #: src/panelMenu.js:121 src/panelMenu.js:131
 msgid "Unmute Audio"
-msgstr ""
+msgstr "Отключить звук"
 
 #: src/panelMenu.js:139
 msgid "Preferences"
-msgstr ""
+msgstr "Предпочтения"
