@@ -2,13 +2,14 @@
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # gfbdrgng <hnaofegnp@hldrive.com>, 2023.
+# "Артём Чичваров (Džeremi)" <chichvarov1315@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: 2023-12-18 01:08+0000\n"
-"Last-Translator: gfbdrgng <hnaofegnp@hldrive.com>\n"
+"PO-Revision-Date: 2023-12-20 17:08+0000\n"
+"Last-Translator: \"Артём Чичваров (Džeremi)\" <chichvarov1315@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/ru/>\n"
 "Language: ru\n"
@@ -21,7 +22,7 @@ msgstr ""
 
 #: src/prefs.js:49
 msgid "General"
-msgstr "Общий"
+msgstr "Общее"
 
 #: src/prefs.js:53 src/panelMenu.js:121 src/panelMenu.js:131
 msgid "Mute Audio"
@@ -33,11 +34,11 @@ msgstr "Уровень громкости"
 
 #: src/prefs.js:55
 msgid "Show Panel Menu"
-msgstr "Показать панель Меню"
+msgstr "Показывать индикатор в панели состояния"
 
 #: src/prefs.js:58
 msgid "Experimental"
-msgstr "Экспериментальный"
+msgstr "Экспериментальные настройки"
 
 #: src/prefs.js:63
 msgid "Experimental VA Plugin"
@@ -48,7 +49,7 @@ msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
 "Включите декодеры VA, которые повышают производительность для пользователей "
-"Intel/AMD Wayland"
+"Intel/AMD на Wayland"
 
 #: src/prefs.js:69
 msgid "NVIDIA Stateless Decoders"
@@ -60,7 +61,7 @@ msgstr "Используйте новые декодеры NVIDIA без ста�
 
 #: src/prefs.js:74
 msgid "Developer"
-msgstr "Разработчик"
+msgstr "Настройки для разработчиков"
 
 #: src/prefs.js:78
 msgid "Debug Mode"
@@ -68,11 +69,11 @@ msgstr "Режим отладки"
 
 #: src/prefs.js:80
 msgid "Print debug messages to log"
-msgstr "Печать отладочных сообщений в журнал"
+msgstr "Вывод сообщений отладки в журнал"
 
 #: src/prefs.js:84
 msgid "Force gtk4paintablesink"
-msgstr "Усилие gtk4paintablesink"
+msgstr "Принудительно использовать gtk4paintablesink"
 
 #: src/prefs.js:86
 msgid "Force use of gtk4paintablesink for video playback"
@@ -81,7 +82,7 @@ msgstr ""
 
 #: src/prefs.js:90
 msgid "Force GtkMediaFile"
-msgstr "Сила GtkMediaFile"
+msgstr "Принудительно использовать GtkMediaFile"
 
 #: src/prefs.js:92
 msgid "Force use of GtkMediaFile for video playback"
@@ -101,7 +102,7 @@ msgstr ""
 
 #: src/prefs.js:174
 msgid "Video Path"
-msgstr "Видео Путь"
+msgstr "Путь до видеофайла"
 
 #: src/prefs.js:180 src/prefs.js:205
 msgid "None"
@@ -109,7 +110,7 @@ msgstr "Нет"
 
 #: src/prefs.js:192
 msgid "Open File"
-msgstr "Открытый файл"
+msgstr "Открыть файл"
 
 #: src/prefs.js:197
 msgid "Cancel"
@@ -151,7 +152,7 @@ msgstr ""
 
 #: src/prefs.js:241
 msgid "Fill"
-msgstr "Заполните"
+msgstr "Заполнение"
 
 #: src/prefs.js:242
 msgid "Contain"
@@ -159,7 +160,7 @@ msgstr "Контейнер"
 
 #: src/prefs.js:243
 msgid "Cover"
-msgstr "Крышка"
+msgstr "Наложение"
 
 #: src/prefs.js:244
 msgid "Scale-down"
@@ -175,12 +176,12 @@ msgstr "Приостановить"
 
 #: src/panelMenu.js:92 src/panelMenu.js:112
 msgid "Play"
-msgstr "Играть"
+msgstr "Воспроизвести"
 
 #: src/panelMenu.js:121 src/panelMenu.js:131
 msgid "Unmute Audio"
-msgstr "Отключить звук"
+msgstr "Включить звук"
 
 #: src/panelMenu.js:139
 msgid "Preferences"
-msgstr "Предпочтения"
+msgstr "Настройки"
