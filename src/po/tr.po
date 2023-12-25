@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: 2023-12-25 03:27+0000\n"
+"PO-Revision-Date: 2023-12-26 04:11+0000\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/tr/>\n"
@@ -29,7 +29,7 @@ msgstr "Sesi Sustur"
 
 #: src/prefs.js:54
 msgid "Volume Level"
-msgstr "Ses Seviyesi"
+msgstr "Ses Düzeyi"
 
 #: src/prefs.js:55
 msgid "Show Panel Menu"
@@ -47,16 +47,16 @@ msgstr "Deneysel VA Eklentisi"
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
-"VA çözücülerini etkinleştirerek Intel/AMD Waylan kullanıcılarının "
-"performansını iyileştir."
+"Intel/AMD Wayland kullanıcıları için başarımı artıran VA kod çözücülerini "
+"etkinleştir"
 
 #: src/prefs.js:69
 msgid "NVIDIA Stateless Decoders"
-msgstr "NVIDIA Durumsuz Çözücüler"
+msgstr "NVIDIA Vatansız Kod Çözücüler"
 
 #: src/prefs.js:71
 msgid "Use new stateless NVIDIA decoders"
-msgstr "Yeni durumsuz NVIDIA çözücülerini kullan"
+msgstr "Yeni durumsuz NVIDIA kod çözücüleri kullan"
 
 #: src/prefs.js:74
 msgid "Developer"
@@ -72,7 +72,7 @@ msgstr "Hata ayıklama iletilerini günlüğe yazdır"
 
 #: src/prefs.js:84
 msgid "Force gtk4paintablesink"
-msgstr "gtk4paintablesink'e Zorla"
+msgstr "gtk4paintablesink'e zorla"
 
 #: src/prefs.js:86
 msgid "Force use of gtk4paintablesink for video playback"
@@ -80,7 +80,7 @@ msgstr "Video oynatmalarında gtk4paintablesink kullanımına zorla"
 
 #: src/prefs.js:90
 msgid "Force GtkMediaFile"
-msgstr "GtkMediaFile'a Zorla"
+msgstr "GtkMediaFile'a zorla"
 
 #: src/prefs.js:92
 msgid "Force use of GtkMediaFile for video playback"
@@ -95,8 +95,8 @@ msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
-"Diğer eklentiler ile uyuşma sorunlarını azalatmak için başlangıç gecikmesi ("
-"milisaniye cinsinden) ekleyin"
+"Diğer uzantılarla uyumluluk sorunlarını azaltmak için başlangıç gecikmesi "
+"ekle (milisaniye cinsinden)"
 
 #: src/prefs.js:174
 msgid "Video Path"
@@ -120,7 +120,7 @@ msgstr "Aç"
 
 #: src/prefs.js:231
 msgid "Fit Mode"
-msgstr "Doldurma Modu"
+msgstr "Doldurma Kipi"
 
 #: src/prefs.js:232
 msgid "Control how wallpaper fits within the monitor"
@@ -139,13 +139,13 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    <b>Doldur</b>: Duvar kağıdını monitörü dolduracak şekilde uzatın.\n"
-"    <b>Döşe</b>: Duvar kağıdını monitöre sığacak şekilde ölçeklendirin (en "
+"    <b>Doldur</b>: Duvar kağıdını ekranı dolduracak şekilde uzat.\n"
+"   <b>İçer</b>: Duvar kağıdını ekrana sığacak şekilde ölçeklendir (en boy "
+"oranını koru).\n"
+"   <b>Kapla</b>: Duvar kağıdını ekranı kaplayacak şekilde ölçeklendir (en "
 "boy oranını koru).\n"
-"    <b>Kapla</b>: Duvar kağıdını monitörü kaplayacak şekilde ölçeklendirin ("
-"en boy oranını koru).\n"
-"    <b>Küçült</b>: Gerekirse monitöre sığacak şekilde duvar kağıdının "
-"ölçeğini küçültün, aksi takdirde orijinal boyutunu koruyun.\n"
+"   <b>Küçült</b>: Gerekirse duvar kağıdını ekrana sığacak şekilde küçült, "
+"aksi takdirde özgün boyutu koru.\n"
 "    "
 
 #: src/prefs.js:241
@@ -166,7 +166,7 @@ msgstr "Küçült"
 
 #: src/prefs.js:257
 msgid "This feature requires Gtk 4.8 or above"
-msgstr "Bu özellik Gtk 4.8 veya yukarısını gerektiriyor"
+msgstr "Bu özellik Gtk 4.8 veya üst sürümü gerektirir"
 
 #: src/panelMenu.js:92 src/panelMenu.js:112
 msgid "Pause"
