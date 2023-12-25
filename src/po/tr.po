@@ -2,13 +2,14 @@
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # Yusa Capraz <computerhackfusion@gmail.com>, 2023.
+# Sabri Ünal <libreajans@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: 2023-12-08 00:04+0000\n"
-"Last-Translator: Yusa Capraz <computerhackfusion@gmail.com>\n"
+"PO-Revision-Date: 2023-12-25 03:27+0000\n"
+"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/tr/>\n"
 "Language: tr\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.3-dev\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: src/prefs.js:49
 msgid "General"
@@ -63,11 +64,11 @@ msgstr "Geliştirici"
 
 #: src/prefs.js:78
 msgid "Debug Mode"
-msgstr "Hata Ayıklama Modu"
+msgstr "Hata Ayıklama Kipi"
 
 #: src/prefs.js:80
 msgid "Print debug messages to log"
-msgstr "Hata ayıklama mesajlarını kayıtlara yazdır"
+msgstr "Hata ayıklama iletilerini günlüğe yazdır"
 
 #: src/prefs.js:84
 msgid "Force gtk4paintablesink"
@@ -87,7 +88,7 @@ msgstr "Video oynatmalarında GtkMediaFile kullanımına zorla"
 
 #: src/prefs.js:94
 msgid "Startup Delay"
-msgstr "Başlangıç Geçikmesi"
+msgstr "Başlangıç Gecikmesi"
 
 #: src/prefs.js:94
 msgid ""
@@ -115,7 +116,7 @@ msgstr "İptal"
 
 #: src/prefs.js:198 src/prefs.js:214
 msgid "Open"
-msgstr "Açık"
+msgstr "Aç"
 
 #: src/prefs.js:231
 msgid "Fit Mode"
@@ -123,7 +124,7 @@ msgstr "Doldurma Modu"
 
 #: src/prefs.js:232
 msgid "Control how wallpaper fits within the monitor"
-msgstr "Duvar kağıdının monitöre nasıl sığdığını kontrol etmek"
+msgstr "Duvar kağıdının ekrana nasıl sığdığını denetle"
 
 #: src/prefs.js:233
 msgid ""
@@ -153,7 +154,7 @@ msgstr "Doldur"
 
 #: src/prefs.js:242
 msgid "Contain"
-msgstr "İçermek"
+msgstr "İçer"
 
 #: src/prefs.js:243
 msgid "Cover"
@@ -181,4 +182,4 @@ msgstr "Sesi Aç"
 
 #: src/panelMenu.js:139
 msgid "Preferences"
-msgstr "Seçenekler"
+msgstr "Tercihler"
