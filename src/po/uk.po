@@ -7,116 +7,124 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-01-02 16:08+0000\n"
+"Last-Translator: volkov <d2oo1dle2x@gmail.com>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/"
+"gnome-ext-hanabi/gnome-ext-hanabi/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: src/prefs.js:49
 msgid "General"
-msgstr ""
+msgstr "Загальні"
 
 #: src/prefs.js:53 src/panelMenu.js:121 src/panelMenu.js:131
 msgid "Mute Audio"
-msgstr ""
+msgstr "Заглушити аудіо"
 
 #: src/prefs.js:54
 msgid "Volume Level"
-msgstr ""
+msgstr "Рівень гучності"
 
 #: src/prefs.js:55
 msgid "Show Panel Menu"
-msgstr ""
+msgstr "Показувати індикатор у панелі стану"
 
 #: src/prefs.js:58
 msgid "Experimental"
-msgstr ""
+msgstr "Експериментальні налаштування"
 
 #: src/prefs.js:63
 msgid "Experimental VA Plugin"
-msgstr ""
+msgstr "Експериментальний плагін відео-прискорення"
 
 #: src/prefs.js:65
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
+"Увімкнути декодери з відео-прискоренням які можуть покращити продуктивність "
+"для користувачів Intel/AMD на Wayland"
 
 #: src/prefs.js:69
 msgid "NVIDIA Stateless Decoders"
-msgstr ""
+msgstr "Декодер NVIDIA"
 
 #: src/prefs.js:71
 msgid "Use new stateless NVIDIA decoders"
-msgstr ""
+msgstr "Використовувати нові декодери NVIDIA"
 
 #: src/prefs.js:74
 msgid "Developer"
-msgstr ""
+msgstr "Розробник"
 
 #: src/prefs.js:78
 msgid "Debug Mode"
-msgstr ""
+msgstr "Режим налагодження"
 
 #: src/prefs.js:80
 msgid "Print debug messages to log"
-msgstr ""
+msgstr "Надсилати повідомлення відлагодження до звіту"
 
 #: src/prefs.js:84
 msgid "Force gtk4paintablesink"
-msgstr ""
+msgstr "Примусово використовувати gtk4paintablesink"
 
 #: src/prefs.js:86
 msgid "Force use of gtk4paintablesink for video playback"
-msgstr ""
+msgstr "Примусово використовувати gtk4paintablesink для програвання відео"
 
 #: src/prefs.js:90
 msgid "Force GtkMediaFile"
-msgstr ""
+msgstr "Примусово використовувати GtkMediaFile"
 
 #: src/prefs.js:92
 msgid "Force use of GtkMediaFile for video playback"
-msgstr ""
+msgstr "Примусово використовувати GtkMediaFile для програвання відео"
 
 #: src/prefs.js:94
 msgid "Startup Delay"
-msgstr ""
+msgstr "Затримка запуску"
 
 #: src/prefs.js:94
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
+"Додати затримку запуску (у мілісекунда) щоб виправити проблеми сумісності з "
+"іншими розширеннями"
 
 #: src/prefs.js:174
 msgid "Video Path"
-msgstr ""
+msgstr "Шлях до відеофайлу"
 
 #: src/prefs.js:180 src/prefs.js:205
 msgid "None"
-msgstr ""
+msgstr "Ні"
 
 #: src/prefs.js:192
 msgid "Open File"
-msgstr ""
+msgstr "Відкрити файл"
 
 #: src/prefs.js:197
 msgid "Cancel"
-msgstr ""
+msgstr "Скасувати"
 
 #: src/prefs.js:198 src/prefs.js:214
 msgid "Open"
-msgstr ""
+msgstr "Відкрити"
 
 #: src/prefs.js:231
 msgid "Fit Mode"
-msgstr ""
+msgstr "Режим заповнення"
 
 #: src/prefs.js:232
 msgid "Control how wallpaper fits within the monitor"
-msgstr ""
+msgstr "Керує як саме шпалери будуть вміщатися у моніторі"
 
 #: src/prefs.js:233
 msgid ""
@@ -130,39 +138,49 @@ msgid ""
 "needed, otherwise keep its original size.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Заповнювати</b>: Розтягувати шпалери щоб заповнити монітор.\n"
+"    <b>Утримувати</b>: Масштабувати шпалери щоб заповнити монітор (зі "
+"збереженням співвідношення сторін).\n"
+"    <b>Накладати</b>: Масштабувати шпалери щоб покрити монітор (зі "
+"збереженням співвідношення сторін).\n"
+"    <b>Зменшити масштаб</b>: Зменшити масштаб шпалер щоб заповнити монітор ("
+"якщо масштабування потребується), в іншому випадку використовувати "
+"оригінальний розмір.\n"
+"    "
 
 #: src/prefs.js:241
 msgid "Fill"
-msgstr ""
+msgstr "Заповнювати"
 
 #: src/prefs.js:242
 msgid "Contain"
-msgstr ""
+msgstr "Утримувати"
 
 #: src/prefs.js:243
 msgid "Cover"
-msgstr ""
+msgstr "Накладати"
 
 #: src/prefs.js:244
 msgid "Scale-down"
-msgstr ""
+msgstr "Зменшити масштаб"
 
 #: src/prefs.js:257
 msgid "This feature requires Gtk 4.8 or above"
-msgstr ""
+msgstr "Ця функція потребує Gtk 4.8 або вище"
 
 #: src/panelMenu.js:92 src/panelMenu.js:112
 msgid "Pause"
-msgstr ""
+msgstr "Призупинити"
 
 #: src/panelMenu.js:92 src/panelMenu.js:112
 msgid "Play"
-msgstr ""
+msgstr "Продовжити"
 
 #: src/panelMenu.js:121 src/panelMenu.js:131
 msgid "Unmute Audio"
-msgstr ""
+msgstr "Увімкнути звуки"
 
 #: src/panelMenu.js:139
 msgid "Preferences"
-msgstr ""
+msgstr "Налаштування"
