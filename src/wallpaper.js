@@ -47,8 +47,6 @@ export const LiveWallpaper = GObject.registerClass(
                 // Layout manager will allocate extra space for the actor, if possible.
                 x_expand: true,
                 y_expand: true,
-                // Larger value = nearer to the user.
-                z_position: backgroundActor.z_position + 1,
                 opacity: 0,
             });
             this._backgroundActor = backgroundActor;

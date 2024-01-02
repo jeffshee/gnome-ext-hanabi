@@ -32,6 +32,8 @@ import * as Util from 'resource:///org/gnome/shell/misc/util.js';
 import * as Wallpaper from './wallpaper.js';
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
+// Ref: https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/workspace.js
+const backgroundCornerRadiusPixels = 30;
 
 export class GnomeShellOverride {
     constructor() {
@@ -87,8 +89,7 @@ export class GnomeShellOverride {
                     originalMethod.call(this);
 
                     const {scaleFactor} = St.ThemeContext.get_for_stage(global.stage);
-                    const cornerRadius =
-                        scaleFactor * Workspace.BACKGROUND_CORNER_RADIUS_PIXELS;
+                    const cornerRadius = scaleFactor * backgroundCornerRadiusPixels;
 
                     const radius = Util.lerp(0, cornerRadius, this._stateAdjustment.value);
                     this._bgManager.videoActor.setRoundedClipRadius(radius);
