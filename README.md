@@ -41,13 +41,13 @@ See also the section [Troubleshooting](#troubleshooting), for version-specific k
 
 1. Clone the repo
 
-- **For GNOME 45**
+-   **For GNOME 45**
 
 ```
 git clone https://github.com/jeffshee/gnome-ext-hanabi.git
 ```
 
-- **For GNOME 44 and earlier**
+-   **For GNOME 44 and earlier**
 
 ```
 git clone https://github.com/jeffshee/gnome-ext-hanabi.git -b legacy
@@ -66,30 +66,31 @@ cd gnome-ext-hanabi
 
 ### Distro-specific Guides
 
-- [Installation Guide for Ubuntu/Pop!\_OS 22.04](docs/ubuntu-22-04.md)
-- [Installation Guide for Ubuntu 23.04](docs/ubuntu-23-04.md)
+-   [Installation Guide for Ubuntu/Pop!\_OS 22.04](docs/ubuntu-22-04.md)
+-   [Installation Guide for Ubuntu 23.04](docs/ubuntu-23-04.md)
+-   [Installation Guide for openSUSE Tumbleweed](docs/opensuse-tumbleweed.md)
 
 ### Troubleshooting
 
 1. The video doesn't play / The extension is enabled but nothing happens  
    The GTK4 media backend is not pre-installed on some distributions (such as PopOS).
 
-   To install the backend:  
-    `sudo apt install libgtk-4-media-gstreamer`
+    To install the backend:  
+     `sudo apt install libgtk-4-media-gstreamer`
 
 2. High CPU usage during video playback (proprietary NVIDIA)  
    Your hardware acceleration may not work properly, see this [issue](https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/-/issues/1478).
 
-   To delete the GStreamer cache:  
-    `rm -rf ~/.cache/gstreamer-1.0/`  
-    After that, check if `gst-inspect-1.0 nvcodec` reports all its features.
+    To delete the GStreamer cache:  
+     `rm -rf ~/.cache/gstreamer-1.0/`  
+     After that, check if `gst-inspect-1.0 nvcodec` reports all its features.
 
 3. The GNOME Shell keeps crashing after enabling Hanabi, help!  
    You can try to disable the extension from tty ( <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>F3</kbd> ):
 
-   ```
-   gnome-extensions disable hanabi-extension@jeffshee.github.io
-   ```
+    ```
+    gnome-extensions disable hanabi-extension@jeffshee.github.io
+    ```
 
 ### Optimization
 
@@ -100,11 +101,11 @@ For this to work, Clapper must be installed **from the package manager and not f
 <details>
   <summary>Performance comparison</summary>
 
-- With `clappersink`
-  ![](https://user-images.githubusercontent.com/25530920/190872365-f1cefa30-6e11-40e4-bf99-1b79c3790d6b.png)
+-   With `clappersink`
+    ![](https://user-images.githubusercontent.com/25530920/190872365-f1cefa30-6e11-40e4-bf99-1b79c3790d6b.png)
 
-- Without `clappersink` (Using `Gtk.MediaFile` as default fallback)
-  ![](https://user-images.githubusercontent.com/25530920/190872366-7fce5703-2310-4c68-81c7-f17a8a15019f.png)
+-   Without `clappersink` (Using `Gtk.MediaFile` as default fallback)
+    ![](https://user-images.githubusercontent.com/25530920/190872366-7fce5703-2310-4c68-81c7-f17a8a15019f.png)
 
 </details>
 
