@@ -16,7 +16,6 @@
  */
 
 import Meta from 'gi://Meta';
-import Gio from 'gi://Gio';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
@@ -26,7 +25,8 @@ const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const logger = new Logger.Logger('autoPause');
 
 export class AutoPause {
-    constructor() {
+    constructor(extension) {
+        this._playbackState = extension.getPlaybackState();
         this._workspaces = new Set();
         this._windows = new Set();
         this._active_workspace = null;
@@ -35,22 +35,6 @@ export class AutoPause {
             fullscreenOnAnyMonitor: false,
             maximizedOrFullscreenOnAllMonitors: false,
         };
-
-        // DBus
-        const dbusXml = `
-            <node>
-                <interface name="io.github.jeffshee.HanabiRenderer">
-                    <method name="setPlay"/>
-                    <method name="setPause"/>
-                    <property name="isPlaying" type="b" access="read"/>
-                    <signal name="isPlayingChanged">
-                        <arg name="isPlaying" type="b"/>
-                    </signal>
-                </interface>
-            </node>`;
-        const proxy = Gio.DBusProxy.makeProxyWrapper(dbusXml);
-        this.proxy = proxy(Gio.DBus.session,
-            'io.github.jeffshee.HanabiRenderer', '/io/github/jeffshee/HanabiRenderer');
     }
 
     enable() {
@@ -97,14 +81,10 @@ export class AutoPause {
 
         logger.log(this._states);
 
-        this.proxy.call(
-            this._states.maximizedOrFullscreenOnAllMonitors ? 'setPause' : 'setPlay', // method_name
-            null, // parameters
-            Gio.DBusCallFlags.NO_AUTO_START, // flags
-            -1, // timeout_msec
-            null, // cancellable
-            null // callback
-        );
+        if (this._states.maximizedOrFullscreenOnAllMonitors)
+            this._playbackState.autoPause();
+        else
+            this._playbackState.autoPlay();
     }
 
     _monitorWindow(metaWindow) {
