@@ -58,12 +58,9 @@ export class PlaybackState {
             playing: {
                 actions: {
                     onEnter: () => {
-                        logger.debug('playing: onEnter');
                         this._rendererDBus.setPlay();
                     },
-                    onExit() {
-                        logger.debug('playing: onExit');
-                    },
+                    onExit() {},
                 },
                 transitions: {
                     // userPlay: {},
@@ -85,12 +82,9 @@ export class PlaybackState {
             pausedByUser: {
                 actions: {
                     onEnter: () => {
-                        logger.debug('pausedByUser: onEnter');
                         this._rendererDBus.setPause();
                     },
-                    onExit() {
-                        logger.debug('pausedByUser: onExit');
-                    },
+                    onExit() {},
                 },
                 transitions: {
                     userPlay: {
@@ -112,12 +106,9 @@ export class PlaybackState {
             pausedByAuto: {
                 actions: {
                     onEnter: () => {
-                        logger.debug('pausedByAuto: onEnter');
                         this._rendererDBus.setPause();
                     },
-                    onExit() {
-                        logger.debug('pausedByAuto: onExit');
-                    },
+                    onExit() {},
                 },
                 transitions: {
                     // userPlay: {},
@@ -138,12 +129,8 @@ export class PlaybackState {
             },
             paused: {
                 actions: {
-                    onEnter() {
-                        logger.debug('paused: onEnter');
-                    },
-                    onExit() {
-                        logger.debug('paused: onExit');
-                    },
+                    onEnter() {},
+                    onExit() {},
                 },
                 transitions: {
                     userPlay: {
