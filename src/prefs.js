@@ -39,6 +39,32 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
         prefsRowInt(window, generalGroup, _('Volume Level'), 'volume', '', 0, 100, 1, 10);
         prefsRowBoolean(window, generalGroup, _('Show Panel Menu'), 'show-panel-menu', '');
 
+        const autoPause = new Adw.PreferencesGroup({
+            title: _('Auto Pause'),
+        });
+        page.add(autoPause);
+        prefsRowBoolean(
+            window,
+            autoPause,
+            _('Pause on Maximize'),
+            'pause-on-maximize',
+            _('Pause playback when there is a maximized window')
+        );
+        prefsRowBoolean(
+            window,
+            autoPause,
+            _('Pause on Fullscreen'),
+            'pause-on-fullscreen',
+            _('Pause playback when there is a fullscreen window')
+        );
+        prefsRowBoolean(
+            window,
+            autoPause,
+            _('Pause on Maximize or Fullscreen on All Monitors'),
+            'pause-on-maximize-fullscreen-all-monitors',
+            _('Pause playback when there are maximized or fullscreen windows on all monitors in a multi-monitor setup')
+        );
+
         const experimentalGroup = new Adw.PreferencesGroup({
             title: _('Experimental'),
         });
