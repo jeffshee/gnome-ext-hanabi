@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-02 19:13+0900\n"
+"POT-Creation-Date: 2024-01-28 03:05+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,22 +17,61 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: src/panelMenu.js:70 src/panelMenu.js:85
+msgid "Pause"
+msgstr ""
+
+#: src/panelMenu.js:70 src/panelMenu.js:85
+msgid "Play"
+msgstr ""
+
+#: src/panelMenu.js:94 src/panelMenu.js:103
+msgid "Unmute Audio"
 #: src/prefs.js:34
 msgid "General"
 msgstr ""
 
+#: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:38
 #: src/prefs.js:38 src/panelMenu.js:111 src/panelMenu.js:120
 msgid "Mute Audio"
 msgstr ""
 
+#: src/panelMenu.js:110
+msgid "Preferences"
+msgstr ""
+
+#: src/prefs.js:34
+msgid "General"
+msgstr ""
+
+#: src/prefs.js:39
 #: src/prefs.js:39
 msgid "Volume Level"
 msgstr ""
 
 #: src/prefs.js:40
+#: src/prefs.js:40
 msgid "Show Panel Menu"
 msgstr ""
 
+#: src/prefs.js:43
+msgid "Auto Pause"
+msgstr ""
+
+#: src/prefs.js:49
+msgid "Pause on Maximize"
+msgstr ""
+
+#: src/prefs.js:51
+msgid "Pause playback when there is a maximized window"
+msgstr ""
+
+#: src/prefs.js:56
+msgid "Pause on Fullscreen"
+msgstr ""
+
+#: src/prefs.js:58
+msgid "Pause playback when there is a fullscreen window"
 #: src/prefs.js:41
 msgid "Change Wallpaper Automatically"
 msgstr ""
@@ -45,81 +84,115 @@ msgstr ""
 msgid "Experimental"
 msgstr ""
 
+#: src/prefs.js:63
+msgid "Pause on Maximize or Fullscreen on All Monitors"
 #: src/prefs.js:53
 msgid "Experimental VA Plugin"
 msgstr ""
 
+#: src/prefs.js:65
+msgid ""
+"Pause playback when there are maximized or fullscreen windows on all "
+"monitors in a multi-monitor setup"
+msgstr ""
+
+#: src/prefs.js:69
+msgid "Experimental"
+msgstr ""
+
+#: src/prefs.js:75
+msgid "Experimental VA Plugin"
+msgstr ""
+
+#: src/prefs.js:77
 #: src/prefs.js:55
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
 
+#: src/prefs.js:82
 #: src/prefs.js:60
 msgid "NVIDIA Stateless Decoders"
 msgstr ""
 
+#: src/prefs.js:84
 #: src/prefs.js:62
 msgid "Use new stateless NVIDIA decoders"
 msgstr ""
 
+#: src/prefs.js:87
 #: src/prefs.js:65
 msgid "Developer"
 msgstr ""
 
+#: src/prefs.js:92
 #: src/prefs.js:70
 msgid "Debug Mode"
 msgstr ""
 
+#: src/prefs.js:94
 #: src/prefs.js:72
 msgid "Print debug messages to log"
 msgstr ""
 
+#: src/prefs.js:99
 #: src/prefs.js:77
 msgid "Force gtk4paintablesink"
 msgstr ""
 
+#: src/prefs.js:101
 #: src/prefs.js:79
 msgid "Force use of gtk4paintablesink for video playback"
 msgstr ""
 
+#: src/prefs.js:106
 #: src/prefs.js:84
 msgid "Force GtkMediaFile"
 msgstr ""
 
+#: src/prefs.js:108
 #: src/prefs.js:86
 msgid "Force use of GtkMediaFile for video playback"
 msgstr ""
 
+#: src/prefs.js:110
 #: src/prefs.js:88
 msgid "Startup Delay"
 msgstr ""
 
+#: src/prefs.js:110
 #: src/prefs.js:88
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
 
+#: src/prefs.js:197
 #: src/prefs.js:175
 msgid "Video Path"
 msgstr ""
 
+#: src/prefs.js:203 src/prefs.js:228
 #: src/prefs.js:181 src/prefs.js:206 src/prefs.js:240 src/prefs.js:261
 msgid "None"
 msgstr ""
 
+#: src/prefs.js:215
 #: src/prefs.js:193
 msgid "Open File"
 msgstr ""
 
+#: src/prefs.js:220
 #: src/prefs.js:198 src/prefs.js:254
 msgid "Cancel"
 msgstr ""
 
+#: src/prefs.js:221 src/prefs.js:237
 #: src/prefs.js:199 src/prefs.js:215 src/prefs.js:255 src/prefs.js:270
 msgid "Open"
 msgstr ""
 
+#: src/prefs.js:256
 #: src/prefs.js:234
 msgid "Change Wallpaper Directory Path"
 msgstr ""
@@ -132,10 +205,12 @@ msgstr ""
 msgid "Fit Mode"
 msgstr ""
 
+#: src/prefs.js:257
 #: src/prefs.js:290
 msgid "Control how wallpaper fits within the monitor"
 msgstr ""
 
+#: src/prefs.js:258
 #: src/prefs.js:291
 msgid ""
 "\n"
@@ -149,22 +224,27 @@ msgid ""
 "    "
 msgstr ""
 
+#: src/prefs.js:266
 #: src/prefs.js:299
 msgid "Fill"
 msgstr ""
 
+#: src/prefs.js:267
 #: src/prefs.js:300
 msgid "Contain"
 msgstr ""
 
+#: src/prefs.js:268
 #: src/prefs.js:301
 msgid "Cover"
 msgstr ""
 
+#: src/prefs.js:269
 #: src/prefs.js:302
 msgid "Scale-down"
 msgstr ""
 
+#: src/prefs.js:282
 #: src/prefs.js:315
 msgid "This feature requires Gtk 4.8 or above"
 msgstr ""
