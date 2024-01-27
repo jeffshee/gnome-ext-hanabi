@@ -15,17 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const {Meta, Gio} = imports.gi;
-const Main = imports.ui.main;
-const ExtensionUtils = imports.misc.extensionUtils;
+import Meta from 'gi://Meta';
+import Gio from 'gi://Gio';
 
-const Me = ExtensionUtils.getCurrentExtension();
-const Logger = Me.imports.logger;
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-const logger = new Logger.Logger('autoPause');
+import * as Logger from './logger.js';
+
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
+const logger = new Logger.Logger();
 
-var AutoPause = class {
+export class AutoPause {
     constructor() {
         this._workspaces = new Set();
         this._windows = new Set();
@@ -157,6 +157,6 @@ var AutoPause = class {
     }
 
     disable() {
-
+        // TODO
     }
-};
+}
