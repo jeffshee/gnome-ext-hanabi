@@ -24,13 +24,12 @@ import * as Logger from './logger.js';
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const logger = new Logger.Logger('autoPause');
 
+
 export class AutoPause {
     constructor(extension) {
         this._settings = extension.getSettings();
         this._playbackState = extension.getPlaybackState();
-        this._workspaces = new Set();
-        this._windows = new Set();
-        this._active_workspace = null;
+        this._activeWorkspace = null;
         this._states = {
             maximizedOnAnyMonitor: false,
             fullscreenOnAnyMonitor: false,
@@ -41,6 +40,11 @@ export class AutoPause {
             pauseOnFullscreen: this._settings.get_boolean('pause-on-fullscreen'),
             pauseOnMaximizeOrFullscreenOnAllMonitors: this._settings.get_boolean('pause-on-maximize-fullscreen-all-monitors'),
         };
+        // signals ids
+        this._windows = [];
+        this._windowAddedId = null;
+        this._windowRemovedId = null;
+        this._activeWorkspaceChangedId = null;
 
         this._settings.connect('changed::pause-on-maximize', () => {
             this.conditions.pauseOnMaximize = this._settings.get_boolean('pause-on-maximize');
@@ -60,20 +64,14 @@ export class AutoPause {
 
     enable() {
         const workspaceManager = global.workspace_manager;
-        this._active_workspace = workspaceManager.get_active_workspace();
-        for (let i = 0; i < workspaceManager.get_n_workspaces(); i++) {
-            let workspace = workspaceManager.get_workspace_by_index(i);
-            this._workspaces.add(workspace);
-        }
+        this._activeWorkspace = workspaceManager.get_active_workspace();
+        this._activeWorkspaceChangedId = workspaceManager.connect('active-workspace-changed', this._activeWorkspaceChanged.bind(this));
 
-        global.get_window_actors().forEach(actor => this._windows.add(actor.meta_window));
-
-        this._workspaces.forEach(workspace => this._workspaceAdded(workspaceManager, workspace));
-        this._windows.forEach(window => this._windowAdded(window));
-
-        workspaceManager.connect('workspace-added', this._workspaceAdded.bind(this));
-        workspaceManager.connect('workspace-removed', this._workspaceRemoved.bind(this));
-        workspaceManager.connect('active-workspace-changed', this._activeWorkspaceChanged.bind(this));
+        this._activeWorkspace.list_windows().forEach(
+            metaWindow => this._windowAdded(metaWindow, false)
+        );
+        this._windowAddedId = this._activeWorkspace.connect('window-added', (_workspace, window) => this._windowAdded(window));
+        this._windowRemovedId = this._activeWorkspace.connect('window-removed', (_workspace, window) => this._windowRemoved(window));
 
         // Initial check
         this.update();
@@ -87,7 +85,7 @@ export class AutoPause {
         }
 
         // Filter out renderer windows and minimized windows
-        let metaWindows = this._active_workspace.list_windows().filter(
+        let metaWindows = this._activeWorkspace.list_windows().filter(
             metaWindow => !metaWindow.title?.includes(applicationId) && !metaWindow.minimized
         );
 
@@ -124,68 +122,101 @@ export class AutoPause {
         this._playbackState.autoPlay();
     }
 
-    _monitorWindow(metaWindow) {
-        // Not need to monitor renderer window
+    _windowAdded(metaWindow, update = true) {
+        // Not need to track renderer window
         if (metaWindow.title?.includes(applicationId))
             return;
-        metaWindow.connect('notify::maximized-horizontally', () => {
-            logger.debug('maximized-horizontally changed');
+
+        let signals = [];
+        signals.push(
+            metaWindow.connect('notify::maximized-horizontally', () => {
+                logger.debug('maximized-horizontally changed');
+                this.update();
+            }));
+        signals.push(
+            metaWindow.connect('notify::maximized-vertically', () => {
+                logger.debug('maximized-vertically changed');
+                this.update();
+            }));
+        signals.push(
+            metaWindow.connect('notify::fullscreen', () => {
+                logger.debug('fullscreen changed');
+                this.update();
+            }));
+        signals.push(
+            metaWindow.connect('notify::minimized', () => {
+                logger.debug('minimized changed');
+                this.update();
+            })
+        );
+        this._windows.push(
+            {
+                metaWindow,
+                signals,
+            }
+        );
+        logger.debug(`Window ${metaWindow.title} added`);
+        if (update)
             this.update();
-        });
-        metaWindow.connect('notify::maximized-vertically', () => {
-            logger.debug('maximized-vertically changed');
-            this.update();
-        });
-        metaWindow.connect('notify::fullscreen', () => {
-            logger.debug('fullscreen changed');
-            this.update();
-        });
-        metaWindow.connect('notify::minimized', () => {
-            logger.debug('minimized changed');
-            this.update();
-        });
     }
 
-    _monitorWorkspace(workspace) {
-        workspace.connect('window-added', (_workspace, window) => this._windowAdded(window));
-        workspace.connect('window-removed', (_workspace, window) => this._windowRemoved(window));
-    }
-
-    _windowAdded(window) {
-        this._windows.add(window);
-        this._monitorWindow(window);
-        logger.debug(`Window ${window.title} added`);
+    _windowRemoved(metaWindow) {
+        this._windows = this._windows.filter(window => {
+            if (window.metaWindow === metaWindow) {
+                window.signals.forEach(signal => metaWindow.disconnect(signal));
+                return false;
+            }
+            return true;
+        });
+        logger.debug(`Window ${metaWindow.title} removed`);
         this.update();
-    }
-
-    _windowRemoved(window) {
-        this._windows.delete(window);
-        logger.debug(`Window ${window.title} removed`);
-        this.update();
-    }
-
-    _workspaceAdded(workspaceManager, index) {
-        let workspace = workspaceManager.get_workspace_by_index(index);
-        this._workspaces.add(workspace);
-        this._monitorWorkspace(workspace);
-        logger.debug(`Workspace ${index} added`);
-    }
-
-    _workspaceRemoved(_workspaceManager, index) {
-        this._workspaces.forEach(workspace => {
-            if (workspace.workspace_index === index)
-                this._workspaces.delete(workspace);
-        });
-        logger.debug(`Workspace ${index} removed`);
     }
 
     _activeWorkspaceChanged(workspaceManager) {
-        this._active_workspace = workspaceManager.get_active_workspace();
-        logger.debug(`Active workspace changed to ${this._active_workspace.workspace_index}`);
+        this._windows.forEach(({metaWindow, signals}) => {
+            signals.forEach(signal => metaWindow.disconnect(signal));
+        });
+        this._windows = [];
+
+        if (this._windowAddedId) {
+            this._activeWorkspace.disconnect(this._windowAddedId);
+            this._windowAddedId = null;
+        }
+        if (this._windowRemovedId) {
+            this._activeWorkspace.disconnect(this._windowRemovedId);
+            this._windowRemovedId = null;
+        }
+        this._activeWorkspace = null;
+
+        this._activeWorkspace = workspaceManager.get_active_workspace();
+        logger.debug(`Active workspace changed to ${this._activeWorkspace.workspace_index}`);
+
+        this._activeWorkspace.list_windows().forEach(
+            metaWindow => this._windowAdded(metaWindow, false)
+        );
+        this._windowAddedId = this._activeWorkspace.connect('window-added', (_workspace, window) => this._windowAdded(window));
+        this._windowRemovedId = this._activeWorkspace.connect('window-removed', (_workspace, window) => this._windowRemoved(window));
+
         this.update();
     }
 
     disable() {
-        // TODO
+        this.workspaceManager.disconnect(this._activeWorkspaceChangedId);
+        this._activeWorkspace = null;
+
+        this._windows.forEach(({metaWindow, signals}) => {
+            signals.forEach(signal => metaWindow.disconnect(signal));
+        });
+        this._windows = [];
+
+        if (this._windowAddedId) {
+            this._activeWorkspace.disconnect(this._windowAddedId);
+            this._windowAddedId = null;
+        }
+        if (this._windowRemovedId) {
+            this._activeWorkspace.disconnect(this._windowRemovedId);
+            this._windowRemovedId = null;
+        }
+        this._activeWorkspace = null;
     }
 }
