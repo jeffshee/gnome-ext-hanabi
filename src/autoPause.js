@@ -23,7 +23,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as Logger from './logger.js';
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
-const logger = new Logger.Logger();
+const logger = new Logger.Logger('autoPause');
 
 export class AutoPause {
     constructor() {
@@ -59,13 +59,16 @@ export class AutoPause {
         for (let i = 0; i < workspaceManager.get_n_workspaces(); i++) {
             let workspace = workspaceManager.get_workspace_by_index(i);
             this._workspaces.add(workspace);
-            this._monitorWorkspace(workspace);
-            let metaWindows = workspace.list_windows();
-            metaWindows.forEach(metaWindow => this._monitorWindow(metaWindow));
         }
 
-        workspaceManager.connect('workspace-added', (_workspaceManager, index) => this._workspaceAdded(workspaceManager.get_workspace_by_index(index)));
-        workspaceManager.connect('active-workspace-changed', () => this._activeWorkspaceChanged(workspaceManager.get_active_workspace()));
+        global.get_window_actors().forEach(actor => this._windows.add(actor.meta_window));
+
+        this._workspaces.forEach(workspace => this._workspaceAdded(workspaceManager, workspace));
+        this._windows.forEach(window => this._windowAdded(window));
+
+        workspaceManager.connect('workspace-added', this._workspaceAdded.bind(this));
+        workspaceManager.connect('workspace-removed', this._workspaceRemoved.bind(this));
+        workspaceManager.connect('active-workspace-changed', this._activeWorkspaceChanged.bind(this));
 
         // Initial check
         this.update();
@@ -144,14 +147,23 @@ export class AutoPause {
         this.update();
     }
 
-    _workspaceAdded(workspace) {
+    _workspaceAdded(workspaceManager, index) {
+        let workspace = workspaceManager.get_workspace_by_index(index);
         this._workspaces.add(workspace);
         this._monitorWorkspace(workspace);
-        logger.debug(`Workspace ${workspace.workspace_index} added`);
+        logger.debug(`Workspace ${index} added`);
     }
 
-    _activeWorkspaceChanged(workspace) {
-        this._active_workspace = workspace;
+    _workspaceRemoved(_workspaceManager, index) {
+        this._workspaces.forEach(workspace => {
+            if (workspace.workspace_index === index)
+                this._workspaces.delete(workspace);
+        });
+        logger.debug(`Workspace ${index} removed`);
+    }
+
+    _activeWorkspaceChanged(workspaceManager) {
+        this._active_workspace = workspaceManager.get_active_workspace();
         logger.debug(`Active workspace changed to ${this._active_workspace.workspace_index}`);
         this.update();
     }
