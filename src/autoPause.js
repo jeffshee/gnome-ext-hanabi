@@ -26,6 +26,7 @@ const logger = new Logger.Logger('autoPause');
 
 export class AutoPause {
     constructor(extension) {
+        this._settings = extension.getSettings();
         this._playbackState = extension.getPlaybackState();
         this._workspaces = new Set();
         this._windows = new Set();
@@ -35,6 +36,26 @@ export class AutoPause {
             fullscreenOnAnyMonitor: false,
             maximizedOrFullscreenOnAllMonitors: false,
         };
+        this.conditions = {
+            pauseOnMaximize: this._settings.get_boolean('pause-on-maximize'),
+            pauseOnFullscreen: this._settings.get_boolean('pause-on-fullscreen'),
+            pauseOnMaximizeOrFullscreenOnAllMonitors: this._settings.get_boolean('pause-on-maximize-fullscreen-all-monitors'),
+        };
+
+        this._settings.connect('changed::pause-on-maximize', () => {
+            this.conditions.pauseOnMaximize = this._settings.get_boolean('pause-on-maximize');
+            this.update();
+        });
+
+        this._settings.connect('changed::pause-on-fullscreen', () => {
+            this.conditions.pauseOnFullscreen = this._settings.get_boolean('pause-on-fullscreen');
+            this.update();
+        });
+
+        this._settings.connect('changed::pause-on-maximize-fullscreen-all-monitors', () => {
+            this.conditions.pauseOnMaximizeOrFullscreenOnAllMonitors = this._settings.get_boolean('pause-on-maximize-fullscreen-all-monitors');
+            this.update();
+        });
     }
 
     enable() {
@@ -59,6 +80,12 @@ export class AutoPause {
     }
 
     update() {
+        // All conditions is false, skip update
+        if (Object.values(this.conditions).every(cond => !cond)) {
+            this._playbackState.autoPlay();
+            return;
+        }
+
         // Filter out renderer windows and minimized windows
         let metaWindows = this._active_workspace.list_windows().filter(
             metaWindow => !metaWindow.title?.includes(applicationId) && !metaWindow.minimized
@@ -79,12 +106,22 @@ export class AutoPause {
             monitor => monitorsWithMaximizedOrFullscreen[monitor.index]
         );
 
-        logger.log(this._states);
+        logger.debug(this._states);
 
-        if (this._states.maximizedOrFullscreenOnAllMonitors)
+        if (this.conditions.pauseOnMaximizeOrFullscreenOnAllMonitors && this._states.maximizedOrFullscreenOnAllMonitors) {
             this._playbackState.autoPause();
-        else
-            this._playbackState.autoPlay();
+            return;
+        } else {
+            if (this.conditions.pauseOnMaximize && this._states.maximizedOnAnyMonitor) {
+                this._playbackState.autoPause();
+                return;
+            }
+            if (this.conditions.pauseOnFullscreen && this._states.fullscreenOnAnyMonitor) {
+                this._playbackState.autoPause();
+                return;
+            }
+        }
+        this._playbackState.autoPlay();
     }
 
     _monitorWindow(metaWindow) {

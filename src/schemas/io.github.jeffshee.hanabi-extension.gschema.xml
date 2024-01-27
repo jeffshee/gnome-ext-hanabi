@@ -42,16 +42,23 @@
             <description>Control how to change wallpapers automatically</description>
         </key>
 
+        <key name="pause-on-maximize" type="b">
+            <default>false</default>
+            <summary>Pause on Maximize</summary>
+            <description>Pause playback when there is a maximized window</description>
+        </key>
+
         <key name="pause-on-fullscreen" type="b">
             <default>false</default>
             <summary>Pause on Fullscreen</summary>
             <description>Pause playback when there is a fullscreen window</description>
         </key>
 
-        <key name="pause-on-maximize" type="b">
+        <key name="pause-on-maximize-fullscreen-all-monitors" type="b">
             <default>false</default>
             <summary>Pause on Maximize</summary>
-            <description>Pause playback when there is a maximized window</description>
+            <description>Pause playback when there are maximized or fullscreen windows on all
+                monitors in a multi-monitor setup</description>
         </key>
 
         <key name="pause-on-battery" type="b">

@@ -43,6 +43,32 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
         prefsRowChangeWallpaperMode(window, generalGroup);
         prefsRowInt(window, generalGroup, _('Change Wallpaper Interval (minutes)'), 'change-wallpaper-interval', '', 1, 1440, 5, 0);
 
+        const autoPause = new Adw.PreferencesGroup({
+            title: _('Auto Pause'),
+        });
+        page.add(autoPause);
+        prefsRowBoolean(
+            window,
+            autoPause,
+            _('Pause on Maximize'),
+            'pause-on-maximize',
+            _('Pause playback when there is a maximized window')
+        );
+        prefsRowBoolean(
+            window,
+            autoPause,
+            _('Pause on Fullscreen'),
+            'pause-on-fullscreen',
+            _('Pause playback when there is a fullscreen window')
+        );
+        prefsRowBoolean(
+            window,
+            autoPause,
+            _('Pause on Maximize or Fullscreen on All Monitors'),
+            'pause-on-maximize-fullscreen-all-monitors',
+            _('Pause playback when there are maximized or fullscreen windows on all monitors in a multi-monitor setup')
+        );
+
         const experimentalGroup = new Adw.PreferencesGroup({
             title: _('Experimental'),
         });
