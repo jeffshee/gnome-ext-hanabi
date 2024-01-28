@@ -29,7 +29,10 @@ import * as Workspace from 'resource:///org/gnome/shell/ui/workspace.js';
 import * as WorkspaceThumbnail from 'resource:///org/gnome/shell/ui/workspaceThumbnail.js';
 import * as Util from 'resource:///org/gnome/shell/misc/util.js';
 
+import * as Logger from './logger.js';
 import * as Wallpaper from './wallpaper.js';
+
+const logger_ = new Logger.Logger();
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 // Ref: https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/workspace.js
@@ -82,12 +85,15 @@ export class GnomeShellOverride {
 
         /**
          * Rounded corner
+         *
+         * Ref: https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/a6d35fdd2abd63d23c7a9d093645f760691539a0/js/ui/workspace.js#L1003-1022
          */
         this._injectionManager.overrideMethod(Workspace.WorkspaceBackground.prototype, '_updateBorderRadius',
             originalMethod => {
                 return function () {
                     originalMethod.call(this);
-
+                    // The scale factor here is an integer, not the fractional scale factor.
+                    // Ref: https://gjs-docs.gnome.org/st13~13/st.themecontext#method-get_scale_factor
                     const {scaleFactor} = St.ThemeContext.get_for_stage(global.stage);
                     const cornerRadius = scaleFactor * backgroundCornerRadiusPixels;
 

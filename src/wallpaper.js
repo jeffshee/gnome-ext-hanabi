@@ -51,11 +51,22 @@ export const LiveWallpaper = GObject.registerClass(
             });
             this._backgroundActor = backgroundActor;
             this._monitorIndex = backgroundActor.monitor;
+
+            /**
+             * _monitorScale is fractional scale factor
+             * _monitorWidth and _monitorHeight are scaled resolution
+             * e.g. if the physical reolution = (2240, 1400) and fractional scale factor = 1.25,
+             * then the scaled resolution would be (2240/1.25, 1400/1.25) = (1792, 1120).
+             */
             this._display = backgroundActor.meta_display;
-            let {height, width} =
+            this._monitorScale = this._display.get_monitor_scale(
+                this._monitorIndex
+            );
+            let {width, height} =
                 Main.layoutManager.monitors[this._monitorIndex];
-            this._monitorHeight = height;
             this._monitorWidth = width;
+            this._monitorHeight = height;
+
             this._metaBackgroundGroup = backgroundActor.get_parent();
             this._metaBackgroundGroup.add_child(this);
             this._wallpaper = null;
@@ -67,10 +78,19 @@ export const LiveWallpaper = GObject.registerClass(
                 new RoundedCornersEffect.RoundedCornersEffect();
             this.add_effect(this._roundedCornersEffect);
 
-            this._monitorScale = this._display.get_monitor_scale(
-                this._monitorIndex
-            );
-
+            /**
+             * Refs for each parameter of RoundedCornersEffect:
+             * - pixel-step
+             * https://gitlab.gnome.org/GNOME/mutter/-/blob/3528b54378b60fdb7692dcd849c61dccfeeb805f/src/compositor/meta-background-content.c#L582-585
+             * - rounded-clip-radius
+             * https://gitlab.gnome.org/GNOME/mutter/-/blob/3528b54378b60fdb7692dcd849c61dccfeeb805f/src/compositor/meta-background-content.c#L507
+             * - rounded-clip-bounds
+             * https://gitlab.gnome.org/GNOME/mutter/-/blob/3528b54378b60fdb7692dcd849c61dccfeeb805f/src/compositor/meta-background-content.c#L487-505
+             */
+            this._roundedCornersEffect.setPixelStep([
+                1.0 / (this._monitorWidth * this._monitorScale),
+                1.0 / (this._monitorHeight * this._monitorScale),
+            ]);
             this.setRoundedClipRadius(0.0);
             const rect = new Graphene.Rect();
             rect.origin.x = 0;
@@ -78,10 +98,6 @@ export const LiveWallpaper = GObject.registerClass(
             rect.size.width = this._monitorWidth;
             rect.size.height = this._monitorHeight;
             this.setRoundedClipBounds(rect);
-            this._roundedCornersEffect.setPixelStep([
-                1.0 / this._monitorWidth,
-                1.0 / this._monitorHeight,
-            ]);
         }
 
         setRoundedClipRadius(radius) {
@@ -156,12 +172,12 @@ export const LiveWallpaper = GObject.registerClass(
 
             /**
              * Only `allocation.get_height()` works fine so far. The `allocation.get_width()` gives weird result for some reasons.
-             * As a workaround, we calculate the scale based on the height, then use it to calculate width.
+             * As a workaround, we calculate the ratio based on the height, then use it to calculate width.
              * It is safe to assume that the ratio of wallpaper is a constant (e.g. 16:9) in our case.
              */
-            let scale = this.allocation.get_height() / this._monitorHeight;
-            this._wallpaper.height = this._monitorHeight * scale;
-            this._wallpaper.width = this._monitorWidth * scale;
+            let ratio = this.allocation.get_height() / this._monitorHeight;
+            this._wallpaper.height = this._monitorHeight * ratio;
+            this._wallpaper.width = this._monitorWidth * ratio;
         }
 
         _fade(visible = true) {
