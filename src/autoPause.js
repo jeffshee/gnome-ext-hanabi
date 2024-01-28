@@ -29,6 +29,7 @@ export class AutoPause {
     constructor(extension) {
         this._settings = extension.getSettings();
         this._playbackState = extension.getPlaybackState();
+        this._workspaceManager = null;
         this._activeWorkspace = null;
         this._states = {
             maximizedOnAnyMonitor: false,
@@ -63,9 +64,9 @@ export class AutoPause {
     }
 
     enable() {
-        const workspaceManager = global.workspace_manager;
-        this._activeWorkspace = workspaceManager.get_active_workspace();
-        this._activeWorkspaceChangedId = workspaceManager.connect('active-workspace-changed', this._activeWorkspaceChanged.bind(this));
+        this._workspaceManager = global.workspace_manager;
+        this._activeWorkspace = this._workspaceManager.get_active_workspace();
+        this._activeWorkspaceChangedId = this._workspaceManager.connect('active-workspace-changed', this._activeWorkspaceChanged.bind(this));
 
         this._activeWorkspace.list_windows().forEach(
             metaWindow => this._windowAdded(metaWindow, false)
@@ -85,7 +86,7 @@ export class AutoPause {
         }
 
         // Filter out renderer windows and minimized windows
-        let metaWindows = this._activeWorkspace.list_windows().filter(
+        let metaWindows = this._windows.map(({metaWindow}) => metaWindow).filter(
             metaWindow => !metaWindow.title?.includes(applicationId) && !metaWindow.minimized
         );
 
@@ -201,7 +202,8 @@ export class AutoPause {
     }
 
     disable() {
-        this.workspaceManager.disconnect(this._activeWorkspaceChangedId);
+        if (this._workspaceManager && this._activeWorkspaceChangedId)
+            this._workspaceManager.disconnect(this._activeWorkspaceChangedId);
         this._activeWorkspace = null;
 
         this._windows.forEach(({metaWindow, signals}) => {
@@ -209,11 +211,11 @@ export class AutoPause {
         });
         this._windows = [];
 
-        if (this._windowAddedId) {
+        if (this._activeWorkspace && this._windowAddedId) {
             this._activeWorkspace.disconnect(this._windowAddedId);
             this._windowAddedId = null;
         }
-        if (this._windowRemovedId) {
+        if (this._activeWorkspace && this._windowRemovedId) {
             this._activeWorkspace.disconnect(this._windowRemovedId);
             this._windowRemovedId = null;
         }
