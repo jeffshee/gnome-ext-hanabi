@@ -20,6 +20,8 @@ import Meta from 'gi://Meta';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import * as Logger from './logger.js';
+import * as DBus from './dbus.js';
+import UPower from 'gi://UPowerGlib';
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const logger = new Logger.Logger('autoPause');
@@ -61,6 +63,9 @@ export class AutoPause {
             this.conditions.pauseOnMaximizeOrFullscreenOnAllMonitors = this._settings.get_boolean('pause-on-maximize-fullscreen-all-monitors');
             this.update();
         });
+
+        //
+        this._upower = new DBus.UPowerDBus();
     }
 
     enable() {
@@ -73,6 +78,13 @@ export class AutoPause {
         );
         this._windowAddedId = this._activeWorkspace.connect('window-added', (_workspace, window) => this._windowAdded(window));
         this._windowRemovedId = this._activeWorkspace.connect('window-removed', (_workspace, window) => this._windowRemoved(window));
+
+        //
+        this._upower.getProxy().connect('g-properties-changed', (_proxy, properties) => this._checkUPower(_proxy, properties));
+        let state = this._upower.getState();
+        let percentage = this._upower.getPercentage();
+        logger.debug(`State ${state}`);
+        logger.debug(`Percentage ${percentage}`);
 
         // Initial check
         this.update();
@@ -199,6 +211,32 @@ export class AutoPause {
         this._windowRemovedId = this._activeWorkspace.connect('window-removed', (_workspace, window) => this._windowRemoved(window));
 
         this.update();
+    }
+
+    _checkUPower(_proxy, properties) {
+        let payload = properties.deep_unpack();
+        if (!payload.hasOwnProperty('State') && !payload.hasOwnProperty('Percentage'))
+            return;
+        logger.debug(payload);
+
+        let state = this._upower.getState();
+        let percentage = this._upower.getPercentage();
+        logger.debug(`State ${state}`);
+        logger.debug(`Percentage ${percentage}`);
+
+        let onBattery = false;
+        let lowBattery = false;
+        onBattery = state === UPower.DeviceState.PENDING_DISCHARGE || state === UPower.DeviceState.DISCHARGING;
+        lowBattery = percentage <= 25;
+
+        if (onBattery) {
+            if (lowBattery)
+                logger.debug('Low Battery');
+            else
+                logger.debug('On Battery');
+        } else {
+            logger.debug('On AC');
+        }
     }
 
     disable() {

@@ -17,6 +17,11 @@
 
 import Gio from 'gi://Gio';
 
+import * as DBusUtil from 'resource://org/gnome/shell/misc/dbusUtils.js';
+
+const UPOWER_BUS_NAME = 'org.freedesktop.UPower';
+const UPOWER_OBJECT_PATH = '/org/freedesktop/UPower/devices/DisplayDevice';
+
 export class RendererDBus {
     constructor() {
         const dbusXml = `
@@ -63,5 +68,29 @@ export class RendererDBus {
             null,
             null
         );
+    }
+}
+
+export class UPowerDBus {
+    constructor() {
+        const dbusXml = DBusUtil.loadInterfaceXML('org.freedesktop.UPower.Device');
+        const proxy = Gio.DBusProxy.makeProxyWrapper(dbusXml);
+        this.proxy = proxy(Gio.DBus.system, UPOWER_BUS_NAME, UPOWER_OBJECT_PATH);
+    }
+
+    getProxy() {
+        return this.proxy;
+    }
+
+    connect(signal, callback) {
+        return this.proxy.connectSignal(signal, callback);
+    }
+
+    getState() {
+        return this.proxy.State;
+    }
+
+    getPercentage() {
+        return this.proxy.Percentage;
     }
 }
