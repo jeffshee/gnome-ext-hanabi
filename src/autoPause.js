@@ -26,6 +26,11 @@ import UPower from 'gi://UPowerGlib';
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const logger = new Logger.Logger('autoPause');
 
+const pauseOnBatteryMode = Object.freeze({
+    never: 0,
+    lowBattery: 1,
+    always: 2,
+});
 
 export class AutoPause {
     constructor(extension) {
@@ -33,15 +38,20 @@ export class AutoPause {
         this._playbackState = extension.getPlaybackState();
         this._workspaceManager = null;
         this._activeWorkspace = null;
-        this._states = {
+        this._upower = new DBus.UPowerDBus();
+        this.states = {
             maximizedOnAnyMonitor: false,
             fullscreenOnAnyMonitor: false,
             maximizedOrFullscreenOnAllMonitors: false,
+            onBattery: false,
+            lowBattery: false,
         };
         this.conditions = {
             pauseOnMaximize: this._settings.get_boolean('pause-on-maximize'),
             pauseOnFullscreen: this._settings.get_boolean('pause-on-fullscreen'),
             pauseOnMaximizeOrFullscreenOnAllMonitors: this._settings.get_boolean('pause-on-maximize-fullscreen-all-monitors'),
+            pauseOnBattery: this._settings.get_int('pause-on-battery'),
+            lowBatteryThreshold: this._settings.get_int('low-battery-threshold'),
         };
         // signals ids
         this._windows = [];
@@ -51,21 +61,28 @@ export class AutoPause {
 
         this._settings.connect('changed::pause-on-maximize', () => {
             this.conditions.pauseOnMaximize = this._settings.get_boolean('pause-on-maximize');
-            this.update();
+            this.updateWindowState();
         });
 
         this._settings.connect('changed::pause-on-fullscreen', () => {
             this.conditions.pauseOnFullscreen = this._settings.get_boolean('pause-on-fullscreen');
-            this.update();
+            this.updateWindowState();
         });
 
         this._settings.connect('changed::pause-on-maximize-fullscreen-all-monitors', () => {
             this.conditions.pauseOnMaximizeOrFullscreenOnAllMonitors = this._settings.get_boolean('pause-on-maximize-fullscreen-all-monitors');
-            this.update();
+            this.updateWindowState();
         });
 
-        //
-        this._upower = new DBus.UPowerDBus();
+        this._settings.connect('changed::pause-on-battery', () => {
+            this.conditions.pauseOnBattery = this._settings.get_int('pause-on-battery');
+            this.updateBatteryState();
+        });
+
+        this._settings.connect('changed::low-battery-threshold', () => {
+            this.conditions.lowBatteryThreshold = this._settings.get_int('low-battery-threshold');
+            this.updateBatteryState();
+        });
     }
 
     enable() {
@@ -79,63 +96,20 @@ export class AutoPause {
         this._windowAddedId = this._activeWorkspace.connect('window-added', (_workspace, window) => this._windowAdded(window));
         this._windowRemovedId = this._activeWorkspace.connect('window-removed', (_workspace, window) => this._windowRemoved(window));
 
-        //
-        this._upower.getProxy().connect('g-properties-changed', (_proxy, properties) => this._checkUPower(_proxy, properties));
-        let state = this._upower.getState();
-        let percentage = this._upower.getPercentage();
-        logger.debug(`State ${state}`);
-        logger.debug(`Percentage ${percentage}`);
+        this._upower.getProxy().connect('g-properties-changed', (_proxy, properties) => {
+            let payload = properties.deep_unpack();
+            if (!payload.hasOwnProperty('State') && !payload.hasOwnProperty('Percentage'))
+                return;
+            logger.debug(payload);
+            this.updateBatteryState();
+        });
 
-        // Initial check
-        this.update();
+        // Initial update
+        this.updateWindowState();
+        this.updateBatteryState();
     }
 
-    update() {
-        // All conditions is false, skip update
-        if (Object.values(this.conditions).every(cond => !cond)) {
-            this._playbackState.autoPlay();
-            return;
-        }
-
-        // Filter out renderer windows and minimized windows
-        let metaWindows = this._windows.map(({metaWindow}) => metaWindow).filter(
-            metaWindow => !metaWindow.title?.includes(applicationId) && !metaWindow.minimized
-        );
-
-        const monitors = Main.layoutManager.monitors;
-
-        this._states.maximizedOnAnyMonitor = metaWindows.some(metaWindow => metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH);
-        this._states.fullscreenOnAnyMonitor = metaWindows.some(metaWindow => metaWindow.fullscreen);
-
-        const monitorsWithMaximizedOrFullscreen = metaWindows.reduce((acc, metaWindow) => {
-            if (metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH || metaWindow.fullscreen)
-                acc[metaWindow.get_monitor()] = true;
-            return acc;
-        }, {});
-
-        this._states.maximizedOrFullscreenOnAllMonitors = monitors.every(
-            monitor => monitorsWithMaximizedOrFullscreen[monitor.index]
-        );
-
-        logger.debug(this._states);
-
-        if (this.conditions.pauseOnMaximizeOrFullscreenOnAllMonitors && this._states.maximizedOrFullscreenOnAllMonitors) {
-            this._playbackState.autoPause();
-            return;
-        } else {
-            if (this.conditions.pauseOnMaximize && this._states.maximizedOnAnyMonitor) {
-                this._playbackState.autoPause();
-                return;
-            }
-            if (this.conditions.pauseOnFullscreen && this._states.fullscreenOnAnyMonitor) {
-                this._playbackState.autoPause();
-                return;
-            }
-        }
-        this._playbackState.autoPlay();
-    }
-
-    _windowAdded(metaWindow, update = true) {
+    _windowAdded(metaWindow, doUpdate = true) {
         // Not need to track renderer window
         if (metaWindow.title?.includes(applicationId))
             return;
@@ -144,22 +118,22 @@ export class AutoPause {
         signals.push(
             metaWindow.connect('notify::maximized-horizontally', () => {
                 logger.debug('maximized-horizontally changed');
-                this.update();
+                this.updateWindowState();
             }));
         signals.push(
             metaWindow.connect('notify::maximized-vertically', () => {
                 logger.debug('maximized-vertically changed');
-                this.update();
+                this.updateWindowState();
             }));
         signals.push(
             metaWindow.connect('notify::fullscreen', () => {
                 logger.debug('fullscreen changed');
-                this.update();
+                this.updateWindowState();
             }));
         signals.push(
             metaWindow.connect('notify::minimized', () => {
                 logger.debug('minimized changed');
-                this.update();
+                this.updateWindowState();
             })
         );
         this._windows.push(
@@ -169,8 +143,8 @@ export class AutoPause {
             }
         );
         logger.debug(`Window ${metaWindow.title} added`);
-        if (update)
-            this.update();
+        if (doUpdate)
+            this.updateWindowState();
     }
 
     _windowRemoved(metaWindow) {
@@ -182,7 +156,7 @@ export class AutoPause {
             return true;
         });
         logger.debug(`Window ${metaWindow.title} removed`);
-        this.update();
+        this.updateWindowState();
     }
 
     _activeWorkspaceChanged(workspaceManager) {
@@ -210,33 +184,70 @@ export class AutoPause {
         this._windowAddedId = this._activeWorkspace.connect('window-added', (_workspace, window) => this._windowAdded(window));
         this._windowRemovedId = this._activeWorkspace.connect('window-removed', (_workspace, window) => this._windowRemoved(window));
 
-        this.update();
+        this.updateWindowState();
     }
 
-    _checkUPower(_proxy, properties) {
-        let payload = properties.deep_unpack();
-        if (!payload.hasOwnProperty('State') && !payload.hasOwnProperty('Percentage'))
-            return;
-        logger.debug(payload);
+    updateWindowState() {
+        // Filter out renderer windows and minimized windows
+        let metaWindows = this._windows.map(({metaWindow}) => metaWindow).filter(
+            metaWindow => !metaWindow.title?.includes(applicationId) && !metaWindow.minimized
+        );
 
+        const monitors = Main.layoutManager.monitors;
+
+        this.states.maximizedOnAnyMonitor = metaWindows.some(metaWindow => metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH);
+        this.states.fullscreenOnAnyMonitor = metaWindows.some(metaWindow => metaWindow.fullscreen);
+
+        const monitorsWithMaximizedOrFullscreen = metaWindows.reduce((acc, metaWindow) => {
+            if (metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH || metaWindow.fullscreen)
+                acc[metaWindow.get_monitor()] = true;
+            return acc;
+        }, {});
+
+        this.states.maximizedOrFullscreenOnAllMonitors = monitors.every(
+            monitor => monitorsWithMaximizedOrFullscreen[monitor.index]
+        );
+
+        this._checkConditions();
+    }
+
+    updateBatteryState() {
         let state = this._upower.getState();
         let percentage = this._upower.getPercentage();
         logger.debug(`State ${state}`);
         logger.debug(`Percentage ${percentage}`);
 
-        let onBattery = false;
-        let lowBattery = false;
-        onBattery = state === UPower.DeviceState.PENDING_DISCHARGE || state === UPower.DeviceState.DISCHARGING;
-        lowBattery = percentage <= 25;
+        this.states.onBattery = state === UPower.DeviceState.PENDING_DISCHARGE || state === UPower.DeviceState.DISCHARGING;
+        this.states.lowBattery = this.states.onBattery && percentage <= this.conditions.lowBatteryThreshold;
 
-        if (onBattery) {
-            if (lowBattery)
-                logger.debug('Low Battery');
-            else
-                logger.debug('On Battery');
-        } else {
-            logger.debug('On AC');
+        this._checkConditions();
+    }
+
+    _checkConditions() {
+        logger.debug(this.states);
+
+        if (this.conditions.pauseOnMaximizeOrFullscreenOnAllMonitors && this.states.maximizedOrFullscreenOnAllMonitors) {
+            this._playbackState.autoPause();
+            return;
         }
+        if (this.conditions.pauseOnMaximize && this.states.maximizedOnAnyMonitor) {
+            this._playbackState.autoPause();
+            return;
+        }
+        if (this.conditions.pauseOnFullscreen && this.states.fullscreenOnAnyMonitor) {
+            this._playbackState.autoPause();
+            return;
+        }
+        if (this.conditions.pauseOnBattery === pauseOnBatteryMode.lowBattery && this.states.lowBattery) {
+            this._playbackState.autoPause();
+            return;
+        }
+        if (this.conditions.pauseOnBattery === pauseOnBatteryMode.always && this.states.onBattery) {
+            this._playbackState.autoPause();
+            return;
+        }
+
+        this._playbackState.autoPlay();
     }
 
     disable() {
