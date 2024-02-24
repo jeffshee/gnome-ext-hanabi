@@ -37,10 +37,16 @@
                 monitors in a multi-monitor setup</description>
         </key>
 
-        <key name="pause-on-battery" type="b">
-            <default>false</default>
+        <key name="pause-on-battery" type="i">
+            <default>0</default>
             <summary>Pause on Battery</summary>
-            <description>Pause playback when device is on battery</description>
+            <description>Pause playback when device is on battery or when the battery is low</description>
+        </key>
+
+        <key name="low-battery-threshold" type="i">
+            <default>25</default>
+            <summary></summary>
+            <description></description>
         </key>
 
         <key name="debug-mode" type="b">
