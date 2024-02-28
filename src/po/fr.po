@@ -18,78 +18,86 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 5.1-dev\n"
 
-#: src/prefs.js:49
+#: src/prefs.js:34
 msgid "General"
 msgstr "Général"
 
-#: src/prefs.js:53 src/panelMenu.js:121 src/panelMenu.js:131
+#: src/prefs.js:38 src/panelMenu.js:111 src/panelMenu.js:120
 msgid "Mute Audio"
 msgstr "Muet"
 
-#: src/prefs.js:54
+#: src/prefs.js:39
 msgid "Volume Level"
 msgstr "Volume"
 
-#: src/prefs.js:55
+#: src/prefs.js:40
 msgid "Show Panel Menu"
 msgstr "Afficher le raccourci de configuration"
 
-#: src/prefs.js:58
+#: src/prefs.js:41
+msgid "Change Wallpaper Automatically"
+msgstr ""
+
+#: src/prefs.js:44
+msgid "Change Wallpaper Interval (minutes)"
+msgstr ""
+
+#: src/prefs.js:47
 msgid "Experimental"
 msgstr "Expérimental"
 
-#: src/prefs.js:63
+#: src/prefs.js:53
 msgid "Experimental VA Plugin"
 msgstr "Plugin VA expérimental"
 
-#: src/prefs.js:65
+#: src/prefs.js:55
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
 "Activer le décodeur VA qui améliore les performances pour les utilisateurs "
 "sous Wayland, ayant du matériel Intel/AMD"
 
-#: src/prefs.js:69
+#: src/prefs.js:60
 msgid "NVIDIA Stateless Decoders"
 msgstr "NVIDIA Stateless Decoders"
 
-#: src/prefs.js:71
+#: src/prefs.js:62
 msgid "Use new stateless NVIDIA decoders"
 msgstr "Utiliser le nouveau décodeur NVDIA Stateless"
 
-#: src/prefs.js:74
+#: src/prefs.js:65
 msgid "Developer"
 msgstr "Développeur"
 
-#: src/prefs.js:78
+#: src/prefs.js:70
 msgid "Debug Mode"
 msgstr "Débogage"
 
-#: src/prefs.js:80
+#: src/prefs.js:72
 msgid "Print debug messages to log"
 msgstr "Affiche les messages de débogage dans les logs"
 
-#: src/prefs.js:84
+#: src/prefs.js:77
 msgid "Force gtk4paintablesink"
 msgstr "Forcer gtk4paintablesink"
 
-#: src/prefs.js:86
+#: src/prefs.js:79
 msgid "Force use of gtk4paintablesink for video playback"
 msgstr "Forcer l'utilisation de gtk4paintablesink pour la lecture vidéo"
 
-#: src/prefs.js:90
+#: src/prefs.js:84
 msgid "Force GtkMediaFile"
 msgstr "Forcer GtkMediaFile"
 
-#: src/prefs.js:92
+#: src/prefs.js:86
 msgid "Force use of GtkMediaFile for video playback"
 msgstr "Forcer l'utilisation de GtkMediaFile pour la lecture vidéo"
 
-#: src/prefs.js:94
+#: src/prefs.js:88
 msgid "Startup Delay"
 msgstr "Délai au démarrage"
 
-#: src/prefs.js:94
+#: src/prefs.js:88
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
@@ -97,35 +105,43 @@ msgstr ""
 "Ajouter un délai (en millisecondes) afin d'éviter les problèmes de "
 "compatibilités avec d'autres extensions"
 
-#: src/prefs.js:174
+#: src/prefs.js:175
 msgid "Video Path"
 msgstr "Chemin vers la vidéo"
 
-#: src/prefs.js:180 src/prefs.js:205
+#: src/prefs.js:181 src/prefs.js:206 src/prefs.js:240 src/prefs.js:261
 msgid "None"
 msgstr "None"
 
-#: src/prefs.js:192
+#: src/prefs.js:193
 msgid "Open File"
 msgstr "Ouvrir le fichier"
 
-#: src/prefs.js:197
+#: src/prefs.js:198 src/prefs.js:254
 msgid "Cancel"
 msgstr "Annuler"
 
-#: src/prefs.js:198 src/prefs.js:214
+#: src/prefs.js:199 src/prefs.js:215 src/prefs.js:255 src/prefs.js:270
 msgid "Open"
 msgstr "Ouvrir"
 
-#: src/prefs.js:231
+#: src/prefs.js:234
+msgid "Change Wallpaper Directory Path"
+msgstr ""
+
+#: src/prefs.js:249
+msgid "Select Directory"
+msgstr ""
+
+#: src/prefs.js:289
 msgid "Fit Mode"
 msgstr "Mode de fond d'écran"
 
-#: src/prefs.js:232
+#: src/prefs.js:290
 msgid "Control how wallpaper fits within the monitor"
 msgstr "Gérer l'affichage du fond d'écran dans l'écran"
 
-#: src/prefs.js:233
+#: src/prefs.js:291
 msgid ""
 "\n"
 "    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
@@ -147,38 +163,72 @@ msgstr ""
 "si besoin, sinon garde la taille originale.\n"
 "    "
 
-#: src/prefs.js:241
+#: src/prefs.js:299
 msgid "Fill"
 msgstr "Remplir"
 
-#: src/prefs.js:242
+#: src/prefs.js:300
 msgid "Contain"
 msgstr "Contenir"
 
-#: src/prefs.js:243
+#: src/prefs.js:301
 msgid "Cover"
 msgstr "Couvrir"
 
-#: src/prefs.js:244
+#: src/prefs.js:302
 msgid "Scale-down"
 msgstr "Mise à l'échelle"
 
-#: src/prefs.js:257
+#: src/prefs.js:315
 msgid "This feature requires Gtk 4.8 or above"
 msgstr "Cette fonctionnalité requiet la version 4.0 de Gtk ou supérieure"
 
-#: src/panelMenu.js:92 src/panelMenu.js:112
+#: src/prefs.js:332
+msgid "Change Wallpaper Mode"
+msgstr ""
+
+#: src/prefs.js:333
+msgid "Control how to change wallpapers automatically"
+msgstr ""
+
+#: src/prefs.js:334
+msgid ""
+"\n"
+"    <b>Sequential:</b> Preserve the directory sequence (descending order).\n"
+"    <b>Inverse Sequential:</b> Retrieve wallpapers in the opposite sequence "
+"(ascending order).\n"
+"    <b>Random:</b> Randomly select wallpapers from the directory.\n"
+"    "
+msgstr ""
+
+#: src/prefs.js:341
+msgid "Sequential"
+msgstr ""
+
+#: src/prefs.js:342
+msgid "Inverse Sequential"
+msgstr ""
+
+#: src/prefs.js:343
+msgid "Random"
+msgstr ""
+
+#: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Pause"
 msgstr "Pause"
 
-#: src/panelMenu.js:92 src/panelMenu.js:112
+#: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Play"
 msgstr "Reprendre"
 
-#: src/panelMenu.js:121 src/panelMenu.js:131
+#: src/panelMenu.js:111 src/panelMenu.js:120
 msgid "Unmute Audio"
 msgstr "Activer le son"
 
-#: src/panelMenu.js:139
+#: src/panelMenu.js:128 src/panelMenu.js:136
+msgid "Next Wallpaper"
+msgstr ""
+
+#: src/panelMenu.js:147
 msgid "Preferences"
 msgstr "Paramètres"
