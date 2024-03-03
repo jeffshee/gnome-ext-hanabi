@@ -30,7 +30,7 @@
         </key>
         
         <key name="change-wallpaper-interval" type="i">
-            <range min="0" max="1440" />
+            <range min="1" max="1440" />
             <default>15</default>
             <summary>Change Wallpaper Interval (minutes)</summary>
         </key>

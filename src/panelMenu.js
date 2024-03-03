@@ -52,10 +52,7 @@ const getChangeWallpaper = () => {
  * Set next wallpaper based in directory.
  */
 const setNextWallpaper = () => {
-    let videoExts = ['.mp4', '.webm'];
-    let actualWallpaperFileName = extSettings.get_string('video-path').split("/").pop(); // Get only filename, not path.
-    let changeWallpaperDirectoryPath = extSettings.get_string('change-wallpaper-directory-path');
-    let videoFileNames = [];
+    let videoPaths = [];
     let dir = Gio.File.new_for_path(changeWallpaperDirectoryPath);
     let enumerator = dir.enumerate_children(
         'standard::*',
@@ -66,26 +63,19 @@ const setNextWallpaper = () => {
     // Get files to push into array
     let fileInfo;
     while ((fileInfo = enumerator.next_file(null))) {
-        let fileName = fileInfo.get_name();
-        if (videoExts.some(ext => fileName.toLowerCase().endsWith(ext)))
-            videoFileNames.push(fileName);
+        if (fileInfo.get_content_type().startsWith('video/')) {
+            let file = dir.get_child(fileInfo.get_name());
+            videoPaths.push(file.get_path());
+        }
     }
 
-    videoFileNames = videoFileNames.sort();
-    videoFileNames.map((actualVideoFileName, i) => {
-        if (actualVideoFileName === actualWallpaperFileName) {
-            let videoPath = "";
-
-            if (i + 1 < videoFileNames.length)
-                videoPath = changeWallpaperDirectoryPath + "/" + videoFileNames[i+1];
-            else
-                videoPath = changeWallpaperDirectoryPath + "/" + videoFileNames[0];
-
-            let gsettingsCommand = `gsettings set io.github.jeffshee.hanabi-extension video-path '${videoPath}'`;
-            GLib.spawn_command_line_async(gsettingsCommand);
-            return;
-        }
-    });
+    videoPaths = videoPaths.sort();
+    let currentVideoPath = extSettings.get_string('video-path');
+    let currentIndex = videoPaths.findIndex(videoPath => videoPath === currentVideoPath);
+    let nextIndex = 0;
+    if (currentIndex !== -1)
+        nextIndex = (currentIndex + 1) % videoPaths.length;
+    extSettings.set_string('video-path', videoPaths[nextIndex]);
 };
 
 var HanabiPanelMenu = class HanabiPanelMenu {
@@ -183,23 +173,18 @@ var HanabiPanelMenu = class HanabiPanelMenu {
         menu.addMenuItem(muteAudio);
 
         // Next wallpaper
-        if (getChangeWallpaper()) {
-            menu.addAction(_('Next Wallpaper'), () => {
-                setNextWallpaper();
-            });
-        }
+        const nextWallpaperMenuItem = menu.addAction(_('Next Wallpaper'), () => {
+            setNextWallpaper();
+        });
 
-        extSettings?.connect('changed', (settings, key) => {
-            if (key === 'change-wallpaper') {
-                if (extSettings.get_boolean('change-wallpaper-directory-path')) {
-                    menu.addAction(_('Next Wallpaper'), () => {
-                        setNextWallpaper();
-                    });
-                }
-                else {
-                    menu.removeAction('Next Wallpaper');
-                }
-            }
+        if (!getChangeWallpaper())
+            nextWallpaperMenuItem.hide();
+
+        extSettings?.connect('changed::change-wallpaper', (settings, key) => {
+            if (getChangeWallpaper())
+                nextWallpaperMenuItem.show();
+            else
+                nextWallpaperMenuItem.hide();
         });
 
         // Preferences

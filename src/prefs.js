@@ -56,7 +56,7 @@ function fillPreferencesWindow(window) {
     prefsRowBoolean(generalGroup, _('Change Wallpaper Automatically'), 'change-wallpaper', '');
     prefsRowDirectoryPath(window, generalGroup);
     prefsRowChangeWallpaperMode(generalGroup);
-    prefsRowInt(generalGroup, _('Change Wallpaper Interval (minutes)'), 'change-wallpaper-interval', '', 0, 1440, 5, 0);
+    prefsRowInt(generalGroup, _('Change Wallpaper Interval (minutes)'), 'change-wallpaper-interval', '', 1, 1440, 5, 0);
 
     const experimentalGroup = new Adw.PreferencesGroup({
         title: _('Experimental'),
