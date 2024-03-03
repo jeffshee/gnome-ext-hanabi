@@ -551,52 +551,45 @@ const HanabiRenderer = GObject.registerClass(
         }
 
         setAutoWallpaper() {
-            let videoExts = ['.mp4', '.webm'];
             let currentIndex = 0; // Index to keep track of the current video
+            let videoPaths = [];
+            let dir = Gio.File.new_for_path(changeWallpaperDirectoryPath);
+            let enumerator = dir.enumerate_children(
+                'standard::*',
+                Gio.FileQueryInfoFlags.NONE,
+                null
+            );
 
-            function getVideoPaths() {
-                let videoPaths = [];
-                let dir = Gio.File.new_for_path(changeWallpaperDirectoryPath);
-
-                let enumerator = dir.enumerate_children(
-                    'standard::*',
-                    Gio.FileQueryInfoFlags.NONE,
-                    null
-                );
-
-                let fileInfo;
-                while ((fileInfo = enumerator.next_file(null))) {
-                    let fileName = fileInfo.get_name();
-                    if (videoExts.some(ext => fileName.toLowerCase().endsWith(ext))) {
-                        let filePath = changeWallpaperDirectoryPath + '/' + fileName;
-                        videoPaths.push(filePath);
-                    }
+            // Get files to push into array
+            let fileInfo;
+            while ((fileInfo = enumerator.next_file(null))) {
+                if (fileInfo.get_content_type().startsWith('video/')) {
+                    let file = dir.get_child(fileInfo.get_name());
+                    videoPaths.push(file.get_path());
                 }
-
-                return videoPaths.sort();
             }
 
-            function setGSettings(videoPath) {
-                let gsettingsCommand = `gsettings set io.github.jeffshee.hanabi-extension video-path '${videoPath}'`;
-                GLib.spawn_command_line_async(gsettingsCommand);
-            }
+            videoPaths = videoPaths.sort();
 
+            /**
+             *
+             * @param actualIndex
+             * @param videosLength
+             */
             function getRandomIndex(actualIndex, videosLength) {
                 if (videosLength <= 1)
                     return actualIndex;
 
                 let newIndex;
-                do {
+                do
                     newIndex = Math.floor(Math.random() * videosLength);
-                } while (newIndex === actualIndex);
+                while (newIndex === actualIndex);
                 return newIndex;
             }
-
+            
             function mainLoop() {
-                let videoPaths = getVideoPaths();
                 if (videoPaths.length > 0 && changeWallpaper) {
-                    let videoPath = videoPaths[currentIndex];
-                    setGSettings(videoPath);
+                    extSettings.set_string('video-path', videoPaths[currentIndex]);
 
                     if (changeWallpaperMode === 0)
                         currentIndex = (currentIndex + 1) % videoPaths.length;
