@@ -122,7 +122,7 @@ export class HanabiPanelMenu {
         });
 
         menu.addMenuItem(muteAudio);
-        
+
         // Next wallpaper
         const nextWallpaperMenuItem = menu.addAction(_('Next Wallpaper'), () => {
             this._setNextWallpaper();
@@ -156,16 +156,20 @@ export class HanabiPanelMenu {
 
     _getChangeWallpaper = () => {
         return this._settings.get_boolean('change-wallpaper');
-    }
+    };
 
     /**
-     * 
+     *
      * Set next wallpaper based in directory.
      */
     _setNextWallpaper = () => {
         let changeWallpaperDirectoryPath = this._settings.get_string('change-wallpaper-directory-path');
         let videoPaths = [];
         let dir = Gio.File.new_for_path(changeWallpaperDirectoryPath);
+        // Check if dir exists and is a directory
+        if (dir.query_file_type(Gio.FileQueryInfoFlags.NONE, null) !== Gio.FileType.DIRECTORY)
+            return;
+
         let enumerator = dir.enumerate_children(
             'standard::*',
             Gio.FileQueryInfoFlags.NONE,
