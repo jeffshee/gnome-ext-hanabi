@@ -55,6 +55,10 @@ const setNextWallpaper = () => {
     let changeWallpaperDirectoryPath = extSettings.get_string('change-wallpaper-directory-path');
     let videoPaths = [];
     let dir = Gio.File.new_for_path(changeWallpaperDirectoryPath);
+    // Check if dir exists and is a directory
+    if (dir.query_file_type(Gio.FileQueryInfoFlags.NONE, null) !== Gio.FileType.DIRECTORY)
+        return;
+
     let enumerator = dir.enumerate_children(
         'standard::*',
         Gio.FileQueryInfoFlags.NONE,
@@ -181,7 +185,7 @@ var HanabiPanelMenu = class HanabiPanelMenu {
         if (!getChangeWallpaper())
             nextWallpaperMenuItem.hide();
 
-        extSettings?.connect('changed::change-wallpaper', (settings, key) => {
+        extSettings?.connect('changed::change-wallpaper', () => {
             if (getChangeWallpaper())
                 nextWallpaperMenuItem.show();
             else

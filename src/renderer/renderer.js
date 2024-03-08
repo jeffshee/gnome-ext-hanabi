@@ -553,6 +553,10 @@ const HanabiRenderer = GObject.registerClass(
             let currentIndex = 0; // Index to keep track of the current video
             let videoPaths = [];
             let dir = Gio.File.new_for_path(changeWallpaperDirectoryPath);
+            // Check if dir exists and is a directory
+            if (dir.query_file_type(Gio.FileQueryInfoFlags.NONE, null) !== Gio.FileType.DIRECTORY)
+                return;
+
             let enumerator = dir.enumerate_children(
                 'standard::*',
                 Gio.FileQueryInfoFlags.NONE,
