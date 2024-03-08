@@ -48,10 +48,11 @@ const getChangeWallpaper = () => {
 };
 
 /**
- * 
+ *
  * Set next wallpaper based in directory.
  */
 const setNextWallpaper = () => {
+    let changeWallpaperDirectoryPath = extSettings.get_string('change-wallpaper-directory-path');
     let videoPaths = [];
     let dir = Gio.File.new_for_path(changeWallpaperDirectoryPath);
     let enumerator = dir.enumerate_children(
