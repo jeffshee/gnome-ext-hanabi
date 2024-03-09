@@ -65,6 +65,7 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
             _('Pause playback when there are maximized or fullscreen windows on all monitors in a multi-monitor setup')
         );
         prefsRowPauseOnBattery(window, autoPause);
+        prefsRowInt(window, autoPause, _('Low Battery Threshold'), 'low-battery-threshold', _('Set the threshold percentage for low battery level'), 0, 100, 5, 10);
 
         const experimentalGroup = new Adw.PreferencesGroup({
             title: _('Experimental'),
