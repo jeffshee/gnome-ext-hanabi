@@ -9,8 +9,8 @@ msgstr ""
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
 "PO-Revision-Date: 2024-01-07 14:06+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
-"Language-Team: Portuguese <https://hosted.weblate.org/projects/"
-"gnome-ext-hanabi/gnome-ext-hanabi/pt/>\n"
+"Language-Team: Portuguese <https://hosted.weblate.org/projects/gnome-ext-"
+"hanabi/gnome-ext-hanabi/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,78 +18,86 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 5.4-dev\n"
 
-#: src/prefs.js:49
+#: src/prefs.js:34
 msgid "General"
 msgstr "Geral"
 
-#: src/prefs.js:53 src/panelMenu.js:121 src/panelMenu.js:131
+#: src/prefs.js:38 src/panelMenu.js:111 src/panelMenu.js:120
 msgid "Mute Audio"
 msgstr "Desligar Som"
 
-#: src/prefs.js:54
+#: src/prefs.js:39
 msgid "Volume Level"
 msgstr "Volume do Som"
 
-#: src/prefs.js:55
+#: src/prefs.js:40
 msgid "Show Panel Menu"
 msgstr "Mostrar Menu de Painel"
 
-#: src/prefs.js:58
+#: src/prefs.js:41
+msgid "Change Wallpaper Automatically"
+msgstr ""
+
+#: src/prefs.js:44
+msgid "Change Wallpaper Interval (minutes)"
+msgstr ""
+
+#: src/prefs.js:47
 msgid "Experimental"
 msgstr "Opções Experimentais"
 
-#: src/prefs.js:63
+#: src/prefs.js:53
 msgid "Experimental VA Plugin"
 msgstr "Plugin VA Experimental"
 
-#: src/prefs.js:65
+#: src/prefs.js:55
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
 "Ativar decodificadores VA que melhoram o desempenho para utilizadores de "
 "Wayland com Intel/AMD"
 
-#: src/prefs.js:69
+#: src/prefs.js:60
 msgid "NVIDIA Stateless Decoders"
 msgstr "Decodificadores sem estado da NVIDIA"
 
-#: src/prefs.js:71
+#: src/prefs.js:62
 msgid "Use new stateless NVIDIA decoders"
 msgstr "Utilizar os novos decodificadores sem estado da NVIDIA"
 
-#: src/prefs.js:74
+#: src/prefs.js:65
 msgid "Developer"
 msgstr "Opções para Programadores"
 
-#: src/prefs.js:78
+#: src/prefs.js:70
 msgid "Debug Mode"
 msgstr "Modo de Depuração"
 
-#: src/prefs.js:80
+#: src/prefs.js:72
 msgid "Print debug messages to log"
 msgstr "Enviar mensagens de depuração ao registo (Debug)"
 
-#: src/prefs.js:84
+#: src/prefs.js:77
 msgid "Force gtk4paintablesink"
 msgstr "Forçar gtk4paintablesink"
 
-#: src/prefs.js:86
+#: src/prefs.js:79
 msgid "Force use of gtk4paintablesink for video playback"
 msgstr "Forçar o uso do gtk4paintablesink para a reprodução dos vídeos"
 
-#: src/prefs.js:90
+#: src/prefs.js:84
 msgid "Force GtkMediaFile"
 msgstr "Forçar GtkMediaFile"
 
-#: src/prefs.js:92
+#: src/prefs.js:86
 msgid "Force use of GtkMediaFile for video playback"
 msgstr "Forçar o uso do GtkMediaFile para a reprodução dos vídeos"
 
-#: src/prefs.js:94
+#: src/prefs.js:88
 msgid "Startup Delay"
 msgstr "Atraso de inicialização"
 
-#: src/prefs.js:94
+#: src/prefs.js:88
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
@@ -97,35 +105,43 @@ msgstr ""
 "Adicionar atraso de inicialização (em milissegundos) para impedir problemas "
 "com outras extensões"
 
-#: src/prefs.js:174
+#: src/prefs.js:175
 msgid "Video Path"
 msgstr "Localização do Vídeo"
 
-#: src/prefs.js:180 src/prefs.js:205
+#: src/prefs.js:181 src/prefs.js:206 src/prefs.js:240 src/prefs.js:261
 msgid "None"
 msgstr "Nenhum"
 
-#: src/prefs.js:192
+#: src/prefs.js:193
 msgid "Open File"
 msgstr "Abrir Ficheiro"
 
-#: src/prefs.js:197
+#: src/prefs.js:198 src/prefs.js:254
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/prefs.js:198 src/prefs.js:214
+#: src/prefs.js:199 src/prefs.js:215 src/prefs.js:255 src/prefs.js:270
 msgid "Open"
 msgstr "Abrir"
 
-#: src/prefs.js:231
+#: src/prefs.js:234
+msgid "Change Wallpaper Directory Path"
+msgstr ""
+
+#: src/prefs.js:249
+msgid "Select Directory"
+msgstr ""
+
+#: src/prefs.js:289
 msgid "Fit Mode"
 msgstr "Ajuste do Papel de Parede"
 
-#: src/prefs.js:232
+#: src/prefs.js:290
 msgid "Control how wallpaper fits within the monitor"
 msgstr "Modificar como o papel de parede se ajusta no seu monitor"
 
-#: src/prefs.js:233
+#: src/prefs.js:291
 msgid ""
 "\n"
 "    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
@@ -148,38 +164,72 @@ msgstr ""
 "para caber no monitor.\n"
 "    "
 
-#: src/prefs.js:241
+#: src/prefs.js:299
 msgid "Fill"
 msgstr "Preencher"
 
-#: src/prefs.js:242
+#: src/prefs.js:300
 msgid "Contain"
 msgstr "Conter"
 
-#: src/prefs.js:243
+#: src/prefs.js:301
 msgid "Cover"
 msgstr "Cobrir"
 
-#: src/prefs.js:244
+#: src/prefs.js:302
 msgid "Scale-down"
 msgstr "Diminuir"
 
-#: src/prefs.js:257
+#: src/prefs.js:315
 msgid "This feature requires Gtk 4.8 or above"
 msgstr "Essa funcionalidade precisa de GTK 4.8 ou alguma versão superior"
 
-#: src/panelMenu.js:92 src/panelMenu.js:112
+#: src/prefs.js:332
+msgid "Change Wallpaper Mode"
+msgstr ""
+
+#: src/prefs.js:333
+msgid "Control how to change wallpapers automatically"
+msgstr ""
+
+#: src/prefs.js:334
+msgid ""
+"\n"
+"    <b>Sequential:</b> Preserve the directory sequence (descending order).\n"
+"    <b>Inverse Sequential:</b> Retrieve wallpapers in the opposite sequence "
+"(ascending order).\n"
+"    <b>Random:</b> Randomly select wallpapers from the directory.\n"
+"    "
+msgstr ""
+
+#: src/prefs.js:341
+msgid "Sequential"
+msgstr ""
+
+#: src/prefs.js:342
+msgid "Inverse Sequential"
+msgstr ""
+
+#: src/prefs.js:343
+msgid "Random"
+msgstr ""
+
+#: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Pause"
 msgstr "Pausar"
 
-#: src/panelMenu.js:92 src/panelMenu.js:112
+#: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Play"
 msgstr "Reproduzir"
 
-#: src/panelMenu.js:121 src/panelMenu.js:131
+#: src/panelMenu.js:111 src/panelMenu.js:120
 msgid "Unmute Audio"
 msgstr "Ligar Som"
 
-#: src/panelMenu.js:139
+#: src/panelMenu.js:128 src/panelMenu.js:136
+msgid "Next Wallpaper"
+msgstr ""
+
+#: src/panelMenu.js:147
 msgid "Preferences"
 msgstr "Preferências"

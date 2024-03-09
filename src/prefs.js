@@ -38,6 +38,10 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
         prefsRowBoolean(window, generalGroup, _('Mute Audio'), 'mute', '');
         prefsRowInt(window, generalGroup, _('Volume Level'), 'volume', '', 0, 100, 1, 10);
         prefsRowBoolean(window, generalGroup, _('Show Panel Menu'), 'show-panel-menu', '');
+        prefsRowBoolean(window, generalGroup, _('Change Wallpaper Automatically'), 'change-wallpaper', '');
+        prefsRowDirectoryPath(window, generalGroup);
+        prefsRowChangeWallpaperMode(window, generalGroup);
+        prefsRowInt(window, generalGroup, _('Change Wallpaper Interval (minutes)'), 'change-wallpaper-interval', '', 1, 1440, 5, 0);
 
         const experimentalGroup = new Adw.PreferencesGroup({
             title: _('Experimental'),
@@ -225,6 +229,61 @@ function prefsRowVideoPath(window, prefsGroup) {
  * @param {Adw.PreferencesWindow} window AdwPreferencesWindow
  * @param {Adw.PreferencesGroup} prefsGroup AdwPreferencesGroup
  */
+function prefsRowDirectoryPath(window, prefsGroup) {
+    const settings = window._settings;
+    const title = _('Change Wallpaper Directory Path');
+    const key = 'change-wallpaper-directory-path';
+
+    let path = settings.get_string(key);
+    const row = new Adw.ActionRow({
+        title,
+        subtitle: `${path !== '' ? path : _('None')}`,
+    });
+    prefsGroup.add(row);
+
+    /**
+     *
+     */
+    function createDialog() {
+        let fileChooser = new Gtk.FileChooserDialog({
+            title: _('Select Directory'),
+            action: Gtk.FileChooserAction.SELECT_FOLDER,
+        });
+        fileChooser.set_modal(true);
+        fileChooser.set_transient_for(window);
+        fileChooser.add_button(_('Cancel'), Gtk.ResponseType.CANCEL);
+        fileChooser.add_button(_('Open'), Gtk.ResponseType.ACCEPT);
+
+        fileChooser.connect('response', (dialog, responseId) => {
+            if (responseId === Gtk.ResponseType.ACCEPT) {
+                let _path = dialog.get_file().get_path();
+                settings.set_string(key, _path);
+                row.subtitle = `${_path !== '' ? _path : _('None')}`;
+            }
+            dialog.destroy();
+        });
+        return fileChooser;
+    }
+
+    let button = new Adw.ButtonContent({
+        icon_name: 'document-open-symbolic',
+        label: _('Open'),
+    });
+
+    row.activatable_widget = button;
+    row.add_suffix(button);
+
+    row.connect('activated', () => {
+        let dialog = createDialog();
+        dialog.show();
+    });
+}
+
+/**
+ *
+ * @param {Adw.PreferencesWindow} window AdwPreferencesWindow
+ * @param {Adw.PreferencesGroup} prefsGroup AdwPreferencesGroup
+ */
 function prefsRowFitMode(window, prefsGroup) {
     const settings = window._settings;
     const title = _('Fit Mode');
@@ -260,5 +319,40 @@ function prefsRowFitMode(window, prefsGroup) {
 
     row.connect('notify::selected', () => {
         settings.set_int('content-fit', row.selected);
+    });
+}
+
+/**
+ *
+ * @param {Adw.PreferencesWindow} window AdwPreferencesWindow
+ * @param {Adw.PreferencesGroup} prefsGroup AdwPreferencesGroup
+ */
+function prefsRowChangeWallpaperMode(window, prefsGroup) {
+    const settings = window._settings;
+    const title = _('Change Wallpaper Mode');
+    const subtitle = _('Control how to change wallpapers automatically');
+    const tooltip = _(`
+    <b>Sequential:</b> Preserve the directory sequence (descending order).
+    <b>Inverse Sequential:</b> Retrieve wallpapers in the opposite sequence (ascending order).
+    <b>Random:</b> Randomly select wallpapers from the directory.
+    `);
+
+    const items = Gtk.StringList.new([
+        _('Sequential'),
+        _('Inverse Sequential'),
+        _('Random'),
+    ]);
+
+    const row = new Adw.ComboRow({
+        title,
+        subtitle,
+        model: items,
+        selected: settings.get_int('change-wallpaper-mode'),
+    });
+    row.set_tooltip_markup(tooltip);
+    prefsGroup.add(row);
+
+    row.connect('notify::selected', () => {
+        settings.set_int('change-wallpaper-mode', row.selected);
     });
 }

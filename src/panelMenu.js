@@ -123,6 +123,21 @@ export class HanabiPanelMenu {
 
         menu.addMenuItem(muteAudio);
 
+        // Next wallpaper
+        const nextWallpaperMenuItem = menu.addAction(_('Next Wallpaper'), () => {
+            this._setNextWallpaper();
+        });
+
+        if (!this._getChangeWallpaper())
+            nextWallpaperMenuItem.hide();
+
+        this._settings.connect('changed::change-wallpaper', () => {
+            if (this._getChangeWallpaper())
+                nextWallpaperMenuItem.show();
+            else
+                nextWallpaperMenuItem.hide();
+        });
+
         // Preferences
         menu.addAction(_('Preferences'), () => {
             this._extension.openPreferences();
@@ -139,6 +154,45 @@ export class HanabiPanelMenu {
         return this._settings.set_boolean('mute', mute);
     }
 
+    _getChangeWallpaper = () => {
+        return this._settings.get_boolean('change-wallpaper');
+    };
+
+    /**
+     *
+     * Set next wallpaper based in directory.
+     */
+    _setNextWallpaper = () => {
+        let changeWallpaperDirectoryPath = this._settings.get_string('change-wallpaper-directory-path');
+        let videoPaths = [];
+        let dir = Gio.File.new_for_path(changeWallpaperDirectoryPath);
+        // Check if dir exists and is a directory
+        if (dir.query_file_type(Gio.FileQueryInfoFlags.NONE, null) !== Gio.FileType.DIRECTORY)
+            return;
+
+        let enumerator = dir.enumerate_children(
+            'standard::*',
+            Gio.FileQueryInfoFlags.NONE,
+            null
+        );
+
+        // Get files to push into array
+        let fileInfo;
+        while ((fileInfo = enumerator.next_file(null))) {
+            if (fileInfo.get_content_type().startsWith('video/')) {
+                let file = dir.get_child(fileInfo.get_name());
+                videoPaths.push(file.get_path());
+            }
+        }
+
+        videoPaths = videoPaths.sort();
+        let currentVideoPath = this._settings.get_string('video-path');
+        let currentIndex = videoPaths.findIndex(videoPath => videoPath === currentVideoPath);
+        let nextIndex = 0;
+        if (currentIndex !== -1)
+            nextIndex = (currentIndex + 1) % videoPaths.length;
+        this._settings.set_string('video-path', videoPaths[nextIndex]);
+    };
 
     disable() {
         if (!this.isEnabled)

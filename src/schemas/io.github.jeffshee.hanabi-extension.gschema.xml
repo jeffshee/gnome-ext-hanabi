@@ -18,6 +18,30 @@
             <summary>Volume Level</summary>
         </key>
 
+        <key name="change-wallpaper" type="b">
+            <default>false</default>
+            <summary>Change Wallpaper</summary>
+        </key>
+
+        <key name="change-wallpaper-directory-path" type="s">
+            <default>''</default>
+            <summary>Change Wallpaper Directory Path</summary>
+            <description>Change Wallpaper Directory Path</description>
+        </key>
+
+        <key name="change-wallpaper-interval" type="i">
+            <range min="1" max="1440" />
+            <default>15</default>
+            <summary>Change Wallpaper Interval (minutes)</summary>
+        </key>
+
+        <key name="change-wallpaper-mode" type="i">
+            <range min="0" max="3" />
+            <default>1</default>
+            <summary>Change Wallpaper Mode</summary>
+            <description>Control how to change wallpapers automatically</description>
+        </key>
+
         <key name="pause-on-fullscreen" type="b">
             <default>false</default>
             <summary>Pause on Fullscreen</summary>
