@@ -43,6 +43,46 @@ const setMute = mute => {
     return extSettings.set_boolean('mute', mute);
 };
 
+const getChangeWallpaper = () => {
+    return extSettings.get_boolean('change-wallpaper');
+};
+
+/**
+ *
+ * Set next wallpaper based in directory.
+ */
+const setNextWallpaper = () => {
+    let changeWallpaperDirectoryPath = extSettings.get_string('change-wallpaper-directory-path');
+    let videoPaths = [];
+    let dir = Gio.File.new_for_path(changeWallpaperDirectoryPath);
+    // Check if dir exists and is a directory
+    if (dir.query_file_type(Gio.FileQueryInfoFlags.NONE, null) !== Gio.FileType.DIRECTORY)
+        return;
+
+    let enumerator = dir.enumerate_children(
+        'standard::*',
+        Gio.FileQueryInfoFlags.NONE,
+        null
+    );
+
+    // Get files to push into array
+    let fileInfo;
+    while ((fileInfo = enumerator.next_file(null))) {
+        if (fileInfo.get_content_type().startsWith('video/')) {
+            let file = dir.get_child(fileInfo.get_name());
+            videoPaths.push(file.get_path());
+        }
+    }
+
+    videoPaths = videoPaths.sort();
+    let currentVideoPath = extSettings.get_string('video-path');
+    let currentIndex = videoPaths.findIndex(videoPath => videoPath === currentVideoPath);
+    let nextIndex = 0;
+    if (currentIndex !== -1)
+        nextIndex = (currentIndex + 1) % videoPaths.length;
+    extSettings.set_string('video-path', videoPaths[nextIndex]);
+};
+
 var HanabiPanelMenu = class HanabiPanelMenu {
     constructor() {
         this._isPlaying = false;
@@ -136,6 +176,21 @@ var HanabiPanelMenu = class HanabiPanelMenu {
         });
 
         menu.addMenuItem(muteAudio);
+
+        // Next wallpaper
+        const nextWallpaperMenuItem = menu.addAction(_('Next Wallpaper'), () => {
+            setNextWallpaper();
+        });
+
+        if (!getChangeWallpaper())
+            nextWallpaperMenuItem.hide();
+
+        extSettings?.connect('changed::change-wallpaper', () => {
+            if (getChangeWallpaper())
+                nextWallpaperMenuItem.show();
+            else
+                nextWallpaperMenuItem.hide();
+        });
 
         // Preferences
         menu.addAction(_('Preferences'), () => {
