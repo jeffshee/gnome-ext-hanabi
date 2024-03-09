@@ -64,6 +64,7 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
             'pause-on-maximize-fullscreen-all-monitors',
             _('Pause playback when there are maximized or fullscreen windows on all monitors in a multi-monitor setup')
         );
+        prefsRowPauseOnBattery(window, autoPause);
 
         const experimentalGroup = new Adw.PreferencesGroup({
             title: _('Experimental'),
@@ -286,5 +287,41 @@ function prefsRowFitMode(window, prefsGroup) {
 
     row.connect('notify::selected', () => {
         settings.set_int('content-fit', row.selected);
+    });
+}
+
+/**
+ *
+ * @param window
+ * @param prefsGroup
+ */
+function prefsRowPauseOnBattery(window, prefsGroup) {
+    const settings = window._settings;
+    const title = _('Pause on Battery');
+    const subtitle = _('Pause playback when the device is on battery or the battery is low');
+    const tooltip = _(`
+    <b>Never</b>: Disable this feature.
+    <b>Low Battery</b>: Pause playback when the device is on low battery (below the threshold).
+    <b>Always</b>: Pause playback when the device is on battery.
+    `);
+
+    const items = Gtk.StringList.new([
+        _('Never'),
+        _('Low Battery'),
+        _('Always'),
+    ]);
+
+    const row = new Adw.ComboRow({
+        title,
+        subtitle,
+        model: items,
+        selected: settings.get_int('pause-on-battery'),
+    });
+
+    row.set_tooltip_markup(tooltip);
+    prefsGroup.add(row);
+
+    row.connect('notify::selected', () => {
+        settings.set_int('pause-on-battery', row.selected);
     });
 }
