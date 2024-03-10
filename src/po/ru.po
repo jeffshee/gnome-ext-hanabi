@@ -3,22 +3,23 @@
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # gfbdrgng <hnaofegnp@hldrive.com>, 2023.
 # "Артём Чичваров (Džeremi)" <chichvarov1315@gmail.com>, 2023.
+# Džeremi <chichvarov1315@users.noreply.hosted.weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: 2023-12-20 17:08+0000\n"
-"Last-Translator: \"Артём Чичваров (Džeremi)\" <chichvarov1315@gmail.com>\n"
+"PO-Revision-Date: 2024-03-11 12:01+0000\n"
+"Last-Translator: Džeremi <chichvarov1315@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.3\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: src/prefs.js:34
 msgid "General"
@@ -38,11 +39,11 @@ msgstr "Показывать индикатор в панели состояни
 
 #: src/prefs.js:41
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "Менять обои автоматически"
 
 #: src/prefs.js:44
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "Изменить интервал смены обоев(в минутах)"
 
 #: src/prefs.js:47
 msgid "Experimental"
@@ -130,11 +131,11 @@ msgstr "Открыть"
 
 #: src/prefs.js:234
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "Изменить путь до директории с обоями"
 
 #: src/prefs.js:249
 msgid "Select Directory"
-msgstr ""
+msgstr "Выбрать директорию"
 
 #: src/prefs.js:289
 msgid "Fit Mode"
@@ -188,11 +189,11 @@ msgstr "Эта функция требует Gtk 4.8 или выше"
 
 #: src/prefs.js:332
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "Изменить режим смены обоев"
 
 #: src/prefs.js:333
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "Способ, которым обои будут сменяться автоматически"
 
 #: src/prefs.js:334
 msgid ""
@@ -206,15 +207,15 @@ msgstr ""
 
 #: src/prefs.js:341
 msgid "Sequential"
-msgstr ""
+msgstr "Последовательно"
 
 #: src/prefs.js:342
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "Обратная последовательность"
 
 #: src/prefs.js:343
 msgid "Random"
-msgstr ""
+msgstr "Случайный"
 
 #: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Pause"
@@ -230,7 +231,7 @@ msgstr "Включить звук"
 
 #: src/panelMenu.js:128 src/panelMenu.js:136
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "Следующие обои"
 
 #: src/panelMenu.js:147
 msgid "Preferences"
