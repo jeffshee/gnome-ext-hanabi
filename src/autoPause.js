@@ -26,6 +26,12 @@ import UPower from 'gi://UPowerGlib';
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const logger = new Logger.Logger('autoPause');
 
+const pauseOnMaximizeOrFullscreenMode = Object.freeze({
+    never: 0,
+    anyMonitor: 1,
+    allMonitors: 2,
+});
+
 const pauseOnBatteryMode = Object.freeze({
     never: 0,
     lowBattery: 1,
@@ -40,16 +46,13 @@ export class AutoPause {
         this._activeWorkspace = null;
         this._upower = new DBus.UPowerDBus();
         this.states = {
-            maximizedOnAnyMonitor: false,
-            fullscreenOnAnyMonitor: false,
+            maximizedOrFullscreenOnAnyMonitor: false,
             maximizedOrFullscreenOnAllMonitors: false,
             onBattery: false,
             lowBattery: false,
         };
         this.conditions = {
-            pauseOnMaximize: this._settings.get_boolean('pause-on-maximize'),
-            pauseOnFullscreen: this._settings.get_boolean('pause-on-fullscreen'),
-            pauseOnMaximizeOrFullscreenOnAllMonitors: this._settings.get_boolean('pause-on-maximize-fullscreen-all-monitors'),
+            pauseOnMaximizeOrFullscreen: this._settings.get_int('pause-on-mazimize-or-fullscreen'),
             pauseOnBattery: this._settings.get_int('pause-on-battery'),
             lowBatteryThreshold: this._settings.get_int('low-battery-threshold'),
         };
@@ -59,18 +62,8 @@ export class AutoPause {
         this._windowRemovedId = null;
         this._activeWorkspaceChangedId = null;
 
-        this._settings.connect('changed::pause-on-maximize', () => {
-            this.conditions.pauseOnMaximize = this._settings.get_boolean('pause-on-maximize');
-            this.updateWindowState();
-        });
-
-        this._settings.connect('changed::pause-on-fullscreen', () => {
-            this.conditions.pauseOnFullscreen = this._settings.get_boolean('pause-on-fullscreen');
-            this.updateWindowState();
-        });
-
-        this._settings.connect('changed::pause-on-maximize-fullscreen-all-monitors', () => {
-            this.conditions.pauseOnMaximizeOrFullscreenOnAllMonitors = this._settings.get_boolean('pause-on-maximize-fullscreen-all-monitors');
+        this._settings.connect('changed::pause-on-mazimize-or-fullscreen', () => {
+            this.conditions.pauseOnMaximizeOrFullscreen = this._settings.get_int('pause-on-mazimize-or-fullscreen');
             this.updateWindowState();
         });
 
@@ -195,8 +188,8 @@ export class AutoPause {
 
         const monitors = Main.layoutManager.monitors;
 
-        this.states.maximizedOnAnyMonitor = metaWindows.some(metaWindow => metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH);
-        this.states.fullscreenOnAnyMonitor = metaWindows.some(metaWindow => metaWindow.fullscreen);
+        this.states.maximizedOrFullscreenOnAnyMonitor = metaWindows.some(metaWindow =>
+            metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH || metaWindow.fullscreen);
 
         const monitorsWithMaximizedOrFullscreen = metaWindows.reduce((acc, metaWindow) => {
             if (metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH || metaWindow.fullscreen)
@@ -226,15 +219,13 @@ export class AutoPause {
     _checkConditions() {
         logger.debug(this.states);
 
-        if (this.conditions.pauseOnMaximizeOrFullscreenOnAllMonitors && this.states.maximizedOrFullscreenOnAllMonitors) {
+        if (this.conditions.pauseOnMaximizeOrFullscreen === pauseOnMaximizeOrFullscreenMode.anyMonitor &&
+            this.states.maximizedOrFullscreenOnAnyMonitor) {
             this._playbackState.autoPause();
             return;
         }
-        if (this.conditions.pauseOnMaximize && this.states.maximizedOnAnyMonitor) {
-            this._playbackState.autoPause();
-            return;
-        }
-        if (this.conditions.pauseOnFullscreen && this.states.fullscreenOnAnyMonitor) {
+        if (this.conditions.pauseOnMaximizeOrFullscreen === pauseOnMaximizeOrFullscreenMode.allMonitors &&
+            this.states.maximizedOrFullscreenOnAllMonitors) {
             this._playbackState.autoPause();
             return;
         }
