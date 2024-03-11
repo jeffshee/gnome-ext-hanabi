@@ -20,23 +20,11 @@
             <description>Set the volume level for audio playback</description>
         </key>
 
-        <key name="pause-on-maximize" type="b">
-            <default>false</default>
-            <summary>Pause on Maximize</summary>
-            <description>Pause playback when a window is maximized</description>
-        </key>
-
-        <key name="pause-on-fullscreen" type="b">
-            <default>false</default>
-            <summary>Pause on Fullscreen</summary>
-            <description>Pause playback when a window is in fullscreen mode</description>
-        </key>
-
-        <key name="pause-on-maximize-fullscreen-all-monitors" type="b">
-            <default>false</default>
-            <summary>Pause on Maximize/Fullscreen</summary>
-            <description>Pause playback when there are maximized or fullscreen windows on all
-                monitors</description>
+        <key name="pause-on-mazimize-or-fullscreen" type="i">
+            <range min="0" max="2" />
+            <default>0</default>
+            <summary>Pause on Maximize or Fullscreen</summary>
+            <description>Pause playback when there is maximized or fullscreen window</description>
         </key>
 
         <key name="pause-on-battery" type="i">

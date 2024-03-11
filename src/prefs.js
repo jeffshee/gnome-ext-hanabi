@@ -43,27 +43,7 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
             title: _('Auto Pause'),
         });
         page.add(autoPause);
-        prefsRowBoolean(
-            window,
-            autoPause,
-            _('Pause on Maximize'),
-            'pause-on-maximize',
-            _('Pause playback when there is a maximized window')
-        );
-        prefsRowBoolean(
-            window,
-            autoPause,
-            _('Pause on Fullscreen'),
-            'pause-on-fullscreen',
-            _('Pause playback when there is a fullscreen window')
-        );
-        prefsRowBoolean(
-            window,
-            autoPause,
-            _('Pause on Maximize or Fullscreen on All Monitors'),
-            'pause-on-maximize-fullscreen-all-monitors',
-            _('Pause playback when there are maximized or fullscreen windows on all monitors in a multi-monitor setup')
-        );
+        prefsRowPauseOnMaximizeOrFullscreen(window, autoPause);
         prefsRowPauseOnBattery(window, autoPause);
         prefsRowInt(window, autoPause, _('Low Battery Threshold'), 'low-battery-threshold', _('Set the threshold percentage for low battery level'), 0, 100, 5, 10);
 
@@ -288,6 +268,42 @@ function prefsRowFitMode(window, prefsGroup) {
 
     row.connect('notify::selected', () => {
         settings.set_int('content-fit', row.selected);
+    });
+}
+
+/**
+ *
+ * @param window
+ * @param prefsGroup
+ */
+function prefsRowPauseOnMaximizeOrFullscreen(window, prefsGroup) {
+    const settings = window._settings;
+    const title = _('Pause on Maximize or Fullscreen');
+    const subtitle = _('Pause playback when there is maximized or fullscreen window');
+    const tooltip = _(`
+    <b>Never</b>: Disable this feature.
+    <b>Any Monitor</b>: Pause playback when there is maximized or fullscreen window on any monitor.
+    <b>All Monitors</b>: Pause playback when there are maximized or fullscreen windows on all monitors.
+    `);
+
+    const items = Gtk.StringList.new([
+        _('Never'),
+        _('Any Monitor'),
+        _('All Monitors'),
+    ]);
+
+    const row = new Adw.ComboRow({
+        title,
+        subtitle,
+        model: items,
+        selected: settings.get_int('pause-on-mazimize-or-fullscreen'),
+    });
+
+    row.set_tooltip_markup(tooltip);
+    prefsGroup.add(row);
+
+    row.connect('notify::selected', () => {
+        settings.set_int('pause-on-mazimize-or-fullscreen', row.selected);
     });
 }
 
