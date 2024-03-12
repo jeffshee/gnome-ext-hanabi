@@ -1,5 +1,4 @@
 # Hanabi extension
-experimental
 src/video.*
 .build
 
