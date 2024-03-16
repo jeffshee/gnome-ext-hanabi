@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: 2023-10-23 23:12+0200\n"
+"PO-Revision-Date: 2024-03-16 15:52+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: src/prefs.js:34
 msgid "General"
@@ -35,11 +35,11 @@ msgstr "Panel Menü anzeigen"
 
 #: src/prefs.js:41
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "Ändere Hintergrundbild automatisch"
 
 #: src/prefs.js:44
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "Intervall zum Ändern des Hintergrundbildes (in Minuten)"
 
 #: src/prefs.js:47
 msgid "Experimental"
@@ -126,11 +126,11 @@ msgstr "Öffnen"
 
 #: src/prefs.js:234
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "Verzeichnispfad des Hintergrundbildes ändern"
 
 #: src/prefs.js:249
 msgid "Select Directory"
-msgstr ""
+msgstr "Verzeichnis auswählen"
 
 #: src/prefs.js:289
 msgid "Fit Mode"
@@ -185,11 +185,11 @@ msgstr "Diese Funktion benötigt Gtk 4.8 oder höher"
 
 #: src/prefs.js:332
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "Modus des Hintergrundbildes ändern"
 
 #: src/prefs.js:333
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "Steuere, wie sich das Hintergrundbild automatisch ändert"
 
 #: src/prefs.js:334
 msgid ""
@@ -200,26 +200,33 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Sequenz:</b> Übernimmt die Verzeichnisreihenfolge (absteigend).\n"
+"    <b>Umgekehrte Sequenz:</b> Übernimmt die Verzeichnisreihenfolge "
+"(aufsteigend).\n"
+"    <b>Zufall:</b> Wählt zufällig Hintergrundbilder aus dem Verzeichnis "
+"aus.\n"
+"    "
 
 #: src/prefs.js:341
 msgid "Sequential"
-msgstr ""
+msgstr "Sequenz"
 
 #: src/prefs.js:342
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "Umgekehrte Sequenz"
 
 #: src/prefs.js:343
 msgid "Random"
-msgstr ""
+msgstr "Zufall"
 
 #: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Pause"
-msgstr "pausieren"
+msgstr "Pausieren"
 
 #: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Play"
-msgstr "abspielen"
+msgstr "Abspielen"
 
 #: src/panelMenu.js:111 src/panelMenu.js:120
 msgid "Unmute Audio"
@@ -227,7 +234,7 @@ msgstr "Stummschaltung aufheben"
 
 #: src/panelMenu.js:128 src/panelMenu.js:136
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "Nächstes Hintergrundbild"
 
 #: src/panelMenu.js:147
 msgid "Preferences"
