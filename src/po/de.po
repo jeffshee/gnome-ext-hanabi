@@ -1,21 +1,22 @@
 # Gnome Shell Extension - Hanabi
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# OptixWolf <OptixWolf@users.noreply.hosted.weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: 2023-10-23 23:12+0200\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2024-03-17 16:01+0000\n"
+"Last-Translator: OptixWolf <OptixWolf@users.noreply.hosted.weblate.org>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
+"gnome-ext-hanabi/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.3.2\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: src/prefs.js:34
 msgid "General"
@@ -35,11 +36,11 @@ msgstr "Panel Menü anzeigen"
 
 #: src/prefs.js:41
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "Ändere Hintergrundbild automatisch"
 
 #: src/prefs.js:44
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "Intervall zum Ändern des Hintergrundbildes (in Minuten)"
 
 #: src/prefs.js:47
 msgid "Experimental"
@@ -53,7 +54,7 @@ msgstr "Experimentelles VA Plugin"
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
-"Aktivierung von VA Dekodierern, welche die Leistung für Intel/AMD Wayland "
+"Aktiviere die VA-Dekodierer, welche die Leistung für Intel/AMD Wayland "
 "Benutzer verbessern"
 
 #: src/prefs.js:60
@@ -74,7 +75,7 @@ msgstr "Debug Modus"
 
 #: src/prefs.js:72
 msgid "Print debug messages to log"
-msgstr "Schreibt Debug Nachrichten in das Protokoll"
+msgstr "Schreibe Debug Nachrichten in das Protokoll"
 
 #: src/prefs.js:77
 msgid "Force gtk4paintablesink"
@@ -126,11 +127,11 @@ msgstr "Öffnen"
 
 #: src/prefs.js:234
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "Verzeichnispfad des Hintergrundbildes ändern"
 
 #: src/prefs.js:249
 msgid "Select Directory"
-msgstr ""
+msgstr "Verzeichnis auswählen"
 
 #: src/prefs.js:289
 msgid "Fit Mode"
@@ -153,7 +154,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    <b>Ausfüllen</b>: Steckt das Hintergrundbild, um den Monitor "
+"    <b>Ausfüllen</b>: Streckt das Hintergrundbild, um den Monitor "
 "auszufüllen.\n"
 "    <b>Anpassen</b>: Skaliert das Hintergrundbild, dass es auf den Monitor "
 "passt (Seitenverhältnis beibehalten). \n"
@@ -185,11 +186,11 @@ msgstr "Diese Funktion benötigt Gtk 4.8 oder höher"
 
 #: src/prefs.js:332
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "Modus des Hintergrundbildes ändern"
 
 #: src/prefs.js:333
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "Steuere, wie sich das Hintergrundbild automatisch ändert"
 
 #: src/prefs.js:334
 msgid ""
@@ -200,18 +201,25 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Sequenz:</b> Übernimmt die Verzeichnisreihenfolge (absteigend).\n"
+"    <b>Umgekehrte Sequenz:</b> Übernimmt die Verzeichnisreihenfolge "
+"(aufsteigend).\n"
+"    <b>Zufall:</b> Wählt zufällig Hintergrundbilder aus dem Verzeichnis aus."
+"\n"
+"    "
 
 #: src/prefs.js:341
 msgid "Sequential"
-msgstr ""
+msgstr "Sequenz"
 
 #: src/prefs.js:342
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "Umgekehrte Sequenz"
 
 #: src/prefs.js:343
 msgid "Random"
-msgstr ""
+msgstr "Zufall"
 
 #: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Pause"
@@ -227,7 +235,7 @@ msgstr "Stummschaltung aufheben"
 
 #: src/panelMenu.js:128 src/panelMenu.js:136
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "Nächstes Hintergrundbild"
 
 #: src/panelMenu.js:147
 msgid "Preferences"
