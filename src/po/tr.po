@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # Yusa Capraz <computerhackfusion@gmail.com>, 2023.
 # Sabri Ünal <libreajans@gmail.com>, 2023.
+# Sabri Ünal <yakushabb@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: 2023-12-26 04:11+0000\n"
-"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
+"PO-Revision-Date: 2024-03-17 16:01+0000\n"
+"Last-Translator: Sabri Ünal <yakushabb@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/tr/>\n"
 "Language: tr\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: src/prefs.js:34
 msgid "General"
@@ -37,11 +38,11 @@ msgstr "Panel Menüsünü Göster"
 
 #: src/prefs.js:41
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "Duvar Kağıdını Kendiliğinden Değiştir"
 
 #: src/prefs.js:44
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "Duvar Kağıdı Aralığını Değiştir (dakika)"
 
 #: src/prefs.js:47
 msgid "Experimental"
@@ -128,11 +129,11 @@ msgstr "Aç"
 
 #: src/prefs.js:234
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "Duvar Kağıdı Dizin Yolunu Değiştir"
 
 #: src/prefs.js:249
 msgid "Select Directory"
-msgstr ""
+msgstr "Dizin Seç"
 
 #: src/prefs.js:289
 msgid "Fit Mode"
@@ -186,7 +187,7 @@ msgstr "Bu özellik Gtk 4.8 veya üst sürümü gerektirir"
 
 #: src/prefs.js:332
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "Duvar Kağıdı Kipini Değiştir"
 
 #: src/prefs.js:333
 msgid "Control how to change wallpapers automatically"
@@ -212,7 +213,7 @@ msgstr ""
 
 #: src/prefs.js:343
 msgid "Random"
-msgstr ""
+msgstr "Rastgele"
 
 #: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Pause"
@@ -228,7 +229,7 @@ msgstr "Sesi Aç"
 
 #: src/panelMenu.js:128 src/panelMenu.js:136
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "Sonraki Duvar Kağıdı"
 
 #: src/panelMenu.js:147
 msgid "Preferences"
