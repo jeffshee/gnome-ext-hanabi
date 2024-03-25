@@ -4,13 +4,14 @@
 # gfbdrgng <hnaofegnp@hldrive.com>, 2023.
 # "Артём Чичваров (Džeremi)" <chichvarov1315@gmail.com>, 2023.
 # Džeremi <chichvarov1315@users.noreply.hosted.weblate.org>, 2024.
+# Evgeniy <mr.shurpatov@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: 2024-03-11 12:01+0000\n"
-"Last-Translator: Džeremi <chichvarov1315@users.noreply.hosted.weblate.org>\n"
+"PO-Revision-Date: 2024-03-26 09:01+0000\n"
+"Last-Translator: Evgeniy <mr.shurpatov@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/ru/>\n"
 "Language: ru\n"
@@ -204,6 +205,13 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Последовательность:</b> Сохраните последовательность каталогов (в "
+"порядке убывания).\n"
+"    <b>Обратная последовательность:</b> <b> Извлеките обои в обратной "
+"последовательности (в порядке возрастания).\n"
+"    <b>Случайно:</b> Случайный выбор обоев из каталога.\n"
+"    "
 
 #: src/prefs.js:341
 msgid "Sequential"
