@@ -1,0 +1,233 @@
+# Gnome Shell Extension - Hanabi
+# Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
+# This file is distributed under the same license as the gnome-ext-hanabi package.
+# Anto426 <amanocchio426@gmail.com>, 2024.
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-09-02 19:13+0900\n"
+"PO-Revision-Date: 2023-10-08 17:00+0000\n"
+"Last-Translator: Anto426 <amanocchio426@gmail.com>\n"
+"Language-Team: Italian <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
+"gnome-ext-hanabi/fr/>\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.1-dev\n"
+
+#: src/prefs.js:34
+msgid "General"
+msgstr "Generale"
+
+#: src/prefs.js:38 src/panelMenu.js:111 src/panelMenu.js:120
+msgid "Mute Audio"
+msgstr "Disattiva Audio"
+
+#: src/prefs.js:39
+msgid "Volume Level"
+msgstr "Volume"
+
+#: src/prefs.js:40
+msgid "Show Panel Menu"
+msgstr "Apri il pannello menu"
+
+#: src/prefs.js:41
+msgid "Change Wallpaper Automatically"
+msgstr "Cambia lo sfondo automaticamente"
+
+#: src/prefs.js:44
+msgid "Change Wallpaper Interval (minutes)"
+msgstr "Cambia Intervallo dello Sfondo (minuti)"
+
+#: src/prefs.js:47
+msgid "Experimental"
+msgstr "Sperimentale"
+
+#: src/prefs.js:53
+msgid "Experimental VA Plugin"
+msgstr "Plugin VA sperimentale"
+
+#: src/prefs.js:55
+msgid ""
+"Enable VA decoders which improve performance for Intel/AMD Wayland users"
+msgstr ""
+""Attiva i decoder VA che migliorano le prestazioni per gli utenti Intel/AMD su Wayland "
+
+
+#: src/prefs.js:60
+msgid "NVIDIA Stateless Decoders"
+msgstr "NVIDIA Stateless Decoders"
+
+#: src/prefs.js:62
+msgid "Use new stateless NVIDIA decoders"
+msgstr "Utilizza il nuovo decoder NVIDIA Stateless"
+
+#: src/prefs.js:65
+msgid "Developer"
+msgstr "Sviluppatore"
+
+#: src/prefs.js:70
+msgid "Debug Mode"
+msgstr "Debug Mode"
+
+#: src/prefs.js:72
+msgid "Print debug messages to log"
+msgstr "Visualizza i log di debug"
+
+#: src/prefs.js:77
+msgid "Force gtk4paintablesink"
+msgstr "Forza gtk4paintablesink"
+
+#: src/prefs.js:79
+msgid "Force use of gtk4paintablesink for video playback"
+msgstr "Forza l'uso di gtk4paintablesink per la riproduzione video"
+
+#: src/prefs.js:84
+msgid "Force GtkMediaFile"
+msgstr "Forza GtkMediaFile"
+
+#: src/prefs.js:86
+msgid "Force use of GtkMediaFile for video playback"
+msgstr "Forza l'uso di GtkMediaFile per la riproduzione video"
+
+#: src/prefs.js:88
+msgid "Startup Delay"
+msgstr "Ritardo di avvio"
+
+#: src/prefs.js:88
+msgid ""
+"Add a startup delay (in milliseconds) to mitigate compatibility issues with "
+"other extensions"
+msgstr ""
+"Aggiungi un ritardo di avvio (in millisecondi) per mitigare problemi di compatibilità con"
+"altre estensioni"
+
+#: src/prefs.js:175
+msgid "Video Path"
+msgstr "Percorso del video"
+
+#: src/prefs.js:181 src/prefs.js:206 src/prefs.js:240 src/prefs.js:261
+msgid "None"
+msgstr "None"
+
+#: src/prefs.js:193
+msgid "Open File"
+msgstr "Apri file"
+
+#: src/prefs.js:198 src/prefs.js:254
+msgid "Cancel"
+msgstr "Annulla"
+
+#: src/prefs.js:199 src/prefs.js:215 src/prefs.js:255 src/prefs.js:270
+msgid "Open"
+msgstr "Open"
+
+#: src/prefs.js:234
+msgid "Cambia Percorso della Directory degli Sfondi"
+msgstr ""
+
+#: src/prefs.js:249
+msgid "Select Directory"
+msgstr "Seleziona Directory"
+
+#: src/prefs.js:289
+msgid "Fit Mode"
+msgstr "Modalità di adattamento"
+
+#: src/prefs.js:290
+msgid "Control how wallpaper fits within the monitor"
+msgstr "Controlla come lo sfondo si adatta al monitor"
+
+#: src/prefs.js:291
+msgid ""
+"\n"
+"    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
+"    <b>Contain</b>: Scale the wallpaper to fit the monitor (keep aspect "
+"ratio).\n"
+"    <b>Cover</b>: Scale the wallpaper to cover the monitor (keep aspect "
+"ratio).\n"
+"    <b>Scale-down</b>: Scale down the wallpaper to fit the monitor if "
+"needed, otherwise keep its original size.\n"
+"    "
+msgstr ""
+"\n"
+"    <b>stirare</b>: Adatta lo sfondo per riempire completamente lo schermo.\n"
+"<b>Contenere</b>: Scala lo sfondo per adattarlo allo schermo "
+"(garde le ratio).\n"
+"<b>Coprire</b>: Scala lo sfondo per riempire lo schermo (mantenendo il rapporto).\n"
+"<b>Ridimensionamento</b>: Riduce lo sfondo per adattarlo allo schermo "
+"altrimenti mantieni le dimensioni originali.\n"
+"    "
+
+#: src/prefs.js:299
+msgid "Fill"
+msgstr "Riempi"
+
+#: src/prefs.js:300
+msgid "Contain"
+msgstr "Contenere"
+
+#: src/prefs.js:301
+msgid "Cover"
+msgstr "Coprire"
+
+#: src/prefs.js:302
+msgid "Scale-down"
+msgstr "Scala proporzionalmente"
+
+#: src/prefs.js:315
+msgid "This feature requires Gtk 4.8 or above"
+msgstr "Questa funzione richiede Gtk 4.8 o versioni successive"
+
+#: src/prefs.js:332
+msgid "Change Wallpaper Mode"
+msgstr "Cambia Modalità Sfondo"
+
+#: src/prefs.js:333
+msgid "Control how to change wallpapers automatically"
+msgstr "Controlla come cambiare gli sfondi automaticamente"
+
+#: src/prefs.js:334
+msgid ""
+"\n"
+"    <b>Sequenziale:</b> Mantieni la sequenza di directory (ordine decrescente).\n"
+"    <b>Sequenziale inverso:</b> Recupera gli sfondi nella sequenza opposta "
+"(ascending order).\n"
+"    <b>Casuale:</b> Seleziona casualmente gli sfondi dalla directory.\n"
+"    "
+msgstr ""
+
+#: src/prefs.js:341
+msgid "Sequential"
+msgstr "Sequenziale"
+
+#: src/prefs.js:342
+msgid "Inverse Sequential"
+msgstr "Sequenziale inverso"
+
+#: src/prefs.js:343
+msgid "Random"
+msgstr "Casuale"
+
+#: src/panelMenu.js:82 src/panelMenu.js:102
+msgid "Pause"
+msgstr "Pausa"
+
+#: src/panelMenu.js:82 src/panelMenu.js:102
+msgid "Play"
+msgstr "Play"
+
+#: src/panelMenu.js:111 src/panelMenu.js:120
+msgid "Unmute Audio"
+msgstr "Riattiva l’audio"
+
+#: src/panelMenu.js:128 src/panelMenu.js:136
+msgid "Next Wallpaper"
+msgstr "Prossimo sfondo"
+
+#: src/panelMenu.js:147
+msgid "Preferences"
+msgstr "Preferenze"
