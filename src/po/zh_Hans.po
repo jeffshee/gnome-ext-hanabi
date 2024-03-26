@@ -2,13 +2,14 @@
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # MomentQYC <zixipersonal@gmail.com>, 2023.
+# 0xarch <alanqa-ops@outlook.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: 2023-12-05 16:03+0000\n"
-"Last-Translator: MomentQYC <zixipersonal@gmail.com>\n"
+"PO-Revision-Date: 2024-03-27 13:47+0000\n"
+"Last-Translator: 0xarch <alanqa-ops@outlook.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "gnome-ext-hanabi/gnome-ext-hanabi/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.3-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: src/prefs.js:34
 msgid "General"
@@ -36,11 +37,11 @@ msgstr "显示面板菜单"
 
 #: src/prefs.js:41
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "自动切换壁纸"
 
 #: src/prefs.js:44
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "切换壁纸间隔（分钟）"
 
 #: src/prefs.js:47
 msgid "Experimental"
@@ -123,11 +124,11 @@ msgstr "打开"
 
 #: src/prefs.js:234
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "更改壁纸目录路径"
 
 #: src/prefs.js:249
 msgid "Select Directory"
-msgstr ""
+msgstr "选择目录"
 
 #: src/prefs.js:289
 msgid "Fit Mode"
@@ -178,11 +179,11 @@ msgstr "此功能需要 Gtk 4.8 或更高版本"
 
 #: src/prefs.js:332
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "壁纸切换模式"
 
 #: src/prefs.js:333
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "控制如何自动切换壁纸"
 
 #: src/prefs.js:334
 msgid ""
@@ -193,18 +194,23 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>顺序：</b>保留目录顺序（降序）。\n"
+"<b>逆序：</b>按相反顺序（升序）检索壁纸。\n"
+"<b>随机：</b>从目录中随机选择壁纸。\n"
+"    "
 
 #: src/prefs.js:341
 msgid "Sequential"
-msgstr ""
+msgstr "顺序"
 
 #: src/prefs.js:342
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "逆序"
 
 #: src/prefs.js:343
 msgid "Random"
-msgstr ""
+msgstr "随机"
 
 #: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Pause"
@@ -220,7 +226,7 @@ msgstr "取消静音"
 
 #: src/panelMenu.js:128 src/panelMenu.js:136
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "下一张壁纸"
 
 #: src/panelMenu.js:147
 msgid "Preferences"
