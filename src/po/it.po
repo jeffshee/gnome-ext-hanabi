@@ -7,132 +7,139 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-03-27 13:47+0000\n"
+"Last-Translator: アントネッロ <amanocchio426@gmail.com>\n"
+"Language-Team: Italian <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
+"gnome-ext-hanabi/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: src/prefs.js:34
 msgid "General"
-msgstr ""
+msgstr "Generale"
 
 #: src/prefs.js:38 src/panelMenu.js:111 src/panelMenu.js:120
 msgid "Mute Audio"
-msgstr ""
+msgstr "Disattiva audio"
 
 #: src/prefs.js:39
 msgid "Volume Level"
-msgstr ""
+msgstr "Livello del volume"
 
 #: src/prefs.js:40
 msgid "Show Panel Menu"
-msgstr ""
+msgstr "Mostra il menu del pannello"
 
 #: src/prefs.js:41
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "Cambia lo sfondo automaticamente"
 
 #: src/prefs.js:44
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "Modifica intervallo sfondo (minuti)"
 
 #: src/prefs.js:47
 msgid "Experimental"
-msgstr ""
+msgstr "Sperimentale"
 
 #: src/prefs.js:53
 msgid "Experimental VA Plugin"
-msgstr ""
+msgstr "Plugin VA sperimentale"
 
 #: src/prefs.js:55
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
+"Abilita i decoder VA che migliorano le prestazioni per gli utenti Intel/AMD "
+"Wayland"
 
 #: src/prefs.js:60
 msgid "NVIDIA Stateless Decoders"
-msgstr ""
+msgstr "Decoder NVIDIA Stateless"
 
 #: src/prefs.js:62
 msgid "Use new stateless NVIDIA decoders"
-msgstr ""
+msgstr "Utilizza i nuovi decoder NVIDIA stateless"
 
 #: src/prefs.js:65
 msgid "Developer"
-msgstr ""
+msgstr "Sviluppatore"
 
 #: src/prefs.js:70
 msgid "Debug Mode"
-msgstr ""
+msgstr "Modalità di debug"
 
 #: src/prefs.js:72
 msgid "Print debug messages to log"
-msgstr ""
+msgstr "Visualizza i log di debug"
 
 #: src/prefs.js:77
 msgid "Force gtk4paintablesink"
-msgstr ""
+msgstr "Forza gtk4paintablesink"
 
 #: src/prefs.js:79
 msgid "Force use of gtk4paintablesink for video playback"
-msgstr ""
+msgstr "Forza l'uso di gtk4paintablesink per la riproduzione video"
 
 #: src/prefs.js:84
 msgid "Force GtkMediaFile"
-msgstr ""
+msgstr "Forza GtkMediaFile"
 
 #: src/prefs.js:86
 msgid "Force use of GtkMediaFile for video playback"
-msgstr ""
+msgstr "Forza l'uso di GtkMediaFile per la riproduzione video"
 
 #: src/prefs.js:88
 msgid "Startup Delay"
-msgstr ""
+msgstr "Ritardo di avvio"
 
 #: src/prefs.js:88
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
+"Aggiungi un ritardo all'avvio (in millisecondi) per mitigare i problemi di "
+"compatibilità con altre estensioni"
 
 #: src/prefs.js:175
 msgid "Video Path"
-msgstr ""
+msgstr "Percorso video"
 
 #: src/prefs.js:181 src/prefs.js:206 src/prefs.js:240 src/prefs.js:261
 msgid "None"
-msgstr ""
+msgstr "Nessuno"
 
 #: src/prefs.js:193
 msgid "Open File"
-msgstr ""
+msgstr "Apri  file"
 
 #: src/prefs.js:198 src/prefs.js:254
 msgid "Cancel"
-msgstr ""
+msgstr "Annulla"
 
 #: src/prefs.js:199 src/prefs.js:215 src/prefs.js:255 src/prefs.js:270
 msgid "Open"
-msgstr ""
+msgstr "Apri"
 
 #: src/prefs.js:234
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "Cambia il percorso della directory degli sfondi"
 
 #: src/prefs.js:249
 msgid "Select Directory"
-msgstr ""
+msgstr "Seleziona Directory"
 
 #: src/prefs.js:289
 msgid "Fit Mode"
-msgstr ""
+msgstr "Modalità Adatta"
 
 #: src/prefs.js:290
 msgid "Control how wallpaper fits within the monitor"
-msgstr ""
+msgstr "Controlla il modo in cui lo sfondo si adatta al monitor"
 
 #: src/prefs.js:291
 msgid ""
@@ -146,34 +153,43 @@ msgid ""
 "needed, otherwise keep its original size.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Riempi</b>: Adatta lo sfondo per coprire il monitor.\n"
+"     <b>Contiene</b>: ridimensiona lo sfondo per adattarlo al monitor ("
+"mantieni le proporzioni).\n"
+"     <b>Copertura</b>: ridimensiona lo sfondo per coprire il monitor ("
+"mantieni le proporzioni).\n"
+"     <b>Riduci</b>: ridimensiona lo sfondo per adattarlo al monitor, se "
+"necessario, altrimenti mantieni le dimensioni originali.\n"
+"    "
 
 #: src/prefs.js:299
 msgid "Fill"
-msgstr ""
+msgstr "Riempi"
 
 #: src/prefs.js:300
 msgid "Contain"
-msgstr ""
+msgstr "Contenere"
 
 #: src/prefs.js:301
 msgid "Cover"
-msgstr ""
+msgstr "Copertina"
 
 #: src/prefs.js:302
 msgid "Scale-down"
-msgstr ""
+msgstr "Rimpicciolire"
 
 #: src/prefs.js:315
 msgid "This feature requires Gtk 4.8 or above"
-msgstr ""
+msgstr "Questa funzionalità richiede Gtk 4.8 o successiva"
 
 #: src/prefs.js:332
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "Cambia la modalità sfondo"
 
 #: src/prefs.js:333
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "Controlla come cambiare automaticamente gli sfondi"
 
 #: src/prefs.js:334
 msgid ""
@@ -184,35 +200,42 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Sequenziale:</b> preserva la sequenza delle directory (ordine "
+"discendente).\n"
+"<b>Sequenziale inversa:</b> recupera gli sfondi nella sequenza opposta ("
+"ordine crescente).\n"
+"<b>Casuale:</b> seleziona casualmente gli sfondi dalla directory.\n"
+"    "
 
 #: src/prefs.js:341
 msgid "Sequential"
-msgstr ""
+msgstr "Sequenziale"
 
 #: src/prefs.js:342
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "Sequenza inversa"
 
 #: src/prefs.js:343
 msgid "Random"
-msgstr ""
+msgstr "Casuale"
 
 #: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Pause"
-msgstr ""
+msgstr "Pausa"
 
 #: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Play"
-msgstr ""
+msgstr "Play"
 
 #: src/panelMenu.js:111 src/panelMenu.js:120
 msgid "Unmute Audio"
-msgstr ""
+msgstr "Riattiva audio"
 
 #: src/panelMenu.js:128 src/panelMenu.js:136
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "Sfondo successivo"
 
 #: src/panelMenu.js:147
 msgid "Preferences"
-msgstr ""
+msgstr "Preferenze"
