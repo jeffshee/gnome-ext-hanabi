@@ -2,13 +2,14 @@
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # François <francois.odin@proton.me>, 2023.
+# Matt Sennin <m@donsan.fr>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: 2023-10-08 17:00+0000\n"
-"Last-Translator: François <francois.odin@proton.me>\n"
+"PO-Revision-Date: 2024-03-29 18:02+0000\n"
+"Last-Translator: Matt Sennin <m@donsan.fr>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/fr/>\n"
 "Language: fr\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.1-dev\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: src/prefs.js:34
 msgid "General"
@@ -36,11 +37,11 @@ msgstr "Afficher le raccourci de configuration"
 
 #: src/prefs.js:41
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "Changer automatiquement le fond d'écran"
 
 #: src/prefs.js:44
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "Modifier l'intervalle de changement du fond d'écran (minutes)"
 
 #: src/prefs.js:47
 msgid "Experimental"
