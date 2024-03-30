@@ -45,22 +45,26 @@ export class AutoPause {
         this._workspaceManager = null;
         this._activeWorkspace = null;
         this._upower = new DBus.UPowerDBus();
+        this._dbus = new DBus.DbusDBus();
         this.states = {
             maximizedOrFullscreenOnAnyMonitor: false,
             maximizedOrFullscreenOnAllMonitors: false,
             onBattery: false,
             lowBattery: false,
+            mprisPlaying: false,
         };
         this.conditions = {
             pauseOnMaximizeOrFullscreen: this._settings.get_int('pause-on-mazimize-or-fullscreen'),
             pauseOnBattery: this._settings.get_int('pause-on-battery'),
             lowBatteryThreshold: this._settings.get_int('low-battery-threshold'),
+            pauseOnMprisPlaying: this._settings.get_boolean('pause-on-mpris-playing'),
         };
         // signals ids
         this._windows = [];
         this._windowAddedId = null;
         this._windowRemovedId = null;
         this._activeWorkspaceChangedId = null;
+        this._mediaPlayers = {};
 
         this._settings.connect('changed::pause-on-mazimize-or-fullscreen', () => {
             this.conditions.pauseOnMaximizeOrFullscreen = this._settings.get_int('pause-on-mazimize-or-fullscreen');
@@ -75,6 +79,11 @@ export class AutoPause {
         this._settings.connect('changed::low-battery-threshold', () => {
             this.conditions.lowBatteryThreshold = this._settings.get_int('low-battery-threshold');
             this.updateBatteryState();
+        });
+
+        this._settings.connect('changed::pause-on-mpris-playing', () => {
+            this.conditions.pauseOnMprisPlaying = this._settings.get_boolean('pause-on-mpris-playing');
+            this.updateMprisState();
         });
     }
 
@@ -97,9 +106,47 @@ export class AutoPause {
             this.updateBatteryState();
         });
 
+        let mprisNames = this._queryMprisNames();
+        mprisNames.forEach(mprisName => {
+            logger.debug('Media Player found:', mprisName);
+            let mpris = new DBus.MprisDbus(mprisName);
+            let playbackStatus = mpris.getPlaybackStatus();
+            let _mprisPropertiesChanged = this._mprisPropertiesChangedFactory(mprisName);
+            let mprisPropertiesChangedId = mpris.getProxy().connect('g-properties-changed', _mprisPropertiesChanged);
+            this._mediaPlayers[mprisName] = {
+                playbackStatus, mpris, mprisPropertiesChangedId,
+            };
+        });
+        logger.debug(JSON.stringify(this._mediaPlayers, null, 2));
+
+        this._dbus.connect('NameOwnerChanged', (_proxy, _sender, [name, oldOwner, newOwner]) => {
+            if (name.startsWith('org.mpris.MediaPlayer2.')) {
+                let mprisName = name;
+                if (oldOwner === '') {
+                    logger.debug('Media Player created:', mprisName);
+                    let mpris = new DBus.MprisDbus(mprisName);
+                    let playbackStatus = mpris.getPlaybackStatus();
+                    let _mprisPropertiesChanged = this._mprisPropertiesChangedFactory(mprisName);
+                    let mprisPropertiesChangedId = mpris.getProxy().connect('g-properties-changed', _mprisPropertiesChanged);
+                    this._mediaPlayers[mprisName] = {
+                        playbackStatus, mpris, mprisPropertiesChangedId,
+                    };
+                } else if (newOwner === '') {
+                    logger.debug('Media Player destroyed:', mprisName);
+                    let mpris = this._mediaPlayers[mprisName].mpris;
+                    let mprisPropertiesChangedId = this._mediaPlayers[mprisName].mprisPropertiesChangedId;
+                    mpris.getProxy().disconnect(mprisPropertiesChangedId);
+                    delete this._mediaPlayers[mprisName];
+                }
+                logger.debug(JSON.stringify(this._mediaPlayers, null, 2));
+                this.updateMprisState();
+            }
+        });
+
         // Initial update
         this.updateWindowState();
         this.updateBatteryState();
+        this.updateMprisState();
     }
 
     _windowAdded(metaWindow, doUpdate = true) {
@@ -216,6 +263,42 @@ export class AutoPause {
         this._checkConditions();
     }
 
+    _queryMprisNames() {
+        try {
+            let ret = this._dbus.listNames();
+            let [names] =  ret.deep_unpack();
+            return names.filter(name => name.startsWith('org.mpris.MediaPlayer2.'));
+        } catch (e) {
+            logger.debug('Error:', e.message);
+        }
+        return null;
+    }
+
+    _mprisPropertiesChangedFactory(mprisName) {
+        let thisRef = this;
+        /**
+         *
+         * @param _proxy
+         * @param properties
+         */
+        function _mprisPropertiesChanged(_proxy, properties) {
+            let payload = properties.deep_unpack();
+            if (!payload.hasOwnProperty('PlaybackStatus'))
+                return;
+            thisRef._mediaPlayers[mprisName].playbackStatus = payload.PlaybackStatus.deep_unpack();
+            logger.debug(JSON.stringify(thisRef._mediaPlayers, null, 2));
+            thisRef.updateMprisState();
+        }
+        return _mprisPropertiesChanged;
+    }
+
+    updateMprisState() {
+        this.states.mprisPlaying = Object.values(this._mediaPlayers).some(
+            properties => properties.playbackStatus === 'Playing'
+        );
+        this._checkConditions();
+    }
+
     _checkConditions() {
         logger.debug(this.states);
 
@@ -234,6 +317,10 @@ export class AutoPause {
             return;
         }
         if (this.conditions.pauseOnBattery === pauseOnBatteryMode.always && this.states.onBattery) {
+            this._playbackState.autoPause();
+            return;
+        }
+        if (this.conditions.pauseOnMprisPlaying && this.states.mprisPlaying) {
             this._playbackState.autoPause();
             return;
         }
