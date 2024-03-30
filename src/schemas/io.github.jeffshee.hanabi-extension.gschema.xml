@@ -65,6 +65,12 @@
             <description>Set the threshold percentage for low battery level</description>
         </key>
 
+        <key name="pause-on-mpris-playing" type="b">
+            <default>false</default>
+            <summary>Pause on Media Player Playing</summary>
+            <description>Pause playback when an MPRIS media player is playing media</description>
+        </key>
+
         <key name="debug-mode" type="b">
             <default>false</default>
             <summary>Debug Mode</summary>

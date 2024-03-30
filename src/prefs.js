@@ -50,6 +50,13 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
         prefsRowPauseOnMaximizeOrFullscreen(window, autoPause);
         prefsRowPauseOnBattery(window, autoPause);
         prefsRowInt(window, autoPause, _('Low Battery Threshold'), 'low-battery-threshold', _('Set the threshold percentage for low battery level'), 0, 100, 5, 10);
+        prefsRowBoolean(
+            window,
+            autoPause,
+            _('Pause on Media Player Playing'),
+            'pause-on-mpris-playing',
+            _('Pause playback when an MPRIS media player is playing media')
+        );
 
         const experimentalGroup = new Adw.PreferencesGroup({
             title: _('Experimental'),

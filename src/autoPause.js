@@ -57,7 +57,7 @@ export class AutoPause {
             pauseOnMaximizeOrFullscreen: this._settings.get_int('pause-on-mazimize-or-fullscreen'),
             pauseOnBattery: this._settings.get_int('pause-on-battery'),
             lowBatteryThreshold: this._settings.get_int('low-battery-threshold'),
-            pauseOnMprisPlaying: true, // TODO prefs
+            pauseOnMprisPlaying: this._settings.get_boolean('pause-on-mpris-playing'),
         };
         // signals ids
         this._windows = [];
@@ -79,6 +79,11 @@ export class AutoPause {
         this._settings.connect('changed::low-battery-threshold', () => {
             this.conditions.lowBatteryThreshold = this._settings.get_int('low-battery-threshold');
             this.updateBatteryState();
+        });
+
+        this._settings.connect('changed::pause-on-mpris-playing', () => {
+            this.conditions.pauseOnMprisPlaying = this._settings.get_boolean('pause-on-mpris-playing');
+            this.updateMprisState();
         });
     }
 
