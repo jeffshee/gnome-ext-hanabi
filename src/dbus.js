@@ -21,6 +21,8 @@ import * as DBusUtil from 'resource://org/gnome/shell/misc/dbusUtils.js';
 
 const UPOWER_BUS_NAME = 'org.freedesktop.UPower';
 const UPOWER_OBJECT_PATH = '/org/freedesktop/UPower/devices/DisplayDevice';
+const DBUS_BUS_NAME = 'org.freedesktop.DBus';
+const DBUS_OBJECT_PATH = '/org/freedesktop/DBus';
 
 export class RendererDBus {
     constructor() {
@@ -94,3 +96,48 @@ export class UPowerDBus {
         return this.proxy.Percentage;
     }
 }
+
+
+export class DbusDBus {
+    constructor() {
+        const dbusXml = DBusUtil.loadInterfaceXML('org.freedesktop.DBus');
+        const proxy = Gio.DBusProxy.makeProxyWrapper(dbusXml);
+        this.proxy = proxy(Gio.DBus.session, DBUS_BUS_NAME, DBUS_OBJECT_PATH);
+    }
+
+    getProxy() {
+        return this.proxy;
+    }
+
+    connect(signal, callback) {
+        return this.proxy.connectSignal(signal, callback);
+    }
+}
+
+export class MprisDbus {
+    constructor(mediaPlayerName) {
+        const dbusXml = DBusUtil.loadInterfaceXML('org.freedesktop.DBus.Properties');
+        const proxy = Gio.DBusProxy.makeProxyWrapper(dbusXml);
+        this.proxy = proxy(Gio.DBus.session, mediaPlayerName, '/org/mpris/MediaPlayer2');
+        const dbusXml2 = DBusUtil.loadInterfaceXML('org.mpris.MediaPlayer2.Player');
+        const proxy2 = Gio.DBusProxy.makeProxyWrapper(dbusXml2);
+        this.proxy2 = proxy2(Gio.DBus.session, mediaPlayerName, '/org/mpris/MediaPlayer2');
+    }
+
+    getProxy() {
+        return this.proxy;
+    }
+
+    connect(signal, callback) {
+        return this.proxy.connectSignal(signal, callback);
+    }
+
+    getPlaybackState() {
+        return this.proxy2.PlaybackStatus;
+    }
+
+    getMetadata() {
+        return this.proxy2.Metadata;
+    }
+}
+

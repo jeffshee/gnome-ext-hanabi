@@ -82,13 +82,13 @@ function monitorMediaPlayers() {
  */
 function queryMediaPlayerNames() {
     let proxy = Gio.DBusProxy.new_sync(
-        connection,
-        Gio.DBusProxyFlags.NONE,
-        null,
-        'org.freedesktop.DBus',
-        '/org/freedesktop/DBus',
-        'org.freedesktop.DBus',
-        null
+        connection,              // connection
+        Gio.DBusProxyFlags.NONE, // flags
+        null,                    // info
+        'org.freedesktop.DBus',  // name
+        '/org/freedesktop/DBus', // object_path
+        'org.freedesktop.DBus', // interface_name
+        null                    // cancellable
     );
 
     try {
