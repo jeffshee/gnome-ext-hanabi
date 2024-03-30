@@ -45,6 +45,7 @@ export class AutoPause {
         this._workspaceManager = null;
         this._activeWorkspace = null;
         this._upower = new DBus.UPowerDBus();
+        this._dbus = new DBus.DbusDBus();
         this.states = {
             maximizedOrFullscreenOnAnyMonitor: false,
             maximizedOrFullscreenOnAllMonitors: false,
@@ -61,6 +62,7 @@ export class AutoPause {
         this._windowAddedId = null;
         this._windowRemovedId = null;
         this._activeWorkspaceChangedId = null;
+        this._mediaPlayers = [];
 
         this._settings.connect('changed::pause-on-mazimize-or-fullscreen', () => {
             this.conditions.pauseOnMaximizeOrFullscreen = this._settings.get_int('pause-on-mazimize-or-fullscreen');
@@ -95,6 +97,26 @@ export class AutoPause {
                 return;
             logger.debug(payload);
             this.updateBatteryState();
+        });
+
+        this._dbus.connect('NameOwnerChanged', (_proxy, _sender, [name, oldOwner, newOwner]) => {
+            if (name.startsWith('org.mpris.MediaPlayer2.')) {
+                if (oldOwner === '') {
+                    logger.debug('Media Player created:', name);
+                    let status = queryPlaybackStatus(name);
+                    let statusId = monitorPlaybackStatus(name);
+                    let metadata = queryMetadata(name);
+                    this._mediaPlayers[name] = {
+                        status, statusId, metadata,
+                    };
+                } else if (newOwner === '') {
+                    print('Media Player destroyed:', name);
+                    // let connection =
+                    // connection.signal_unsubscribe(mediaPlayers[name].statusId);
+                    delete this._mediaPlayers[name];
+                }
+                logger.debug(JSON.stringify(this._mediaPlayers, null, 2));
+            }
         });
 
         // Initial update
@@ -214,6 +236,15 @@ export class AutoPause {
         this.states.lowBattery = this.states.onBattery && percentage <= this.conditions.lowBatteryThreshold;
 
         this._checkConditions();
+    }
+
+    queryPlaybackStatus(mediaPlayerName) {
+
+    }
+
+    monitorPlaybackStatus(mediaPlayerName) {
+
+
     }
 
     _checkConditions() {
