@@ -112,16 +112,23 @@ export class DbusDBus {
     connect(signal, callback) {
         return this.proxy.connectSignal(signal, callback);
     }
+
+    listNames() {
+        return this.proxy.call_sync(
+            'ListNames',
+            null,
+            Gio.DBusCallFlags.NONE,
+            -1,
+            null
+        );
+    }
 }
 
 export class MprisDbus {
     constructor(mediaPlayerName) {
-        const dbusXml = DBusUtil.loadInterfaceXML('org.freedesktop.DBus.Properties');
+        const dbusXml = DBusUtil.loadInterfaceXML('org.mpris.MediaPlayer2.Player');
         const proxy = Gio.DBusProxy.makeProxyWrapper(dbusXml);
         this.proxy = proxy(Gio.DBus.session, mediaPlayerName, '/org/mpris/MediaPlayer2');
-        const dbusXml2 = DBusUtil.loadInterfaceXML('org.mpris.MediaPlayer2.Player');
-        const proxy2 = Gio.DBusProxy.makeProxyWrapper(dbusXml2);
-        this.proxy2 = proxy2(Gio.DBus.session, mediaPlayerName, '/org/mpris/MediaPlayer2');
     }
 
     getProxy() {
@@ -132,12 +139,8 @@ export class MprisDbus {
         return this.proxy.connectSignal(signal, callback);
     }
 
-    getPlaybackState() {
-        return this.proxy2.PlaybackStatus;
-    }
-
-    getMetadata() {
-        return this.proxy2.Metadata;
+    getPlaybackStatus() {
+        return this.proxy.PlaybackStatus;
     }
 }
 
