@@ -78,7 +78,7 @@ let windowDimension = {width: 1920, height: 1080};
 let windowed = false;
 let fullscreened = true;
 let isDebugMode = extSettings ? extSettings.get_boolean('debug-mode') : true;
-let changeWallpaperTimerID;
+let changeWallpaperTimerId = null;
 
 
 const HanabiRenderer = GObject.registerClass(
@@ -145,9 +145,11 @@ const HanabiRenderer = GObject.registerClass(
                     break;
                 case 'change-wallpaper-interval':
                     changeWallpaperInterval = settings.get_int(key);
+                    this.setAutoWallpaper();
                     break;
                 case 'change-wallpaper-directory-path':
                     changeWallpaperDirectoryPath = settings.get_string(key);
+                    this.setAutoWallpaper();
                     break;
                 case 'change-wallpaper-mode':
                     changeWallpaperMode = settings.get_int(key);
@@ -237,7 +239,7 @@ const HanabiRenderer = GObject.registerClass(
 
         _setupGst() {
             // Software libav decoders have "primary" rank, set Nvidia higher
-            // to use NVDEC hardware acceleration
+            // to use NVDEC hardware acceleration.
             this._setPluginDecodersRank(
                 'nvcodec',
                 Gst.Rank.PRIMARY + 1,
@@ -551,7 +553,8 @@ const HanabiRenderer = GObject.registerClass(
         }
 
         setAutoWallpaper() {
-            let currentIndex = 0; // Index to keep track of the current video
+            // Index to keep track of the current video
+            let currentIndex = 0;
             let videoPaths = [];
             let dir = Gio.File.new_for_path(changeWallpaperDirectoryPath);
             // Check if dir exists and is a directory
@@ -572,15 +575,11 @@ const HanabiRenderer = GObject.registerClass(
                     videoPaths.push(file.get_path());
                 }
             }
-
+            if (videoPaths.length === 0)
+                return;
             videoPaths = videoPaths.sort();
 
-            /**
-             *
-             * @param actualIndex
-             * @param videosLength
-             */
-            function getRandomIndex(actualIndex, videosLength) {
+            const getRandomIndex = (actualIndex, videosLength) => {
                 if (videosLength <= 1)
                     return actualIndex;
 
@@ -589,13 +588,12 @@ const HanabiRenderer = GObject.registerClass(
                     newIndex = Math.floor(Math.random() * videosLength);
                 while (newIndex === actualIndex);
                 return newIndex;
-            }
+            };
 
-            /**
-             *
-             */
-            function mainLoop() {
-                if (videoPaths.length > 0 && changeWallpaper) {
+            const operation = () => {
+                console.debug(`setAutoWallpaper operation, interval: ${changeWallpaperInterval} min`);
+                // Avoid changing the wallpaper if it's paused to avoid unexpected playback resume.
+                if (this._isPlaying) {
                     extSettings.set_string('video-path', videoPaths[currentIndex]);
 
                     if (changeWallpaperMode === 0)
@@ -604,15 +602,22 @@ const HanabiRenderer = GObject.registerClass(
                         currentIndex = (currentIndex - 1 + videoPaths.length) % videoPaths.length;
                     else if (changeWallpaperMode === 2)
                         currentIndex = getRandomIndex(currentIndex, videoPaths.length);
-
-                    changeWallpaperTimerID = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, changeWallpaperInterval * 60, mainLoop); // Timer to run function again
                 }
-            }
 
-            if (changeWallpaper && changeWallpaperDirectoryPath)
-                mainLoop();
-            else if (changeWallpaperTimerID)
-                GLib.source_remove(changeWallpaperTimerID); // Remove timer
+                // return true to be called again.
+                return true;
+            };
+
+            // Remove the current timer
+            if (changeWallpaperTimerId) {
+                GLib.source_remove(changeWallpaperTimerId);
+                changeWallpaperTimerId = null;
+            }
+            // Reset the timer accordingly
+            if (changeWallpaper) {
+                operation();
+                changeWallpaperTimerId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, changeWallpaperInterval * 60, operation);
+            }
         }
 
         get isPlaying() {
