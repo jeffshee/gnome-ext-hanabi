@@ -27,13 +27,9 @@ Please click on the image to view <i>(redirect to YouTube)</i>
 
 ## GNOME Shell Support
 
-| Version | Status |
-| :-----: | :----: |
-|   ≤41   |   ⛔   |
-|   42    |   ✅   |
-|   43    |   ✅   |
-|   44    |   ✅   |
-|   45    |   ✅   |
+| Version | ≤41 | 42  | 43  | 44  | 45  | 46  |
+| :-----: | :-: | :-: | :-: | :-: | :-: | :-: |
+| Status  | ⛔  | ✅  | ✅  | ✅  | ✅  | ✅  |
 
 See also the section [Troubleshooting](#troubleshooting), for version-specific known issues.
 
@@ -41,7 +37,7 @@ See also the section [Troubleshooting](#troubleshooting), for version-specific k
 
 1. Clone the repo
 
--   **For GNOME 45**
+-   **For GNOME 45 and later**
 
 ```
 git clone https://github.com/jeffshee/gnome-ext-hanabi.git
