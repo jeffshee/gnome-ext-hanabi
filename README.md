@@ -8,7 +8,9 @@
 
 If you like my project, please consider buying me a coffee!! (⁎˃ ꇴ ˂⁎)ｯ
 
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/jeffshee)
+[![Github-sponsors](https://img.shields.io/badge/sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#EA4AAA)](https://github.com/sponsors/jeffshee)
+[![Ko-Fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/jeffshee)
+[![BuyMeACoffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/jeffshee)
 
 Also please don't forget to hit that star button! 🌟  
 Feel free to open an issue for problems or suggestions 🤗  
@@ -16,7 +18,7 @@ Your support is truly appreciated!
 
 ## Join our Discord!
 
-[![](https://dcbadge.vercel.app/api/server/mP7yg4gX7g?compact=true)](https://discord.gg/mP7yg4gX7g)
+[![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/mP7yg4gX7g)
 
 ## Demo 📽️
 
@@ -116,8 +118,6 @@ Contributors are welcome! Let's make Hanabi extension better together~
 If you're interested in translating, you can help on [Hosted Weblate](https://hosted.weblate.org/projects/gnome-ext-hanabi/gnome-ext-hanabi/).
 
 ### Translation Status
-
-[![Translation status](https://hosted.weblate.org/widget/gnome-ext-hanabi/gnome-ext-hanabi/svg-badge.svg)](https://hosted.weblate.org/engage/gnome-ext-hanabi/)
 
 [![Translation status](https://hosted.weblate.org/widget/gnome-ext-hanabi/gnome-ext-hanabi/multi-auto.svg)](https://hosted.weblate.org/engage/gnome-ext-hanabi/)
 
