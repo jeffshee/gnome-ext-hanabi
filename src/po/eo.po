@@ -7,17 +7,20 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-04-12 03:01+0000\n"
+"Last-Translator: phlostically <phlostically@mailinator.com>\n"
+"Language-Team: Esperanto <https://hosted.weblate.org/projects/"
+"gnome-ext-hanabi/gnome-ext-hanabi/eo/>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: src/prefs.js:34
 msgid "General"
-msgstr ""
+msgstr "Ĝenerala"
 
 #: src/prefs.js:38 src/panelMenu.js:111 src/panelMenu.js:120
 msgid "Mute Audio"
@@ -25,7 +28,7 @@ msgstr ""
 
 #: src/prefs.js:39
 msgid "Volume Level"
-msgstr ""
+msgstr "Laŭto"
 
 #: src/prefs.js:40
 msgid "Show Panel Menu"
@@ -41,7 +44,7 @@ msgstr ""
 
 #: src/prefs.js:47
 msgid "Experimental"
-msgstr ""
+msgstr "Eksperimenta"
 
 #: src/prefs.js:53
 msgid "Experimental VA Plugin"
@@ -74,7 +77,7 @@ msgstr ""
 
 #: src/prefs.js:77
 msgid "Force gtk4paintablesink"
-msgstr ""
+msgstr "Devigi gtk4paintablesink"
 
 #: src/prefs.js:79
 msgid "Force use of gtk4paintablesink for video playback"
@@ -82,7 +85,7 @@ msgstr ""
 
 #: src/prefs.js:84
 msgid "Force GtkMediaFile"
-msgstr ""
+msgstr "Devigi GtkMediaFile"
 
 #: src/prefs.js:86
 msgid "Force use of GtkMediaFile for video playback"
@@ -104,19 +107,19 @@ msgstr ""
 
 #: src/prefs.js:181 src/prefs.js:206 src/prefs.js:240 src/prefs.js:261
 msgid "None"
-msgstr ""
+msgstr "Nenio"
 
 #: src/prefs.js:193
 msgid "Open File"
-msgstr ""
+msgstr "Malfermi dosieron"
 
 #: src/prefs.js:198 src/prefs.js:254
 msgid "Cancel"
-msgstr ""
+msgstr "Nuligi"
 
 #: src/prefs.js:199 src/prefs.js:215 src/prefs.js:255 src/prefs.js:270
 msgid "Open"
-msgstr ""
+msgstr "Malfermi"
 
 #: src/prefs.js:234
 msgid "Change Wallpaper Directory Path"
@@ -149,11 +152,11 @@ msgstr ""
 
 #: src/prefs.js:299
 msgid "Fill"
-msgstr ""
+msgstr "Plenigi"
 
 #: src/prefs.js:300
 msgid "Contain"
-msgstr ""
+msgstr "Enhavi"
 
 #: src/prefs.js:301
 msgid "Cover"
@@ -195,19 +198,19 @@ msgstr ""
 
 #: src/prefs.js:343
 msgid "Random"
-msgstr ""
+msgstr "Hazarda"
 
 #: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Pause"
-msgstr ""
+msgstr "Paŭzigi"
 
 #: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Play"
-msgstr ""
+msgstr "Spekti"
 
 #: src/panelMenu.js:111 src/panelMenu.js:120
 msgid "Unmute Audio"
-msgstr ""
+msgstr "Malsilentigi"
 
 #: src/panelMenu.js:128 src/panelMenu.js:136
 msgid "Next Wallpaper"
@@ -215,4 +218,4 @@ msgstr ""
 
 #: src/panelMenu.js:147
 msgid "Preferences"
-msgstr ""
+msgstr "Preferoj"
