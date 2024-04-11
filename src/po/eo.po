@@ -1,0 +1,218 @@
+# Gnome Shell Extension - Hanabi
+# Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
+# This file is distributed under the same license as the gnome-ext-hanabi package.
+# phlostically <phlostically@mailinator.com>, 2024.
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-09-02 19:13+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: eo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/prefs.js:34
+msgid "General"
+msgstr ""
+
+#: src/prefs.js:38 src/panelMenu.js:111 src/panelMenu.js:120
+msgid "Mute Audio"
+msgstr ""
+
+#: src/prefs.js:39
+msgid "Volume Level"
+msgstr ""
+
+#: src/prefs.js:40
+msgid "Show Panel Menu"
+msgstr ""
+
+#: src/prefs.js:41
+msgid "Change Wallpaper Automatically"
+msgstr ""
+
+#: src/prefs.js:44
+msgid "Change Wallpaper Interval (minutes)"
+msgstr ""
+
+#: src/prefs.js:47
+msgid "Experimental"
+msgstr ""
+
+#: src/prefs.js:53
+msgid "Experimental VA Plugin"
+msgstr ""
+
+#: src/prefs.js:55
+msgid ""
+"Enable VA decoders which improve performance for Intel/AMD Wayland users"
+msgstr ""
+
+#: src/prefs.js:60
+msgid "NVIDIA Stateless Decoders"
+msgstr ""
+
+#: src/prefs.js:62
+msgid "Use new stateless NVIDIA decoders"
+msgstr ""
+
+#: src/prefs.js:65
+msgid "Developer"
+msgstr ""
+
+#: src/prefs.js:70
+msgid "Debug Mode"
+msgstr ""
+
+#: src/prefs.js:72
+msgid "Print debug messages to log"
+msgstr ""
+
+#: src/prefs.js:77
+msgid "Force gtk4paintablesink"
+msgstr ""
+
+#: src/prefs.js:79
+msgid "Force use of gtk4paintablesink for video playback"
+msgstr ""
+
+#: src/prefs.js:84
+msgid "Force GtkMediaFile"
+msgstr ""
+
+#: src/prefs.js:86
+msgid "Force use of GtkMediaFile for video playback"
+msgstr ""
+
+#: src/prefs.js:88
+msgid "Startup Delay"
+msgstr ""
+
+#: src/prefs.js:88
+msgid ""
+"Add a startup delay (in milliseconds) to mitigate compatibility issues with "
+"other extensions"
+msgstr ""
+
+#: src/prefs.js:175
+msgid "Video Path"
+msgstr ""
+
+#: src/prefs.js:181 src/prefs.js:206 src/prefs.js:240 src/prefs.js:261
+msgid "None"
+msgstr ""
+
+#: src/prefs.js:193
+msgid "Open File"
+msgstr ""
+
+#: src/prefs.js:198 src/prefs.js:254
+msgid "Cancel"
+msgstr ""
+
+#: src/prefs.js:199 src/prefs.js:215 src/prefs.js:255 src/prefs.js:270
+msgid "Open"
+msgstr ""
+
+#: src/prefs.js:234
+msgid "Change Wallpaper Directory Path"
+msgstr ""
+
+#: src/prefs.js:249
+msgid "Select Directory"
+msgstr ""
+
+#: src/prefs.js:289
+msgid "Fit Mode"
+msgstr ""
+
+#: src/prefs.js:290
+msgid "Control how wallpaper fits within the monitor"
+msgstr ""
+
+#: src/prefs.js:291
+msgid ""
+"\n"
+"    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
+"    <b>Contain</b>: Scale the wallpaper to fit the monitor (keep aspect "
+"ratio).\n"
+"    <b>Cover</b>: Scale the wallpaper to cover the monitor (keep aspect "
+"ratio).\n"
+"    <b>Scale-down</b>: Scale down the wallpaper to fit the monitor if "
+"needed, otherwise keep its original size.\n"
+"    "
+msgstr ""
+
+#: src/prefs.js:299
+msgid "Fill"
+msgstr ""
+
+#: src/prefs.js:300
+msgid "Contain"
+msgstr ""
+
+#: src/prefs.js:301
+msgid "Cover"
+msgstr ""
+
+#: src/prefs.js:302
+msgid "Scale-down"
+msgstr ""
+
+#: src/prefs.js:315
+msgid "This feature requires Gtk 4.8 or above"
+msgstr ""
+
+#: src/prefs.js:332
+msgid "Change Wallpaper Mode"
+msgstr ""
+
+#: src/prefs.js:333
+msgid "Control how to change wallpapers automatically"
+msgstr ""
+
+#: src/prefs.js:334
+msgid ""
+"\n"
+"    <b>Sequential:</b> Preserve the directory sequence (descending order).\n"
+"    <b>Inverse Sequential:</b> Retrieve wallpapers in the opposite sequence "
+"(ascending order).\n"
+"    <b>Random:</b> Randomly select wallpapers from the directory.\n"
+"    "
+msgstr ""
+
+#: src/prefs.js:341
+msgid "Sequential"
+msgstr ""
+
+#: src/prefs.js:342
+msgid "Inverse Sequential"
+msgstr ""
+
+#: src/prefs.js:343
+msgid "Random"
+msgstr ""
+
+#: src/panelMenu.js:82 src/panelMenu.js:102
+msgid "Pause"
+msgstr ""
+
+#: src/panelMenu.js:82 src/panelMenu.js:102
+msgid "Play"
+msgstr ""
+
+#: src/panelMenu.js:111 src/panelMenu.js:120
+msgid "Unmute Audio"
+msgstr ""
+
+#: src/panelMenu.js:128 src/panelMenu.js:136
+msgid "Next Wallpaper"
+msgstr ""
+
+#: src/panelMenu.js:147
+msgid "Preferences"
+msgstr ""
