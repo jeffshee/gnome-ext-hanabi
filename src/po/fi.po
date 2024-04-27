@@ -7,132 +7,139 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-04-28 02:07+0000\n"
+"Last-Translator: Linus Virtanen <linus.virtanen@protonmail.com>\n"
+"Language-Team: Finnish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
+"gnome-ext-hanabi/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.5.1\n"
 
 #: src/prefs.js:34
 msgid "General"
-msgstr ""
+msgstr "Yleistä"
 
 #: src/prefs.js:38 src/panelMenu.js:111 src/panelMenu.js:120
 msgid "Mute Audio"
-msgstr ""
+msgstr "Vaienna äänet"
 
 #: src/prefs.js:39
 msgid "Volume Level"
-msgstr ""
+msgstr "Äänenvoimakkuus"
 
 #: src/prefs.js:40
 msgid "Show Panel Menu"
-msgstr ""
+msgstr "Näytä ohjausvalikko"
 
 #: src/prefs.js:41
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "Vaihda taustakuva automaattisesti"
 
 #: src/prefs.js:44
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "Muuta taustakuvan vaihtoväli (minuuteissa)"
 
 #: src/prefs.js:47
 msgid "Experimental"
-msgstr ""
+msgstr "Kokeellinen"
 
 #: src/prefs.js:53
 msgid "Experimental VA Plugin"
-msgstr ""
+msgstr "Kokeellinen VA-liitännäinen"
 
 #: src/prefs.js:55
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
+"Ota VA-dekooderit käyttöön; nämä parantavat Wayland-suorituskykyä Intel/AMD -"
+"laitteiden käyttäjille"
 
 #: src/prefs.js:60
 msgid "NVIDIA Stateless Decoders"
-msgstr ""
+msgstr "NVIDIA:n tilattomat dekooderit"
 
 #: src/prefs.js:62
 msgid "Use new stateless NVIDIA decoders"
-msgstr ""
+msgstr "Käytä uutta tilatonta NVIDIA-dekooderia"
 
 #: src/prefs.js:65
 msgid "Developer"
-msgstr ""
+msgstr "Kehittäjä"
 
 #: src/prefs.js:70
 msgid "Debug Mode"
-msgstr ""
+msgstr "Virheenkorjauksen tila"
 
 #: src/prefs.js:72
 msgid "Print debug messages to log"
-msgstr ""
+msgstr "Kirjaa virheenkorjauksen viestit lokiin"
 
 #: src/prefs.js:77
 msgid "Force gtk4paintablesink"
-msgstr ""
+msgstr "Pakota gtk4paintablesink"
 
 #: src/prefs.js:79
 msgid "Force use of gtk4paintablesink for video playback"
-msgstr ""
+msgstr "Pakota gtk4paintablesink-käyttö videon toistolle"
 
 #: src/prefs.js:84
 msgid "Force GtkMediaFile"
-msgstr ""
+msgstr "Pakota GtkMediaFile"
 
 #: src/prefs.js:86
 msgid "Force use of GtkMediaFile for video playback"
-msgstr ""
+msgstr "Pakota GtkMediaFile-käyttö videon toistolle"
 
 #: src/prefs.js:88
 msgid "Startup Delay"
-msgstr ""
+msgstr "Käynnistyksen viive"
 
 #: src/prefs.js:88
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
+"Lisää käynnistysviive (millisekunneissa) lieventääksesi "
+"yhteensopivuusongelmia muiden laajennusten kanssa"
 
 #: src/prefs.js:175
 msgid "Video Path"
-msgstr ""
+msgstr "Videopolku"
 
 #: src/prefs.js:181 src/prefs.js:206 src/prefs.js:240 src/prefs.js:261
 msgid "None"
-msgstr ""
+msgstr "Tyhjä"
 
 #: src/prefs.js:193
 msgid "Open File"
-msgstr ""
+msgstr "Avaa tiedosto"
 
 #: src/prefs.js:198 src/prefs.js:254
 msgid "Cancel"
-msgstr ""
+msgstr "Peruuta"
 
 #: src/prefs.js:199 src/prefs.js:215 src/prefs.js:255 src/prefs.js:270
 msgid "Open"
-msgstr ""
+msgstr "Avaa"
 
 #: src/prefs.js:234
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "Vaihda taustakuvan hakemistopolkua"
 
 #: src/prefs.js:249
 msgid "Select Directory"
-msgstr ""
+msgstr "Valitse hakemisto"
 
 #: src/prefs.js:289
 msgid "Fit Mode"
-msgstr ""
+msgstr "Sovitustila"
 
 #: src/prefs.js:290
 msgid "Control how wallpaper fits within the monitor"
-msgstr ""
+msgstr "Hallinnoi miten taustakuva asettuu näytölle"
 
 #: src/prefs.js:291
 msgid ""
@@ -146,34 +153,43 @@ msgid ""
 "needed, otherwise keep its original size.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Täytä</b>: Venytä taustakuva näytön täyttämiseksi.\n"
+"    <b>Sovita</b>: Skaalaa taustakuva sopivaksi näyttöön (säilytä kuvasuhde)."
+"\n"
+"    <b>Peitä</b>: Skaalaa taustakuva peittääksesi näytön (säilytä kuvasuhde)."
+"\n"
+"    <b>Suhteuta</b>: Pienennä taustakuvaa näytölle sopivaksi tarvittaessa, "
+"mutta muutoin säilytä alkuperäinen koko.\n"
+"    "
 
 #: src/prefs.js:299
 msgid "Fill"
-msgstr ""
+msgstr "Täytä"
 
 #: src/prefs.js:300
 msgid "Contain"
-msgstr ""
+msgstr "Sisällytä"
 
 #: src/prefs.js:301
 msgid "Cover"
-msgstr ""
+msgstr "Peitä"
 
 #: src/prefs.js:302
 msgid "Scale-down"
-msgstr ""
+msgstr "Pienennä mittakaavassa"
 
 #: src/prefs.js:315
 msgid "This feature requires Gtk 4.8 or above"
-msgstr ""
+msgstr "Tämä ominaisuus vaatii Gtk julkaisun 4.8 tai uudemman"
 
 #: src/prefs.js:332
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "Vaihda taustakuvatila"
 
 #: src/prefs.js:333
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "Hallinnoi taustakuvien automaattista vaihtoa"
 
 #: src/prefs.js:334
 msgid ""
@@ -184,35 +200,41 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Järjestyksellinen:</b> Säilytä hakemistojärjestys (laskevasti).\n"
+"    <b>Käänteinen järjestys:</b> Hae taustakuvia vastakkaisessa "
+"järjestyksessä (nousevasti).\n"
+"    <b>satunnainen:</b> Valitse taustakuvia hakemistosta satunnaisesti.\n"
+"    "
 
 #: src/prefs.js:341
 msgid "Sequential"
-msgstr ""
+msgstr "Järjestyksellinen"
 
 #: src/prefs.js:342
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "Käänteinen järjestys"
 
 #: src/prefs.js:343
 msgid "Random"
-msgstr ""
+msgstr "Satunnainen"
 
 #: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Pause"
-msgstr ""
+msgstr "Tauko"
 
 #: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Play"
-msgstr ""
+msgstr "Toista"
 
 #: src/panelMenu.js:111 src/panelMenu.js:120
 msgid "Unmute Audio"
-msgstr ""
+msgstr "Poista äänenvaimennus"
 
 #: src/panelMenu.js:128 src/panelMenu.js:136
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "Seuraava taustakuva"
 
 #: src/panelMenu.js:147
 msgid "Preferences"
-msgstr ""
+msgstr "Asetukset"
