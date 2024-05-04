@@ -33,17 +33,10 @@ export class AutoPause {
 
         // Modules
         this.modules = [];
-        this._pauseOnMaximizeOrFullscreenModule = new PauseOnMaximizeOrFullscreenModule(extension);
-        this._pauseOnMaximizeOrFullscreenModule.connect('updated', () => this.eval());
-        this.modules.push(this._pauseOnMaximizeOrFullscreenModule);
-
-        this._pauseOnBatteryModule = new PauseOnBatteryModule(extension);
-        this._pauseOnBatteryModule.connect('updated', () => this.eval());
-        this.modules.push(this._pauseOnBatteryModule);
-
-        this._pauseOnMprisPlayingModule = new PauseOnMprisPlayingModule(extension);
-        this._pauseOnMprisPlayingModule.connect('updated', () => this.eval());
-        this.modules.push(this._pauseOnMprisPlayingModule);
+        this.modules.push(new PauseOnMaximizeOrFullscreenModule(extension));
+        this.modules.push(new PauseOnBatteryModule(extension));
+        this.modules.push(new PauseOnMprisPlayingModule(extension));
+        this.modules.forEach(module => module.connect('updated', () => this.eval()));
     }
 
     enable() {
@@ -101,7 +94,6 @@ const PauseOnMaximizeOrFullscreenMode = Object.freeze({
     allMonitors: 2,
 });
 
-
 const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
     class PauseOnMaximizeOrFullscreenModule extends AutoPauseModule {
         constructor(extension) {
@@ -120,7 +112,8 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
 
             this._workspaceManager = null;
             this._activeWorkspace = null;
-            this._windows = [];
+            this._activeWorkspaceChangedId = null;
+            this._windows = []; // [{metaWindow, signals: [...]}, ...]
             this._windowAddedId = null;
             this._windowRemovedId = null;
         }
@@ -228,7 +221,7 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
             this.states.maximizedOrFullscreenOnAnyMonitor = metaWindows.some(metaWindow =>
                 metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH || metaWindow.fullscreen);
 
-            const monitorsWithMaximizedOrFullscreen = metaWindows.reduce((acc, metaWindow) => {
+            let monitorsWithMaximizedOrFullscreen = metaWindows.reduce((acc, metaWindow) => {
                 if (metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH || metaWindow.fullscreen)
                     acc[metaWindow.get_monitor()] = true;
                 return acc;
@@ -254,24 +247,19 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
         }
 
         disable() {
-            if (this._workspaceManager && this._activeWorkspaceChangedId)
-                this._workspaceManager.disconnect(this._activeWorkspaceChangedId);
-            this._activeWorkspace = null;
-
+            this._workspaceManager?.disconnect(this._activeWorkspaceChangedId);
             this._windows.forEach(({metaWindow, signals}) => {
                 signals.forEach(signal => metaWindow.disconnect(signal));
             });
-            this._windows = [];
+            this._activeWorkspace?.disconnect(this._windowAddedId);
+            this._activeWorkspace?.disconnect(this._windowRemovedId);
 
-            if (this._activeWorkspace && this._windowAddedId) {
-                this._activeWorkspace.disconnect(this._windowAddedId);
-                this._windowAddedId = null;
-            }
-            if (this._activeWorkspace && this._windowRemovedId) {
-                this._activeWorkspace.disconnect(this._windowRemovedId);
-                this._windowRemovedId = null;
-            }
+            this._workspaceManager = null;
             this._activeWorkspace = null;
+            this._activeWorkspaceChangedId = null;
+            this._windows = [];
+            this._windowAddedId = null;
+            this._windowRemovedId = null;
         }
     }
 );
@@ -372,7 +360,7 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
             });
 
             this._dbus = new DBus.DbusDBus();
-            this._mediaPlayers = {};
+            this._mediaPlayers = {}; // {$mprisName: {playbackStatus, mpris, mprisPropertiesChangedId}, ...}
         }
 
         enable() {
@@ -461,7 +449,14 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
         }
 
         disable() {
-
+            Object.values(this._mediaPlayers).forEach(
+                mediaPlayer => {
+                    let mpris = mediaPlayer.mpris;
+                    let mprisPropertiesChangedId = mediaPlayer.mprisPropertiesChangedId;
+                    mpris.getProxy().disconnect(mprisPropertiesChangedId);
+                }
+            );
+            this._mediaPlayers = {};
         }
     }
 );
