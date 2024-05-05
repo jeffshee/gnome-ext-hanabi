@@ -65,9 +65,11 @@ const AutoPauseModule = GObject.registerClass({
         'updated': {},
     },
 }, class AutoPauseModule extends GObject.Object {
-    constructor(extension) {
+    constructor(extension, moduleName) {
         super();
         this._settings = extension.getSettings();
+        this.name = moduleName;
+        this._logger = moduleName ? new Logger.Logger(`autoPause::${moduleName}`) : logger;
     }
 
     enable() {}
@@ -97,7 +99,7 @@ const PauseOnMaximizeOrFullscreenMode = Object.freeze({
 const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
     class PauseOnMaximizeOrFullscreenModule extends AutoPauseModule {
         constructor(extension) {
-            super(extension);
+            super(extension, 'maximizeOrFullscreen');
             this.states = {
                 maximizedOrFullscreenOnAnyMonitor: false,
                 maximizedOrFullscreenOnAllMonitors: false,
@@ -133,29 +135,29 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
         }
 
         _windowAdded(metaWindow, doUpdate = true) {
-        // Not need to track renderer window
-            if (metaWindow.title?.includes(applicationId))
+            // Not need to track renderer window or skip taskbar window
+            if (metaWindow.title?.includes(applicationId) | metaWindow.skip_taskbar)
                 return;
 
             let signals = [];
             signals.push(
                 metaWindow.connect('notify::maximized-horizontally', () => {
-                    logger.debug('maximized-horizontally changed');
+                    this._logger.debug('maximized-horizontally changed');
                     this._update();
                 }));
             signals.push(
                 metaWindow.connect('notify::maximized-vertically', () => {
-                    logger.debug('maximized-vertically changed');
+                    this._logger.debug('maximized-vertically changed');
                     this._update();
                 }));
             signals.push(
                 metaWindow.connect('notify::fullscreen', () => {
-                    logger.debug('fullscreen changed');
+                    this._logger.debug('fullscreen changed');
                     this._update();
                 }));
             signals.push(
                 metaWindow.connect('notify::minimized', () => {
-                    logger.debug('minimized changed');
+                    this._logger.debug('minimized changed');
                     this._update();
                 })
             );
@@ -165,12 +167,15 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
                     signals,
                 }
             );
-            logger.debug(`Window ${metaWindow.title} added`);
+            this._logger.debug(`Window ${metaWindow.title} added`);
             if (doUpdate)
                 this._update();
         }
 
         _windowRemoved(metaWindow) {
+            if (metaWindow.title?.includes(applicationId) | metaWindow.skip_taskbar)
+                return;
+
             this._windows = this._windows.filter(window => {
                 if (window.metaWindow === metaWindow) {
                     window.signals.forEach(signal => metaWindow.disconnect(signal));
@@ -178,7 +183,7 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
                 }
                 return true;
             });
-            logger.debug(`Window ${metaWindow.title} removed`);
+            this._logger.debug(`Window ${metaWindow.title} removed`);
             this._update();
         }
 
@@ -199,7 +204,7 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
             this._activeWorkspace = null;
 
             this._activeWorkspace = workspaceManager.get_active_workspace();
-            logger.debug(`Active workspace changed to ${this._activeWorkspace.workspace_index}`);
+            this._logger.debug(`Active workspace changed to ${this._activeWorkspace.workspace_index}`);
 
             this._activeWorkspace.list_windows().forEach(
                 metaWindow => this._windowAdded(metaWindow, false)
@@ -235,15 +240,17 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
         }
 
         shouldAutoPause() {
+            let res = false;
             if (this.conditions.pauseOnMaximizeOrFullscreen === PauseOnMaximizeOrFullscreenMode.anyMonitor &&
                 this.states.maximizedOrFullscreenOnAnyMonitor)
-                return true;
+                res = true;
 
             if (this.conditions.pauseOnMaximizeOrFullscreen === PauseOnMaximizeOrFullscreenMode.allMonitors &&
                 this.states.maximizedOrFullscreenOnAllMonitors)
-                return true;
+                res = true;
 
-            return false;
+            this._logger.debug('shouldAutoPause:', res);
+            return res;
         }
 
         disable() {
@@ -269,7 +276,7 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
  * Pause On Battery
  */
 
-const pauseOnBatteryMode = Object.freeze({
+const PauseOnBatteryMode = Object.freeze({
     never: 0,
     lowBattery: 1,
     always: 2,
@@ -278,7 +285,7 @@ const pauseOnBatteryMode = Object.freeze({
 const PauseOnBatteryModule = GObject.registerClass(
     class PauseOnBatteryModule extends AutoPauseModule {
         constructor(extension) {
-            super(extension);
+            super(extension, 'battery');
             this.states = {
                 onBattery: false,
                 lowBattery: false,
@@ -304,7 +311,7 @@ const PauseOnBatteryModule = GObject.registerClass(
                 let payload = properties.deep_unpack();
                 if (!payload.hasOwnProperty('State') && !payload.hasOwnProperty('Percentage'))
                     return;
-                logger.debug(payload);
+                this._logger.debug(`State ${payload.State}, Percentage ${payload.Percentage}`);
                 this._update();
             });
 
@@ -314,8 +321,6 @@ const PauseOnBatteryModule = GObject.registerClass(
         _update() {
             let state = this._upower.getState();
             let percentage = this._upower.getPercentage();
-            logger.debug(`State ${state}`);
-            logger.debug(`Percentage ${percentage}`);
 
             this.states.onBattery = state === UPower.DeviceState.PENDING_DISCHARGE || state === UPower.DeviceState.DISCHARGING;
             this.states.lowBattery = this.states.onBattery && percentage <= this.conditions.lowBatteryThreshold;
@@ -324,13 +329,15 @@ const PauseOnBatteryModule = GObject.registerClass(
         }
 
         shouldAutoPause() {
-            if (this.conditions.pauseOnBattery === pauseOnBatteryMode.lowBattery && this.states.lowBattery)
-                return true;
+            let res = false;
+            if (this.conditions.pauseOnBattery === PauseOnBatteryMode.lowBattery && this.states.lowBattery)
+                res = true;
 
-            if (this.conditions.pauseOnBattery === pauseOnBatteryMode.always && this.states.onBattery)
-                return true;
+            if (this.conditions.pauseOnBattery === PauseOnBatteryMode.always && this.states.onBattery)
+                res = true;
 
-            return false;
+            this._logger.debug('shouldAutoPause:', res);
+            return res;
         }
 
         disable() {
@@ -347,7 +354,7 @@ const PauseOnBatteryModule = GObject.registerClass(
 const PauseOnMprisPlayingModule = GObject.registerClass(
     class PauseOnMprisPlayingModule extends AutoPauseModule {
         constructor(extension) {
-            super(extension);
+            super(extension, 'mpris');
             this.states = {
                 mprisPlaying: false,
             };
@@ -366,7 +373,7 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
         enable() {
             let mprisNames = this._queryMprisNames();
             mprisNames.forEach(mprisName => {
-                logger.debug('Media Player found:', mprisName);
+                this._logger.debug('Media Player found:', mprisName);
                 let mpris = new DBus.MprisDbus(mprisName);
                 let playbackStatus = mpris.getPlaybackStatus();
                 let _mprisPropertiesChanged = this._mprisPropertiesChangedFactory(mprisName);
@@ -375,13 +382,13 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
                     playbackStatus, mpris, mprisPropertiesChangedId,
                 };
             });
-            logger.debug(JSON.stringify(this._mediaPlayers, null, 2));
+            this._logger.debug(this._stringifyMediaPlayers());
 
             this._dbus.connect('NameOwnerChanged', (_proxy, _sender, [name, oldOwner, newOwner]) => {
                 if (name.startsWith('org.mpris.MediaPlayer2.')) {
                     let mprisName = name;
                     if (oldOwner === '') {
-                        logger.debug('Media Player created:', mprisName);
+                        this._logger.debug('Media Player created:', mprisName);
                         let mpris = new DBus.MprisDbus(mprisName);
                         let playbackStatus = mpris.getPlaybackStatus();
                         let _mprisPropertiesChanged = this._mprisPropertiesChangedFactory(mprisName);
@@ -390,13 +397,13 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
                             playbackStatus, mpris, mprisPropertiesChangedId,
                         };
                     } else if (newOwner === '') {
-                        logger.debug('Media Player destroyed:', mprisName);
+                        this._logger.debug('Media Player destroyed:', mprisName);
                         let mpris = this._mediaPlayers[mprisName].mpris;
                         let mprisPropertiesChangedId = this._mediaPlayers[mprisName].mprisPropertiesChangedId;
                         mpris.getProxy().disconnect(mprisPropertiesChangedId);
                         delete this._mediaPlayers[mprisName];
                     }
-                    logger.debug(JSON.stringify(this._mediaPlayers, null, 2));
+                    this._logger.debug(this._stringifyMediaPlayers());
                     this._update();
                 }
             });
@@ -410,7 +417,7 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
                 let [names] =  ret.deep_unpack();
                 return names.filter(name => name.startsWith('org.mpris.MediaPlayer2.'));
             } catch (e) {
-                logger.debug('Error:', e.message);
+                this._logger.error('Error:', e.message);
             }
             return null;
         }
@@ -427,10 +434,19 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
                 if (!payload.hasOwnProperty('PlaybackStatus'))
                     return;
                 thisRef._mediaPlayers[mprisName].playbackStatus = payload.PlaybackStatus.deep_unpack();
-                logger.debug(JSON.stringify(thisRef._mediaPlayers, null, 2));
+                thisRef._logger.debug(thisRef._stringifyMediaPlayers());
                 thisRef._update();
             }
             return _mprisPropertiesChanged;
+        }
+
+        _stringifyMediaPlayers() {
+            let string = Object.entries(this._mediaPlayers).reduce((acc, [key, value]) => {
+                acc[key] = {playbackStatus: value.playbackStatus};
+                return acc;
+            }, {});
+
+            return JSON.stringify(string, null, 2);
         }
 
         _update() {
@@ -442,10 +458,12 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
         }
 
         shouldAutoPause() {
+            let res = false;
             if (this.conditions.pauseOnMprisPlaying && this.states.mprisPlaying)
-                return true;
+                res = true;
 
-            return false;
+            this._logger.debug('shouldAutoPause:', res);
+            return res;
         }
 
         disable() {
