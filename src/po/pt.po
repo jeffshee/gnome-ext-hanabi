@@ -2,21 +2,22 @@
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # ssantos <ssantos@web.de>, 2024.
+# Cesar H <estagiariocesar@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-02 19:13+0900\n"
-"PO-Revision-Date: 2024-01-07 14:06+0000\n"
-"Last-Translator: ssantos <ssantos@web.de>\n"
-"Language-Team: Portuguese <https://hosted.weblate.org/projects/gnome-ext-"
-"hanabi/gnome-ext-hanabi/pt/>\n"
+"PO-Revision-Date: 2024-05-17 21:01+0000\n"
+"Last-Translator: Cesar H <estagiariocesar@gmail.com>\n"
+"Language-Team: Portuguese <https://hosted.weblate.org/projects/"
+"gnome-ext-hanabi/gnome-ext-hanabi/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"X-Generator: Weblate 5.6-dev\n"
 
 #: src/prefs.js:34
 msgid "General"
@@ -36,11 +37,11 @@ msgstr "Mostrar Menu de Painel"
 
 #: src/prefs.js:41
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "Mudar Papel de Parede Automaticamente"
 
 #: src/prefs.js:44
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "Mudar Intervalo do Papel de Parede (minutos)"
 
 #: src/prefs.js:47
 msgid "Experimental"
@@ -127,11 +128,11 @@ msgstr "Abrir"
 
 #: src/prefs.js:234
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "Mudar o Caminho do Diretório do Papel de Parede"
 
 #: src/prefs.js:249
 msgid "Select Directory"
-msgstr ""
+msgstr "Selecionar Diretório"
 
 #: src/prefs.js:289
 msgid "Fit Mode"
@@ -186,11 +187,11 @@ msgstr "Essa funcionalidade precisa de GTK 4.8 ou alguma versão superior"
 
 #: src/prefs.js:332
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "Mudar Modo do Papel de Parede"
 
 #: src/prefs.js:333
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "Controlar Como Mudar o Papel de Parede Automaticamente"
 
 #: src/prefs.js:334
 msgid ""
@@ -204,15 +205,15 @@ msgstr ""
 
 #: src/prefs.js:341
 msgid "Sequential"
-msgstr ""
+msgstr "Sequencial"
 
 #: src/prefs.js:342
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "Sequencia Inversa"
 
 #: src/prefs.js:343
 msgid "Random"
-msgstr ""
+msgstr "Aleatório"
 
 #: src/panelMenu.js:82 src/panelMenu.js:102
 msgid "Pause"
@@ -228,7 +229,7 @@ msgstr "Ligar Som"
 
 #: src/panelMenu.js:128 src/panelMenu.js:136
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "Próximo Papel de Parede"
 
 #: src/panelMenu.js:147
 msgid "Preferences"
