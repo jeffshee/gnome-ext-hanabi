@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-05-22 22:01+0000\n"
+"PO-Revision-Date: 2024-05-26 12:10+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/es/>\n"
@@ -56,30 +56,30 @@ msgid "Show Panel Menu"
 msgstr "Mostrar menú del panel"
 
 #: src/prefs.js:51
-#, fuzzy
-#| msgid "Pause"
 msgid "Auto Pause"
-msgstr "Pausa"
+msgstr "Pausa automática"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr ""
+msgstr "Límite de la batería baja"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "Establece el porcentaje del umbral para el nivel bajo de batería"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr ""
+msgstr "Pausa en la reproducción del reproductor multimedia"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
 msgstr ""
+"Pausar la reproducción cuando un reproductor multimedia MPRIS está "
+"reproduciendo los medios"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "Cambiador del fondo de pantalla"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
@@ -233,11 +233,12 @@ msgstr "Esta característica requiere Gtk 4.8 o superior"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "Pausa en maximizar o pantalla completa"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
 msgstr ""
+"Pausa la reproducción cuando hay una ventana maximizada o a pantalla completa"
 
 #: src/prefs.js:373
 msgid ""
@@ -249,26 +250,35 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Nunca</b>: deshabilite esta función.\n"
+"    <b>Cualquier monitor</b>: pausa la reproducción cuando haya una ventana "
+"maximizada o de pantalla completa en cualquier monitor.\n"
+"    <b>Todos los monitores</b>: pausa la reproducción cuando haya ventanas "
+"maximizadas o de pantalla completa en todos los monitores.\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "Nunca"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "Cualquier monitor"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "Todos los monitores"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
-msgstr ""
+msgstr "Pausa en la batería"
 
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
+"Pausa la reproducción cuando el dispositivo está con batería o la batería "
+"está baja"
 
 #: src/prefs.js:409
 msgid ""
@@ -279,14 +289,21 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Nunca</b>: deshabilite esta función.\n"
+"    <b>Batería baja</b>: pausa la reproducción cuando el dispositivo tiene "
+"poca batería (por debajo del umbral).\n"
+"    <b>Siempre</b>: pausa la reproducción cuando el dispositivo tiene "
+"batería.\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "Batería baja"
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "Siempre"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
