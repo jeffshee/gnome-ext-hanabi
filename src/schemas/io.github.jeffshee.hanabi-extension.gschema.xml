@@ -4,18 +4,20 @@
         <key name="video-path" type="s">
             <default>''</default>
             <summary>Video Path</summary>
-            <description>Video path</description>
+            <description>Path to the video file</description>
         </key>
 
         <key name="mute" type="b">
             <default>false</default>
             <summary>Mute Audio</summary>
+            <description>Mute audio during playback</description>
         </key>
 
         <key name="volume" type="i">
             <range min="0" max="100" />
             <default>50</default>
             <summary>Volume Level</summary>
+            <description>Set the volume level for audio playback</description>
         </key>
 
         <key name="change-wallpaper" type="b">
@@ -42,34 +44,43 @@
             <description>Control how to change wallpapers automatically</description>
         </key>
 
-        <key name="pause-on-fullscreen" type="b">
-            <default>false</default>
-            <summary>Pause on Fullscreen</summary>
-            <description>Pause playback when there is a fullscreen window</description>
+        <key name="pause-on-maximize-or-fullscreen" type="i">
+            <range min="0" max="2" />
+            <default>0</default>
+            <summary>Pause on Maximize or Fullscreen</summary>
+            <description>Pause playback when there is maximized or fullscreen window</description>
         </key>
 
-        <key name="pause-on-maximize" type="b">
-            <default>false</default>
-            <summary>Pause on Maximize</summary>
-            <description>Pause playback when there is a maximized window</description>
-        </key>
-
-        <key name="pause-on-battery" type="b">
-            <default>false</default>
+        <key name="pause-on-battery" type="i">
+            <range min="0" max="2" />
+            <default>0</default>
             <summary>Pause on Battery</summary>
-            <description>Pause playback when device is on battery</description>
+            <description>Pause playback when the device is on battery or the battery is low</description>
+        </key>
+
+        <key name="low-battery-threshold" type="i">
+            <range min="0" max="100" />
+            <default>25</default>
+            <summary>Low Battery Threshold</summary>
+            <description>Set the threshold percentage for low battery level</description>
+        </key>
+
+        <key name="pause-on-mpris-playing" type="b">
+            <default>false</default>
+            <summary>Pause on Media Player Playing</summary>
+            <description>Pause playback when an MPRIS media player is playing media</description>
         </key>
 
         <key name="debug-mode" type="b">
             <default>false</default>
             <summary>Debug Mode</summary>
-            <description>Print debug messages to log</description>
+            <description>Enable printing debug messages to log</description>
         </key>
 
         <key name="enable-va" type="b">
             <default>false</default>
             <summary>Experimental VA Plugin</summary>
-            <description>Enable VA decoders which improve performance for Intel/AMD Wayland users</description>
+            <description>Enable VA decoders for improved performance on Intel/AMD Wayland setups</description>
         </key>
 
         <key name="enable-nvsl" type="b">
@@ -81,19 +92,19 @@
         <key name="force-gtk4paintablesink" type="b">
             <default>false</default>
             <summary>Force gtk4paintablesink</summary>
-            <description>Force use of gtk4paintablesink for video playback</description>
+            <description>Force the use of gtk4paintablesink for video playback</description>
         </key>
 
         <key name="force-mediafile" type="b">
             <default>false</default>
             <summary>Force GtkMediaFile</summary>
-            <description>Force use of GtkMediaFile for video playback</description>
+            <description>Force the use of GtkMediaFile for video playback</description>
         </key>
 
         <key name="content-fit" type="i">
             <range min="0" max="3" />
             <default>1</default>
-            <summary>GtkPicture content-fit</summary>
+            <summary>GtkPicture Content Fit</summary>
             <description>Control how content fits within the GtkPicture</description>
         </key>
 
@@ -108,6 +119,7 @@
         <key name="show-panel-menu" type="b">
             <default>true</default>
             <summary>Show Panel Menu</summary>
+            <description>Show the panel menu for the extension</description>
         </key>
     </schema>
 </schemalist>

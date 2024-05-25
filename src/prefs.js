@@ -28,21 +28,55 @@ const haveContentFit = Gtk.get_minor_version() >= 8;
 export default class HanabiExtensionPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         window._settings = this.getSettings();
-
         // Create a preferences page and group
         const page = new Adw.PreferencesPage();
-        const generalGroup = new Adw.PreferencesGroup({title: _('General')});
+
+        /**
+         * General
+         */
+        const generalGroup = new Adw.PreferencesGroup({
+            title: _('General'),
+        });
         page.add(generalGroup);
         prefsRowVideoPath(window, generalGroup);
         prefsRowFitMode(window, generalGroup);
         prefsRowBoolean(window, generalGroup, _('Mute Audio'), 'mute', '');
         prefsRowInt(window, generalGroup, _('Volume Level'), 'volume', '', 0, 100, 1, 10);
         prefsRowBoolean(window, generalGroup, _('Show Panel Menu'), 'show-panel-menu', '');
-        prefsRowBoolean(window, generalGroup, _('Change Wallpaper Automatically'), 'change-wallpaper', '');
-        prefsRowDirectoryPath(window, generalGroup);
-        prefsRowChangeWallpaperMode(window, generalGroup);
-        prefsRowInt(window, generalGroup, _('Change Wallpaper Interval (minutes)'), 'change-wallpaper-interval', '', 1, 1440, 5, 0);
 
+        /**
+         * Auto Pause
+         */
+        const autoPauseGroup = new Adw.PreferencesGroup({
+            title: _('Auto Pause'),
+        });
+        page.add(autoPauseGroup);
+        prefsRowPauseOnMaximizeOrFullscreen(window, autoPauseGroup);
+        prefsRowPauseOnBattery(window, autoPauseGroup);
+        prefsRowInt(window, autoPauseGroup, _('Low Battery Threshold'), 'low-battery-threshold', _('Set the threshold percentage for low battery level'), 0, 100, 5, 10);
+        prefsRowBoolean(
+            window,
+            autoPauseGroup,
+            _('Pause on Media Player Playing'),
+            'pause-on-mpris-playing',
+            _('Pause playback when an MPRIS media player is playing media')
+        );
+
+        /**
+         * Wallpaper Changer
+         */
+        const wallpaperChangerGroup = new Adw.PreferencesGroup({
+            title: _('Wallpaper Changer'),
+        });
+        page.add(wallpaperChangerGroup);
+        prefsRowBoolean(window, wallpaperChangerGroup, _('Change Wallpaper Automatically'), 'change-wallpaper', '');
+        prefsRowDirectoryPath(window, wallpaperChangerGroup);
+        prefsRowChangeWallpaperMode(window, wallpaperChangerGroup);
+        prefsRowInt(window, wallpaperChangerGroup, _('Change Wallpaper Interval (minutes)'), 'change-wallpaper-interval', '', 1, 1440, 5, 0);
+
+        /**
+         * Experimental
+         */
         const experimentalGroup = new Adw.PreferencesGroup({
             title: _('Experimental'),
         });
@@ -62,7 +96,12 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
             _('Use new stateless NVIDIA decoders')
         );
 
-        const developerGroup = new Adw.PreferencesGroup({title: _('Developer')});
+        /**
+         * Developer
+         */
+        const developerGroup = new Adw.PreferencesGroup({
+            title: _('Developer'),
+        });
         page.add(developerGroup);
         prefsRowBoolean(
             window,
@@ -319,6 +358,78 @@ function prefsRowFitMode(window, prefsGroup) {
 
     row.connect('notify::selected', () => {
         settings.set_int('content-fit', row.selected);
+    });
+}
+
+/**
+ *
+ * @param window
+ * @param prefsGroup
+ */
+function prefsRowPauseOnMaximizeOrFullscreen(window, prefsGroup) {
+    const settings = window._settings;
+    const title = _('Pause on Maximize or Fullscreen');
+    const subtitle = _('Pause playback when there is maximized or fullscreen window');
+    const tooltip = _(`
+    <b>Never</b>: Disable this feature.
+    <b>Any Monitor</b>: Pause playback when there is maximized or fullscreen window on any monitor.
+    <b>All Monitors</b>: Pause playback when there are maximized or fullscreen windows on all monitors.
+    `);
+
+    const items = Gtk.StringList.new([
+        _('Never'),
+        _('Any Monitor'),
+        _('All Monitors'),
+    ]);
+
+    const row = new Adw.ComboRow({
+        title,
+        subtitle,
+        model: items,
+        selected: settings.get_int('pause-on-maximize-or-fullscreen'),
+    });
+
+    row.set_tooltip_markup(tooltip);
+    prefsGroup.add(row);
+
+    row.connect('notify::selected', () => {
+        settings.set_int('pause-on-maximize-or-fullscreen', row.selected);
+    });
+}
+
+/**
+ *
+ * @param window
+ * @param prefsGroup
+ */
+function prefsRowPauseOnBattery(window, prefsGroup) {
+    const settings = window._settings;
+    const title = _('Pause on Battery');
+    const subtitle = _('Pause playback when the device is on battery or the battery is low');
+    const tooltip = _(`
+    <b>Never</b>: Disable this feature.
+    <b>Low Battery</b>: Pause playback when the device is on low battery (below the threshold).
+    <b>Always</b>: Pause playback when the device is on battery.
+    `);
+
+    const items = Gtk.StringList.new([
+        _('Never'),
+        _('Low Battery'),
+        _('Always'),
+    ]);
+
+    const row = new Adw.ComboRow({
+        title,
+        subtitle,
+        model: items,
+        selected: settings.get_int('pause-on-battery'),
+    });
+
+    row.set_tooltip_markup(tooltip);
+    prefsGroup.add(row);
+
+    row.connect('notify::selected', () => {
+        settings.set_int('pause-on-battery', row.selected);
     });
 }
 

@@ -11,11 +11,14 @@ configure_file(
 )
 
 sources = [
+  'autoPause.js',
+  'dbus.js',
   'extension.js',
   'gnomeShellOverride.js',
   'launcher.js',
   'logger.js',
   'panelMenu.js',
+  'playbackState.js',
   'prefs.js',
   'roundedCornersEffect.js',
   'wallpaper.js',

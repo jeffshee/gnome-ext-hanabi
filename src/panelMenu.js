@@ -24,29 +24,17 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
+import * as DBus from './dbus.js';
+
 export class HanabiPanelMenu {
     constructor(extension) {
         this.isEnabled = false;
 
         this._extension = extension;
         this._settings = extension.getSettings();
+        this._playbackState = extension.getPlaybackState();
         this._isPlaying = false;
-
-        // DBus
-        const dbusXml = `
-        <node>
-            <interface name="io.github.jeffshee.HanabiRenderer">
-                <method name="setPlay"/>
-                <method name="setPause"/>
-                <property name="isPlaying" type="b" access="read"/>
-                <signal name="isPlayingChanged">
-                    <arg name="isPlaying" type="b"/>
-                </signal>
-            </interface>
-        </node>`;
-        const proxy = Gio.DBusProxy.makeProxyWrapper(dbusXml);
-        this.proxy = proxy(Gio.DBus.session,
-            'io.github.jeffshee.HanabiRenderer', '/io/github/jeffshee/HanabiRenderer');
+        this._renderer = new DBus.RendererWrapper();
     }
 
     enable() {
@@ -83,18 +71,13 @@ export class HanabiPanelMenu {
         );
 
         playPause.connect('activate', () => {
-            this.proxy.call(
-                this._isPlaying ? 'setPause' : 'setPlay', // method_name
-                null, // parameters
-                Gio.DBusCallFlags.NO_AUTO_START, // flags
-                -1, // timeout_msec
-                null, // cancellable
-                null // callback
-            );
-        }
-        );
+            if (this._isPlaying)
+                this._playbackState.userPause();
+            else
+                this._playbackState.userPlay();
+        });
 
-        this.proxy.connectSignal(
+        this._renderer.proxy.connectSignal(
             'isPlayingChanged',
             (_proxy, _sender, [isPlaying]) => {
                 this._isPlaying = isPlaying;

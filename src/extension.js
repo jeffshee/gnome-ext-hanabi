@@ -23,6 +23,8 @@ import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/ex
 import * as GnomeShellOverride from './gnomeShellOverride.js';
 import * as Launcher from './launcher.js';
 import * as WindowManager from './windowManager.js';
+import * as PlaybackState from './playbackState.js';
+import * as AutoPause from './autoPause.js';
 import * as PanelMenu from './panelMenu.js';
 
 export default class HanabiExtension extends Extension {
@@ -42,6 +44,7 @@ export default class HanabiExtension extends Extension {
 
     enable() {
         this.settings = this.getSettings();
+        this.playbackState = new PlaybackState.PlaybackState();
 
         /**
          * Panel Menu
@@ -77,6 +80,7 @@ export default class HanabiExtension extends Extension {
          */
         this.override = new GnomeShellOverride.GnomeShellOverride();
         this.manager = new WindowManager.WindowManager();
+        this.autoPause = new AutoPause.AutoPause(this);
 
         // If the desktop is still starting up, wait until it is ready
         if (Main.layoutManager._startingUp) {
@@ -102,12 +106,17 @@ export default class HanabiExtension extends Extension {
     innerEnable() {
         this.override.enable();
         this.manager.enable();
+        this.autoPause.enable();
 
         this.isEnabled = true;
         if (this.launchRendererId)
             GLib.source_remove(this.launchRendererId);
 
         this.launchRenderer();
+    }
+
+    getPlaybackState() {
+        return this.playbackState;
     }
 
     launchRenderer() {
@@ -177,6 +186,7 @@ export default class HanabiExtension extends Extension {
         Main.sessionMode.hasOverview = this.old_hasOverview;
         this.override.disable();
         this.manager.disable();
+        this.autoPause.disable();
 
         this.isEnabled = false;
         this.killCurrentProcess();
