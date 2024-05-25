@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-02 19:13+0900\n"
+"POT-Creation-Date: 2024-05-25 18:29+0900\n"
 "PO-Revision-Date: 2024-03-27 13:47+0000\n"
 "Last-Translator: 0xarch <alanqa-ops@outlook.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -19,126 +19,172 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.5-dev\n"
 
-#: src/prefs.js:34
-msgid "General"
-msgstr "一般设置"
+#: src/panelMenu.js:70 src/panelMenu.js:85
+msgid "Pause"
+msgstr "暂停"
 
-#: src/prefs.js:38 src/panelMenu.js:111 src/panelMenu.js:120
+#: src/panelMenu.js:70 src/panelMenu.js:85
+msgid "Play"
+msgstr "播放"
+
+#: src/panelMenu.js:94 src/panelMenu.js:103
+msgid "Unmute Audio"
+msgstr "取消静音"
+
+#: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:43
 msgid "Mute Audio"
 msgstr "静音"
 
-#: src/prefs.js:39
+#: src/panelMenu.js:110
+msgid "Next Wallpaper"
+msgstr "下一张壁纸"
+
+#: src/panelMenu.js:125
+msgid "Preferences"
+msgstr "偏好设置"
+
+#: src/prefs.js:38
+msgid "General"
+msgstr "一般设置"
+
+#: src/prefs.js:44
 msgid "Volume Level"
 msgstr "音量"
 
-#: src/prefs.js:40
+#: src/prefs.js:45
 msgid "Show Panel Menu"
 msgstr "显示面板菜单"
 
-#: src/prefs.js:41
+#: src/prefs.js:51
+#, fuzzy
+#| msgid "Pause"
+msgid "Auto Pause"
+msgstr "暂停"
+
+#: src/prefs.js:56
+msgid "Low Battery Threshold"
+msgstr ""
+
+#: src/prefs.js:56
+msgid "Set the threshold percentage for low battery level"
+msgstr ""
+
+#: src/prefs.js:60
+msgid "Pause on Media Player Playing"
+msgstr ""
+
+#: src/prefs.js:62
+msgid "Pause playback when an MPRIS media player is playing media"
+msgstr ""
+
+#: src/prefs.js:69
+msgid "Wallpaper Changer"
+msgstr ""
+
+#: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
 msgstr "自动切换壁纸"
 
-#: src/prefs.js:44
+#: src/prefs.js:75
 msgid "Change Wallpaper Interval (minutes)"
 msgstr "切换壁纸间隔（分钟）"
 
-#: src/prefs.js:47
+#: src/prefs.js:81
 msgid "Experimental"
 msgstr "实验性"
 
-#: src/prefs.js:53
+#: src/prefs.js:87
 msgid "Experimental VA Plugin"
 msgstr "实验性 VA 插件"
 
-#: src/prefs.js:55
+#: src/prefs.js:89
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr "启用 VA 解码器以提高英特尔/AMD Wayland 用户的性能"
 
-#: src/prefs.js:60
+#: src/prefs.js:94
 msgid "NVIDIA Stateless Decoders"
 msgstr "NVIDIA 无状态解码器"
 
-#: src/prefs.js:62
+#: src/prefs.js:96
 msgid "Use new stateless NVIDIA decoders"
 msgstr "使用新的 NVIDIA 无状态解码器"
 
-#: src/prefs.js:65
+#: src/prefs.js:103
 msgid "Developer"
 msgstr "开发者"
 
-#: src/prefs.js:70
+#: src/prefs.js:109
 msgid "Debug Mode"
 msgstr "调试模式"
 
-#: src/prefs.js:72
+#: src/prefs.js:111
 msgid "Print debug messages to log"
 msgstr "将调试信息打印到日志中"
 
-#: src/prefs.js:77
+#: src/prefs.js:116
 msgid "Force gtk4paintablesink"
 msgstr "强制使用 gtk4paintablesink"
 
-#: src/prefs.js:79
+#: src/prefs.js:118
 msgid "Force use of gtk4paintablesink for video playback"
 msgstr "强制使用 gtk4paintablesink 播放视频"
 
-#: src/prefs.js:84
+#: src/prefs.js:123
 msgid "Force GtkMediaFile"
 msgstr "强制使用 GtkMediaFile"
 
-#: src/prefs.js:86
+#: src/prefs.js:125
 msgid "Force use of GtkMediaFile for video playback"
 msgstr "强制使用 GtkMediaFile 播放视频"
 
-#: src/prefs.js:88
+#: src/prefs.js:127
 msgid "Startup Delay"
 msgstr "启动延迟"
 
-#: src/prefs.js:88
+#: src/prefs.js:127
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr "增加启动延迟（以毫秒为单位）以减少与其它扩展的兼容性问题"
 
-#: src/prefs.js:175
+#: src/prefs.js:214
 msgid "Video Path"
 msgstr "视频路径"
 
-#: src/prefs.js:181 src/prefs.js:206 src/prefs.js:240 src/prefs.js:261
+#: src/prefs.js:220 src/prefs.js:245 src/prefs.js:279 src/prefs.js:300
 msgid "None"
 msgstr "无"
 
-#: src/prefs.js:193
+#: src/prefs.js:232
 msgid "Open File"
 msgstr "打开文件"
 
-#: src/prefs.js:198 src/prefs.js:254
+#: src/prefs.js:237 src/prefs.js:293
 msgid "Cancel"
 msgstr "取消"
 
-#: src/prefs.js:199 src/prefs.js:215 src/prefs.js:255 src/prefs.js:270
+#: src/prefs.js:238 src/prefs.js:254 src/prefs.js:294 src/prefs.js:309
 msgid "Open"
 msgstr "打开"
 
-#: src/prefs.js:234
+#: src/prefs.js:273
 msgid "Change Wallpaper Directory Path"
 msgstr "更改壁纸目录路径"
 
-#: src/prefs.js:249
+#: src/prefs.js:288
 msgid "Select Directory"
 msgstr "选择目录"
 
-#: src/prefs.js:289
+#: src/prefs.js:328
 msgid "Fit Mode"
 msgstr "适应模式"
 
-#: src/prefs.js:290
+#: src/prefs.js:329
 msgid "Control how wallpaper fits within the monitor"
 msgstr "控制壁纸在显示器内的贴合方式"
 
-#: src/prefs.js:291
+#: src/prefs.js:330
 msgid ""
 "\n"
 "    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
@@ -157,35 +203,92 @@ msgstr ""
 "    <b>缩放</b>：必要时缩放壁纸以适应显示器，否则保持原始大小。\n"
 "    "
 
-#: src/prefs.js:299
+#: src/prefs.js:338
 msgid "Fill"
 msgstr "填充"
 
-#: src/prefs.js:300
+#: src/prefs.js:339
 msgid "Contain"
 msgstr "包含"
 
-#: src/prefs.js:301
+#: src/prefs.js:340
 msgid "Cover"
 msgstr "覆盖"
 
-#: src/prefs.js:302
+#: src/prefs.js:341
 msgid "Scale-down"
 msgstr "缩减"
 
-#: src/prefs.js:315
+#: src/prefs.js:354
 msgid "This feature requires Gtk 4.8 or above"
 msgstr "此功能需要 Gtk 4.8 或更高版本"
 
-#: src/prefs.js:332
+#: src/prefs.js:371
+msgid "Pause on Maximize or Fullscreen"
+msgstr ""
+
+#: src/prefs.js:372
+msgid "Pause playback when there is maximized or fullscreen window"
+msgstr ""
+
+#: src/prefs.js:373
+msgid ""
+"\n"
+"    <b>Never</b>: Disable this feature.\n"
+"    <b>Any Monitor</b>: Pause playback when there is maximized or fullscreen "
+"window on any monitor.\n"
+"    <b>All Monitors</b>: Pause playback when there are maximized or "
+"fullscreen windows on all monitors.\n"
+"    "
+msgstr ""
+
+#: src/prefs.js:380 src/prefs.js:416
+msgid "Never"
+msgstr ""
+
+#: src/prefs.js:381
+msgid "Any Monitor"
+msgstr ""
+
+#: src/prefs.js:382
+msgid "All Monitors"
+msgstr ""
+
+#: src/prefs.js:407
+msgid "Pause on Battery"
+msgstr ""
+
+#: src/prefs.js:408
+msgid "Pause playback when the device is on battery or the battery is low"
+msgstr ""
+
+#: src/prefs.js:409
+msgid ""
+"\n"
+"    <b>Never</b>: Disable this feature.\n"
+"    <b>Low Battery</b>: Pause playback when the device is on low battery "
+"(below the threshold).\n"
+"    <b>Always</b>: Pause playback when the device is on battery.\n"
+"    "
+msgstr ""
+
+#: src/prefs.js:417
+msgid "Low Battery"
+msgstr ""
+
+#: src/prefs.js:418
+msgid "Always"
+msgstr ""
+
+#: src/prefs.js:443
 msgid "Change Wallpaper Mode"
 msgstr "壁纸切换模式"
 
-#: src/prefs.js:333
+#: src/prefs.js:444
 msgid "Control how to change wallpapers automatically"
 msgstr "控制如何自动切换壁纸"
 
-#: src/prefs.js:334
+#: src/prefs.js:445
 msgid ""
 "\n"
 "    <b>Sequential:</b> Preserve the directory sequence (descending order).\n"
@@ -200,34 +303,14 @@ msgstr ""
 "<b>随机：</b>从目录中随机选择壁纸。\n"
 "    "
 
-#: src/prefs.js:341
+#: src/prefs.js:452
 msgid "Sequential"
 msgstr "顺序"
 
-#: src/prefs.js:342
+#: src/prefs.js:453
 msgid "Inverse Sequential"
 msgstr "逆序"
 
-#: src/prefs.js:343
+#: src/prefs.js:454
 msgid "Random"
 msgstr "随机"
-
-#: src/panelMenu.js:82 src/panelMenu.js:102
-msgid "Pause"
-msgstr "暂停"
-
-#: src/panelMenu.js:82 src/panelMenu.js:102
-msgid "Play"
-msgstr "播放"
-
-#: src/panelMenu.js:111 src/panelMenu.js:120
-msgid "Unmute Audio"
-msgstr "取消静音"
-
-#: src/panelMenu.js:128 src/panelMenu.js:136
-msgid "Next Wallpaper"
-msgstr "下一张壁纸"
-
-#: src/panelMenu.js:147
-msgid "Preferences"
-msgstr "偏好设置"
