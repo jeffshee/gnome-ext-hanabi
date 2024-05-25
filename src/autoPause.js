@@ -105,10 +105,10 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
                 maximizedOrFullscreenOnAllMonitors: false,
             };
             this.conditions = {
-                pauseOnMaximizeOrFullscreen: this._settings.get_int('pause-on-mazimize-or-fullscreen'),
+                pauseOnMaximizeOrFullscreen: this._settings.get_int('pause-on-maximize-or-fullscreen'),
             };
-            this._settings.connect('changed::pause-on-mazimize-or-fullscreen', () => {
-                this.conditions.pauseOnMaximizeOrFullscreen = this._settings.get_int('pause-on-mazimize-or-fullscreen');
+            this._settings.connect('changed::pause-on-maximize-or-fullscreen', () => {
+                this.conditions.pauseOnMaximizeOrFullscreen = this._settings.get_int('pause-on-maximize-or-fullscreen');
                 this._update();
             });
 

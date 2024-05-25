@@ -28,36 +28,55 @@ const haveContentFit = Gtk.get_minor_version() >= 8;
 export default class HanabiExtensionPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         window._settings = this.getSettings();
-
         // Create a preferences page and group
         const page = new Adw.PreferencesPage();
-        const generalGroup = new Adw.PreferencesGroup({title: _('General')});
+
+        /**
+         * General
+         */
+        const generalGroup = new Adw.PreferencesGroup({
+            title: _('General'),
+        });
         page.add(generalGroup);
         prefsRowVideoPath(window, generalGroup);
         prefsRowFitMode(window, generalGroup);
         prefsRowBoolean(window, generalGroup, _('Mute Audio'), 'mute', '');
         prefsRowInt(window, generalGroup, _('Volume Level'), 'volume', '', 0, 100, 1, 10);
         prefsRowBoolean(window, generalGroup, _('Show Panel Menu'), 'show-panel-menu', '');
-        prefsRowBoolean(window, generalGroup, _('Change Wallpaper Automatically'), 'change-wallpaper', '');
-        prefsRowDirectoryPath(window, generalGroup);
-        prefsRowChangeWallpaperMode(window, generalGroup);
-        prefsRowInt(window, generalGroup, _('Change Wallpaper Interval (minutes)'), 'change-wallpaper-interval', '', 1, 1440, 5, 0);
 
-        const autoPause = new Adw.PreferencesGroup({
+        /**
+         * Auto Pause
+         */
+        const autoPauseGroup = new Adw.PreferencesGroup({
             title: _('Auto Pause'),
         });
-        page.add(autoPause);
-        prefsRowPauseOnMaximizeOrFullscreen(window, autoPause);
-        prefsRowPauseOnBattery(window, autoPause);
-        prefsRowInt(window, autoPause, _('Low Battery Threshold'), 'low-battery-threshold', _('Set the threshold percentage for low battery level'), 0, 100, 5, 10);
+        page.add(autoPauseGroup);
+        prefsRowPauseOnMaximizeOrFullscreen(window, autoPauseGroup);
+        prefsRowPauseOnBattery(window, autoPauseGroup);
+        prefsRowInt(window, autoPauseGroup, _('Low Battery Threshold'), 'low-battery-threshold', _('Set the threshold percentage for low battery level'), 0, 100, 5, 10);
         prefsRowBoolean(
             window,
-            autoPause,
+            autoPauseGroup,
             _('Pause on Media Player Playing'),
             'pause-on-mpris-playing',
             _('Pause playback when an MPRIS media player is playing media')
         );
 
+        /**
+         * Wallpaper Changer
+         */
+        const wallpaperChangerGroup = new Adw.PreferencesGroup({
+            title: _('Wallpaper Changer'),
+        });
+        page.add(wallpaperChangerGroup);
+        prefsRowBoolean(window, wallpaperChangerGroup, _('Change Wallpaper Automatically'), 'change-wallpaper', '');
+        prefsRowDirectoryPath(window, wallpaperChangerGroup);
+        prefsRowChangeWallpaperMode(window, wallpaperChangerGroup);
+        prefsRowInt(window, wallpaperChangerGroup, _('Change Wallpaper Interval (minutes)'), 'change-wallpaper-interval', '', 1, 1440, 5, 0);
+
+        /**
+         * Experimental
+         */
         const experimentalGroup = new Adw.PreferencesGroup({
             title: _('Experimental'),
         });
@@ -77,7 +96,12 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
             _('Use new stateless NVIDIA decoders')
         );
 
-        const developerGroup = new Adw.PreferencesGroup({title: _('Developer')});
+        /**
+         * Developer
+         */
+        const developerGroup = new Adw.PreferencesGroup({
+            title: _('Developer'),
+        });
         page.add(developerGroup);
         prefsRowBoolean(
             window,
@@ -339,41 +363,6 @@ function prefsRowFitMode(window, prefsGroup) {
 
 /**
  *
- * @param {Adw.PreferencesWindow} window AdwPreferencesWindow
- * @param {Adw.PreferencesGroup} prefsGroup AdwPreferencesGroup
- */
-function prefsRowChangeWallpaperMode(window, prefsGroup) {
-    const settings = window._settings;
-    const title = _('Change Wallpaper Mode');
-    const subtitle = _('Control how to change wallpapers automatically');
-    const tooltip = _(`
-    <b>Sequential:</b> Preserve the directory sequence (descending order).
-    <b>Inverse Sequential:</b> Retrieve wallpapers in the opposite sequence (ascending order).
-    <b>Random:</b> Randomly select wallpapers from the directory.
-    `);
-
-    const items = Gtk.StringList.new([
-        _('Sequential'),
-        _('Inverse Sequential'),
-        _('Random'),
-    ]);
-
-    const row = new Adw.ComboRow({
-        title,
-        subtitle,
-        model: items,
-        selected: settings.get_int('change-wallpaper-mode'),
-    });
-    row.set_tooltip_markup(tooltip);
-    prefsGroup.add(row);
-
-    row.connect('notify::selected', () => {
-        settings.set_int('change-wallpaper-mode', row.selected);
-    });
-}
-
-/**
- *
  * @param window
  * @param prefsGroup
  */
@@ -397,14 +386,14 @@ function prefsRowPauseOnMaximizeOrFullscreen(window, prefsGroup) {
         title,
         subtitle,
         model: items,
-        selected: settings.get_int('pause-on-mazimize-or-fullscreen'),
+        selected: settings.get_int('pause-on-maximize-or-fullscreen'),
     });
 
     row.set_tooltip_markup(tooltip);
     prefsGroup.add(row);
 
     row.connect('notify::selected', () => {
-        settings.set_int('pause-on-mazimize-or-fullscreen', row.selected);
+        settings.set_int('pause-on-maximize-or-fullscreen', row.selected);
     });
 }
 
@@ -441,5 +430,40 @@ function prefsRowPauseOnBattery(window, prefsGroup) {
 
     row.connect('notify::selected', () => {
         settings.set_int('pause-on-battery', row.selected);
+    });
+}
+
+/**
+ *
+ * @param {Adw.PreferencesWindow} window AdwPreferencesWindow
+ * @param {Adw.PreferencesGroup} prefsGroup AdwPreferencesGroup
+ */
+function prefsRowChangeWallpaperMode(window, prefsGroup) {
+    const settings = window._settings;
+    const title = _('Change Wallpaper Mode');
+    const subtitle = _('Control how to change wallpapers automatically');
+    const tooltip = _(`
+    <b>Sequential:</b> Preserve the directory sequence (descending order).
+    <b>Inverse Sequential:</b> Retrieve wallpapers in the opposite sequence (ascending order).
+    <b>Random:</b> Randomly select wallpapers from the directory.
+    `);
+
+    const items = Gtk.StringList.new([
+        _('Sequential'),
+        _('Inverse Sequential'),
+        _('Random'),
+    ]);
+
+    const row = new Adw.ComboRow({
+        title,
+        subtitle,
+        model: items,
+        selected: settings.get_int('change-wallpaper-mode'),
+    });
+    row.set_tooltip_markup(tooltip);
+    prefsGroup.add(row);
+
+    row.connect('notify::selected', () => {
+        settings.set_int('change-wallpaper-mode', row.selected);
     });
 }

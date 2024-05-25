@@ -44,7 +44,7 @@
             <description>Control how to change wallpapers automatically</description>
         </key>
 
-        <key name="pause-on-mazimize-or-fullscreen" type="i">
+        <key name="pause-on-maximize-or-fullscreen" type="i">
             <range min="0" max="2" />
             <default>0</default>
             <summary>Pause on Maximize or Fullscreen</summary>
