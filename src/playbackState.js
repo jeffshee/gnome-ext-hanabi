@@ -18,7 +18,6 @@
 import * as DBus from './dbus.js';
 import * as Logger from './logger.js';
 
-const logger = new Logger.Logger('playbackState');
 
 /**
  * Ref: https://kentcdodds.com/blog/implementing-a-simple-state-machine-library-in-javascript
@@ -52,13 +51,14 @@ function createMachine(stateMachineDefinition) {
 
 export class PlaybackState {
     constructor() {
-        this._rendererDBus = new DBus.RendererDBus();
+        this._logger = new Logger.Logger('playbackState');
+        this._renderer = new DBus.RendererWrapper();
         this._machineDefinition = {
             initialState: 'playing',
             playing: {
                 actions: {
                     onEnter: () => {
-                        this._rendererDBus.setPlay();
+                        this._renderer.setPlay();
                     },
                     onExit() {},
                 },
@@ -67,14 +67,14 @@ export class PlaybackState {
                     // autoPlay: {},
                     userPause: {
                         target: 'pausedByUser',
-                        action() {
-                            logger.debug('playing -> pausedByUser');
+                        action: () => {
+                            this._logger.debug('playing -> pausedByUser');
                         },
                     },
                     autoPause: {
                         target: 'pausedByAuto',
-                        action() {
-                            logger.debug('playing -> pausedByAuto');
+                        action: () => {
+                            this._logger.debug('playing -> pausedByAuto');
                         },
                     },
                 },
@@ -82,23 +82,23 @@ export class PlaybackState {
             pausedByUser: {
                 actions: {
                     onEnter: () => {
-                        this._rendererDBus.setPause();
+                        this._renderer.setPause();
                     },
                     onExit() {},
                 },
                 transitions: {
                     userPlay: {
                         target: 'playing',
-                        action() {
-                            logger.debug('pausedByUser -> playing');
+                        action: () => {
+                            this._logger.debug('pausedByUser -> playing');
                         },
                     },
                     // autoPlay: {},
                     // userPause: {},
                     autoPause: {
                         target: 'paused',
-                        action() {
-                            logger.debug('pausedByUser -> paused');
+                        action: () => {
+                            this._logger.debug('pausedByUser -> paused');
                         },
                     },
                 },
@@ -106,7 +106,7 @@ export class PlaybackState {
             pausedByAuto: {
                 actions: {
                     onEnter: () => {
-                        this._rendererDBus.setPause();
+                        this._renderer.setPause();
                     },
                     onExit() {},
                 },
@@ -114,14 +114,14 @@ export class PlaybackState {
                     // userPlay: {},
                     autoPlay: {
                         target: 'playing',
-                        action() {
-                            logger.debug('pausedByAuto -> playing');
+                        action: () => {
+                            this._logger.debug('pausedByAuto -> playing');
                         },
                     },
                     userPause: {
                         target: 'paused',
-                        action() {
-                            logger.debug('pausedByAuto -> paused');
+                        action: () => {
+                            this._logger.debug('pausedByAuto -> paused');
                         },
                     },
                     // autoPause: {},
@@ -135,14 +135,14 @@ export class PlaybackState {
                 transitions: {
                     userPlay: {
                         target: 'pausedByAuto',
-                        action() {
-                            logger.debug('paused -> pausedByAuto');
+                        action: () => {
+                            this._logger.debug('paused -> pausedByAuto');
                         },
                     },
                     autoPlay: {
                         target: 'pausedByUser',
-                        action() {
-                            logger.debug('paused -> pausedByUser');
+                        action: () => {
+                            this._logger.debug('paused -> pausedByUser');
                         },
                     },
                     // userPause: {},
@@ -150,7 +150,7 @@ export class PlaybackState {
                 },
             },
         };
-        this._rendererDBus.connect(
+        this._renderer.proxy.connectSignal(
             'isPlayingChanged',
             (_proxy, _sender, [isPlaying]) => {
                 if (isPlaying && this.getCurrentState() !== 'playing') {
@@ -158,7 +158,7 @@ export class PlaybackState {
                     // This discrepancy can happen when the shell reload, renderer process reload,
                     // or when the user restarts the playback (e.g. select another video file in prefs).
                     // Pause the renderer if that's the case.
-                    this._rendererDBus.setPause();
+                    this._renderer.setPause();
                 }
             }
         );
