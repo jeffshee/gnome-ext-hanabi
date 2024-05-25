@@ -34,7 +34,7 @@ export class HanabiPanelMenu {
         this._settings = extension.getSettings();
         this._playbackState = extension.getPlaybackState();
         this._isPlaying = false;
-        this._rendererDBus = new DBus.RendererDBus();
+        this._renderer = new DBus.RendererWrapper();
     }
 
     enable() {
@@ -77,7 +77,7 @@ export class HanabiPanelMenu {
                 this._playbackState.userPlay();
         });
 
-        this._rendererDBus.connect(
+        this._renderer.proxy.connectSignal(
             'isPlayingChanged',
             (_proxy, _sender, [isPlaying]) => {
                 this._isPlaying = isPlaying;

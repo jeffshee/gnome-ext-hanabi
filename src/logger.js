@@ -69,3 +69,19 @@ export class Logger {
         console.trace(...this._processArgs(args));
     }
 }
+
+
+/**
+ * List all methods of an object in JavaScript
+ * Ref: https://flaviocopes.com/how-to-list-object-methods-javascript/
+ *
+ * @param obj
+ */
+export const getMethods = obj => {
+    let properties = new Set();
+    let currentObj = obj;
+    do
+        Object.getOwnPropertyNames(currentObj).map(item => properties.add(item));
+    while ((currentObj = Object.getPrototypeOf(currentObj)));
+    return [...properties.keys()].filter(item => typeof obj[item] === 'function');
+};

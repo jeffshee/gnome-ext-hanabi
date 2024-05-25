@@ -18,15 +18,18 @@
 import Gio from 'gi://Gio';
 
 import * as DBusUtil from 'resource://org/gnome/shell/misc/dbusUtils.js';
+import * as Logger from './logger.js';
 
-const UPOWER_BUS_NAME = 'org.freedesktop.UPower';
-const UPOWER_OBJECT_PATH = '/org/freedesktop/UPower/devices/DisplayDevice';
-const DBUS_BUS_NAME = 'org.freedesktop.DBus';
-const DBUS_OBJECT_PATH = '/org/freedesktop/DBus';
 
-export class RendererDBus {
+// Ref: https://gjs.guide/guides/gio/dbus.html#high-level-proxies
+export class RendererWrapper {
     constructor() {
-        const dbusXml = `
+        this._logger = new Logger.Logger('dbus::renderer');
+        this.proxy = this.createProxy();
+    }
+
+    createProxy() {
+        const interfaceXml = `
         <node>
             <interface name="io.github.jeffshee.HanabiRenderer">
                 <method name="setPlay"/>
@@ -37,55 +40,41 @@ export class RendererDBus {
                 </signal>
             </interface>
         </node>`;
-        const proxy = Gio.DBusProxy.makeProxyWrapper(dbusXml);
-        this.proxy = proxy(Gio.DBus.session,
-            'io.github.jeffshee.HanabiRenderer', '/io/github/jeffshee/HanabiRenderer');
+        const DBUS_BUS_NAME = 'io.github.jeffshee.HanabiRenderer';
+        const DBUS_OBJECT_PATH = '/io/github/jeffshee/HanabiRenderer';
+        const DBusProxy = Gio.DBusProxy.makeProxyWrapper(interfaceXml);
+        return DBusProxy(Gio.DBus.session, DBUS_BUS_NAME, DBUS_OBJECT_PATH);
     }
 
-    getProxy() {
-        return this.proxy;
+    async setPlay() {
+        try {
+            await this.proxy.setPlayAsync();
+        } catch (e) {
+            this._logger.warn(e);
+        }
     }
 
-    connect(signal, callback) {
-        return this.proxy.connectSignal(signal, callback);
-    }
-
-    setPlay() {
-        this.proxy.call(
-            'setPlay', // method_name
-            null, // parameters
-            Gio.DBusCallFlags.NO_AUTO_START, // flags
-            -1, // timeout_msec
-            null, // cancellable
-            null // callback
-        );
-    }
-
-    setPause() {
-        this.proxy.call(
-            'setPause',
-            null,
-            Gio.DBusCallFlags.NO_AUTO_START,
-            -1,
-            null,
-            null
-        );
+    async setPause() {
+        try {
+            await this.proxy.setPauseAsync();
+        } catch (e) {
+            this._logger.warn(e);
+        }
     }
 }
 
-export class UPowerDBus {
+export class UPowerWrapper {
     constructor() {
-        const dbusXml = DBusUtil.loadInterfaceXML('org.freedesktop.UPower.Device');
-        const proxy = Gio.DBusProxy.makeProxyWrapper(dbusXml);
-        this.proxy = proxy(Gio.DBus.system, UPOWER_BUS_NAME, UPOWER_OBJECT_PATH);
+        this.proxy = this.createProxy();
     }
 
-    getProxy() {
-        return this.proxy;
-    }
-
-    connect(signal, callback) {
-        return this.proxy.connectSignal(signal, callback);
+    createProxy() {
+        const DBUS_INTERFACE = 'org.freedesktop.UPower.Device';
+        const DBUS_BUS_NAME = 'org.freedesktop.UPower';
+        const DBUS_OBJECT_PATH = '/org/freedesktop/UPower/devices/DisplayDevice';
+        const interfaceXml = DBusUtil.loadInterfaceXML(DBUS_INTERFACE);
+        const DBusProxy = Gio.DBusProxy.makeProxyWrapper(interfaceXml);
+        return DBusProxy(Gio.DBus.system, DBUS_BUS_NAME, DBUS_OBJECT_PATH);
     }
 
     getState() {
@@ -98,49 +87,47 @@ export class UPowerDBus {
 }
 
 
-export class DbusDBus {
+export class DBusWrapper {
     constructor() {
-        const dbusXml = DBusUtil.loadInterfaceXML('org.freedesktop.DBus');
-        const proxy = Gio.DBusProxy.makeProxyWrapper(dbusXml);
-        this.proxy = proxy(Gio.DBus.session, DBUS_BUS_NAME, DBUS_OBJECT_PATH);
+        this._logger = new Logger.Logger('dbus::dbus');
+        this.proxy = this.createProxy();
     }
 
-    getProxy() {
-        return this.proxy;
-    }
-
-    connect(signal, callback) {
-        return this.proxy.connectSignal(signal, callback);
+    createProxy() {
+        const DBUS_INTERFACE = 'org.freedesktop.DBus';
+        const DBUS_BUS_NAME = 'org.freedesktop.DBus';
+        const DBUS_OBJECT_PATH = '/org/freedesktop/DBus';
+        const interfaceXml = DBusUtil.loadInterfaceXML(DBUS_INTERFACE);
+        const DBusProxy = Gio.DBusProxy.makeProxyWrapper(interfaceXml);
+        return DBusProxy(Gio.DBus.session, DBUS_BUS_NAME, DBUS_OBJECT_PATH);
     }
 
     listNames() {
-        return this.proxy.call_sync(
-            'ListNames',
-            null,
-            Gio.DBusCallFlags.NONE,
-            -1,
-            null
-        );
+        try {
+            return this.proxy.ListNamesSync();
+        } catch (e) {
+            this._logger.warn(e);
+        }
+        return [];
     }
 }
 
-export class MprisDbus {
+export class MprisWrapper {
     constructor(mediaPlayerName) {
-        const dbusXml = DBusUtil.loadInterfaceXML('org.mpris.MediaPlayer2.Player');
-        const proxy = Gio.DBusProxy.makeProxyWrapper(dbusXml);
-        this.proxy = proxy(Gio.DBus.session, mediaPlayerName, '/org/mpris/MediaPlayer2');
+        this._logger = new Logger.Logger(`dbus::mpris::${mediaPlayerName}`);
+        this.proxy = this.createProxy(mediaPlayerName);
     }
 
-    getProxy() {
-        return this.proxy;
-    }
-
-    connect(signal, callback) {
-        return this.proxy.connectSignal(signal, callback);
+    createProxy(mediaPlayerName) {
+        const DBUS_INTERFACE = 'org.mpris.MediaPlayer2.Player';
+        const DBUS_BUS_NAME = mediaPlayerName;
+        const DBUS_OBJECT_PATH = '/org/mpris/MediaPlayer2';
+        const interfaceXml = DBusUtil.loadInterfaceXML(DBUS_INTERFACE);
+        const DBusProxy = Gio.DBusProxy.makeProxyWrapper(interfaceXml);
+        return DBusProxy(Gio.DBus.session, DBUS_BUS_NAME, DBUS_OBJECT_PATH);
     }
 
     getPlaybackStatus() {
         return this.proxy.PlaybackStatus;
     }
 }
-

@@ -303,11 +303,11 @@ const PauseOnBatteryModule = GObject.registerClass(
                 this._update();
             });
 
-            this._upower = new DBus.UPowerDBus();
+            this._upower = new DBus.UPowerWrapper();
         }
 
         enable() {
-            this._upower.getProxy().connect('g-properties-changed', (_proxy, properties) => {
+            this._upower.proxy.connect('g-properties-changed', (_proxy, properties) => {
                 let payload = properties.deep_unpack();
                 if (!payload.hasOwnProperty('State') && !payload.hasOwnProperty('Percentage'))
                     return;
@@ -366,7 +366,7 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
                 this._update();
             });
 
-            this._dbus = new DBus.DbusDBus();
+            this._dbus = new DBus.DBusWrapper();
             this._mediaPlayers = {}; // {$mprisName: {playbackStatus, mpris, mprisPropertiesChangedId}, ...}
         }
 
@@ -374,25 +374,25 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
             let mprisNames = this._queryMprisNames();
             mprisNames.forEach(mprisName => {
                 this._logger.debug('Media Player found:', mprisName);
-                let mpris = new DBus.MprisDbus(mprisName);
+                let mpris = new DBus.MprisWrapper(mprisName);
                 let playbackStatus = mpris.getPlaybackStatus();
                 let _mprisPropertiesChanged = this._mprisPropertiesChangedFactory(mprisName);
-                let mprisPropertiesChangedId = mpris.getProxy().connect('g-properties-changed', _mprisPropertiesChanged);
+                let mprisPropertiesChangedId = mpris.proxy.connect('g-properties-changed', _mprisPropertiesChanged);
                 this._mediaPlayers[mprisName] = {
                     playbackStatus, mpris, mprisPropertiesChangedId,
                 };
             });
             this._logger.debug(this._stringifyMediaPlayers());
 
-            this._dbus.connect('NameOwnerChanged', (_proxy, _sender, [name, oldOwner, newOwner]) => {
+            this._dbus.proxy.connectSignal('NameOwnerChanged', (_proxy, _sender, [name, oldOwner, newOwner]) => {
                 if (name.startsWith('org.mpris.MediaPlayer2.')) {
                     let mprisName = name;
                     if (oldOwner === '') {
                         this._logger.debug('Media Player created:', mprisName);
-                        let mpris = new DBus.MprisDbus(mprisName);
+                        let mpris = new DBus.MprisWrapper(mprisName);
                         let playbackStatus = mpris.getPlaybackStatus();
                         let _mprisPropertiesChanged = this._mprisPropertiesChangedFactory(mprisName);
-                        let mprisPropertiesChangedId = mpris.getProxy().connect('g-properties-changed', _mprisPropertiesChanged);
+                        let mprisPropertiesChangedId = mpris.proxy.connect('g-properties-changed', _mprisPropertiesChanged);
                         this._mediaPlayers[mprisName] = {
                             playbackStatus, mpris, mprisPropertiesChangedId,
                         };
@@ -400,7 +400,7 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
                         this._logger.debug('Media Player destroyed:', mprisName);
                         let mpris = this._mediaPlayers[mprisName].mpris;
                         let mprisPropertiesChangedId = this._mediaPlayers[mprisName].mprisPropertiesChangedId;
-                        mpris.getProxy().disconnect(mprisPropertiesChangedId);
+                        mpris.proxy.disconnect(mprisPropertiesChangedId);
                         delete this._mediaPlayers[mprisName];
                     }
                     this._logger.debug(this._stringifyMediaPlayers());
@@ -413,8 +413,9 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
 
         _queryMprisNames() {
             try {
-                let ret = this._dbus.listNames();
-                let [names] =  ret.deep_unpack();
+                // let ret = this._dbus.listNames();
+                // let [names] =  ret.deep_unpack();
+                let [names] = this._dbus.listNames();
                 return names.filter(name => name.startsWith('org.mpris.MediaPlayer2.'));
             } catch (e) {
                 this._logger.error('Error:', e.message);
@@ -471,7 +472,7 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
                 mediaPlayer => {
                     let mpris = mediaPlayer.mpris;
                     let mprisPropertiesChangedId = mediaPlayer.mprisPropertiesChangedId;
-                    mpris.getProxy().disconnect(mprisPropertiesChangedId);
+                    mpris.proxy.disconnect(mprisPropertiesChangedId);
                 }
             );
             this._mediaPlayers = {};
