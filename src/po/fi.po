@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-04-28 02:07+0000\n"
+"PO-Revision-Date: 2024-05-27 15:09+0000\n"
 "Last-Translator: Linus Virtanen <linus.virtanen@protonmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/fi/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5.1\n"
+"X-Generator: Weblate 5.6-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -55,30 +55,28 @@ msgid "Show Panel Menu"
 msgstr "Näytä ohjausvalikko"
 
 #: src/prefs.js:51
-#, fuzzy
-#| msgid "Pause"
 msgid "Auto Pause"
-msgstr "Tauko"
+msgstr "Automaattitauotus"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr ""
+msgstr "Vähäisen akkuvirran kynnystaso"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "Aseta prosenttimääre vähäisen akkuvirran kynnystasolle"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr ""
+msgstr "Tauota mediaohjelman toistaessa jotakin"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
-msgstr ""
+msgstr "Tauota MPRIS-mediasoittimen toistaessa jotakin"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "Taustakuvan vaihtaja"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
@@ -231,11 +229,11 @@ msgstr "Tämä ominaisuus vaatii Gtk julkaisun 4.8 tai uudemman"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "Tauota enimmäisikkunoinnin tai kokoruututilan kohdalla"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
-msgstr ""
+msgstr "Tauota toisto kun ikkuna suurennetaan tai asetetaan kokoruututilaan"
 
 #: src/prefs.js:373
 msgid ""
@@ -247,26 +245,34 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Älä milloinkaan</b>: Kytke pois tätä ominaisuutta.\n"
+"    <b>Mikä tahansa näyttö</b>: Tauota toisto kun mille tahansa näytölle "
+"asetetaan suurennettu tai kokoruutuikkuna.\n"
+"    <b>Kaikki näytöt</b>: Tauota toisto mikäli kaikilla näytöillä on "
+"suurennettuja tai kokoruudun ikkunoita.\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "Ei koskaan"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "Mikä tahansa näyttö"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "Kaikki näytöt"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
-msgstr ""
+msgstr "Tauota akkuvirralla"
 
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
+"Tauota toisto laitteen ollessa akkuvirran varassa tai akun varaus on vähissä"
 
 #: src/prefs.js:409
 msgid ""
@@ -277,14 +283,20 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Älä milloinkaan</b>: Kytke pois tätä ominaisuutta.\n"
+"    <b>Vähäinen akunlataus</b>: Tauota toisto kun laitteen akku on vähissä ("
+"määritetyn kynnyksen alapuolella).\n"
+"    <b>Aina</b>: Tauota toisto laitteen ollessa akkuvirran varassa.\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "Akku vähissä"
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "Aina"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
