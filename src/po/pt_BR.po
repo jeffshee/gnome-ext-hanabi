@@ -3,19 +3,22 @@
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # Seikm, 2023.
 #
+# ☂︎ <gabriel_alcantara12@outlook.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2023-10-12 04:02-0300\n"
-"Last-Translator: Seikm\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2024-05-27 15:09+0000\n"
+"Last-Translator: ☂︎ <gabriel_alcantara12@outlook.com>\n"
+"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
+"gnome-ext-hanabi/gnome-ext-hanabi/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.3.2\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.6-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -51,33 +54,31 @@ msgstr "Volume do Som"
 
 #: src/prefs.js:45
 msgid "Show Panel Menu"
-msgstr "Mostrar Menu de Painel"
+msgstr "Mostrar Menu do Painel"
 
 #: src/prefs.js:51
-#, fuzzy
-#| msgid "Pause"
 msgid "Auto Pause"
-msgstr "Pausar"
+msgstr "Pausar Automaticamente"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr ""
+msgstr "Limite de pouca bateria"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "Especifique um limite de porcentagem para o nível de bateria baixa"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr ""
+msgstr "Pausar quando algum reprodutor de vídeo estiver ativo"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
-msgstr ""
+msgstr "Pausar a reprodução quando um MPRIS estiver reproduzindo alguma mídia"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "Mudança do Wallpaper"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
@@ -85,7 +86,7 @@ msgstr "Mudar Wallpaper Automaticamente"
 
 #: src/prefs.js:75
 msgid "Change Wallpaper Interval (minutes)"
-msgstr "Intervalo p/ Mudar Wallpaper (minutos)"
+msgstr "Intervalo p/ Mudar de Wallpaper (minutos)"
 
 #: src/prefs.js:81
 msgid "Experimental"
@@ -140,19 +141,19 @@ msgstr "Forçar o uso do GtkMediaFile para a reprodução dos vídeos"
 
 #: src/prefs.js:127
 msgid "Startup Delay"
-msgstr "Atraso de inicialização"
+msgstr "Atraso na inicialização"
 
 #: src/prefs.js:127
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
-"Adicionar atraso de inicialização (em milissegundos) para impedir problemas "
-"com outras extensões"
+"Adiciona um atraso de inicialização (em milissegundos) para diminuir "
+"problemas de compatibilidade com outras extensões"
 
 #: src/prefs.js:214
 msgid "Video Path"
-msgstr "Localização do Vídeo"
+msgstr "Diretório do Vídeo"
 
 #: src/prefs.js:220 src/prefs.js:245 src/prefs.js:279 src/prefs.js:300
 msgid "None"
@@ -172,7 +173,7 @@ msgstr "Abrir"
 
 #: src/prefs.js:273
 msgid "Change Wallpaper Directory Path"
-msgstr "Caminho do Diretório p/ Mudar Wallpaper"
+msgstr "Alterar Caminho do Diretório de Wallpapers"
 
 #: src/prefs.js:288
 msgid "Select Directory"
@@ -180,11 +181,11 @@ msgstr "Selecionar Diretório"
 
 #: src/prefs.js:328
 msgid "Fit Mode"
-msgstr "Ajuste do Papel de Parede"
+msgstr "Ajuste do Wallpaper"
 
 #: src/prefs.js:329
 msgid "Control how wallpaper fits within the monitor"
-msgstr "Modificar como o papel de parede se ajusta no seu monitor"
+msgstr "Controla como o wallpaper se ajusta ao seu monitor"
 
 #: src/prefs.js:330
 msgid ""
@@ -199,14 +200,14 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    <b>Preencher</b>: Estica o papel de parede para preencher o monitor por "
+"    <b>Preencher</b>: Estica o wallpaper para preencher o monitor por "
 "completo.\n"
-"    <b>Conter</b>: Dimensiona o papel de parede para caber no monitor (não "
+"    <b>Conter</b>: Dimensiona o wallpaper para caber no monitor (não "
 "modifica a proporção).\n"
-"    <b>Cobrir</b>: Dimensiona o papel de parede para cobrir o monitor (não "
+"    <b>Cobrir</b>: Dimensiona o wallpaper para cobrir o monitor (não "
 "modifica a proporção).\n"
-"    <b>Diminuir</b>: Caso não couber, diminui o tamanho do papel de parede "
-"para caber no monitor.\n"
+"    <b>Diminuir</b>: Caso não couber, diminui o tamanho do wallpaper para "
+"caber no monitor.\n"
 "    "
 
 #: src/prefs.js:338
@@ -223,7 +224,7 @@ msgstr "Cobrir"
 
 #: src/prefs.js:341
 msgid "Scale-down"
-msgstr "Diminuir"
+msgstr "Diminuir Escala"
 
 #: src/prefs.js:354
 msgid "This feature requires Gtk 4.8 or above"
@@ -231,11 +232,12 @@ msgstr "Essa funcionalidade precisa de GTK 4.8 ou alguma versão superior"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "Pausar quando a janela estiver preenchendo, ou tela cheia"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
 msgstr ""
+"Pausar a reprodução quando tiver uma janela preenchendo ou em tela cheia"
 
 #: src/prefs.js:373
 msgid ""
@@ -247,26 +249,35 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Nunca<b>: Deativar esse recurso.\n"
+"    <b>Qualquer Monitor<b>: Pausa a reprodução quando tem uma janela "
+"maximizada ou em tela cheia em algum dos monitores\n"
+"    <b>Todos os Monitores<b>:Pausa a reprodução quando tem uma janela "
+"maximizada ou em tela cheia em todos dos monitores\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "Nunca"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "Qualquer Monitor"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "Todos os monitores"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
-msgstr ""
+msgstr "Pausar na Bateria"
 
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
+"Pausar a reprodução quando o dispositivo estiver na bateria ou estiver com "
+"pouca bateria."
 
 #: src/prefs.js:409
 msgid ""
@@ -277,18 +288,24 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Nunca<b>: Desativa esse recurso\n"
+"    <b>Pouca Bateria<b>: Pausa a reprodução quando o dispositivo está com "
+"pouca bateria (abaixo do limite).\n"
+"    <b>Sempre<b>: Pausa a reprodução quando o dispositivo está na bateria.\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "Pouca Bateria"
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "Sempre"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
-msgstr "Modo p/ Mudar Wallpaper"
+msgstr "Alterar Modo do Wallpaper"
 
 #: src/prefs.js:444
 msgid "Control how to change wallpapers automatically"
@@ -304,20 +321,19 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    <b>Sequencial:</b> Preservar a sequência de arquivos (ordem crescente).\n"
-"    <b>Sequencial Inversa:</b> Usar papéis de parede na sequência oposta "
-"(ordem decrescente).\n"
-"    <b>Aleatório:</b> Selecionar papéis de parede aleatoriamente do "
-"diretório.\n"
+"    <b>Sequêncial:</b> Preservar a sequência de arquivos (ordem crescente).\n"
+"    <b>Sequêncial Inversa:</b> Usar papéis de parede na sequência oposta ("
+"ordem decrescente).\n"
+"    <b>Aleatório:</b> Seleciona wallpapers aleatoriamente do diretório.\n"
 "    "
 
 #: src/prefs.js:452
 msgid "Sequential"
-msgstr "Sequencial"
+msgstr "Sequêncial"
 
 #: src/prefs.js:453
 msgid "Inverse Sequential"
-msgstr "Sequencial Inversa"
+msgstr "Sequência Inversa"
 
 #: src/prefs.js:454
 msgid "Random"
