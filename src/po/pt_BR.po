@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-05-27 15:09+0000\n"
+"PO-Revision-Date: 2024-06-05 06:55+0000\n"
 "Last-Translator: ☂︎ <gabriel_alcantara12@outlook.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "gnome-ext-hanabi/gnome-ext-hanabi/pt_BR/>\n"
@@ -30,11 +30,11 @@ msgstr "Reproduzir"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103
 msgid "Unmute Audio"
-msgstr "Ligar Som"
+msgstr "Ativar Som"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:43
 msgid "Mute Audio"
-msgstr "Desligar Som"
+msgstr "Desativar Som"
 
 #: src/panelMenu.js:110
 msgid "Next Wallpaper"
@@ -54,7 +54,7 @@ msgstr "Volume do Som"
 
 #: src/prefs.js:45
 msgid "Show Panel Menu"
-msgstr "Mostrar Menu do Painel"
+msgstr "Mostrar o Menu do Painel"
 
 #: src/prefs.js:51
 msgid "Auto Pause"
@@ -82,7 +82,7 @@ msgstr "Mudança do Wallpaper"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
-msgstr "Mudar Wallpaper Automaticamente"
+msgstr "Muda o Wallpaper Automaticamente"
 
 #: src/prefs.js:75
 msgid "Change Wallpaper Interval (minutes)"
@@ -113,7 +113,7 @@ msgstr "Utilizar os novos decodificadores sem estado da NVIDIA"
 
 #: src/prefs.js:103
 msgid "Developer"
-msgstr "Opções para Desenvolvedores"
+msgstr "Desenvolvedor"
 
 #: src/prefs.js:109
 msgid "Debug Mode"
@@ -121,7 +121,7 @@ msgstr "Modo de Depuração"
 
 #: src/prefs.js:111
 msgid "Print debug messages to log"
-msgstr "Enviar mensagens de depuração para o registro (Debug)"
+msgstr "Armazenar mensagens de debug ao log"
 
 #: src/prefs.js:116
 msgid "Force gtk4paintablesink"
@@ -173,7 +173,7 @@ msgstr "Abrir"
 
 #: src/prefs.js:273
 msgid "Change Wallpaper Directory Path"
-msgstr "Alterar Caminho do Diretório de Wallpapers"
+msgstr "Altere o Caminho do Diretório de Wallpapers"
 
 #: src/prefs.js:288
 msgid "Select Directory"
@@ -305,11 +305,11 @@ msgstr "Sempre"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
-msgstr "Alterar Modo do Wallpaper"
+msgstr "Altere o Modo do Wallpaper"
 
 #: src/prefs.js:444
 msgid "Control how to change wallpapers automatically"
-msgstr "Controla como alterar wallpapers automaticamente"
+msgstr "Controla como alterar os wallpapers automaticamente"
 
 #: src/prefs.js:445
 msgid ""
@@ -321,15 +321,16 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    <b>Sequêncial:</b> Preservar a sequência de arquivos (ordem crescente).\n"
+"    <b>Sequêncial:</b> Preservar a sequência de arquivos (ordem decrescente)."
+"\n"
 "    <b>Sequêncial Inversa:</b> Usar papéis de parede na sequência oposta ("
-"ordem decrescente).\n"
+"ordem crescente).\n"
 "    <b>Aleatório:</b> Seleciona wallpapers aleatoriamente do diretório.\n"
 "    "
 
 #: src/prefs.js:452
 msgid "Sequential"
-msgstr "Sequêncial"
+msgstr "Sequencial"
 
 #: src/prefs.js:453
 msgid "Inverse Sequential"
