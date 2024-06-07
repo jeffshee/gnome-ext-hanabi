@@ -2,22 +2,23 @@
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # volkov <d2oo1dle2x@gmail.com>, 2024.
+# Hotripak <hotr1pak@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-01-02 16:08+0000\n"
-"Last-Translator: volkov <d2oo1dle2x@gmail.com>\n"
-"Language-Team: Ukrainian <https://hosted.weblate.org/projects/gnome-ext-"
-"hanabi/gnome-ext-hanabi/uk/>\n"
+"PO-Revision-Date: 2024-06-08 16:09+0000\n"
+"Last-Translator: Hotripak <hotr1pak@gmail.com>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/"
+"gnome-ext-hanabi/gnome-ext-hanabi/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.4-dev\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.6-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -37,7 +38,7 @@ msgstr "Заглушити аудіо"
 
 #: src/panelMenu.js:110
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "Наступні шпалери"
 
 #: src/panelMenu.js:125
 msgid "Preferences"
@@ -56,38 +57,36 @@ msgid "Show Panel Menu"
 msgstr "Показувати індикатор у панелі стану"
 
 #: src/prefs.js:51
-#, fuzzy
-#| msgid "Pause"
 msgid "Auto Pause"
-msgstr "Призупинити"
+msgstr "Авто пауза"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr ""
+msgstr "Поріг низького заряду акумулятора"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "Встановіть пороговий відсоток для низького заряду батареї"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr ""
+msgstr "Пауза у відтворенні медіаплеєра"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
-msgstr ""
+msgstr "Призупинити відтворення, коли медіаплеєр MPRIS відтворює медіафайли"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "Змінювач шпалер"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "Автоматична зміна шпалер"
 
 #: src/prefs.js:75
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "Інтервал зміни шпалер (хвилини)"
 
 #: src/prefs.js:81
 msgid "Experimental"
@@ -174,11 +173,11 @@ msgstr "Відкрити"
 
 #: src/prefs.js:273
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "Зміна шляху до каталогу шпалер"
 
 #: src/prefs.js:288
 msgid "Select Directory"
-msgstr ""
+msgstr "Обрати каталог"
 
 #: src/prefs.js:328
 msgid "Fit Mode"
@@ -233,11 +232,11 @@ msgstr "Ця функція потребує Gtk 4.8 або вище"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "Пауза на повноекранному режимі"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
-msgstr ""
+msgstr "Призупинити відтворення при розгорнутому або повноекранному вікні"
 
 #: src/prefs.js:373
 msgid ""
@@ -249,26 +248,35 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Ніколи</b>: Вимкнути дану функцію.\n"
+"    <b>Будь-який монітор</b>: Призупинити відтворення, коли вікно розгорнуто "
+"на весь екран або на весь екран на будь-якому моніторі.\n"
+"    <b>Всі монітори</b>: Призупинити відтворення, коли на всіх моніторах "
+"розгорнуті вікна на весь екран або в повноекранному режимі.\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "Ніколи"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "Будь-який монітор"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "Всі монітори"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
-msgstr ""
+msgstr "Пауза на акумуляторі"
 
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
+"Призупинення відтворення, коли пристрій працює від акумулятора або "
+"акумулятор розряджений"
 
 #: src/prefs.js:409
 msgid ""
@@ -279,22 +287,29 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Ніколи</b>: Вимкнути дану функцію.\n"
+"    <b>Низький рівень заряду акумулятора</b>: Призупинити відтворення, коли "
+"пристрій має низький рівень заряду акумулятора (нижче порогового значення).\n"
+"    <b>Завжди</b>: Призупинити відтворення, коли пристрій працює від "
+"акумулятора.\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "Низький рівень заряду акумулятора"
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "Завжди"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "Зміна режиму шпалер"
 
 #: src/prefs.js:444
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "Керуйте автоматичною зміною шпалер"
 
 #: src/prefs.js:445
 msgid ""
@@ -305,15 +320,21 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Послідовний:</b> Зберегти послідовність каталогів (за спаданням).\n"
+"    <b>Зворотна послідовність:</b> Отримати шпалери у зворотній "
+"послідовності (за зростанням).\n"
+"    <b>Випадково:</b> Випадковий вибір шпалер з каталогу.\n"
+"    "
 
 #: src/prefs.js:452
 msgid "Sequential"
-msgstr ""
+msgstr "Послідовний"
 
 #: src/prefs.js:453
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "Зворотна послідовність"
 
 #: src/prefs.js:454
 msgid "Random"
-msgstr ""
+msgstr "Випадково"
