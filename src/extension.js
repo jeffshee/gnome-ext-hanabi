@@ -27,6 +27,7 @@ import * as PlaybackState from './playbackState.js';
 import * as AutoPause from './autoPause.js';
 import * as PanelMenu from './panelMenu.js';
 import * as Logger from './logger.js';
+import * as DBus from './dbus.js';
 
 const logger = new Logger.Logger();
 
@@ -37,6 +38,7 @@ export default class HanabiExtension extends Extension {
         this.launchRendererId = 0;
         this.currentProcess = null;
         this.reloadTime = 100;
+        this._renderer = new DBus.RendererWrapper();
 
         /**
          * This is a safeguard measure for the case of Gnome Shell being relaunched
@@ -110,6 +112,17 @@ export default class HanabiExtension extends Extension {
          */
         this.monitorsChangedId = Main.layoutManager.connect('monitors-changed', () => {
             logger.debug('monitors-changed');
+            let req = [];
+            let monitors = Main.layoutManager.monitors;
+            monitors.forEach(monitor => {
+                logger.log(monitor);
+                // eslint-disable-next-line no-unused-vars
+                let {index, width, height, x, y, geometry_scale: geometryScale} = monitor;
+                let monitorWidth = width * geometryScale;
+                let monitorHeight = height * geometryScale;
+                req.push(`${x}:${y}:${monitorWidth}:${monitorHeight}`);
+            });
+            this._renderer.setMonitors(req);
         });
 
         /*
@@ -117,6 +130,17 @@ export default class HanabiExtension extends Extension {
           */
         this.workareasChangedId = global.display.connect('workareas-changed', () => {
             logger.debug('workareas-changed');
+            let req = [];
+            let monitors = Main.layoutManager.monitors;
+            monitors.forEach(monitor => {
+                logger.log(monitor);
+                // eslint-disable-next-line no-unused-vars
+                let {index, width, height, x, y, geometry_scale: geometryScale} = monitor;
+                let monitorWidth = width * geometryScale;
+                let monitorHeight = height * geometryScale;
+                req.push(`${x}:${y}:${monitorWidth}:${monitorHeight}`);
+            });
+            this._renderer.setMonitors(req);
         });
 
         /*

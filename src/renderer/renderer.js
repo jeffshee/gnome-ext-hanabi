@@ -76,7 +76,7 @@ let changeWallpaperMode = extSettings ? extSettings.get_int('change-wallpaper-mo
 let changeWallpaperInterval = extSettings ? extSettings.get_int('change-wallpaper-interval') : 15;
 // let windowDimension = {width: 1920, height: 1080};
 let windowed = false;
-let fullscreened = true;
+let fullscreened = false;
 let isDebugMode = extSettings ? extSettings.get_boolean('debug-mode') : true;
 let changeWallpaperTimerId = null;
 let monitors = [];
@@ -95,7 +95,7 @@ const HanabiRenderer = GObject.registerClass(
 
             GLib.log_set_debug_enabled(isDebugMode);
 
-            this._hanabiWindows = [];
+            this._hanabiWindows = {};
             this._pictures = [];
             this._sharedPaintable = null;
             this._gstImplName = '';
@@ -110,7 +110,7 @@ const HanabiRenderer = GObject.registerClass(
                 let activeWindow = app.activeWindow;
                 if (!activeWindow) {
                     this._buildUI();
-                    this._hanabiWindows.forEach(window => {
+                    Object.values(this._hanabiWindows).forEach(window => {
                         window.present();
                     });
                 }
@@ -118,6 +118,7 @@ const HanabiRenderer = GObject.registerClass(
 
             this.connect('command-line', (app, commandLine) => {
                 const argv = commandLine.get_arguments();
+                console.debug(`Argv: ${argv}`);
                 if (this._parseArgs(argv)) {
                     this.activate();
                     commandLine.set_exit_status(0);
@@ -289,60 +290,76 @@ const HanabiRenderer = GObject.registerClass(
 
         _buildUI() {
             monitors.forEach((monitor, index) => {
-                // FIXME: this is wrong
-                let gdkMonitor = this._gdkMonitors[index];
-                let widget = this._getWidgetFromSharedPaintable();
+                if (!this._hanabiWindows[index]) {
+                    // FIXME: this is wrong
+                    let gdkMonitor = this._gdkMonitors[index];
+                    let widget = this._getWidgetFromSharedPaintable();
 
-                // Avoid creating another instance if we couldn't get the shared paintable
-                if (index > 0 && !widget)
-                    return;
+                    // Avoid creating another instance if we couldn't get the shared paintable
+                    if (index > 0 && !widget)
+                        return;
 
-                if (!widget) {
-                    if (!forceMediaFile && haveGstPlay) {
-                        let sink = null;
-                        if (!forceGtk4PaintableSink) {
-                            // Try to find "clappersink" for best performance
-                            sink = Gst.ElementFactory.make(
-                                'clappersink',
-                                'clappersink'
-                            );
+                    if (!widget) {
+                        if (!forceMediaFile && haveGstPlay) {
+                            let sink = null;
+                            if (!forceGtk4PaintableSink) {
+                                // Try to find "clappersink" for best performance
+                                sink = Gst.ElementFactory.make(
+                                    'clappersink',
+                                    'clappersink'
+                                );
+                            }
+
+                            // Try "gtk4paintablesink" from gstreamer-rs plugins as 2nd best choice
+                            if (!sink) {
+                                sink = Gst.ElementFactory.make(
+                                    'gtk4paintablesink',
+                                    'gtk4paintablesink'
+                                );
+                            }
+
+                            if (sink)
+                                widget = this._getWidgetFromSink(sink);
                         }
 
-                        // Try "gtk4paintablesink" from gstreamer-rs plugins as 2nd best choice
-                        if (!sink) {
-                            sink = Gst.ElementFactory.make(
-                                'gtk4paintablesink',
-                                'gtk4paintablesink'
-                            );
-                        }
-
-                        if (sink)
-                            widget = this._getWidgetFromSink(sink);
+                        if (!widget)
+                            widget = this._getGtkStockWidget();
                     }
 
-                    if (!widget)
-                        widget = this._getGtkStockWidget();
+                    // const geometry = gdkMonitor.get_geometry();
+                    const state = {
+                        // position: [geometry.x, geometry.y],
+                        position: [monitor.x, monitor.y],
+                        keepAtBottom: true,
+                        keepMinimized: true,
+                        keepPosition: true,
+                    };
+                    const windowTitle = nohide ? `Hanabi Renderer #${index} (using ${this._gstImplName})` : `@${applicationId}!${JSON.stringify(state)}|${index}`;
+                    const window = new HanabiRendererWindow(
+                        this,
+                        windowTitle,
+                        widget,
+                        gdkMonitor,
+                        index
+                    );
+
+                    this._hanabiWindows[index] = window;
+                    console.debug(`Spawning renderer: ${windowTitle}`);
+                } else {
+                    // Window is already there
+                    const state = {
+                        // position: [geometry.x, geometry.y],
+                        position: [monitor.x, monitor.y],
+                        keepAtBottom: true,
+                        keepMinimized: true,
+                        keepPosition: true,
+                    };
+
+                    const windowTitle = nohide ? `Hanabi Renderer #${index} (using ${this._gstImplName})` : `@${applicationId}!${JSON.stringify(state)}|${index}`;
+                    const window = this._hanabiWindows[index];
+                    window.title = windowTitle;
+                    window.updateSize();
                 }
-
-                // const geometry = gdkMonitor.get_geometry();
-                const state = {
-                    // position: [geometry.x, geometry.y],
-                    position: [monitors[index].x, monitors[index].y],
-                    keepAtBottom: true,
-                    keepMinimized: true,
-                    keepPosition: true,
-                };
-                const window = new HanabiRendererWindow(
-                    this,
-                    nohide
-                        ? `Hanabi Renderer #${index} (using ${this._gstImplName})`
-                        : `@${applicationId}!${JSON.stringify(state)}|${index}`,
-                    widget,
-                    gdkMonitor,
-                    index
-                );
-
-                this._hanabiWindows.push(window);
             });
             console.log(`using ${this._gstImplName} for video output`);
         }
@@ -474,6 +491,9 @@ const HanabiRenderer = GObject.registerClass(
                 <interface name="io.github.jeffshee.HanabiRenderer">
                     <method name="setPlay"/>
                     <method name="setPause"/>
+                    <method name="setMonitors">
+                        <arg type="as" name="monitors" direction="in"/>
+                    </method>
                     <property name="isPlaying" type="b" access="read"/>
                     <signal name="isPlayingChanged">
                         <arg name="isPlaying" type="b"/>
@@ -561,6 +581,30 @@ const HanabiRenderer = GObject.registerClass(
                 this._play.pause();
             else if (this._media)
                 this._media.pause();
+        }
+
+        setMonitors(newMonitors) {
+            console.debug('setMonitors:', newMonitors);
+            monitors = [];
+            newMonitors.forEach(arg => {
+                let data = arg.split(':');
+                monitors.push({
+                    x: parseInt(data[0]),
+                    y: parseInt(data[1]),
+                    width: parseInt(data[2]),
+                    height: parseInt(data[3]),
+                });
+            });
+            this._buildUI();
+            Object.entries(this._hanabiWindows).forEach(([index, window]) => {
+                if (index < monitors.length) {
+                    window.present();
+                } else {
+                    console.debug('Closing renderer:', window.title);
+                    window.close();
+                    delete this._hanabiWindows[index];
+                }
+            });
         }
 
         setAutoWallpaper() {
@@ -653,6 +697,9 @@ const HanabiRendererWindow = GObject.registerClass(
                 title,
             });
 
+            this.gdkMonitor = gdkMonitor;
+            this.index = index;
+
             // Load CSS with custom style
             let cssProvider = new Gtk.CssProvider();
             cssProvider.load_from_file(
@@ -668,17 +715,15 @@ const HanabiRendererWindow = GObject.registerClass(
             );
 
             this.set_child(widget);
-            if (!windowed) {
-                if (fullscreened) {
-                    this.fullscreen_on_monitor(gdkMonitor);
-                } else {
-                    // const geometry = gdkMonitor.get_geometry();
-                    // const [width, height] = [geometry.width, geometry.height];
-                    // this.set_size_request(width, height);
-                    this.set_size_request(monitors[index].width, monitors[index].height);
-                }
+            this.updateSize();
+        }
+
+        updateSize() {
+            if (!windowed && fullscreened) {
+                this.fullscreen_on_monitor(this.gdkMonitor);
             } else {
-                this.set_size_request(monitors[index].width, monitors[index].height);
+                this.set_size_request(monitors[this.index].width, monitors[this.index].height);
+                console.debug('set_size_request:', monitors[this.index].width, monitors[this.index].height);
             }
         }
     }

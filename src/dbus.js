@@ -34,6 +34,9 @@ export class RendererWrapper {
             <interface name="io.github.jeffshee.HanabiRenderer">
                 <method name="setPlay"/>
                 <method name="setPause"/>
+                <method name="setMonitors">
+                    <arg type="as" name="monitors" direction="in"/>
+                </method>
                 <property name="isPlaying" type="b" access="read"/>
                 <signal name="isPlayingChanged">
                     <arg name="isPlaying" type="b"/>
@@ -57,6 +60,14 @@ export class RendererWrapper {
     async setPause() {
         try {
             await this.proxy.setPauseAsync();
+        } catch (e) {
+            this._logger.warn(e);
+        }
+    }
+
+    async setMonitors(monitors) {
+        try {
+            await this.proxy.setMonitorsAsync(monitors);
         } catch (e) {
             this._logger.warn(e);
         }
