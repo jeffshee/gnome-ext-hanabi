@@ -26,6 +26,9 @@ import * as WindowManager from './windowManager.js';
 import * as PlaybackState from './playbackState.js';
 import * as AutoPause from './autoPause.js';
 import * as PanelMenu from './panelMenu.js';
+import * as Logger from './logger.js';
+
+const logger = new Logger.Logger();
 
 export default class HanabiExtension extends Extension {
     constructor(metadata) {
@@ -101,6 +104,25 @@ export default class HanabiExtension extends Extension {
                 return false;
             });
         }
+
+        /*
+         * If the desktop geometry changes (because a new monitor has been added, for example),
+         */
+        this.monitorsChangedId = Main.layoutManager.connect('monitors-changed', () => {
+            logger.debug('monitors-changed');
+        });
+
+        /*
+          * Any change in the workareas must be detected too, for example if the used size changes.
+          */
+        this.workareasChangedId = global.display.connect('workareas-changed', () => {
+            logger.debug('workareas-changed');
+        });
+
+        /*
+          * This callback allows to detect a change in the working area (like when changing the Scale value)
+          */
+        // this.visibleAreaId = this.visibleArea.connect('updated-usable-area', this._updateDesktopGeometry.bind(this));
     }
 
     innerEnable() {
@@ -139,6 +161,18 @@ export default class HanabiExtension extends Extension {
         argv.push('-P', this.path);
         argv.push('-F', videoPath);
 
+        // WIP: get the size of each monitor
+        let monitors = Main.layoutManager.monitors;
+        monitors.forEach(monitor => {
+            logger.log(monitor);
+            // eslint-disable-next-line no-unused-vars
+            let {index, width, height, x, y, geometry_scale: geometryScale} = monitor;
+            let monitorWidth = width * geometryScale;
+            let monitorHeight = height * geometryScale;
+            argv.push('-W', `${x}:${y}:${monitorWidth}:${monitorHeight}`);
+        });
+
+        logger.debug('Renderer argv:', argv);
         this.currentProcess = new Launcher.LaunchSubprocess();
         this.currentProcess.set_cwd(GLib.get_home_dir());
         this.currentProcess.spawnv(argv);

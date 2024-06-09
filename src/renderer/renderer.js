@@ -74,11 +74,12 @@ let changeWallpaper = extSettings ? extSettings.get_boolean('change-wallpaper') 
 let changeWallpaperDirectoryPath = extSettings ? extSettings.get_string('change-wallpaper-directory-path') : '';
 let changeWallpaperMode = extSettings ? extSettings.get_int('change-wallpaper-mode') : 0;
 let changeWallpaperInterval = extSettings ? extSettings.get_int('change-wallpaper-interval') : 15;
-let windowDimension = {width: 1920, height: 1080};
+// let windowDimension = {width: 1920, height: 1080};
 let windowed = false;
 let fullscreened = true;
 let isDebugMode = extSettings ? extSettings.get_boolean('debug-mode') : true;
 let changeWallpaperTimerId = null;
+let monitors = [];
 
 
 const HanabiRenderer = GObject.registerClass(
@@ -104,7 +105,7 @@ const HanabiRenderer = GObject.registerClass(
 
             this.connect('activate', app => {
                 this._display = Gdk.Display.get_default();
-                this._monitors = this._display ? [...this._display.get_monitors()] : [];
+                this._gdkMonitors = this._display ? [...this._display.get_monitors()] : [];
 
                 let activeWindow = app.activeWindow;
                 if (!activeWindow) {
@@ -207,13 +208,19 @@ const HanabiRenderer = GObject.registerClass(
                 case '--windowed': {
                     windowed = true;
                     let data = arg.split(':');
-                    windowDimension = {
-                        width: parseInt(data[0]),
-                        height: parseInt(data[1]),
-                    };
-                    console.debug(
-                        `windowed = ${windowed}, windowConfig = ${windowDimension}`
-                    );
+                    // windowDimension = {
+                    //     width: parseInt(data[0]),
+                    //     height: parseInt(data[1]),
+                    // };
+                    monitors.push({
+                        x: parseInt(data[0]),
+                        y: parseInt(data[1]),
+                        width: parseInt(data[2]),
+                        height: parseInt(data[3]),
+                    });
+                    // console.debug(
+                    //     `windowed = ${windowed}, windowConfig = ${windowDimension}`
+                    // );
                     break;
                 }
                 case '-P':
@@ -281,7 +288,9 @@ const HanabiRenderer = GObject.registerClass(
         }
 
         _buildUI() {
-            this._monitors.forEach((gdkMonitor, index) => {
+            monitors.forEach((monitor, index) => {
+                // FIXME: this is wrong
+                let gdkMonitor = this._gdkMonitors[index];
                 let widget = this._getWidgetFromSharedPaintable();
 
                 // Avoid creating another instance if we couldn't get the shared paintable
@@ -315,9 +324,10 @@ const HanabiRenderer = GObject.registerClass(
                         widget = this._getGtkStockWidget();
                 }
 
-                const geometry = gdkMonitor.get_geometry();
+                // const geometry = gdkMonitor.get_geometry();
                 const state = {
-                    position: [geometry.x, geometry.y],
+                    // position: [geometry.x, geometry.y],
+                    position: [monitors[index].x, monitors[index].y],
                     keepAtBottom: true,
                     keepMinimized: true,
                     keepPosition: true,
@@ -328,7 +338,8 @@ const HanabiRenderer = GObject.registerClass(
                         ? `Hanabi Renderer #${index} (using ${this._gstImplName})`
                         : `@${applicationId}!${JSON.stringify(state)}|${index}`,
                     widget,
-                    gdkMonitor
+                    gdkMonitor,
+                    index
                 );
 
                 this._hanabiWindows.push(window);
@@ -631,12 +642,14 @@ const HanabiRendererWindow = GObject.registerClass(
         GTypeName: 'HanabiRendererWindow',
     },
     class HanabiRendererWindow extends Gtk.ApplicationWindow {
-        constructor(application, title, widget, gdkMonitor) {
+        constructor(application, title, widget, gdkMonitor, index) {
             super({
                 application,
                 decorated: !!nohide,
-                default_height: windowDimension.height,
-                default_width: windowDimension.width,
+                // default_height: windowDimension.height,
+                // default_width: windowDimension.width,
+                default_height: monitors[index].height,
+                default_width: monitors[index].width,
                 title,
             });
 
@@ -659,10 +672,13 @@ const HanabiRendererWindow = GObject.registerClass(
                 if (fullscreened) {
                     this.fullscreen_on_monitor(gdkMonitor);
                 } else {
-                    const geometry = gdkMonitor.get_geometry();
-                    const [width, height] = [geometry.width, geometry.height];
-                    this.set_size_request(width, height);
+                    // const geometry = gdkMonitor.get_geometry();
+                    // const [width, height] = [geometry.width, geometry.height];
+                    // this.set_size_request(width, height);
+                    this.set_size_request(monitors[index].width, monitors[index].height);
                 }
+            } else {
+                this.set_size_request(monitors[index].width, monitors[index].height);
             }
         }
     }
