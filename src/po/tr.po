@@ -4,13 +4,14 @@
 # Yusa Capraz <computerhackfusion@gmail.com>, 2023.
 # Sabri Ünal <libreajans@gmail.com>, 2023.
 # Sabri Ünal <yakushabb@gmail.com>, 2024.
+# Seymen Kalkan <seymenkalkan@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-03-17 16:01+0000\n"
-"Last-Translator: Sabri Ünal <yakushabb@gmail.com>\n"
+"PO-Revision-Date: 2024-06-11 17:00+0000\n"
+"Last-Translator: Seymen Kalkan <seymenkalkan@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/tr/>\n"
 "Language: tr\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.6-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -57,30 +58,28 @@ msgid "Show Panel Menu"
 msgstr "Panel Menüsünü Göster"
 
 #: src/prefs.js:51
-#, fuzzy
-#| msgid "Pause"
 msgid "Auto Pause"
-msgstr "Durdur"
+msgstr "Otomatik Durdur"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr ""
+msgstr "Düşük Batarya Eşiği"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "Düşük batarya seviyesinin eşiğini ayarla"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr ""
+msgstr "Medya Oynatıcı Çalıyorken Duraklat"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
-msgstr ""
+msgstr "MPRIS medya oynatıcısı çalıyorken oynatımı duraklat"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "Duvar Kağıdı Değiştirici"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
@@ -107,7 +106,7 @@ msgstr ""
 
 #: src/prefs.js:94
 msgid "NVIDIA Stateless Decoders"
-msgstr "NVIDIA Vatansız Kod Çözücüler"
+msgstr "NVIDIA Durumsuz Kod Çözücüler"
 
 #: src/prefs.js:96
 msgid "Use new stateless NVIDIA decoders"
@@ -233,11 +232,11 @@ msgstr "Bu özellik Gtk 4.8 veya üst sürümü gerektirir"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "Tam veya Büyütülmüş Pencerede Duraklat"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
-msgstr ""
+msgstr "Büyütülmüş veya tam ekran pencere olduğunda oynatmayı duraklat"
 
 #: src/prefs.js:373
 msgid ""
@@ -249,26 +248,33 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Asla</b>: Bu özelliği kapat.\n"
+"    <b>Herhangi Monitor</b>: Herhangi bir monitörde tam ekran veya "
+"büyütülmüş bir pencere varsa oynatmayı durdur.\n"
+"    <b>All Monitors</b>: Bütün monitörlerde tam ekran veya büyütülmüş bir "
+"pencere varsa oynatmayı durdur.\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "Asla"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "Herhangi Monitor"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "Bütün Ekranlar"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
-msgstr ""
+msgstr "Batarya durumunda duraklat"
 
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
-msgstr ""
+msgstr "Bilgisayar batarya durumunda veya düşük bataryada ise oynatmayı durdur."
 
 #: src/prefs.js:409
 msgid ""
@@ -279,14 +285,20 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Asla</b>: Bu özelliği kapat.\n"
+"    <b>Düşük batarya</b>: Batarya düşük güçte(belirlenen seviyenin altında) "
+"ise oynatmayı durdur.\n"
+"    <b>Her zaman</b>: Bilgisayar güce takılı değil ise oynatmayı durdur.\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "Düşük Batarya"
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "Her zaman"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
@@ -294,7 +306,7 @@ msgstr "Duvar Kağıdı Kipini Değiştir"
 
 #: src/prefs.js:444
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "Duvar kağıtlarını otomatik olarak nasıl değiştirileceğini ayarlayın."
 
 #: src/prefs.js:445
 msgid ""
@@ -305,14 +317,19 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Ardışık:</b> Dizin sırasını koru (A-Z).\n"
+"    <b>Ters Ardışık:</b> Dizin sırasını koru (Z-A).\n"
+"    <b>Rastgele:</b> Dizinden rastgele duvar kağıdı seç.\n"
+"    "
 
 #: src/prefs.js:452
 msgid "Sequential"
-msgstr ""
+msgstr "Ardışık"
 
 #: src/prefs.js:453
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "Ters Ardışık"
 
 #: src/prefs.js:454
 msgid "Random"
