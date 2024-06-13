@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-03-17 16:01+0000\n"
+"PO-Revision-Date: 2024-06-13 20:58+0000\n"
 "Last-Translator: OptixWolf <OptixWolf@users.noreply.hosted.weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/de/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.6-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -55,30 +55,28 @@ msgid "Show Panel Menu"
 msgstr "Panel Menü anzeigen"
 
 #: src/prefs.js:51
-#, fuzzy
-#| msgid "Pause"
 msgid "Auto Pause"
-msgstr "pausieren"
+msgstr "Automatisch pausieren"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr ""
+msgstr "Schwellenwert für niedrigen Batteriestand"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "Lege den Schwellenwert für niedrigen Batteriestand in Prozent fest"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr ""
+msgstr "Pause bei der Wiedergabe eines Medienspielers"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
-msgstr ""
+msgstr "Pause bei der Wiedergabe eines MPRIS Medienspielers"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "Hintergrundbild-Wechsler"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
@@ -232,11 +230,11 @@ msgstr "Diese Funktion benötigt Gtk 4.8 oder höher"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "Pause bei Maximieren oder Vollbildmodus"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
-msgstr ""
+msgstr "Wiedergabe bei maximiertem oder Vollbildfenster anhalten"
 
 #: src/prefs.js:373
 msgid ""
@@ -248,26 +246,34 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Niemals</b>: Disable this feature.\n"
+"    <b>Beliebiger Bildschirm</b>: Wiedergabe bei maximiertem oder "
+"Vollbildfenster auf einem beliebigen Bildschirm anhalten.\n"
+"    <b>Alle Bildschirme</b>: Wiedergabe bei maximiertem oder Vollbildfenster "
+"auf allen Bildschirm anhalten.\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "Niemals"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "Beliebiger Bildschirm"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "Alle Bildschirme"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
-msgstr ""
+msgstr "Pause bei Batteriebetrieb"
 
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
+"Pausieren der Wiedergabe im Batteriebetrieb oder bei niedrigem Batteriestand"
 
 #: src/prefs.js:409
 msgid ""
@@ -278,14 +284,20 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Niemals</b>: Deaktiviert die Funktion.\n"
+"    <b>Niedriger Batteriestand</b>: Pausieren der Wiedergabe bei niedrigem "
+"Batteriestand (Unter dem Schwellwert).\n"
+"    <b>Immer</b>: Pausieren der Wiedergabe im Batteriebetrieb.\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "Niedriger Batteriestand"
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "Immer"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
