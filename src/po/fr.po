@@ -33,11 +33,11 @@ msgstr "Activer le son"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:43
 msgid "Mute Audio"
-msgstr "Muet"
+msgstr "Couper l'audio"
 
 #: src/panelMenu.js:110
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "Fond d'écran suivant"
 
 #: src/panelMenu.js:125
 msgid "Preferences"
@@ -63,23 +63,23 @@ msgstr "Pause"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr ""
+msgstr "Niveau de batterie faible"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "Définir le niveau du seuil de pourcentage pour la batterie faible"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr ""
+msgstr "Suspendre quand un média est joué"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
-msgstr ""
+msgstr "Suspendre la lecture lorsqu'un lecteur MPRIS lit un média"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "Changeur de fond d'écran"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
@@ -101,16 +101,16 @@ msgstr "Plugin VA expérimental"
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
-"Activer le décodeur VA qui améliore les performances pour les utilisateurs "
+"Activer le décodeur VA , ce qui améliore les performances pour les utilisateurs "
 "sous Wayland, ayant du matériel Intel/AMD"
 
 #: src/prefs.js:94
 msgid "NVIDIA Stateless Decoders"
-msgstr "NVIDIA Stateless Decoders"
+msgstr "Décodeurs NVIDIA sans état"
 
 #: src/prefs.js:96
 msgid "Use new stateless NVIDIA decoders"
-msgstr "Utiliser le nouveau décodeur NVDIA Stateless"
+msgstr "Utiliser le nouveau décodeur NVDIA sans état"
 
 #: src/prefs.js:103
 msgid "Developer"
@@ -118,7 +118,7 @@ msgstr "Développeur"
 
 #: src/prefs.js:109
 msgid "Debug Mode"
-msgstr "Débogage"
+msgstr "Mode débogage"
 
 #: src/prefs.js:111
 msgid "Print debug messages to log"
@@ -158,7 +158,7 @@ msgstr "Chemin vers la vidéo"
 
 #: src/prefs.js:220 src/prefs.js:245 src/prefs.js:279 src/prefs.js:300
 msgid "None"
-msgstr "None"
+msgstr "Aucun"
 
 #: src/prefs.js:232
 msgid "Open File"
@@ -174,19 +174,19 @@ msgstr "Ouvrir"
 
 #: src/prefs.js:273
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "Changer le chemin d'accès au fond d'écran"
 
 #: src/prefs.js:288
 msgid "Select Directory"
-msgstr ""
+msgstr "Sélectionner le répertoire"
 
 #: src/prefs.js:328
 msgid "Fit Mode"
-msgstr "Mode de fond d'écran"
+msgstr "Mode d'ajustement"
 
 #: src/prefs.js:329
 msgid "Control how wallpaper fits within the monitor"
-msgstr "Gérer l'affichage du fond d'écran dans l'écran"
+msgstr "Gérer l'affichage du fond d'écran sur l'écran"
 
 #: src/prefs.js:330
 msgid ""
@@ -206,8 +206,8 @@ msgstr ""
 "(garde le ratio).\n"
 "<b>Couvrir</b>: Met à l'échelle le fond d'écran pour remplir l'écran (garde "
 "le ration).\n"
-"<b>Mise à l'échelle</b>: Réduit le fond d'écran pour correspondre à l'écran "
-"si besoin, sinon garde la taille originale.\n"
+"<b>Mise à l'échelle</b>: Redimensionne le fond d'écran pour correspondre à  "
+"l'écran si nécessaire, sinon conserve la taille originale.
 "    "
 
 #: src/prefs.js:338
@@ -216,7 +216,7 @@ msgstr "Remplir"
 
 #: src/prefs.js:339
 msgid "Contain"
-msgstr "Contenir"
+msgstr "Adapter"
 
 #: src/prefs.js:340
 msgid "Cover"
@@ -228,15 +228,15 @@ msgstr "Mise à l'échelle"
 
 #: src/prefs.js:354
 msgid "This feature requires Gtk 4.8 or above"
-msgstr "Cette fonctionnalité requiet la version 4.0 de Gtk ou supérieure"
+msgstr "Cette fonctionnalité nécessite la version 4.8 de Gtk ou une version ultérieure."
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "Pause si maximisée ou en plein écran"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
-msgstr ""
+msgstr "Mettre en pause la lecture lorsqu'il y a une fenêtre maximisée ou en plein écran"
 
 #: src/prefs.js:373
 msgid ""
@@ -248,26 +248,33 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Jamais</b>: Désactive cette fonctionnalité.\n"
+"    <b>N'importe quel écran</b>: Mettre en pause la lecture lorsqu'il y a une fenêtre maximisée ou en plein écran sur n'importe quel écran. "
+"fenêtre sur tout les écrans\n"
+"    <b>Tous les écrans</b>: Mettre en pause la lecture lorsqu'il y a des fenêtres maximisées ou "
+"en plein écran sur tous les écrans\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "Jamais"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "N'importe quel écran"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "Tout les écrans"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
-msgstr ""
+msgstr "Pause sur batterie"
 
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
-msgstr ""
+msgstr "Arrêter la lecture lorsque l'appareil est sur batterie ou lorsque la batterie est faible"
 
 #: src/prefs.js:409
 msgid ""
@@ -278,22 +285,28 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Jamais</b>: Désactive cette fonctionnalité.\n"
+"    <b>Batterie faible</b>: Arrête la lecture lorsque la batterie est faible. "
+"(en dessous du seuil).\n"
+"    <b>Toujours</b>: Arrête la lecture lorsque l'appareil est sur batterie.\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "Batterie faible"
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "Toujours"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "Modifier le mode de fond d'écran"
 
 #: src/prefs.js:444
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "Contrôle comment changer le fond d'écran automatiquement"
 
 #: src/prefs.js:445
 msgid ""
@@ -304,15 +317,21 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Séquentiel:</b> Préserve la séquence du répertoire (ordre descendant).\n"
+"    <b>Séquentiel inversé:</b> Affiche les fonds d'écran dans l'ordre inversé "
+"(ordre ascendant).\n"
+"    <b>Aléatoire:</b> Affiche un fond d'écran aléatoire à partir du répertoire.\n"
+"    "
 
 #: src/prefs.js:452
 msgid "Sequential"
-msgstr ""
+msgstr "Séquentiel"
 
 #: src/prefs.js:453
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "Séquentiel inversé"
 
 #: src/prefs.js:454
 msgid "Random"
-msgstr ""
+msgstr "Aléatoire"
