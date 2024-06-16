@@ -207,7 +207,7 @@ msgstr ""
 "<b>Couvrir</b>: Met à l'échelle le fond d'écran pour remplir l'écran (garde "
 "le ration).\n"
 "<b>Mise à l'échelle</b>: Redimensionne le fond d'écran pour correspondre à  "
-"l'écran si nécessaire, sinon conserve la taille originale.
+"l'écran si nécessaire, sinon conserve la taille originale.\n"
 "    "
 
 #: src/prefs.js:338
