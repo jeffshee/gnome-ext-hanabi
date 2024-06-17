@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # François <francois.odin@proton.me>, 2023.
 # Matt Sennin <m@donsan.fr>, 2024.
+# Miphonya <weblate@miphonya.ch>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-03-29 18:02+0000\n"
-"Last-Translator: Matt Sennin <m@donsan.fr>\n"
+"PO-Revision-Date: 2024-06-18 19:09+0000\n"
+"Last-Translator: Miphonya <weblate@miphonya.ch>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/fr/>\n"
 "Language: fr\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.6-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -56,10 +57,8 @@ msgid "Show Panel Menu"
 msgstr "Afficher le raccourci de configuration"
 
 #: src/prefs.js:51
-#, fuzzy
-#| msgid "Pause"
 msgid "Auto Pause"
-msgstr "Pause"
+msgstr "Pause automatique"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
