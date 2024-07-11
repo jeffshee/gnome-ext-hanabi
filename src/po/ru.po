@@ -5,13 +5,14 @@
 # "Артём Чичваров (Džeremi)" <chichvarov1315@gmail.com>, 2023.
 # Džeremi <chichvarov1315@users.noreply.hosted.weblate.org>, 2024.
 # Evgeniy <mr.shurpatov@gmail.com>, 2024.
+# Mirukuu <mirukuu@proton.me>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-03-26 09:01+0000\n"
-"Last-Translator: Evgeniy <mr.shurpatov@gmail.com>\n"
+"PO-Revision-Date: 2024-07-12 16:09+0000\n"
+"Last-Translator: Mirukuu <mirukuu@proton.me>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/ru/>\n"
 "Language: ru\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.7-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -59,10 +60,8 @@ msgid "Show Panel Menu"
 msgstr "Показывать индикатор в панели состояния"
 
 #: src/prefs.js:51
-#, fuzzy
-#| msgid "Pause"
 msgid "Auto Pause"
-msgstr "Приостановить"
+msgstr "Автоматически приостанавливать"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
@@ -74,7 +73,7 @@ msgstr ""
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr ""
+msgstr "Приостановить при проигрывании медиа плеера"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
@@ -259,11 +258,11 @@ msgstr ""
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "Любой монитор"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "Все мониторы"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
@@ -285,11 +284,11 @@ msgstr ""
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "Низкий уровень заряда баттареи"
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "Всегда"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
