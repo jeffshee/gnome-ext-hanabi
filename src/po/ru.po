@@ -6,13 +6,14 @@
 # Džeremi <chichvarov1315@users.noreply.hosted.weblate.org>, 2024.
 # Evgeniy <mr.shurpatov@gmail.com>, 2024.
 # Mirukuu <mirukuu@proton.me>, 2024.
+# Shebeno4ka <shebeno4ka@outlook.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-07-12 16:09+0000\n"
-"Last-Translator: Mirukuu <mirukuu@proton.me>\n"
+"PO-Revision-Date: 2024-07-20 02:09+0000\n"
+"Last-Translator: Shebeno4ka <shebeno4ka@outlook.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/ru/>\n"
 "Language: ru\n"
@@ -65,11 +66,11 @@ msgstr "Автоматически приостанавливать"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr ""
+msgstr "Пороговый уровень заряда батареи"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "Установить пороговый уровень заряда батареи"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
@@ -78,10 +79,11 @@ msgstr "Приостановить при проигрывании медиа п
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
 msgstr ""
+"Приостанавливать воспроизведение при работе MPRIS-совместимого медиаплеера."
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "Смена обоев"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
@@ -108,7 +110,7 @@ msgstr ""
 
 #: src/prefs.js:94
 msgid "NVIDIA Stateless Decoders"
-msgstr "Безэтапные декодеры NVIDIA"
+msgstr "NVIDIA Stateless Decoders"
 
 #: src/prefs.js:96
 msgid "Use new stateless NVIDIA decoders"
@@ -235,11 +237,11 @@ msgstr "Эта функция требует Gtk 4.8 или выше"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "Приостанавливать при разворачивании на полный экран"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
-msgstr ""
+msgstr "Приостановить при разворачивании приложений."
 
 #: src/prefs.js:373
 msgid ""
@@ -251,10 +253,17 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Никогда<b>: Отключить эту возможность.\n"
+"    <b>Любой монитор</b>: Приостановить воспроизведение когда хотя бы на "
+"одном из мониторов запущено приложение развёрнутое на полный экран.\n"
+"    <b>Все мониторы</b>: Приостановить воспроизведение когда на всех "
+"мониторах запущены приложения развёрнутые на полный экран.\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "Никогда"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
@@ -266,11 +275,11 @@ msgstr "Все мониторы"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
-msgstr ""
+msgstr "Приостанавливать при использовании батареи"
 
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
-msgstr ""
+msgstr "Приостанавливать при питании от батареи или низком заряде"
 
 #: src/prefs.js:409
 msgid ""
@@ -281,6 +290,12 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Никогда</b>: Отключить эту возможность.\n"
+"    <b>Низкий заряд батареи</b>: Приостанавливать воспроизведение при малом "
+"заряде батареи (ниже заданного уровня) .\n"
+"    <b>Всегда<b>: Приостанавливать воспроизведение при питании от батареи.\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
