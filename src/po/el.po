@@ -7,73 +7,79 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-07-29 15:09+0000\n"
+"Last-Translator: Athanasios Nektarios Karachalios Stagkas <nasos.karachalios."
+"stagkas@proton.me>\n"
+"Language-Team: Greek <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
+"gnome-ext-hanabi/el/>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.7-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
-msgstr ""
+msgstr "Παύση"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Play"
-msgstr ""
+msgstr "Παίξε"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103
 msgid "Unmute Audio"
-msgstr ""
+msgstr "Κατάργηση Σίγασης Ήχου"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:43
 msgid "Mute Audio"
-msgstr ""
+msgstr "Σίγαση ήχου"
 
 #: src/panelMenu.js:110
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "Επόμενη Ταπετσαρία"
 
 #: src/panelMenu.js:125
 msgid "Preferences"
-msgstr ""
+msgstr "Προτιμήσεις"
 
 #: src/prefs.js:38
 msgid "General"
-msgstr ""
+msgstr "Γενικά"
 
 #: src/prefs.js:44
 msgid "Volume Level"
-msgstr ""
+msgstr "Επίπεδο Έντασης"
 
 #: src/prefs.js:45
 msgid "Show Panel Menu"
-msgstr ""
+msgstr "Εμφάνιση μενού πάνελ"
 
 #: src/prefs.js:51
 msgid "Auto Pause"
-msgstr ""
+msgstr "Αυτόματη Παύση"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr ""
+msgstr "Κατώφλι Xαμηλής Mπαταρίας"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "Ορίστε το ποσοστό κατωφλίου για χαμηλή στάθμη μπαταρίας"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr ""
+msgstr "Παύση κατά την αναπαραγωγή προγράμματος αναπαραγωγής πολυμέσων"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
 msgstr ""
+"Παύση αναπαραγωγής όταν μια συσκευή αναπαραγωγής πολυμέσων MPRIS αναπαράγει "
+"πολυμέσα"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "Αλλαγή Ταπετσαρίας"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
@@ -85,74 +91,78 @@ msgstr ""
 
 #: src/prefs.js:81
 msgid "Experimental"
-msgstr ""
+msgstr "Πειραματικό"
 
 #: src/prefs.js:87
 msgid "Experimental VA Plugin"
-msgstr ""
+msgstr "Πειραματικό πρόσθετο VA"
 
 #: src/prefs.js:89
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
+"Ενεργοποίηση των αποκωδικοποιητών VA που βελτιώνουν την απόδοση για τους "
+"χρήστες Intel/AMD Wayland"
 
 #: src/prefs.js:94
 msgid "NVIDIA Stateless Decoders"
-msgstr ""
+msgstr "Αποκωδικοποιητές NVIDIA χωρίς κατάσταση"
 
 #: src/prefs.js:96
 msgid "Use new stateless NVIDIA decoders"
-msgstr ""
+msgstr "Χρήση νέων αποκωδικοποιητών NVIDIA χωρίς κατάσταση"
 
 #: src/prefs.js:103
 msgid "Developer"
-msgstr ""
+msgstr "Προγραμματιστής"
 
 #: src/prefs.js:109
 msgid "Debug Mode"
-msgstr ""
+msgstr "Λειτουργία Αποσφαλμάτωσης"
 
 #: src/prefs.js:111
 msgid "Print debug messages to log"
-msgstr ""
+msgstr "Εκτύπωση μηνυμάτων εντοπισμού σφαλμάτων στο αρχείο καταγραφής"
 
 #: src/prefs.js:116
 msgid "Force gtk4paintablesink"
-msgstr ""
+msgstr "Επιβολή gtk4paintablesink"
 
 #: src/prefs.js:118
 msgid "Force use of gtk4paintablesink for video playback"
-msgstr ""
+msgstr "Επιβολή χρήσης του gtk4paintablesink για αναπαραγωγή βίντεο"
 
 #: src/prefs.js:123
 msgid "Force GtkMediaFile"
-msgstr ""
+msgstr "Επιβολή GtkMediaFile"
 
 #: src/prefs.js:125
 msgid "Force use of GtkMediaFile for video playback"
-msgstr ""
+msgstr "Επιβολή χρήσης του GtkMediaFile για την αναπαραγωγή βίντεο"
 
 #: src/prefs.js:127
 msgid "Startup Delay"
-msgstr ""
+msgstr "Καθυστέρηση εκκίνησης"
 
 #: src/prefs.js:127
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
+"Προσθέστε καθυστέρηση εκκίνησης (σε milliseconds) για τον μετριασμό των "
+"ζητημάτων συμβατότητας με άλλες επεκτάσεις"
 
 #: src/prefs.js:214
 msgid "Video Path"
-msgstr ""
+msgstr "Διαδρομή βίντεο"
 
 #: src/prefs.js:220 src/prefs.js:245 src/prefs.js:279 src/prefs.js:300
 msgid "None"
-msgstr ""
+msgstr "Κανένα"
 
 #: src/prefs.js:232
 msgid "Open File"
-msgstr ""
+msgstr "Άνοιγμα Aρχείου"
 
 #: src/prefs.js:237 src/prefs.js:293
 msgid "Cancel"
@@ -160,7 +170,7 @@ msgstr ""
 
 #: src/prefs.js:238 src/prefs.js:254 src/prefs.js:294 src/prefs.js:309
 msgid "Open"
-msgstr ""
+msgstr "Άνοιγμα"
 
 #: src/prefs.js:273
 msgid "Change Wallpaper Directory Path"
@@ -168,15 +178,15 @@ msgstr ""
 
 #: src/prefs.js:288
 msgid "Select Directory"
-msgstr ""
+msgstr "Επιλογή Φακέλου"
 
 #: src/prefs.js:328
 msgid "Fit Mode"
-msgstr ""
+msgstr "Λειτουργία προσαρμογής"
 
 #: src/prefs.js:329
 msgid "Control how wallpaper fits within the monitor"
-msgstr ""
+msgstr "Έλεγχος του τρόπου τοποθέτησης της ταπετσαρίας στην οθόνη"
 
 #: src/prefs.js:330
 msgid ""
@@ -190,10 +200,19 @@ msgid ""
 "needed, otherwise keep its original size.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Γέμισμα</b>: Επιμηκύνετε την ταπετσαρία για να γεμίσει την οθόνη.\n"
+"    <b>Συγκρατεί</b>: Κλιμακώστε την ταπετσαρία ώστε να ταιριάζει στην οθόνη "
+"(διατηρήστε την αναλογία διαστάσεων).\n"
+"    <b>Κάλυψη</b>: Κλιμακώστε την ταπετσαρία ώστε να καλύπτει την οθόνη ("
+"διατηρήστε την αναλογία διαστάσεων).\n"
+"    <b>Κλιμακωτή μείωση</b>:  Κλιμακώστε την ταπετσαρία ώστε να ταιριάζει "
+"στην οθόνη, αν χρειάζεται, διαφορετικά διατηρήστε το αρχικό της μέγεθος.\n"
+"    "
 
 #: src/prefs.js:338
 msgid "Fill"
-msgstr ""
+msgstr "Γέμισμα"
 
 #: src/prefs.js:339
 msgid "Contain"
@@ -201,23 +220,25 @@ msgstr ""
 
 #: src/prefs.js:340
 msgid "Cover"
-msgstr ""
+msgstr "Εξώφυλλο"
 
 #: src/prefs.js:341
 msgid "Scale-down"
-msgstr ""
+msgstr "Κλιμακωτή μείωση"
 
 #: src/prefs.js:354
 msgid "This feature requires Gtk 4.8 or above"
-msgstr ""
+msgstr "Αυτή η λειτουργία απαιτεί Gtk 4.8 ή νεότερη έκδοση"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "Παύση σε μεγιστοποίηση ή πλήρη οθόνη"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
 msgstr ""
+"Παύση αναπαραγωγής όταν υπάρχει μεγιστοποιημένο παράθυρο ή παράθυρο πλήρους "
+"οθόνης"
 
 #: src/prefs.js:373
 msgid ""
@@ -232,23 +253,25 @@ msgstr ""
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "Ποτέ"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "Οποιαδήποτε Οθόνη"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "Όλες Οι Οθόνες"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
-msgstr ""
+msgstr "Παύση λειτουργίας κατά την κατανάλωση μπαταρίας"
 
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
+"Παύση της αναπαραγωγής όταν η συσκευή λειτουργεί με μπαταρία ή όταν η "
+"μπαταρία είναι χαμηλή"
 
 #: src/prefs.js:409
 msgid ""
@@ -262,19 +285,19 @@ msgstr ""
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "ΧαμηλήMπαταρία"
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "Πάντα"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "Αλλαγή λειτουργίας ταπετσαρίας"
 
 #: src/prefs.js:444
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "Έλεγχος του τρόπου αυτόματης αλλαγής ταπετσαριών"
 
 #: src/prefs.js:445
 msgid ""
@@ -288,12 +311,12 @@ msgstr ""
 
 #: src/prefs.js:452
 msgid "Sequential"
-msgstr ""
+msgstr "Διαδοχικά"
 
 #: src/prefs.js:453
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "Αντίστροφη Aκολουθία"
 
 #: src/prefs.js:454
 msgid "Random"
-msgstr ""
+msgstr "Τυχαία"
