@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Check if the script is being run as root
+if [ "$(id -u)" -eq 0 ]; then
+    echo "Error: This script should not be run as root" >&2
+    exit 1
+fi
+
 UUID="hanabi-extension@jeffshee.github.io"
 
 if [ "$1" == "install" ]; then
@@ -43,6 +49,6 @@ elif [ "$1" == "help" ]; then
     echo "Run '$0 help' to see this message."
     exit 0
 else
-    echo "Invalid action. Run '$0 help' to see valid actions."
+    echo "Error: Invalid action. Run '$0 help' to see valid actions." >&2
     exit 1
 fi
