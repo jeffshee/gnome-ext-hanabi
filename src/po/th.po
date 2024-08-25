@@ -2,13 +2,14 @@
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # Karorogunso <karorogunso@hotmail.com>, 2024.
+# rain1150 <arinchai0405.jj@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-06-01 19:24+0000\n"
-"Last-Translator: Karorogunso <karorogunso@hotmail.com>\n"
+"PO-Revision-Date: 2024-08-26 02:09+0000\n"
+"Last-Translator: rain1150 <arinchai0405.jj@gmail.com>\n"
 "Language-Team: Thai <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/th/>\n"
 "Language: th\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.6-dev\n"
+"X-Generator: Weblate 5.7.1-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -198,10 +199,10 @@ msgid ""
 msgstr ""
 "\n"
 "    <b>เติม</b>: ขยายภาพให้เต็มหน้าจอ\n"
-"    <b>ฟิต</b>: ขยายภาพให้ฟิตหน้าจอ (โดยให้อัตราส่วนเหมือนเดิม)\n"
+"    <b>พอดี</b>: ขยายภาพให้พอดีหน้าจอ (โดยให้อัตราส่วนเหมือนเดิม)\n"
 "    <b>เต็มหน้าจอ</b>: ขยายภาพให้เต็มหน้าจอ (โดยให้อัตราส่วนเหมือนเดิม) \n"
-"    <b>ลดขนาดภาพ</b>: ลดขนาดภาพเพื่อให้ฟิตหน้าจอ หากจำเป็น ไม่งั้น "
-"จะให้อัตราส่วนเหมือนเดิม\n"
+"    <b>ลดขนาดภาพ</b>: ลดขนาดภาพเพื่อให้พอดีหน้าจอ หากจำเป็น ไม่งั้น จะให้อัตราส่วนเหมือนเดิ"
+"ม\n"
 "    "
 
 #: src/prefs.js:338
@@ -209,8 +210,9 @@ msgid "Fill"
 msgstr "เติม"
 
 #: src/prefs.js:339
+#, fuzzy
 msgid "Contain"
-msgstr "ฟิต"
+msgstr "พอดี"
 
 #: src/prefs.js:340
 msgid "Cover"
