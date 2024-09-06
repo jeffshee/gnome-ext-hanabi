@@ -7,94 +7,98 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-09-07 09:09+0000\n"
+"Last-Translator: Magnus Zahle <magnuskzahle@outlook.com>\n"
+"Language-Team: Danish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
+"gnome-ext-hanabi/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.8-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
-msgstr ""
+msgstr "Paus"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Play"
-msgstr ""
+msgstr "Afspil"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103
 msgid "Unmute Audio"
-msgstr ""
+msgstr "Slå Lyden Til"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:43
 msgid "Mute Audio"
-msgstr ""
+msgstr "Slå lyd fra"
 
 #: src/panelMenu.js:110
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "Næste Baggrund"
 
 #: src/panelMenu.js:125
 msgid "Preferences"
-msgstr ""
+msgstr "Præferencer"
 
 #: src/prefs.js:38
 msgid "General"
-msgstr ""
+msgstr "Generelt"
 
 #: src/prefs.js:44
 msgid "Volume Level"
-msgstr ""
+msgstr "Volumen Niveau"
 
 #: src/prefs.js:45
 msgid "Show Panel Menu"
-msgstr ""
+msgstr "Vis Panel Menu"
 
 #: src/prefs.js:51
 msgid "Auto Pause"
-msgstr ""
+msgstr "Automatisk Pause"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr ""
+msgstr "Lavt Batteri Tærskel"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "Set tærsklen for lavt batteri-niveau"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr ""
+msgstr "Paus ved Medie Afspiller"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
-msgstr ""
+msgstr "Paus afspilning når en MPRIS medieafspiller afspiller noget"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "Baggrunds Skifter"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "Skift Baggrund Automatisk"
 
 #: src/prefs.js:75
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "Ændr Baggrunds Interval (minutter)"
 
 #: src/prefs.js:81
 msgid "Experimental"
-msgstr ""
+msgstr "Eksperimentel"
 
 #: src/prefs.js:87
 msgid "Experimental VA Plugin"
-msgstr ""
+msgstr "Eksperimentelt VA Plugin"
 
 #: src/prefs.js:89
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
+"Slå VA dekodere til hvilket forbedre ydeevne for Intel/AMD Wayland brugere"
 
 #: src/prefs.js:94
 msgid "NVIDIA Stateless Decoders"
@@ -102,73 +106,75 @@ msgstr ""
 
 #: src/prefs.js:96
 msgid "Use new stateless NVIDIA decoders"
-msgstr ""
+msgstr "Brug nye stat-løse NVIDIA dekodere"
 
 #: src/prefs.js:103
 msgid "Developer"
-msgstr ""
+msgstr "Udvikler"
 
 #: src/prefs.js:109
 msgid "Debug Mode"
-msgstr ""
+msgstr "Debug Tilstand"
 
 #: src/prefs.js:111
 msgid "Print debug messages to log"
-msgstr ""
+msgstr "Print debug beskeder til log"
 
 #: src/prefs.js:116
 msgid "Force gtk4paintablesink"
-msgstr ""
+msgstr "Tving gtk4paintablesink"
 
 #: src/prefs.js:118
 msgid "Force use of gtk4paintablesink for video playback"
-msgstr ""
+msgstr "Tving brug af gtk4paintablesink til video afspilning"
 
 #: src/prefs.js:123
 msgid "Force GtkMediaFile"
-msgstr ""
+msgstr "Tving GtkMediaFile"
 
 #: src/prefs.js:125
 msgid "Force use of GtkMediaFile for video playback"
-msgstr ""
+msgstr "Tving brug af GtkMediaFile til video afspilning"
 
 #: src/prefs.js:127
 msgid "Startup Delay"
-msgstr ""
+msgstr "Start Forsinkelse"
 
 #: src/prefs.js:127
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
+"Tilføj et start forsinkelse (i millisekunder) for at undvige "
+"kompatibilitetsproblemer med andre udvidelser"
 
 #: src/prefs.js:214
 msgid "Video Path"
-msgstr ""
+msgstr "Video Sti"
 
 #: src/prefs.js:220 src/prefs.js:245 src/prefs.js:279 src/prefs.js:300
 msgid "None"
-msgstr ""
+msgstr "Ingen"
 
 #: src/prefs.js:232
 msgid "Open File"
-msgstr ""
+msgstr "Åben Fil"
 
 #: src/prefs.js:237 src/prefs.js:293
 msgid "Cancel"
-msgstr ""
+msgstr "Annuller"
 
 #: src/prefs.js:238 src/prefs.js:254 src/prefs.js:294 src/prefs.js:309
 msgid "Open"
-msgstr ""
+msgstr "Åben"
 
 #: src/prefs.js:273
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "Skift Stien Til Bagrunds-mappen"
 
 #: src/prefs.js:288
 msgid "Select Directory"
-msgstr ""
+msgstr "Vælg Mappe"
 
 #: src/prefs.js:328
 msgid "Fit Mode"
@@ -176,7 +182,7 @@ msgstr ""
 
 #: src/prefs.js:329
 msgid "Control how wallpaper fits within the monitor"
-msgstr ""
+msgstr "Kontroller hvordan baggrunde passer til skærmen"
 
 #: src/prefs.js:330
 msgid ""
@@ -190,34 +196,43 @@ msgid ""
 "needed, otherwise keep its original size.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Fyld</b>: Stræk baggrunden til at fylde skærmen.\n"
+"    <b>Indehold</b>: Skaler baggrunden for at passe ind på skærmen (behold "
+"billedformat).\n"
+"    <b>Dæk</b>: Skaler baggrunden til at dække skærmen (behold billedformat)."
+"\n"
+"    <b>Skaler ned</b>: Skaler baggrunden ned for at passe til skærmen hvis "
+"nødvendigt, ellers behold den originale størrelse.\n"
+"    "
 
 #: src/prefs.js:338
 msgid "Fill"
-msgstr ""
+msgstr "Fyld"
 
 #: src/prefs.js:339
 msgid "Contain"
-msgstr ""
+msgstr "Indholde"
 
 #: src/prefs.js:340
 msgid "Cover"
-msgstr ""
+msgstr "Dæk"
 
 #: src/prefs.js:341
 msgid "Scale-down"
-msgstr ""
+msgstr "Skaler-ned"
 
 #: src/prefs.js:354
 msgid "This feature requires Gtk 4.8 or above"
-msgstr ""
+msgstr "Denne funktion har brug for Gtk 4.8 eller senere"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "Paus ved Maksimer eller Fuldskærm"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
-msgstr ""
+msgstr "Paus afspilning når der er et maksimeret eller fuldskærmet vindue"
 
 #: src/prefs.js:373
 msgid ""
@@ -229,26 +244,33 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Aldrig</b>: Deaktiver denne funktion.\n"
+"    <b>Enhver skærm</b>: Paus afspilning når der er et maksimeret eller fuld-"
+"skærms vindue på enhver skærm.\n"
+"    <b>Alle skærme</b>: Paus afspilning når der er et maksimeret eller fuld-"
+"skærms vindue på alle skærme.\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "Aldrig"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "Enhver skærm"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "Alle skærme"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
-msgstr ""
+msgstr "Paus ved Batteri"
 
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
-msgstr ""
+msgstr "Paus afspilning når enheden er på batteri eller batteriet er lavt"
 
 #: src/prefs.js:409
 msgid ""
@@ -259,22 +281,28 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Aldrig</b>: Deaktiver denne funktion.\n"
+"    <b>Lavt Batteri</b>: Paus afspilning når enheden er på lavt batteri ("
+"under tærsklen).\n"
+"    <b>Altid</b>: Paus afspilning når enheden er på batteri.\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "Lavt Batteri"
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "Altid"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "Ændr Baggrunds Tilstand"
 
 #: src/prefs.js:444
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "Kontroller hvordan baggrunde skiftes automatisk"
 
 #: src/prefs.js:445
 msgid ""
@@ -285,15 +313,22 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Normal rækkefølge:</b> Behold mappe rækkefølge (faldende rækkefølge)."
+"\n"
+"    <b>Modsat rækkefølge:</b> Hent baggrunde i modsat rækkefølge (stigende "
+"rækkefølge).\n"
+"    <b>Tilfældig:</b> Vælg baggrunde fra mappen i tilfældig rækkefølge.\n"
+"    "
 
 #: src/prefs.js:452
 msgid "Sequential"
-msgstr ""
+msgstr "Normal rækkefølge"
 
 #: src/prefs.js:453
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "Modsat Rækkefølge"
 
 #: src/prefs.js:454
 msgid "Random"
-msgstr ""
+msgstr "Tilfældig"
