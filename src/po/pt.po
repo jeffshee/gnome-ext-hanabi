@@ -4,13 +4,14 @@
 # ssantos <ssantos@web.de>, 2024.
 # Cesar H <estagiariocesar@gmail.com>, 2024.
 # Luccas Lopes <lopesluccassilva@gmail.com>, 2024.
+# Emanoel Rodrigues Aires <emanoelairesrodrigues@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-07-02 22:09+0000\n"
-"Last-Translator: Luccas Lopes <lopesluccassilva@gmail.com>\n"
+"PO-Revision-Date: 2024-09-24 20:10+0000\n"
+"Last-Translator: Emanoel Rodrigues Aires <emanoelairesrodrigues@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/"
 "gnome-ext-hanabi/gnome-ext-hanabi/pt/>\n"
 "Language: pt\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.7-dev\n"
+"X-Generator: Weblate 5.8-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -30,15 +31,15 @@ msgstr "Reproduzir"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103
 msgid "Unmute Audio"
-msgstr "Ligar Som"
+msgstr "Ativar áudio"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:43
 msgid "Mute Audio"
-msgstr "Desligar Som"
+msgstr "Silenciar Áudio"
 
 #: src/panelMenu.js:110
 msgid "Next Wallpaper"
-msgstr "Próximo Papel de Parede"
+msgstr "Próximo papel de parede"
 
 #: src/panelMenu.js:125
 msgid "Preferences"
@@ -50,45 +51,44 @@ msgstr "Geral"
 
 #: src/prefs.js:44
 msgid "Volume Level"
-msgstr "Volume do Som"
+msgstr "Nível de Volume"
 
 #: src/prefs.js:45
 msgid "Show Panel Menu"
 msgstr "Mostrar Menu de Painel"
 
 #: src/prefs.js:51
-#, fuzzy
-#| msgid "Pause"
 msgid "Auto Pause"
-msgstr "Pausar"
+msgstr "Pausa Automática"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr "Bateria Fraca"
+msgstr "Limite de Bateria Baixa"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "Defina a porcentagem limite para o modo Baixa Bateria"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr "Pausa ao Tocar Música"
+msgstr "Pausar quando um reprodutor de mídia estiver reproduzindo"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
 msgstr ""
+"Pausar a reprodução quando um reprodutor de mídia MPRIS estiver reproduzindo"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "Alterador de Papel de Parede"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
-msgstr "Mudar Papel de Parede Automaticamente"
+msgstr "Mudar papel de parede automaticamente"
 
 #: src/prefs.js:75
 msgid "Change Wallpaper Interval (minutes)"
-msgstr "Mudar Intervalo do Papel de Parede (minutos)"
+msgstr "Alterar o intervalo de papel de parede (minutos)"
 
 #: src/prefs.js:81
 msgid "Experimental"
@@ -102,7 +102,7 @@ msgstr "Plugin VA Experimental"
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
-"Ativar decodificadores VA que melhoram o desempenho para utilizadores de "
+"Habilitar decodificadores VA que melhoram o desempenho para usuários de "
 "Wayland com Intel/AMD"
 
 #: src/prefs.js:94
@@ -150,8 +150,8 @@ msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
-"Adicionar atraso de inicialização (em milissegundos) para impedir problemas "
-"com outras extensões"
+"Adicionar um atraso de inicialização (em milissegundos) para impedir "
+"problemas de compatibilidade com outras extensões"
 
 #: src/prefs.js:214
 msgid "Video Path"
@@ -163,7 +163,7 @@ msgstr "Nenhum"
 
 #: src/prefs.js:232
 msgid "Open File"
-msgstr "Abrir Ficheiro"
+msgstr "Abrir arquivo"
 
 #: src/prefs.js:237 src/prefs.js:293
 msgid "Cancel"
@@ -175,7 +175,7 @@ msgstr "Abrir"
 
 #: src/prefs.js:273
 msgid "Change Wallpaper Directory Path"
-msgstr "Mudar o Caminho do Diretório do Papel de Parede"
+msgstr "Mudar o caminho do diretório do papel de parede"
 
 #: src/prefs.js:288
 msgid "Select Directory"
@@ -187,7 +187,7 @@ msgstr "Ajuste do Papel de Parede"
 
 #: src/prefs.js:329
 msgid "Control how wallpaper fits within the monitor"
-msgstr "Modificar como o papel de parede se ajusta no seu monitor"
+msgstr "Controlar como o papel de parede se ajusta dentro do monitor"
 
 #: src/prefs.js:330
 msgid ""
@@ -202,14 +202,13 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    <b>Preencher</b>: Estica o papel de parede para preencher o monitor por "
-"completo.\n"
-"    <b>Conter</b>: Dimensiona o papel de parede para caber no monitor (não "
-"modifica a proporção).\n"
-"    <b>Cobrir</b>: Dimensiona o papel de parede para cobrir o monitor (não "
-"modifica a proporção).\n"
-"    <b>Diminuir</b>: Caso não couber, diminui o tamanho do papel de parede "
-"para caber no monitor.\n"
+"    <b>Preencher</b>: Esticar o papel de parede para preencher o monitor.\n"
+"\t<b>Conter</b>: Redimensionar o papel de parede para caber no monitor ("
+"mantém a proporção).\n"
+"\t<b>Cobrir</b>: Redimensionar o papel de parede para cobrir o monitor ("
+"mantém a proporção).\n"
+"\t<b>Reduzir</b>: Reduzir o papel de parede para caber no monitor, se "
+"necessário; caso contrário, mantém seu tamanho original.\n"
 "    "
 
 #: src/prefs.js:338
@@ -226,19 +225,20 @@ msgstr "Cobrir"
 
 #: src/prefs.js:341
 msgid "Scale-down"
-msgstr "Diminuir"
+msgstr "Reduzir"
 
 #: src/prefs.js:354
 msgid "This feature requires Gtk 4.8 or above"
-msgstr "Essa funcionalidade precisa de GTK 4.8 ou alguma versão superior"
+msgstr "Este recurso requer Gtk 4.8 ou superior"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr "Pausa ao Maximizar ou Tela Cheia"
+msgstr "Pausar ao Maximizar ou em Tela Cheia"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
 msgstr ""
+"Pausar a reprodução quando houver uma janela maximizada ou em tela cheia"
 
 #: src/prefs.js:373
 msgid ""
@@ -250,6 +250,13 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Nunca</b>: Desabilitar este recurso.\n"
+"\t<b>Qualquer Monitor</b>: Pausar a reprodução quando houver uma janela "
+"maximizada ou em tela cheia em qualquer monitor.\n"
+"\t<b>Todos os Monitores</b>: Pausar a reprodução quando houver janelas "
+"maximizadas ou em tela cheia em todos os monitores.\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
@@ -257,19 +264,21 @@ msgstr "Nunca"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "Qualquer Monitor"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "Todos os Monitores"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
-msgstr ""
+msgstr "Pausar ao usar  Bateria"
 
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
+"Pausar a reprodução quando o dispositivos estiver usando bateria ou quando a "
+"bateria estiver baixa"
 
 #: src/prefs.js:409
 msgid ""
@@ -280,6 +289,13 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Nunca</b>: Desabilitar este recurso.\n"
+"\t<b>Bateria Fraca</b>: Pausar a reprodução quando o dispositivo estiver no "
+"modo baixa bateria (abaixo do limite definido).\n"
+"\t<b>Sempre</b>: Pausar a reprodução quando o dispositivo estiver na bateria."
+"\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
@@ -287,15 +303,15 @@ msgstr "Bateria Baixa"
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "Sempre"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
-msgstr "Mudar Modo do Papel de Parede"
+msgstr "Mudar modo do papel de parede"
 
 #: src/prefs.js:444
 msgid "Control how to change wallpapers automatically"
-msgstr "Controlar Como Mudar o Papel de Parede Automaticamente"
+msgstr "Controlar como mudar os papéis de parede automaticamente"
 
 #: src/prefs.js:445
 msgid ""
@@ -306,6 +322,13 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Sequencial:</b> Preservar a sequência do diretório (ordem "
+"decrescente).\n"
+"\t<b>Sequencial Inverso:</b> Reagrupa os papéis de parede na sequência "
+"oposta (ordem crescente).\n"
+"\t<b>Aleatório:</b> Seleciona aleatoriamente papéis de parede do diretório.\n"
+"    "
 
 #: src/prefs.js:452
 msgid "Sequential"
@@ -313,7 +336,7 @@ msgstr "Sequencial"
 
 #: src/prefs.js:453
 msgid "Inverse Sequential"
-msgstr "Sequencia Inversa"
+msgstr "Sequência Inversa"
 
 #: src/prefs.js:454
 msgid "Random"
