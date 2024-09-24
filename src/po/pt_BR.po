@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-09-24 20:10+0000\n"
+"PO-Revision-Date: 2024-09-24 22:22+0000\n"
 "Last-Translator: Emanoel Rodrigues Aires <emanoelairesrodrigues@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "gnome-ext-hanabi/gnome-ext-hanabi/pt_BR/>\n"
@@ -51,7 +51,7 @@ msgstr "Geral"
 
 #: src/prefs.js:44
 msgid "Volume Level"
-msgstr "Volume do Som"
+msgstr "Nível de Volume"
 
 #: src/prefs.js:45
 msgid "Show Panel Menu"
@@ -67,7 +67,7 @@ msgstr "Limite de Baixa Bateria"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr "Especifique um limite de porcentagem para o nível de bateria baixa"
+msgstr "Especifique um limite de porcentagem para o modo de Baixa Bateria"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
@@ -80,7 +80,7 @@ msgstr ""
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr "Mudança do Wallpaper"
+msgstr "Alterador de Papel de Parede"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
@@ -225,11 +225,11 @@ msgstr "Cobrir"
 
 #: src/prefs.js:341
 msgid "Scale-down"
-msgstr "Diminuir Escala"
+msgstr "Reduzir"
 
 #: src/prefs.js:354
 msgid "This feature requires Gtk 4.8 or above"
-msgstr "Essa funcionalidade precisa de GTK 4.8 ou alguma versão superior"
+msgstr "Este recurso requer Gtk 4.8 ou superior"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
@@ -238,7 +238,7 @@ msgstr "Pausar ao Maximizar ou em Tela Cheia"
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
 msgstr ""
-"Pausar a reprodução quando tiver uma janela preenchendo ou em tela cheia"
+"Pausar a reprodução quando houver uma janela maximizada ou em tela cheia"
 
 #: src/prefs.js:373
 msgid ""
