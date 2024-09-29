@@ -2,13 +2,14 @@
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # アントネッロ <amanocchio426@gmail.com>, 2024.
+# Federico Giovine <giovine.federico@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-03-27 13:47+0000\n"
-"Last-Translator: アントネッロ <amanocchio426@gmail.com>\n"
+"PO-Revision-Date: 2024-09-29 14:15+0000\n"
+"Last-Translator: Federico Giovine <giovine.federico@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/it/>\n"
 "Language: it\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.8-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -55,26 +56,24 @@ msgid "Show Panel Menu"
 msgstr "Mostra il menu del pannello"
 
 #: src/prefs.js:51
-#, fuzzy
-#| msgid "Pause"
 msgid "Auto Pause"
 msgstr "Pausa"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr ""
+msgstr "Soglia di batteria scarica"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "Seleziona la percentuale della soglia per la batteria scarica"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr ""
+msgstr "Metti in pausa quando il Media Player è attivo"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
-msgstr ""
+msgstr "Metti in pausa quando il MPRIS media player è attivo"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
@@ -235,7 +234,7 @@ msgstr ""
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
-msgstr ""
+msgstr "Metti in pausa quando c'è una finestra ingrandita o a schermo intero"
 
 #: src/prefs.js:373
 msgid ""
@@ -247,18 +246,25 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Never</b>: Disattiva questa funzione.\n"
+"    <b>Any Monitor</b>: Metti in pausa quando c'è una finestra ingrandita o "
+"schermo intero su qualsiasi monitor.\n"
+"    <b>All Monitors</b>: Metti in pausa quando ci sono finestre ingrandite o "
+"schermo intero su tutti i monitor.\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "Mai"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "Qualsiasi monitor"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "Tutti i monitor"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
@@ -267,6 +273,8 @@ msgstr ""
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
+"Metti in pausa quando il dispositivo è alimentato dalla batteria o la "
+"batteria è bassa"
 
 #: src/prefs.js:409
 msgid ""
@@ -277,14 +285,21 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Never</b>: Disattiva questa funzionalità.\n"
+"    <b>Low Battery</b>: Metti in pausa quando il dispositivo ha la batteria "
+"scarica (sotto la soglia di batteria scarica).\n"
+"    <b>Always</b>: Metti in pausa quando il dispositivo è alimentato dalla "
+"batteria.\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "Batteria Bassa"
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "Sempre"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
