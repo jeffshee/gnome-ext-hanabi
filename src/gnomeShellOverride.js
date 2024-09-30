@@ -58,6 +58,16 @@ export class GnomeShellOverride {
          * we have to recreate it to use our actors, so it can set radius to our actor.
          */
         Main.overview._overview._controls._workspacesDisplay._updateWorkspacesViews();
+
+        /**
+         *  Blur My Shell
+         */
+        if (Main.extensionManager._enabledExtensions.includes('blur-my-shell@aunetx')) {
+            // This will trigger the `update_backgrounds` method of overview, sceenshot and coverflow alt tab.
+            Main.layoutManager.emit('monitors-changed');
+            // This will trigger the `reset` method of panel.
+            global.display.emit('workareas-changed');
+        }
     }
 
     enable() {
