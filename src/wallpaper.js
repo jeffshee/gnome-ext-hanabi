@@ -31,6 +31,8 @@ const logger = new Logger.Logger();
 // Ref: https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/layout.js
 const BACKGROUND_FADE_ANIMATION_TIME = 1000;
 
+const CUSTOM_BACKGROUND_BOUNDS_PADDING = 2;
+
 /**
  * The widget that holds the window preview of the renderer.
  */
@@ -50,6 +52,7 @@ export const LiveWallpaper = GObject.registerClass(
                 opacity: 0,
             });
             this._backgroundActor = backgroundActor;
+            this._metaBackgroundGroup = backgroundActor.get_parent();
             this._monitorIndex = backgroundActor.monitor;
 
             /**
@@ -71,33 +74,34 @@ export const LiveWallpaper = GObject.registerClass(
             backgroundActor.add_child(this);
 
             this._wallpaper = null;
-
             this._applyWallpaper();
 
             this._roundedCornersEffect =
                 new RoundedCornersEffect.RoundedCornersEffect();
-            this.add_effect(this._roundedCornersEffect);
+            this._backgroundActor.add_effect(this._roundedCornersEffect);
 
-            /**
-             * Refs for each parameter of RoundedCornersEffect:
-             * - pixel-step
-             * https://gitlab.gnome.org/GNOME/mutter/-/blob/3528b54378b60fdb7692dcd849c61dccfeeb805f/src/compositor/meta-background-content.c#L582-585
-             * - rounded-clip-radius
-             * https://gitlab.gnome.org/GNOME/mutter/-/blob/3528b54378b60fdb7692dcd849c61dccfeeb805f/src/compositor/meta-background-content.c#L507
-             * - rounded-clip-bounds
-             * https://gitlab.gnome.org/GNOME/mutter/-/blob/3528b54378b60fdb7692dcd849c61dccfeeb805f/src/compositor/meta-background-content.c#L487-505
-             */
-            this._roundedCornersEffect.setPixelStep([
-                1.0 / (this._monitorWidth * this._monitorScale),
-                1.0 / (this._monitorHeight * this._monitorScale),
-            ]);
+            this.setPixelStep(this._monitorWidth, this._monitorHeight);
             this.setRoundedClipRadius(0.0);
-            const rect = new Graphene.Rect();
-            rect.origin.x = 0;
-            rect.origin.y = 0;
-            rect.size.width = this._monitorWidth;
-            rect.size.height = this._monitorHeight;
-            this.setRoundedClipBounds(rect);
+            this.setRoundedClipBounds(0, 0, this._monitorWidth, this._monitorHeight);
+
+            this.connect('notify::height', () => {
+                let heightOffset = this.height - this._metaBackgroundGroup.get_parent().height;
+                this._roundedCornersEffect.setBounds(
+                    [
+                        CUSTOM_BACKGROUND_BOUNDS_PADDING,
+                        CUSTOM_BACKGROUND_BOUNDS_PADDING + heightOffset,
+                        this.width,
+                        this.height,
+                    ].map(e => e * this._monitorScale)
+                );
+            });
+        }
+
+        setPixelStep(width, height) {
+            this._roundedCornersEffect.setPixelStep([
+                1.0 / (width * this._monitorScale),
+                1.0 / (height * this._monitorScale),
+            ]);
         }
 
         setRoundedClipRadius(radius) {
@@ -106,14 +110,9 @@ export const LiveWallpaper = GObject.registerClass(
             );
         }
 
-        setRoundedClipBounds(rect) {
+        setRoundedClipBounds(x1, y1, x2, y2) {
             this._roundedCornersEffect.setBounds(
-                [
-                    rect.origin.x,
-                    rect.origin.y,
-                    rect.origin.x + rect.size.width,
-                    rect.origin.y + rect.size.height,
-                ].map(e => e * this._monitorScale)
+                [x1, y1, x2, y2].map(e => e * this._monitorScale)
             );
         }
 
