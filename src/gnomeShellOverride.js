@@ -32,11 +32,11 @@ import * as Util from 'resource:///org/gnome/shell/misc/util.js';
 import * as Logger from './logger.js';
 import * as Wallpaper from './wallpaper.js';
 
-const logger_ = new Logger.Logger();
+const logger = new Logger.Logger();
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 // Ref: https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/workspace.js
-const backgroundCornerRadiusPixels = 30;
+const BACKGROUND_CORNER_RADIUS_PIXELS = 30;
 
 export class GnomeShellOverride {
     constructor() {
@@ -95,7 +95,7 @@ export class GnomeShellOverride {
                     // The scale factor here is an integer, not the fractional scale factor.
                     // Ref: https://gjs-docs.gnome.org/st13~13/st.themecontext#method-get_scale_factor
                     const {scaleFactor} = St.ThemeContext.get_for_stage(global.stage);
-                    const cornerRadius = scaleFactor * backgroundCornerRadiusPixels;
+                    const cornerRadius = scaleFactor * BACKGROUND_CORNER_RADIUS_PIXELS;
 
                     const radius = Util.lerp(0, cornerRadius, this._stateAdjustment.value);
                     this._bgManager.videoActor.setRoundedClipRadius(radius);
@@ -116,6 +116,7 @@ export class GnomeShellOverride {
                     rect.size.width = this._workarea.width;
                     rect.size.height = this._workarea.height;
 
+                    logger.debug("_updateRoundedClipBounds rect:", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height)
                     this._bgManager.videoActor.setRoundedClipBounds(rect);
                 };
             }
