@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-09-29 14:15+0000\n"
+"PO-Revision-Date: 2024-10-01 12:16+0000\n"
 "Last-Translator: 云晓逸 <jiangmingyu150@gmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/gnome-ext-hanabi/gnome-ext-hanabi/zh_Hans/>\n"
@@ -74,7 +74,7 @@ msgstr "在媒体播放器播放媒体时暂停"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
-msgstr "当远程媒体播放器在播放媒体时暂停播放"
+msgstr "当MPRIS媒体播放器在播放媒体时暂停播放"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
@@ -224,7 +224,7 @@ msgstr "此功能需要 Gtk 4.8 或更高版本"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr "最大化或全屏时 暂停"
+msgstr "最大化或全屏时暂停"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
@@ -308,8 +308,8 @@ msgid ""
 msgstr ""
 "\n"
 "    <b>顺序：</b>保留目录顺序（降序）。\n"
-"<b>逆序：</b>按相反顺序（升序）检索壁纸。\n"
-"<b>随机：</b>从目录中随机选择壁纸。\n"
+"    <b>逆序：</b>按相反顺序（升序）检索壁纸。\n"
+"    <b>随机：</b>从目录中随机选择壁纸。\n"
 "    "
 
 #: src/prefs.js:452
