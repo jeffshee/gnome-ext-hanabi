@@ -19,6 +19,10 @@
 import GObject from 'gi://GObject';
 import Shell from 'gi://Shell';
 
+import * as Logger from './logger.js';
+
+const logger = new Logger.Logger('roundedCorners');
+
 // This shader is copied from Mutter project.
 // See <https://gitlab.gnome.org/GNOME/mutter/-/blob/main/src/compositor/meta-background-content.c>.
 const fragmentShaderDeclarations = [
@@ -90,6 +94,7 @@ export const RoundedCornersEffect = GObject.registerClass(
         }
 
         setBounds(bounds) {
+            logger.debug('bounds:', ...bounds);
             this.set_uniform_float(
                 this.get_uniform_location('bounds'),
                 4,
@@ -98,6 +103,7 @@ export const RoundedCornersEffect = GObject.registerClass(
         }
 
         setClipRadius(clipRadius) {
+            logger.debug('clipRadius:', clipRadius);
             this.set_uniform_float(
                 this.get_uniform_location('clip_radius'),
                 1,
@@ -106,6 +112,7 @@ export const RoundedCornersEffect = GObject.registerClass(
         }
 
         setPixelStep(pixelStep) {
+            logger.debug('pixelStep:', ...pixelStep);
             this.set_uniform_float(
                 this.get_uniform_location('pixel_step'),
                 2,

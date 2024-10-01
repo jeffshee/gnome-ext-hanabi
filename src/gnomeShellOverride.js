@@ -20,7 +20,6 @@
 import Meta from 'gi://Meta';
 import St from 'gi://St';
 import Shell from 'gi://Shell';
-import Graphene from 'gi://Graphene';
 
 import {InjectionManager, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Background from 'resource:///org/gnome/shell/ui/background.js';
@@ -32,11 +31,12 @@ import * as Util from 'resource:///org/gnome/shell/misc/util.js';
 import * as Logger from './logger.js';
 import * as Wallpaper from './wallpaper.js';
 
-const logger_ = new Logger.Logger();
+// eslint-disable-next-line no-unused-vars
+const logger = new Logger.Logger();
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 // Ref: https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/workspace.js
-const backgroundCornerRadiusPixels = 30;
+const BACKGROUND_CORNER_RADIUS_PIXELS = 30;
 
 export class GnomeShellOverride {
     constructor() {
@@ -58,6 +58,16 @@ export class GnomeShellOverride {
          * we have to recreate it to use our actors, so it can set radius to our actor.
          */
         Main.overview._overview._controls._workspacesDisplay._updateWorkspacesViews();
+
+        /**
+         *  Blur My Shell
+         */
+        if (Main.extensionManager._enabledExtensions.includes('blur-my-shell@aunetx')) {
+            // This will trigger the `update_backgrounds` method of overview, sceenshot and coverflow alt tab.
+            Main.layoutManager.emit('monitors-changed');
+            // This will trigger the `reset` method of panel.
+            global.display.emit('workareas-changed');
+        }
     }
 
     enable() {
@@ -89,34 +99,16 @@ export class GnomeShellOverride {
          * Ref: https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/a6d35fdd2abd63d23c7a9d093645f760691539a0/js/ui/workspace.js#L1003-1022
          */
         this._injectionManager.overrideMethod(Workspace.WorkspaceBackground.prototype, '_updateBorderRadius',
-            originalMethod => {
+            // Don't call the orginal method, use our implementation of rounded corners instead.
+            _originalMethod => {
                 return function () {
-                    originalMethod.call(this);
                     // The scale factor here is an integer, not the fractional scale factor.
                     // Ref: https://gjs-docs.gnome.org/st13~13/st.themecontext#method-get_scale_factor
                     const {scaleFactor} = St.ThemeContext.get_for_stage(global.stage);
-                    const cornerRadius = scaleFactor * backgroundCornerRadiusPixels;
+                    const cornerRadius = scaleFactor * BACKGROUND_CORNER_RADIUS_PIXELS;
 
                     const radius = Util.lerp(0, cornerRadius, this._stateAdjustment.value);
                     this._bgManager.videoActor.setRoundedClipRadius(radius);
-                };
-            }
-        );
-
-        this._injectionManager.overrideMethod(Workspace.WorkspaceBackground.prototype, '_updateRoundedClipBounds',
-            originalMethod => {
-                return function () {
-                    originalMethod.call(this);
-
-                    const monitor = Main.layoutManager.monitors[this._monitorIndex];
-
-                    const rect = new Graphene.Rect();
-                    rect.origin.x = this._workarea.x - monitor.x;
-                    rect.origin.y = this._workarea.y - monitor.y;
-                    rect.size.width = this._workarea.width;
-                    rect.size.height = this._workarea.height;
-
-                    this._bgManager.videoActor.setRoundedClipBounds(rect);
                 };
             }
         );

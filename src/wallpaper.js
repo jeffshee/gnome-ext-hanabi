@@ -18,11 +18,9 @@
 import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
-import Meta from 'gi://Meta';
 import St from 'gi://St';
 import Graphene from 'gi://Graphene';
 
-import * as Background from 'resource:///org/gnome/shell/ui/background.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import * as Logger from './logger.js';
@@ -30,6 +28,10 @@ import * as RoundedCornersEffect from './roundedCornersEffect.js';
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const logger = new Logger.Logger();
+// Ref: https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/layout.js
+const BACKGROUND_FADE_ANIMATION_TIME = 1000;
+
+const CUSTOM_BACKGROUND_BOUNDS_PADDING = 2;
 
 /**
  * The widget that holds the window preview of the renderer.
@@ -50,6 +52,7 @@ export const LiveWallpaper = GObject.registerClass(
                 opacity: 0,
             });
             this._backgroundActor = backgroundActor;
+            this._metaBackgroundGroup = backgroundActor.get_parent();
             this._monitorIndex = backgroundActor.monitor;
 
             /**
@@ -67,37 +70,38 @@ export const LiveWallpaper = GObject.registerClass(
             this._monitorWidth = width;
             this._monitorHeight = height;
 
-            this._metaBackgroundGroup = backgroundActor.get_parent();
-            this._metaBackgroundGroup.add_child(this);
-            this._wallpaper = null;
+            backgroundActor.layout_manager = new Clutter.BinLayout();
+            backgroundActor.add_child(this);
 
-            this.connect('destroy', this._onDestroy.bind(this));
+            this._wallpaper = null;
             this._applyWallpaper();
 
             this._roundedCornersEffect =
                 new RoundedCornersEffect.RoundedCornersEffect();
-            this.add_effect(this._roundedCornersEffect);
+            this._backgroundActor.add_effect(this._roundedCornersEffect);
 
-            /**
-             * Refs for each parameter of RoundedCornersEffect:
-             * - pixel-step
-             * https://gitlab.gnome.org/GNOME/mutter/-/blob/3528b54378b60fdb7692dcd849c61dccfeeb805f/src/compositor/meta-background-content.c#L582-585
-             * - rounded-clip-radius
-             * https://gitlab.gnome.org/GNOME/mutter/-/blob/3528b54378b60fdb7692dcd849c61dccfeeb805f/src/compositor/meta-background-content.c#L507
-             * - rounded-clip-bounds
-             * https://gitlab.gnome.org/GNOME/mutter/-/blob/3528b54378b60fdb7692dcd849c61dccfeeb805f/src/compositor/meta-background-content.c#L487-505
-             */
-            this._roundedCornersEffect.setPixelStep([
-                1.0 / (this._monitorWidth * this._monitorScale),
-                1.0 / (this._monitorHeight * this._monitorScale),
-            ]);
+            this.setPixelStep(this._monitorWidth, this._monitorHeight);
             this.setRoundedClipRadius(0.0);
-            const rect = new Graphene.Rect();
-            rect.origin.x = 0;
-            rect.origin.y = 0;
-            rect.size.width = this._monitorWidth;
-            rect.size.height = this._monitorHeight;
-            this.setRoundedClipBounds(rect);
+            this.setRoundedClipBounds(0, 0, this._monitorWidth, this._monitorHeight);
+
+            this.connect('notify::height', () => {
+                let heightOffset = this.height - this._metaBackgroundGroup.get_parent().height;
+                this._roundedCornersEffect.setBounds(
+                    [
+                        CUSTOM_BACKGROUND_BOUNDS_PADDING,
+                        CUSTOM_BACKGROUND_BOUNDS_PADDING + heightOffset,
+                        this.width,
+                        this.height,
+                    ].map(e => e * this._monitorScale)
+                );
+            });
+        }
+
+        setPixelStep(width, height) {
+            this._roundedCornersEffect.setPixelStep([
+                1.0 / (width * this._monitorScale),
+                1.0 / (height * this._monitorScale),
+            ]);
         }
 
         setRoundedClipRadius(radius) {
@@ -106,14 +110,9 @@ export const LiveWallpaper = GObject.registerClass(
             );
         }
 
-        setRoundedClipBounds(rect) {
+        setRoundedClipBounds(x1, y1, x2, y2) {
             this._roundedCornersEffect.setBounds(
-                [
-                    rect.origin.x,
-                    rect.origin.y,
-                    rect.origin.x + rect.size.width,
-                    rect.origin.y + rect.size.height,
-                ].map(e => e * this._monitorScale)
+                [x1, y1, x2, y2].map(e => e * this._monitorScale)
             );
         }
 
@@ -166,61 +165,12 @@ export const LiveWallpaper = GObject.registerClass(
             return renderer ? renderer : null;
         }
 
-        _resize() {
-            if (!this._wallpaper || this._wallpaper.width === 0)
-                return;
-
-            /**
-             * Only `allocation.get_height()` works fine so far. The `allocation.get_width()` gives weird result for some reasons.
-             * As a workaround, we calculate the ratio based on the height, then use it to calculate width.
-             * It is safe to assume that the ratio of wallpaper is a constant (e.g. 16:9) in our case.
-             */
-            let ratio = this.allocation.get_height() / this._monitorHeight;
-            this._wallpaper.height = this._monitorHeight * ratio;
-            this._wallpaper.width = this._monitorWidth * ratio;
-        }
-
         _fade(visible = true) {
             this.ease({
                 opacity: visible ? 255 : 0,
-                duration: Background.FADE_ANIMATION_TIME,
+                duration: BACKGROUND_FADE_ANIMATION_TIME,
                 mode: Clutter.AnimationMode.EASE_OUT_QUAD,
             });
-            this._backgroundActor.ease({
-                opacity: visible ? 0 : 255,
-                duration: Background.FADE_ANIMATION_TIME,
-                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-            });
-        }
-
-        vfunc_allocate(box) {
-            super.vfunc_allocate(box);
-
-            if (this._laterId)
-                return;
-
-            const laterType = Meta.LaterType.BEFORE_REDRAW;
-            const sourceFunction = () => {
-                this._resize();
-
-                this._laterId = 0;
-                return GLib.SOURCE_REMOVE;
-            };
-            const laters = global.compositor?.get_laters();
-            if (laters)
-                laters.add(laterType, sourceFunction);
-            else
-                Meta.later_add(laterType, sourceFunction);
-        }
-
-        _onDestroy() {
-            const laters = global.compositor?.get_laters();
-            if (laters)
-                laters.remove(this._laterId);
-            else
-                Meta.later_remove(this._laterId);
-
-            this._laterId = 0;
         }
     }
 );
