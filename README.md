@@ -29,9 +29,9 @@ Please click on the image to view <i>(redirect to YouTube)</i>
 
 ## GNOME Shell Support
 
-| Version | ≤41 | 42  | 43  | 44  | 45  | 46  |
-| :-----: | :-: | :-: | :-: | :-: | :-: | :-: |
-| Status  | ⛔  | ✅  | ✅  | ✅  | ✅  | ✅  |
+| Version | ≤41 | 42  | 43  | 44  | 45  | 46  | 47  |
+| :-----: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| Status  | ⛔  | ✅  | ✅  | ✅  | ✅  | ✅  | 🚧  |
 
 See also the section [Troubleshooting](#troubleshooting), for version-specific known issues.
 
@@ -39,24 +39,29 @@ See also the section [Troubleshooting](#troubleshooting), for version-specific k
 
 1. Clone the repo
 
+-   **For GNOME 47 (experimental)**
+
+    ```
+    git clone https://github.com/jeffshee/gnome-ext-hanabi.git -b gnome-47
+    ```
+
+    See also: https://github.com/jeffshee/gnome-ext-hanabi/issues/146
+
 -   **For GNOME 45 and later**
-
-```
-git clone https://github.com/jeffshee/gnome-ext-hanabi.git
-```
-
+    ```
+    git clone https://github.com/jeffshee/gnome-ext-hanabi.git
+    ```
 -   **For GNOME 44 and earlier**
-
-```
-git clone https://github.com/jeffshee/gnome-ext-hanabi.git -b legacy
-```
+    ```
+    git clone https://github.com/jeffshee/gnome-ext-hanabi.git -b legacy
+    ```
 
 2. Run the installation script (Require `meson`)
 
-```
-cd gnome-ext-hanabi
-./run.sh install
-```
+    ```
+    cd gnome-ext-hanabi
+    ./run.sh install
+    ```
 
 3. Restart GNOME Shell
 4. Enable the Hanabi extension
@@ -85,7 +90,6 @@ cd gnome-ext-hanabi
 
 3. The GNOME Shell keeps crashing after enabling Hanabi, help!  
    You can try to disable the extension from tty ( <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>F3</kbd> ):
-
     ```
     gnome-extensions disable hanabi-extension@jeffshee.github.io
     ```
