@@ -1,7 +1,7 @@
 #!/usr/bin/env gjs
 
 /**
- * Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
+ * Copyright (C) 2024 Jeff Shee (jeffshee8969@gmail.com)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,22 @@
 imports.gi.versions.Gtk = '4.0';
 const {GObject, Gtk, Gio, GLib, Gdk, Gst} = imports.gi;
 
+// [major, minor, micro, nano]
+const gstVersion = Gst.version();
+console.log(`GStreamer version: ${gstVersion.join('.')}`);
+
+// [major, minor, micro]
+const gtkVersion = [Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version()];
+console.log(`Gtk version: ${gtkVersion.join('.')}`);
+
+const isGstVersionAtLeast = (major, minor) => {
+    return gstVersion[0] > major || (gstVersion[0] === major && gstVersion[1] >= minor);
+};
+
+const isGtkVersionAtLeast = (major, minor) => {
+    return gtkVersion[0] > major || (gtkVersion[0] === major && gtkVersion[1] >= minor);
+};
+
 let GstPlay = null;
 // GstPlay is available from GStreamer 1.20+
 try {
@@ -35,13 +51,19 @@ try {
 const haveGstAudio = GstAudio !== null;
 
 // ContentFit is available from Gtk 4.8+
-const haveContentFit = Gtk.get_minor_version() >= 8;
+const haveContentFit = isGtkVersionAtLeast(4, 8);
+
+// Support for dmabus and graphics offload is available from Gtk 4.14+
+const haveGraphicsOffload = isGtkVersionAtLeast(4, 14);
+
+// Use glsinkbin for Gst 1.24+
+const useGstGL = isGstVersionAtLeast(1, 24);
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 
 let extSettings = null;
 const extSchemaId = 'io.github.jeffshee.hanabi-extension';
-const settingsSchemaSource = Gio.SettingsSchemaSource.get_default();
+let settingsSchemaSource = Gio.SettingsSchemaSource.get_default();
 if (settingsSchemaSource.lookup(extSchemaId, false))
     extSettings = Gio.Settings.new(extSchemaId);
 
@@ -116,7 +138,7 @@ const HanabiRenderer = GObject.registerClass(
             });
 
             this.connect('command-line', (app, commandLine) => {
-                const argv = commandLine.get_arguments();
+                let argv = commandLine.get_arguments();
                 if (this._parseArgs(argv)) {
                     this.activate();
                     commandLine.set_exit_status(0);
@@ -172,7 +194,7 @@ const HanabiRenderer = GObject.registerClass(
 
         _parseArgs(argv) {
             let lastCommand = null;
-            for (const arg of argv) {
+            for (let arg of argv) {
                 if (!lastCommand) {
                     switch (arg) {
                     case '-M':
@@ -253,11 +275,11 @@ const HanabiRenderer = GObject.registerClass(
         }
 
         _setPluginDecodersRank(pluginName, rank, useStateless = false) {
-            const gstRegistry = Gst.Registry.get();
-            const features = gstRegistry.get_feature_list_by_plugin(pluginName);
+            let gstRegistry = Gst.Registry.get();
+            let features = gstRegistry.get_feature_list_by_plugin(pluginName);
 
             for (let feature of features) {
-                const featureName = feature.get_name();
+                let featureName = feature.get_name();
 
                 if (
                     !featureName.endsWith('dec') &&
@@ -265,12 +287,12 @@ const HanabiRenderer = GObject.registerClass(
                 )
                     continue;
 
-                const isStateless = featureName.includes('sl');
+                let isStateless = featureName.includes('sl');
 
                 if (isStateless !== useStateless)
                     continue;
 
-                const oldRank = feature.get_rank();
+                let oldRank = feature.get_rank();
 
                 if (rank === oldRank)
                     continue;
@@ -315,14 +337,14 @@ const HanabiRenderer = GObject.registerClass(
                         widget = this._getGtkStockWidget();
                 }
 
-                const geometry = gdkMonitor.get_geometry();
-                const state = {
+                let geometry = gdkMonitor.get_geometry();
+                let state = {
                     position: [geometry.x, geometry.y],
                     keepAtBottom: true,
                     keepMinimized: true,
                     keepPosition: true,
                 };
-                const window = new HanabiRendererWindow(
+                let window = new HanabiRendererWindow(
                     this,
                     nohide
                         ? `Hanabi Renderer #${index} (using ${this._gstImplName})`
@@ -338,13 +360,23 @@ const HanabiRenderer = GObject.registerClass(
 
         _getWidgetFromSharedPaintable() {
             if (this._sharedPaintable) {
-                const picture = new Gtk.Picture({
+                let picture = new Gtk.Picture({
                     paintable: this._sharedPaintable,
+                    hexpand: true,
+                    vexpand: true,
                 });
+
                 if (haveContentFit)
                     picture.set_content_fit(contentFit);
                 this._pictures.push(picture);
-                return this._pictures.at(-1);
+
+                if (haveGraphicsOffload) {
+                    let offload = Gtk.GraphicsOffload.new(picture);
+                    offload.set_enabled(Gtk.GraphicsOffloadEnabled.ENABLED);
+                    return offload;
+                }
+
+                return picture;
             }
             return null;
         }
@@ -363,7 +395,7 @@ const HanabiRenderer = GObject.registerClass(
                     // otherwise the sink.widget will spawn a window for itself.
                     // This workaround is only needed for the first window.
                     this._sharedPaintable = sink.widget.paintable;
-                    const box = new Gtk.Box();
+                    let box = new Gtk.Box();
                     box.append(sink.widget);
                     box.append(this._getWidgetFromSharedPaintable());
                     // Hide the sink.widget to show our Gtk.Picture only
@@ -381,6 +413,17 @@ const HanabiRenderer = GObject.registerClass(
             if (!widget)
                 return null;
 
+            if (useGstGL) {
+                let glsink = Gst.ElementFactory.make(
+                    'glsinkbin',
+                    'glsinkbin'
+                );
+                if (glsink) {
+                    this._gstImplName = `glsinkbin + ${this._gstImplName}`;
+                    glsink.set_property('sink', sink);
+                    sink = glsink;
+                }
+            }
             this._play = GstPlay.Play.new(
                 GstPlay.PlayVideoOverlayVideoRenderer.new_with_sink(null, sink)
             );
@@ -419,7 +462,7 @@ const HanabiRenderer = GObject.registerClass(
                 }
             );
 
-            const file = Gio.File.new_for_path(videoPath);
+            let file = Gio.File.new_for_path(videoPath);
             this._play.set_uri(file.get_uri());
 
             this.setPlay();
@@ -449,7 +492,7 @@ const HanabiRenderer = GObject.registerClass(
             });
 
             this._sharedPaintable = this._media;
-            const widget = this._getWidgetFromSharedPaintable();
+            let widget = this._getWidgetFromSharedPaintable();
 
             this.setPlay();
             this.setAutoWallpaper();
@@ -493,7 +536,7 @@ const HanabiRenderer = GObject.registerClass(
          * @param _volume
          */
         setVolume(_volume) {
-            const player = this._play != null ? this._play : this._media;
+            let player = this._play != null ? this._play : this._media;
 
             // GstPlay uses linear volume
             if (this._play) {
@@ -526,7 +569,7 @@ const HanabiRenderer = GObject.registerClass(
         }
 
         setFilePath(_videoPath) {
-            const file = Gio.File.new_for_path(_videoPath);
+            let file = Gio.File.new_for_path(_videoPath);
             if (this._play) {
                 this._play.set_uri(file.get_uri());
             } else if (this._media) {
@@ -579,7 +622,7 @@ const HanabiRenderer = GObject.registerClass(
                 return;
             videoPaths = videoPaths.sort();
 
-            const getRandomIndex = (actualIndex, videosLength) => {
+            let getRandomIndex = (actualIndex, videosLength) => {
                 if (videosLength <= 1)
                     return actualIndex;
 
@@ -590,7 +633,7 @@ const HanabiRenderer = GObject.registerClass(
                 return newIndex;
             };
 
-            const operation = () => {
+            let operation = () => {
                 console.debug(`setAutoWallpaper operation, interval: ${changeWallpaperInterval} min`);
                 // Avoid changing the wallpaper if it's paused to avoid unexpected playback resume.
                 if (this._isPlaying) {
@@ -659,8 +702,8 @@ const HanabiRendererWindow = GObject.registerClass(
                 if (fullscreened) {
                     this.fullscreen_on_monitor(gdkMonitor);
                 } else {
-                    const geometry = gdkMonitor.get_geometry();
-                    const [width, height] = [geometry.width, geometry.height];
+                    let geometry = gdkMonitor.get_geometry();
+                    let [width, height] = [geometry.width, geometry.height];
                     this.set_size_request(width, height);
                 }
             }
@@ -670,5 +713,5 @@ const HanabiRendererWindow = GObject.registerClass(
 
 Gst.init(null);
 
-const renderer = new HanabiRenderer();
+let renderer = new HanabiRenderer();
 renderer.run(ARGV);
