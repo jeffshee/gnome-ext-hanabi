@@ -41,9 +41,6 @@ export const LiveWallpaper = GObject.registerClass(
         constructor(backgroundActor) {
             super({
                 layout_manager: new Clutter.BinLayout(),
-                //
-                x: backgroundActor.x,
-                y: backgroundActor.y,
                 width: backgroundActor.width,
                 height: backgroundActor.height,
                 // Layout manager will allocate extra space for the actor, if possible.
@@ -84,7 +81,7 @@ export const LiveWallpaper = GObject.registerClass(
             this.setRoundedClipRadius(0.0);
             this.setRoundedClipBounds(0, 0, this._monitorWidth, this._monitorHeight);
 
-            this.connect('notify::height', () => {
+            this.connect('notify::allocation', () => {
                 let heightOffset = this.height - this._metaBackgroundGroup.get_parent().height;
                 this._roundedCornersEffect.setBounds(
                     [
