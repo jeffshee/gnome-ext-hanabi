@@ -4,13 +4,14 @@
 # MomentQYC <zixipersonal@gmail.com>, 2023.
 # 0xarch <alanqa-ops@outlook.com>, 2024.
 # 云晓逸 <jiangmingyu150@gmail.com>, 2024.
+# Xarth <g@lzzz.ink>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-10-01 12:16+0000\n"
-"Last-Translator: 云晓逸 <jiangmingyu150@gmail.com>\n"
+"PO-Revision-Date: 2024-10-09 02:15+0000\n"
+"Last-Translator: Xarth <g@lzzz.ink>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/gnome-ext-hanabi/gnome-ext-hanabi/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -181,7 +182,7 @@ msgstr "适应模式"
 
 #: src/prefs.js:329
 msgid "Control how wallpaper fits within the monitor"
-msgstr "控制壁纸在显示器内的贴合方式"
+msgstr "控制壁纸在显示器内的适配方式"
 
 #: src/prefs.js:330
 msgid ""
@@ -242,8 +243,8 @@ msgid ""
 msgstr ""
 "\n"
 "    <b>从不</b>: 停用该功能。\n"
-"    <b>任一监视器</b>: 当某个监视器存在最大化窗口或全屏窗口时暂停播放。\n"
-"    <b>所有监视器</b>: 当所有监视器都存在最大化窗口或全屏窗口时暂停播放。\n"
+"    <b>任一显示器</b>: 当任一显示器存在最大化窗口或全屏窗口时暂停播放。\n"
+"    <b>所有显示器</b>: 当所有显示器都存在最大化窗口或全屏窗口时暂停播放。\n"
 "    "
 
 #: src/prefs.js:380 src/prefs.js:416
@@ -252,11 +253,11 @@ msgstr "从不"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr "任一监视器"
+msgstr "任一显示器"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr "所有监视器"
+msgstr "所有显示器"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
