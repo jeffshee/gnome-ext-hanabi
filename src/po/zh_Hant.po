@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # reimu105 <peter112548@gmail.com>, 2023.
 # 云晓逸 <jiangmingyu150@gmail.com>, 2024.
+# Xarth <g@lzzz.ink>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-10-01 12:16+0000\n"
-"Last-Translator: 云晓逸 <jiangmingyu150@gmail.com>\n"
+"PO-Revision-Date: 2024-10-09 02:15+0000\n"
+"Last-Translator: Xarth <g@lzzz.ink>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
 "projects/gnome-ext-hanabi/gnome-ext-hanabi/zh_Hant/>\n"
 "Language: zh_Hant\n"
@@ -25,11 +26,11 @@ msgstr "暫停"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Play"
-msgstr ""
+msgstr "播放"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103
 msgid "Unmute Audio"
-msgstr ""
+msgstr "取消靜音"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:43
 msgid "Mute Audio"
@@ -41,7 +42,7 @@ msgstr "下一張壁紙"
 
 #: src/panelMenu.js:125
 msgid "Preferences"
-msgstr ""
+msgstr "偏好設定"
 
 #: src/prefs.js:38
 msgid "General"
@@ -49,11 +50,11 @@ msgstr "通用的"
 
 #: src/prefs.js:44
 msgid "Volume Level"
-msgstr ""
+msgstr "音量"
 
 #: src/prefs.js:45
 msgid "Show Panel Menu"
-msgstr ""
+msgstr "顯示面板選單"
 
 #: src/prefs.js:51
 msgid "Auto Pause"
@@ -65,7 +66,7 @@ msgstr "低電量閥值"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "設定低電量水平的閾值百分比"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
@@ -77,11 +78,11 @@ msgstr "當MPRIS媒體播放器正在播放媒體時暫停播放"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "壁紙修改器"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "自動更換壁紙"
 
 #: src/prefs.js:75
 msgid "Change Wallpaper Interval (minutes)"
@@ -106,7 +107,7 @@ msgstr ""
 
 #: src/prefs.js:96
 msgid "Use new stateless NVIDIA decoders"
-msgstr ""
+msgstr "使用新的 NVIDIA 無狀態解碼器"
 
 #: src/prefs.js:103
 msgid "Developer"
@@ -118,11 +119,11 @@ msgstr "偵錯模式"
 
 #: src/prefs.js:111
 msgid "Print debug messages to log"
-msgstr ""
+msgstr "將偵錯資訊打印到日誌中"
 
 #: src/prefs.js:116
 msgid "Force gtk4paintablesink"
-msgstr ""
+msgstr "強制使用 gtk4paintablesink"
 
 #: src/prefs.js:118
 msgid "Force use of gtk4paintablesink for video playback"
@@ -130,7 +131,7 @@ msgstr "強制使用 gtk4paintablesink 進行影片播放"
 
 #: src/prefs.js:123
 msgid "Force GtkMediaFile"
-msgstr ""
+msgstr "強制使用 GtkMediaFile"
 
 #: src/prefs.js:125
 msgid "Force use of GtkMediaFile for video playback"
@@ -138,21 +139,21 @@ msgstr "強制使用 GtkMediaFile 進行影片播放"
 
 #: src/prefs.js:127
 msgid "Startup Delay"
-msgstr ""
+msgstr "啟動延遲"
 
 #: src/prefs.js:127
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
-msgstr ""
+msgstr "增加啟動延遲（以毫秒為單位）以減少與其他擴充功能的相容性問題"
 
 #: src/prefs.js:214
 msgid "Video Path"
-msgstr ""
+msgstr "影片路徑"
 
 #: src/prefs.js:220 src/prefs.js:245 src/prefs.js:279 src/prefs.js:300
 msgid "None"
-msgstr ""
+msgstr "無"
 
 #: src/prefs.js:232
 msgid "Open File"
@@ -172,7 +173,7 @@ msgstr "更改壁紙目錄路徑"
 
 #: src/prefs.js:288
 msgid "Select Directory"
-msgstr ""
+msgstr "選擇目錄"
 
 #: src/prefs.js:328
 msgid "Fit Mode"
@@ -194,6 +195,12 @@ msgid ""
 "needed, otherwise keep its original size.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>填充</b>：拉伸壁紙以填滿顯示器。\n"
+"    <b>包含</b>：縮放壁紙以適應顯示器（保持寬高比）。\n"
+"    <b>覆蓋</b>：縮放壁紙以覆蓋顯示器（保持寬高比）。\n"
+"    <b>縮小</b>：必要時縮小壁紙以適應顯示器，否則保持原始大小。\n"
+"    "
 
 #: src/prefs.js:338
 msgid "Fill"
@@ -209,11 +216,11 @@ msgstr "覆蓋"
 
 #: src/prefs.js:341
 msgid "Scale-down"
-msgstr ""
+msgstr "縮小"
 
 #: src/prefs.js:354
 msgid "This feature requires Gtk 4.8 or above"
-msgstr ""
+msgstr "此功能需要 Gtk 4.8 或更高版本"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
@@ -221,7 +228,7 @@ msgstr "最大化或全螢幕時暫停"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
-msgstr ""
+msgstr "存在最大化窗口或全螢幕窗口時暫停播放"
 
 #: src/prefs.js:373
 msgid ""
@@ -233,6 +240,11 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>從不</b>：停用此功能。\n"
+"    <b>任一顯示器</b>：當任一顯示器有最大化或全螢幕視窗時暫停播放。\n"
+"    <b>所有顯示器</b>：當所有顯示器都有最大化或全螢幕視窗時暫停播放。\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
@@ -240,11 +252,11 @@ msgstr "從不"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr "任一監視器"
+msgstr "任一顯示器"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "所有顯示器"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
@@ -263,6 +275,11 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>從不</b>：停用此功能。\n"
+"    <b>低電量時</b>：當裝置處於低電量（低於臨界值）狀態時暫停播放。\n"
+"    <b>總是</b>：當裝置使用電池時暫停播放。\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
@@ -274,7 +291,7 @@ msgstr "總是"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
-msgstr "壁紙修改方式"
+msgstr "壁紙更換方式"
 
 #: src/prefs.js:444
 msgid "Control how to change wallpapers automatically"
@@ -289,10 +306,15 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>順序：</b>保留目錄順序（降序）。\n"
+"    <b>逆序：</b>按相反順序（升序）檢索壁紙。\n"
+"    <b>隨機：</b>從目錄中隨機選擇壁紙。\n"
+"    "
 
 #: src/prefs.js:452
 msgid "Sequential"
-msgstr ""
+msgstr "順序"
 
 #: src/prefs.js:453
 msgid "Inverse Sequential"
@@ -300,4 +322,4 @@ msgstr "逆序"
 
 #: src/prefs.js:454
 msgid "Random"
-msgstr ""
+msgstr "隨機"
