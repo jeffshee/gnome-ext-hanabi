@@ -40,21 +40,28 @@ let GstPlay = null;
 // GstPlay is available from GStreamer 1.20+
 try {
     GstPlay = imports.gi.GstPlay;
-} catch (e) {}
+} catch (e) {
+    console.error(e);
+    console.warn('GstPlay, or the typelib is not installed. Renderer will fallback to GtkMediaFile!');
+}
 const haveGstPlay = GstPlay !== null;
 
 let GstAudio = null;
 // Might not pre-installed on some distributions
 try {
     GstAudio = imports.gi.GstAudio;
-} catch (e) {}
+} catch (e) {
+    console.error(e);
+    console.warn('GstAudio, or the typelib is not installed.');
+}
 const haveGstAudio = GstAudio !== null;
 
 // ContentFit is available from Gtk 4.8+
 const haveContentFit = isGtkVersionAtLeast(4, 8);
 
 // Support for dmabus and graphics offload is available from Gtk 4.14+
-const haveGraphicsOffload = isGtkVersionAtLeast(4, 14);
+// FIXME: Disabled for now as it has issue with Ubuntu 24.04
+const haveGraphicsOffload = isGtkVersionAtLeast(4, 14) && false;
 
 // Use glsinkbin for Gst 1.24+
 const useGstGL = isGstVersionAtLeast(1, 24);
