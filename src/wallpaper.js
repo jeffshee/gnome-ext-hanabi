@@ -31,7 +31,7 @@ const logger = new Logger.Logger();
 // Ref: https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/layout.js
 const BACKGROUND_FADE_ANIMATION_TIME = 1000;
 
-const CUSTOM_BACKGROUND_BOUNDS_PADDING = 2;
+// const CUSTOM_BACKGROUND_BOUNDS_PADDING = 2;
 
 /**
  * The widget that holds the window preview of the renderer.
@@ -75,23 +75,24 @@ export const LiveWallpaper = GObject.registerClass(
 
             this._roundedCornersEffect =
                 new RoundedCornersEffect.RoundedCornersEffect();
-            this._backgroundActor.add_effect(this._roundedCornersEffect);
+            // this._backgroundActor.add_effect(this._roundedCornersEffect);
 
             this.setPixelStep(this._monitorWidth, this._monitorHeight);
             this.setRoundedClipRadius(0.0);
             this.setRoundedClipBounds(0, 0, this._monitorWidth, this._monitorHeight);
 
-            this.connect('notify::allocation', () => {
-                let heightOffset = this.height - this._metaBackgroundGroup.get_parent().height;
-                this._roundedCornersEffect.setBounds(
-                    [
-                        CUSTOM_BACKGROUND_BOUNDS_PADDING,
-                        CUSTOM_BACKGROUND_BOUNDS_PADDING + heightOffset,
-                        this.width,
-                        this.height,
-                    ].map(e => e * this._monitorScale)
-                );
-            });
+            // FIXME: Bounds calculation is wrong if the layout isn't vanilla (with custom dock, panel, etc.), disabled for now.
+            // this.connect('notify::allocation', () => {
+            //     let heightOffset = this.height - this._metaBackgroundGroup.get_parent().height;
+            //     this._roundedCornersEffect.setBounds(
+            //         [
+            //             CUSTOM_BACKGROUND_BOUNDS_PADDING,
+            //             CUSTOM_BACKGROUND_BOUNDS_PADDING + heightOffset,
+            //             this.width,
+            //             this.height,
+            //         ].map(e => e * this._monitorScale)
+            //     );
+            // });
         }
 
         setPixelStep(width, height) {
