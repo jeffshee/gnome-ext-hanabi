@@ -8,7 +8,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
 "PO-Revision-Date: 2024-10-20 11:31+0000\n"
-"Last-Translator: Nikodem Frączek <niko123571@gmail.com>\n"ONE\
+"Last-Translator: Nikodem Frączek <niko123571@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/pl/>\n"
 "Language: pl\n"
