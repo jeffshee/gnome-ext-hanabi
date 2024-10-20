@@ -7,9 +7,10 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-10-20 11:31+0000\n"
+"Last-Translator: Nikodem Frączek <niko123571@gmail.com>\n"ONE\
+"Language-Team: Polish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
+"gnome-ext-hanabi/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,166 +18,168 @@ msgstr ""
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
-msgstr ""
+msgstr "Zatrzymaj"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Play"
-msgstr ""
+msgstr "Odtwórz"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103
 msgid "Unmute Audio"
-msgstr ""
+msgstr "Włącz Dźwięk"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:43
 msgid "Mute Audio"
-msgstr ""
+msgstr "Wycisz Dźwięk"
 
 #: src/panelMenu.js:110
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "Następna Tapeta"
 
 #: src/panelMenu.js:125
 msgid "Preferences"
-msgstr ""
+msgstr "Ustawienia"
 
 #: src/prefs.js:38
 msgid "General"
-msgstr ""
+msgstr "Ogólne"
 
 #: src/prefs.js:44
 msgid "Volume Level"
-msgstr ""
+msgstr "Głośność"
 
 #: src/prefs.js:45
 msgid "Show Panel Menu"
-msgstr ""
+msgstr "Wyświetlaj Menu w Panelu"
 
 #: src/prefs.js:51
 msgid "Auto Pause"
-msgstr ""
+msgstr "Automatyczne Zatrzymanie"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr ""
+msgstr "Próg Niskiego Poziomu Baterii"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "Wartość w procentach uznawana za niski poziom baterii"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr ""
+msgstr "Zatrzymaj przy Włączonym Odtwarzaczu"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
-msgstr ""
+msgstr "Zatrzymaj animacje, gdy odtwaracz multimedii MPRIS jest aktywny"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "Rotacja Tapet"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "Zmieniaj Tapety Automatycznie"
 
 #: src/prefs.js:75
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "Częstotliwość Zmian Tapety (minuty)"
 
 #: src/prefs.js:81
 msgid "Experimental"
-msgstr ""
+msgstr "Eksperymentalne"
 
 #: src/prefs.js:87
 msgid "Experimental VA Plugin"
-msgstr ""
+msgstr "Eksperymentalny Plugin VA"
 
 #: src/prefs.js:89
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
-msgstr ""
+msgstr "Włącz dekodery VA poprawiające wydajność dla sesji Intel/AMD Wayland"
 
 #: src/prefs.js:94
 msgid "NVIDIA Stateless Decoders"
-msgstr ""
+msgstr "Dekodery NVIDIA Stateless"
 
 #: src/prefs.js:96
 msgid "Use new stateless NVIDIA decoders"
-msgstr ""
+msgstr "Użyj nowych dekoderów bezstanowych NVIDIA"
 
 #: src/prefs.js:103
 msgid "Developer"
-msgstr ""
+msgstr "Ustawienia Deweloperskie"
 
 #: src/prefs.js:109
 msgid "Debug Mode"
-msgstr ""
+msgstr "Tryb Debugowania"
 
 #: src/prefs.js:111
 msgid "Print debug messages to log"
-msgstr ""
+msgstr "Włącz zapisywanie wiadomości debug do dziennika"
 
 #: src/prefs.js:116
 msgid "Force gtk4paintablesink"
-msgstr ""
+msgstr "Wymuś Użycie gtk4paintablesink"
 
 #: src/prefs.js:118
 msgid "Force use of gtk4paintablesink for video playback"
-msgstr ""
+msgstr "Wymuś użycie gtk4paintablesink do odtwarzania wideo"
 
 #: src/prefs.js:123
 msgid "Force GtkMediaFile"
-msgstr ""
+msgstr "Wymuś Użycie GtkMediaFile"
 
 #: src/prefs.js:125
 msgid "Force use of GtkMediaFile for video playback"
-msgstr ""
+msgstr "Wymuś użycie GtkMediaFile do odtwarzania wideo"
 
 #: src/prefs.js:127
 msgid "Startup Delay"
-msgstr ""
+msgstr "Opóźnienie Uruchomienia"
 
 #: src/prefs.js:127
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
+"Dodaj opóźnienie uruchomienia (w milisekundach) w celu zachowania kompatybilności "
+"z innymi rozszerzeniami"
 
 #: src/prefs.js:214
 msgid "Video Path"
-msgstr ""
+msgstr "Ścieżka do Tła"
 
 #: src/prefs.js:220 src/prefs.js:245 src/prefs.js:279 src/prefs.js:300
 msgid "None"
-msgstr ""
+msgstr "Brak"
 
 #: src/prefs.js:232
 msgid "Open File"
-msgstr ""
+msgstr "Otwórz Plik"
 
 #: src/prefs.js:237 src/prefs.js:293
 msgid "Cancel"
-msgstr ""
+msgstr "Anuluj"
 
 #: src/prefs.js:238 src/prefs.js:254 src/prefs.js:294 src/prefs.js:309
 msgid "Open"
-msgstr ""
+msgstr "Otwórz"
 
 #: src/prefs.js:273
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "Ścieżka Folderu z Tapetami"
 
 #: src/prefs.js:288
 msgid "Select Directory"
-msgstr ""
+msgstr "Wybierz Folder"
 
 #: src/prefs.js:328
 msgid "Fit Mode"
-msgstr ""
+msgstr "Tryb Dopasowania"
 
 #: src/prefs.js:329
 msgid "Control how wallpaper fits within the monitor"
-msgstr ""
+msgstr "Kontroluje sposób dopasowania tapety do monitora"
 
 #: src/prefs.js:330
 msgid ""
@@ -190,34 +193,40 @@ msgid ""
 "needed, otherwise keep its original size.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Wypełnij</b>: Rozciągnij tapetę aby wypełnić ekran.\n"
+"    <b>Dopasuj</b>: Przeskaluj tapetę aby dopasować ją do ekranu (bez zmian proporcji).\n"
+"    <b>Rozciągnij</b>: Przeskaluj tapetę aby pokryć ekran (bez zmian proporcji).\n"
+"    <b>Zmniejsz w skali</b>: W razie potrzeby zmniejsza skalę tapety aby dopasować ją do ekranu\n"
+"    "
 
 #: src/prefs.js:338
 msgid "Fill"
-msgstr ""
+msgstr "Wypełnij"
 
 #: src/prefs.js:339
 msgid "Contain"
-msgstr ""
+msgstr "Dopasuj"
 
 #: src/prefs.js:340
 msgid "Cover"
-msgstr ""
+msgstr "Rozciągnij"
 
 #: src/prefs.js:341
 msgid "Scale-down"
-msgstr ""
+msgstr "Zmniejsz w skali"
 
 #: src/prefs.js:354
 msgid "This feature requires Gtk 4.8 or above"
-msgstr ""
+msgstr "Ta funkcja wymaga wersji Gtk 4.8 lub wyżej"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "Zatrzymaj przy Pełnym Ekranie"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
-msgstr ""
+msgstr "Zatrzymaj odtwarzanie, gdy okno pokrywa cały ekran"
 
 #: src/prefs.js:373
 msgid ""
@@ -229,26 +238,33 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Nigdy</b>: Wyłącz tę funkcję.\n"
+"    <b>Jeden z Ekranów</b>: Zatrzymaj odtwarzanie, gdy na jednym z ekranów "
+"otwarta jest aplikacja pełnoekranowa.\n"
+"    <b>Wszystkie Ekrany</b>: Zatrzymaj odtwarzanie, gdy na wszystkich ekranach "
+"otwarte są aplikacje pełnoekranowe.\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "Nigdy"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "Jeden z Ekranów"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "Wszystkie Ekrany"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
-msgstr ""
+msgstr "Zatrzymaj na Baterii"
 
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
-msgstr ""
+msgstr "Zatrzymaj odtwarzanie w zależności od stanu baterii"
 
 #: src/prefs.js:409
 msgid ""
@@ -259,22 +275,27 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Nigdy</b>: Wyłącz tę funkcję.\n"
+"    <b>Słaba Bateria</b>: Zatrzymaj odtwarzanie, gdy poziom baterii jest niski.\n"
+"    <b>Zawsze</b>: Zatrzymaj odtwarzanie, gdy urządzenie jest zasilane z baterii.\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "Słaba Bateria"
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "Zawsze"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "Zmień Tryb Zmian Tapety"
 
 #: src/prefs.js:444
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "Kontroluje w jaki sposób tapety powinny się zmieniać"
 
 #: src/prefs.js:445
 msgid ""
@@ -285,15 +306,20 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Sekwencyjnie:</b> Zachowaj kolejność folderu (malejąco).\n"
+"    <b>Sekwencyjnie (od tyłu):</b> Zachowaj odwrotną kolejność folderu (rosnąco).\n"
+"    <b>Losowo:</b> Losowo wybieraj tapety z folderu.\n"
+"    "
 
 #: src/prefs.js:452
 msgid "Sequential"
-msgstr ""
+msgstr "Sekwencyjnie"
 
 #: src/prefs.js:453
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "Sekwencyjnie (od tyłu)"
 
 #: src/prefs.js:454
 msgid "Random"
-msgstr ""
+msgstr "Losowo"
