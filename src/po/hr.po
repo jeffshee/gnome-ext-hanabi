@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-11-22 03:20+0000\n"
+"PO-Revision-Date: 2024-11-23 14:00+0000\n"
 "Last-Translator: Oliver Kreitmeyer <oliverkreitmeyer@gmail.com>\n"
 "Language-Team: Croatian <https://hosted.weblate.org/projects/"
 "gnome-ext-hanabi/gnome-ext-hanabi/hr/>\n"
@@ -73,7 +73,7 @@ msgstr "Zaustavi Video za vrijeme Medijskih Zapisa"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
-msgstr ""
+msgstr "Zaustavi video dok je MPRIS medijski čitač aktivan"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
@@ -174,7 +174,7 @@ msgstr ""
 
 #: src/prefs.js:288
 msgid "Select Directory"
-msgstr ""
+msgstr "Odaberi Direktorij"
 
 #: src/prefs.js:328
 msgid "Fit Mode"
@@ -211,7 +211,7 @@ msgstr ""
 
 #: src/prefs.js:341
 msgid "Scale-down"
-msgstr ""
+msgstr "Smanji"
 
 #: src/prefs.js:354
 msgid "This feature requires Gtk 4.8 or above"
@@ -245,7 +245,7 @@ msgstr ""
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "Nikad"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
@@ -275,7 +275,7 @@ msgstr ""
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "Niska Baterija"
 
 #: src/prefs.js:418
 msgid "Always"
@@ -309,4 +309,4 @@ msgstr ""
 
 #: src/prefs.js:454
 msgid "Random"
-msgstr ""
+msgstr "Nasumično"
