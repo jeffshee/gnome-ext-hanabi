@@ -28,4 +28,4 @@ sudo dnf install clapper
 
 ## 5. Install Hanabi Extension
 
-[Refer to the README](https://github.com/jeffshee/gnome-ext-hanabi)
+Check GNOME Version in Settings > System > About > System Details and then [Refer to the README](https://github.com/jeffshee/gnome-ext-hanabi)
