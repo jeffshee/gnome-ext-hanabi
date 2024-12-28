@@ -7,94 +7,98 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-12-29 17:00+0000\n"
+"Last-Translator: தமிழ்நேரம் <anishprabu.t@gmail.com>\n"
+"Language-Team: Tamil <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
+"gnome-ext-hanabi/ta/>\n"
 "Language: ta\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
-msgstr ""
+msgstr "இடைநிறுத்தம்"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Play"
-msgstr ""
+msgstr "விளையாடுங்கள்"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103
 msgid "Unmute Audio"
-msgstr ""
+msgstr "இயக்க ஆடியோ"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:43
 msgid "Mute Audio"
-msgstr ""
+msgstr "முடக்கு ஆடியோ"
 
 #: src/panelMenu.js:110
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "அடுத்த வால்பேப்பர்"
 
 #: src/panelMenu.js:125
 msgid "Preferences"
-msgstr ""
+msgstr "விருப்பத்தேர்வுகள்"
 
 #: src/prefs.js:38
 msgid "General"
-msgstr ""
+msgstr "பொது"
 
 #: src/prefs.js:44
 msgid "Volume Level"
-msgstr ""
+msgstr "தொகுதி நிலை"
 
 #: src/prefs.js:45
 msgid "Show Panel Menu"
-msgstr ""
+msgstr "குழு மெனுவைக் காட்டு"
 
 #: src/prefs.js:51
 msgid "Auto Pause"
-msgstr ""
+msgstr "ஆட்டோ இடைநிறுத்தம்"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr ""
+msgstr "குறைந்த பேட்டரி வாசல்"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "குறைந்த பேட்டரி மட்டத்திற்கு வாசல் சதவீதத்தை அமைக்கவும்"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr ""
+msgstr "மீடியா பிளேயர் விளையாடுவதில் இடைநிறுத்தம்"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
-msgstr ""
+msgstr "ஒரு MPRIS மீடியா பிளேயர் மீடியா விளையாடும்போது இடைநிறுத்தப்பட்ட பின்னணி"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "வால்பேப்பர் சேஞ்சர்"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "வால்பேப்பரை தானாக மாற்றவும்"
 
 #: src/prefs.js:75
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "வால்பேப்பர் இடைவெளியை மாற்றவும் (நிமிடங்கள்)"
 
 #: src/prefs.js:81
 msgid "Experimental"
-msgstr ""
+msgstr "சோதனை"
 
 #: src/prefs.js:87
 msgid "Experimental VA Plugin"
-msgstr ""
+msgstr "சோதனை வி.ஏ. சொருகி"
 
 #: src/prefs.js:89
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
+"இன்டெல்/ஏஎம்டி வேலேண்ட் பயனர்களுக்கான செயல்திறனை மேம்படுத்தும் VA டிகோடர்களை இயக்கவும்"
 
 #: src/prefs.js:94
 msgid "NVIDIA Stateless Decoders"
@@ -102,73 +106,75 @@ msgstr ""
 
 #: src/prefs.js:96
 msgid "Use new stateless NVIDIA decoders"
-msgstr ""
+msgstr "புதிய நிலையற்ற என்விடியா டிகோடர்களைப் பயன்படுத்தவும்"
 
 #: src/prefs.js:103
 msgid "Developer"
-msgstr ""
+msgstr "உருவாக்குநர்"
 
 #: src/prefs.js:109
 msgid "Debug Mode"
-msgstr ""
+msgstr "பிழைத்திருத்த முறை"
 
 #: src/prefs.js:111
 msgid "Print debug messages to log"
-msgstr ""
+msgstr "பதிவு செய்ய பிழைத்திருத்த செய்திகளை அச்சிடுங்கள்"
 
 #: src/prefs.js:116
 msgid "Force gtk4paintablesink"
-msgstr ""
+msgstr "Gtk4paintablesink ஐ கட்டாயப்படுத்துங்கள்"
 
 #: src/prefs.js:118
 msgid "Force use of gtk4paintablesink for video playback"
-msgstr ""
+msgstr "வீடியோ பிளேபேக்கிற்கான gtk4paintablesink இன் கட்டாய பயன்பாடு"
 
 #: src/prefs.js:123
 msgid "Force GtkMediaFile"
-msgstr ""
+msgstr "Gtkmediafile ஐ கட்டாயப்படுத்துங்கள்"
 
 #: src/prefs.js:125
 msgid "Force use of GtkMediaFile for video playback"
-msgstr ""
+msgstr "வீடியோ பிளேபேக்கிற்கான சி.டி.கே.மீடியாஃபைலின் கட்டாய பயன்பாடு"
 
 #: src/prefs.js:127
 msgid "Startup Delay"
-msgstr ""
+msgstr "தொடக்க நேரந்தவறுகை"
 
 #: src/prefs.js:127
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
+"பிற நீட்டிப்புகளுடன் பொருந்தக்கூடிய சிக்கல்களைத் தணிக்க தொடக்க தாமதத்தை (மில்லி "
+"விநாடிகளில்) சேர்க்கவும்"
 
 #: src/prefs.js:214
 msgid "Video Path"
-msgstr ""
+msgstr "வீடியோ பாதை"
 
 #: src/prefs.js:220 src/prefs.js:245 src/prefs.js:279 src/prefs.js:300
 msgid "None"
-msgstr ""
+msgstr "எதுவுமில்லை"
 
 #: src/prefs.js:232
 msgid "Open File"
-msgstr ""
+msgstr "கோப்பை திற"
 
 #: src/prefs.js:237 src/prefs.js:293
 msgid "Cancel"
-msgstr ""
+msgstr "ரத்துசெய்"
 
 #: src/prefs.js:238 src/prefs.js:254 src/prefs.js:294 src/prefs.js:309
 msgid "Open"
-msgstr ""
+msgstr "திற"
 
 #: src/prefs.js:273
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "வால்பேப்பர் அடைவு பாதையை மாற்றவும்"
 
 #: src/prefs.js:288
 msgid "Select Directory"
-msgstr ""
+msgstr "கோப்பகத்தைத் தேர்ந்தெடு"
 
 #: src/prefs.js:328
 msgid "Fit Mode"
@@ -177,6 +183,7 @@ msgstr ""
 #: src/prefs.js:329
 msgid "Control how wallpaper fits within the monitor"
 msgstr ""
+"மானிட்டருக்குள் வால்பேப்பர் எவ்வாறு பொருந்துகிறது என்பதைக் கட்டுப்படுத்தவும்"
 
 #: src/prefs.js:330
 msgid ""
@@ -190,34 +197,43 @@ msgid ""
 "needed, otherwise keep its original size.\n"
 "    "
 msgstr ""
+"\n"
+"    <b> நிரப்பு </b>: மானிட்டரை நிரப்ப வால்பேப்பரை நீட்டவும்.\n"
+" <b> ஐக் கொண்டுள்ளது </b>: மானிட்டருக்கு ஏற்றவாறு வால்பேப்பரை அளவிடவும் (விகித "
+"விகிதத்தை வைத்திருங்கள்).\n"
+" <b> கவர் </b>: மானிட்டரை மறைக்க வால்பேப்பரை அளவிடவும் (விகித விகிதத்தை வைத்திருங்கள்)."
+"\n"
+" <b> ச்கேல்-டவுன் </b>: தேவைப்பட்டால் மானிட்டருக்கு ஏற்றவாறு வால்பேப்பரை அளவிடவும், "
+"இல்லையெனில் அதன் அசல் அளவை வைத்திருங்கள்.\n"
+"    "
 
 #: src/prefs.js:338
 msgid "Fill"
-msgstr ""
+msgstr "நிரப்பவும்"
 
 #: src/prefs.js:339
 msgid "Contain"
-msgstr ""
+msgstr "கட்டுப்படுத்தவும்"
 
 #: src/prefs.js:340
 msgid "Cover"
-msgstr ""
+msgstr "கவர்"
 
 #: src/prefs.js:341
 msgid "Scale-down"
-msgstr ""
+msgstr "அளவிலான-கீழ்"
 
 #: src/prefs.js:354
 msgid "This feature requires Gtk 4.8 or above"
-msgstr ""
+msgstr "இந்த அம்சத்திற்கு சி.டி.கே 4.8 அல்லது அதற்கு மேல் தேவைப்படுகிறது"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "அதிகபட்சம் அல்லது முழுத்திரை ஆகியவற்றில் இடைநிறுத்தவும்"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
-msgstr ""
+msgstr "அதிகபட்ச அல்லது முழுத்திரை சாளரம் இருக்கும்போது பின்னணி பின்னணி"
 
 #: src/prefs.js:373
 msgid ""
@@ -229,26 +245,35 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    <b> நெவர் </b>: இந்த அம்சத்தை முடக்கு.\n"
+" <b> எந்த மானிட்டரும் </b>: எந்த மானிட்டரிலும் அதிகபட்ச அல்லது முழுத்திரை சாளரம் "
+"இருக்கும்போது பின்னணி பின்னணி.\n"
+" <b> அனைத்து மானிட்டர்களும் </b>: அனைத்து மானிட்டர்களிலும் அதிகபட்ச அல்லது முழுத்திரை "
+"சாளரங்கள் இருக்கும்போது பின்னணி பின்னணி.\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "ஒருபோதும்"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "எந்த மானிட்டரும்"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "அனைத்து மானிட்டர்களும்"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
-msgstr ""
+msgstr "பேட்டரியில் இடைநிறுத்தம்"
 
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
+"சாதனம் பேட்டரியில் இருக்கும்போது அல்லது பேட்டரி குறைவாக இருக்கும்போது இடைநிறுத்தப்பட்ட "
+"பின்னணி"
 
 #: src/prefs.js:409
 msgid ""
@@ -259,22 +284,28 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    <b> நெவர் </b>: இந்த அம்சத்தை முடக்கு.\n"
+" <b> குறைந்த பேட்டரி </b>: சாதனம் குறைந்த பேட்டரியில் இருக்கும்போது (வாசலுக்குக் கீழே) "
+"இடைநிறுத்த பிளேபேக்.\n"
+" <b> எப்போதும் </b>: சாதனம் பேட்டரியில் இருக்கும்போது பின்னணி பின்னணி.\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "குறைந்த பேட்டரி"
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "எப்போதும்"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "வால்பேப்பர் பயன்முறையை மாற்றவும்"
 
 #: src/prefs.js:444
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "வால்பேப்பர்களை தானாக மாற்றுவது எப்படி என்பதைக் கட்டுப்படுத்தவும்"
 
 #: src/prefs.js:445
 msgid ""
@@ -285,15 +316,21 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    <b> தொடர்ச்சியான: </b> அடைவு வரிசையை பாதுகாக்கவும் (இறங்கு வரிசை).\n"
+" <b> தலைகீழ் தொடர்ச்சியானது: </b> எதிர் வரிசையில் (ஏறுவரிசை வரிசை) வால்பேப்பர்களை "
+"மீட்டெடுக்கவும்.\n"
+" <b> சீரற்ற: </b> கோப்பகத்திலிருந்து தோராயமாக வால்பேப்பர்களைத் தேர்ந்தெடுக்கவும்.\n"
+"    "
 
 #: src/prefs.js:452
 msgid "Sequential"
-msgstr ""
+msgstr "தொடர்ச்சியான"
 
 #: src/prefs.js:453
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "தலைகீழ் தொடர்ச்சியான"
 
 #: src/prefs.js:454
 msgid "Random"
-msgstr ""
+msgstr "சீரற்ற"
