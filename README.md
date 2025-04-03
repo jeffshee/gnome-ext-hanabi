@@ -31,7 +31,7 @@ Please click on the image to view <i>(redirect to YouTube)</i>
 
 | Version | ≤41 | 42  | 43  | 44  | 45  | 46  | 47  |
 | :-----: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| Status  | ⛔  | ✅  | ✅  | ✅  | ✅  | ✅  | 🚧  |
+| Status  | ⛔  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  |
 
 See also the section [Troubleshooting](#troubleshooting), for version-specific known issues.
 
@@ -39,13 +39,13 @@ See also the section [Troubleshooting](#troubleshooting), for version-specific k
 
 1. Clone the repo
 
--   **For GNOME 47 (experimental)**
+<!-- -   **For GNOME 47 (experimental)**
 
     ```
     git clone https://github.com/jeffshee/gnome-ext-hanabi.git -b gnome-47
     ```
 
-    See also: https://github.com/jeffshee/gnome-ext-hanabi/issues/146
+    See also: https://github.com/jeffshee/gnome-ext-hanabi/issues/146 -->
 
 -   **For GNOME 45 and later**
     ```
