@@ -173,17 +173,49 @@ export class GnomeShellOverride {
             }
         );
 
+        // Somehow, nautilus meta window shows the same pid as the gnome-shell.
+        // Since we use meta wayland client to spawn the renderer in Wayland,
+        // the renderer window also has the same pid as the gnome-shell.
+        // This causes renderer window to be mistakenly associated as same app as nautilus.
+        // These overrides workarond this issue. (Almost, nautilus app state might shows as `RUNNING`)
+        this._injectionManager.overrideMethod(Shell.WindowTracker.prototype, 'get_window_app',
+            originalMethod => {
+                return function (window) {
+                    let isRenderer = window.title?.includes(applicationId);
+                    return isRenderer
+                        ? null
+                        : originalMethod.apply(this, [window]);
+                };
+            }
+        );
+
+        this._injectionManager.overrideMethod(Shell.App.prototype, 'get_windows',
+            originalMethod => {
+                return function () {
+                    let metaWindows = originalMethod.call(this);
+                    let result = metaWindows.filter(
+                        metaWindow => !metaWindow.title?.includes(applicationId)
+                    );
+                    return result;
+                };
+            }
+        );
+
+        this._injectionManager.overrideMethod(Shell.App.prototype, 'get_n_windows',
+            _originalMethod => {
+                return function () {
+                    let app = this;
+                    return app.get_windows().length;
+                };
+            }
+        );
+
         // This remove the renderer icon from altTab and dash.
         this._injectionManager.overrideMethod(Shell.AppSystem.prototype, 'get_running',
             originalMethod => {
                 return function () {
                     let runningApps = originalMethod.call(this);
-                    let result = runningApps.filter(
-                        app =>
-                            !app
-                            .get_windows()
-                            .some(window => window.title?.includes(applicationId))
-                    );
+                    let result = runningApps.filter(app => app.get_n_windows() > 0);
                     return result;
                 };
             }
