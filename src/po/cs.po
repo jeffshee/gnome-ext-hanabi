@@ -2,13 +2,13 @@
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # vyPal <kubik.palacky@gmail.com>, 2023.
-# David Čudek <dajosek2seznam.cz@gmail.com>, 2024.
+# David Čudek <dajosek2seznam.cz@gmail.com>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-12-01 14:00+0000\n"
+"PO-Revision-Date: 2025-04-06 08:05+0000\n"
 "Last-Translator: David Čudek <dajosek2seznam.cz@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/cs/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.11-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -331,4 +331,4 @@ msgstr "Obráceně sekvenční"
 
 #: src/prefs.js:454
 msgid "Random"
-msgstr "Náhodná"
+msgstr "Random"
