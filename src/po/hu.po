@@ -2,18 +2,22 @@
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # János Bakcsi <bakcsi.janos.met@gmail.com>, 2025.
+# Máté <vagvolgyimate19@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-04-23 01:29+0000\n"
+"Last-Translator: Máté <vagvolgyimate19@gmail.com>\n"
+"Language-Team: Hungarian <https://hosted.weblate.org/projects/"
+"gnome-ext-hanabi/gnome-ext-hanabi/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.11.1-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -53,7 +57,7 @@ msgstr ""
 
 #: src/prefs.js:51
 msgid "Auto Pause"
-msgstr ""
+msgstr "Automatikus szüneteltetés"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
@@ -141,6 +145,8 @@ msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
+"Indítás késleltetése (milliszekundumban) más bővitményekkel való "
+"kompatibilátási problémák elkerülésére"
 
 #: src/prefs.js:214
 msgid "Video Path"
@@ -190,6 +196,15 @@ msgid ""
 "needed, otherwise keep its original size.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Kitöltés</b>: A háttérkép képernyőhöz nyújtással.\n"
+"    <b>Teljes kép</b>: Háttérkép méretezése, hogy elférjen a képernyőn ("
+"képarány megtartása).\n"
+"    <b>Teljes képernyő</b>: Háttérkép méretezése, hogy kitöltse a képernyőt ("
+"képarány megtartása).\n"
+"    <b>Kicsinyítés</b>: Kicsinyítse a képet, hogy elférjen a képernyőn, ha "
+"szükséges, amúgy tartsa meg az erdeti méretet.\n"
+"    "
 
 #: src/prefs.js:338
 msgid "Fill"
@@ -229,6 +244,13 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Soha</b>: Funkció kikapcsolása.\n"
+"    <b>Bármely képernyő</b>: Lejátszás szüneteltetése nagy ablak vagy teljes "
+"képernyő esetén bármely monitoron.\n"
+"    <b>Összes képernyő</b>: Lejátszás szüneteltetése nagy ablak vagy teljes "
+"képernyő esetén az összes monitoron.\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
@@ -236,11 +258,11 @@ msgstr ""
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "Bármely képernyő"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "Összes képernyő"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
@@ -266,7 +288,7 @@ msgstr ""
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "Mindig"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
