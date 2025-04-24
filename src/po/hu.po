@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2025-04-23 01:29+0000\n"
+"PO-Revision-Date: 2025-04-24 19:01+0000\n"
 "Last-Translator: Máté <vagvolgyimate19@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/"
 "gnome-ext-hanabi/gnome-ext-hanabi/hu/>\n"
@@ -21,39 +21,39 @@ msgstr ""
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
-msgstr ""
+msgstr "Szüneteltetés"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Play"
-msgstr ""
+msgstr "Lejátszás"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103
 msgid "Unmute Audio"
-msgstr ""
+msgstr "Némítás feloldása"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:43
 msgid "Mute Audio"
-msgstr ""
+msgstr "Némítás"
 
 #: src/panelMenu.js:110
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "Következő háttérkép"
 
 #: src/panelMenu.js:125
 msgid "Preferences"
-msgstr ""
+msgstr "Beállítások"
 
 #: src/prefs.js:38
 msgid "General"
-msgstr ""
+msgstr "Általános"
 
 #: src/prefs.js:44
 msgid "Volume Level"
-msgstr ""
+msgstr "Hangerőszint"
 
 #: src/prefs.js:45
 msgid "Show Panel Menu"
-msgstr ""
+msgstr "Panel menü mutatása"
 
 #: src/prefs.js:51
 msgid "Auto Pause"
@@ -61,44 +61,46 @@ msgstr "Automatikus szüneteltetés"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr ""
+msgstr "Alsó akkumulátorszint határ"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "Alsó százalék beállítása alacsony akkumulátorszint esetén"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr ""
+msgstr "Szüneteltetés média lejátszása közben"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
-msgstr ""
+msgstr "Szüneteltetés, ha MPRIS média lejátszó aktív"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "Háttérkép váltása"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "Háttérkép változtatása automatikusan"
 
 #: src/prefs.js:75
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "Háttérkép időtartamának változtatása (perc)"
 
 #: src/prefs.js:81
 msgid "Experimental"
-msgstr ""
+msgstr "Kísérleti"
 
 #: src/prefs.js:87
 msgid "Experimental VA Plugin"
-msgstr ""
+msgstr "Kísérleti VA bővítmény"
 
 #: src/prefs.js:89
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
+"VA decoder bekapcsolása teljesítmény növeléséhez Intel/AMD Wayland "
+"felhasználóknak"
 
 #: src/prefs.js:94
 msgid "NVIDIA Stateless Decoders"
@@ -106,39 +108,39 @@ msgstr ""
 
 #: src/prefs.js:96
 msgid "Use new stateless NVIDIA decoders"
-msgstr ""
+msgstr "Új NVIDIA Stateless Decoder használata"
 
 #: src/prefs.js:103
 msgid "Developer"
-msgstr ""
+msgstr "Fejlesztői"
 
 #: src/prefs.js:109
 msgid "Debug Mode"
-msgstr ""
+msgstr "Hibakeresési mód"
 
 #: src/prefs.js:111
 msgid "Print debug messages to log"
-msgstr ""
+msgstr "Hibaüzenetek kiírása naplóba"
 
 #: src/prefs.js:116
 msgid "Force gtk4paintablesink"
-msgstr ""
+msgstr "gtk4paintablesink kényszerítése"
 
 #: src/prefs.js:118
 msgid "Force use of gtk4paintablesink for video playback"
-msgstr ""
+msgstr "gtk4paintablesink használatának kényszerítése videó lejátszásához"
 
 #: src/prefs.js:123
 msgid "Force GtkMediaFile"
-msgstr ""
+msgstr "GtkMediaFile kényszerítése"
 
 #: src/prefs.js:125
 msgid "Force use of GtkMediaFile for video playback"
-msgstr ""
+msgstr "GtkMediaFile használatának kényszerítése videó lejátszásához"
 
 #: src/prefs.js:127
 msgid "Startup Delay"
-msgstr ""
+msgstr "Indítás késleltetése"
 
 #: src/prefs.js:127
 msgid ""
@@ -150,31 +152,31 @@ msgstr ""
 
 #: src/prefs.js:214
 msgid "Video Path"
-msgstr ""
+msgstr "Videó útvonala"
 
 #: src/prefs.js:220 src/prefs.js:245 src/prefs.js:279 src/prefs.js:300
 msgid "None"
-msgstr ""
+msgstr "Nincs"
 
 #: src/prefs.js:232
 msgid "Open File"
-msgstr ""
+msgstr "Fájl megnyitása"
 
 #: src/prefs.js:237 src/prefs.js:293
 msgid "Cancel"
-msgstr ""
+msgstr "Mégse"
 
 #: src/prefs.js:238 src/prefs.js:254 src/prefs.js:294 src/prefs.js:309
 msgid "Open"
-msgstr ""
+msgstr "Megnyitás"
 
 #: src/prefs.js:273
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "Háttérkép elérési útjának változtatása"
 
 #: src/prefs.js:288
 msgid "Select Directory"
-msgstr ""
+msgstr "Könyvtár kiválasztása"
 
 #: src/prefs.js:328
 msgid "Fit Mode"
@@ -182,7 +184,7 @@ msgstr ""
 
 #: src/prefs.js:329
 msgid "Control how wallpaper fits within the monitor"
-msgstr ""
+msgstr "Változtatja hogyan illeszkedik a háttérkép a kijelzőhöz"
 
 #: src/prefs.js:330
 msgid ""
@@ -198,8 +200,8 @@ msgid ""
 msgstr ""
 "\n"
 "    <b>Kitöltés</b>: A háttérkép képernyőhöz nyújtással.\n"
-"    <b>Teljes kép</b>: Háttérkép méretezése, hogy elférjen a képernyőn ("
-"képarány megtartása).\n"
+"    <b>Teljes háttérkép</b>: Háttérkép méretezése, hogy elférjen a képernyőn "
+"(képarány megtartása).\n"
 "    <b>Teljes képernyő</b>: Háttérkép méretezése, hogy kitöltse a képernyőt ("
 "képarány megtartása).\n"
 "    <b>Kicsinyítés</b>: Kicsinyítse a képet, hogy elférjen a képernyőn, ha "
@@ -208,31 +210,33 @@ msgstr ""
 
 #: src/prefs.js:338
 msgid "Fill"
-msgstr ""
+msgstr "Kitöltés"
 
 #: src/prefs.js:339
 msgid "Contain"
-msgstr ""
+msgstr "Teljes háttérkép"
 
 #: src/prefs.js:340
 msgid "Cover"
-msgstr ""
+msgstr "Teljes képernyő"
 
 #: src/prefs.js:341
 msgid "Scale-down"
-msgstr ""
+msgstr "Kicsinyítés"
 
 #: src/prefs.js:354
 msgid "This feature requires Gtk 4.8 or above"
-msgstr ""
+msgstr "Ehhez a funkcióhoz Gtk 4.8 vagy újabb szükséges"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "Szüneteltetés teljes méret vagy teljes képernyő esetén"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
 msgstr ""
+"Lejátszás szüneteltetése, ha egy ablak teljes méret vagy teljes képernyő "
+"módban van"
 
 #: src/prefs.js:373
 msgid ""
@@ -246,15 +250,15 @@ msgid ""
 msgstr ""
 "\n"
 "    <b>Soha</b>: Funkció kikapcsolása.\n"
-"    <b>Bármely képernyő</b>: Lejátszás szüneteltetése nagy ablak vagy teljes "
-"képernyő esetén bármely monitoron.\n"
-"    <b>Összes képernyő</b>: Lejátszás szüneteltetése nagy ablak vagy teljes "
-"képernyő esetén az összes monitoron.\n"
+"    <b>Bármely képernyő</b>: Lejátszás szüneteltetése teljes méret vagy "
+"teljes képernyő esetén bármely monitoron.\n"
+"    <b>Összes képernyő</b>: Lejátszás szüneteltetése teljes méret vagy "
+"teljes képernyő esetén az összes monitoron.\n"
 "    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "Soha"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
@@ -266,11 +270,13 @@ msgstr "Összes képernyő"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
-msgstr ""
+msgstr "Szüneteltetés akkumulátor használat esetén"
 
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
+"Lejátszás szüneteltetése, ha az eszköz akkumulátort használ, vagy az "
+"akkumulátorszint alacsony"
 
 #: src/prefs.js:409
 msgid ""
@@ -281,10 +287,17 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Soha</b>: Funkció kikapcsolása.\n"
+"    <b>Alacsony akkumulátorszint</b>: Lejátszás szüneteltetése, ha a "
+"készülék alacsony akkumulátorszinten van (értékhatár alatt).\n"
+"    <b>Mindig</b>: Lejátszás szüneteltetése, ha a készülék akkumulátorról "
+"üzemel.\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "Alacsony akkumulátorszint"
 
 #: src/prefs.js:418
 msgid "Always"
@@ -292,11 +305,11 @@ msgstr "Mindig"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "Háttérkép módjának változtatása"
 
 #: src/prefs.js:444
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "Szabályozza, hogy hogyan változzank a háttérképek automatikusan"
 
 #: src/prefs.js:445
 msgid ""
@@ -307,15 +320,21 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Csökkenő:</b> Könyvtár sorrendjének megtartása (csökkenő sorrend).\n"
+"    <b>Növekvő:</b> Könyvtár sorrendjének megfordítása (növekvő sorrend).\n"
+"    <b>Véletlenszerű:</b> Háttérkép választása véletlenszerűen a könyvtárból."
+"\n"
+"    "
 
 #: src/prefs.js:452
 msgid "Sequential"
-msgstr ""
+msgstr "Csökkenő"
 
 #: src/prefs.js:453
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "Növekvő"
 
 #: src/prefs.js:454
 msgid "Random"
-msgstr ""
+msgstr "Véletlenszerű"
