@@ -7,17 +7,20 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-05-13 04:01+0000\n"
+"Last-Translator: Arif Ardiansyah <arifard49@gmail.com>\n"
+"Language-Team: Indonesian <https://hosted.weblate.org/projects/"
+"gnome-ext-hanabi/gnome-ext-hanabi/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
-msgstr ""
+msgstr "Jeda"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Play"
@@ -53,7 +56,7 @@ msgstr ""
 
 #: src/prefs.js:51
 msgid "Auto Pause"
-msgstr ""
+msgstr "Jeda Otomatis"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
@@ -77,15 +80,15 @@ msgstr ""
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "Ubah Wallpaper Otomatis"
 
 #: src/prefs.js:75
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "Ubah Interval Wallpaper (menit)"
 
 #: src/prefs.js:81
 msgid "Experimental"
-msgstr ""
+msgstr "Eksperimental"
 
 #: src/prefs.js:87
 msgid "Experimental VA Plugin"
@@ -141,6 +144,8 @@ msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
+"Tambahkan penundaan startup (dalam milidetik) untuk mengurangi masalah "
+"kompatibilitas dengan ekstensi lainnya"
 
 #: src/prefs.js:214
 msgid "Video Path"
@@ -148,23 +153,23 @@ msgstr ""
 
 #: src/prefs.js:220 src/prefs.js:245 src/prefs.js:279 src/prefs.js:300
 msgid "None"
-msgstr ""
+msgstr "Tidak ada"
 
 #: src/prefs.js:232
 msgid "Open File"
-msgstr ""
+msgstr "Buka File"
 
 #: src/prefs.js:237 src/prefs.js:293
 msgid "Cancel"
-msgstr ""
+msgstr "Batal"
 
 #: src/prefs.js:238 src/prefs.js:254 src/prefs.js:294 src/prefs.js:309
 msgid "Open"
-msgstr ""
+msgstr "Buka"
 
 #: src/prefs.js:273
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "Ubah Jalur Direktori Wallpaper"
 
 #: src/prefs.js:288
 msgid "Select Directory"
@@ -236,11 +241,11 @@ msgstr ""
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "Monitor apa pun"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "Semua Monitor"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
@@ -266,11 +271,11 @@ msgstr ""
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "Selalu"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "Ubah Mode Wallpaper"
 
 #: src/prefs.js:444
 msgid "Control how to change wallpapers automatically"
