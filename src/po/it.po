@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # アントネッロ <amanocchio426@gmail.com>, 2024.
 # Federico Giovine <giovine.federico@gmail.com>, 2024.
+# albanobattistella <albano_battistella@hotmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-09-29 14:15+0000\n"
-"Last-Translator: Federico Giovine <giovine.federico@gmail.com>\n"
+"PO-Revision-Date: 2025-07-27 22:15+0000\n"
+"Last-Translator: albanobattistella <albano_battistella@hotmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/it/>\n"
 "Language: it\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8-dev\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -230,7 +231,7 @@ msgstr "Questa funzionalità richiede Gtk 4.8 o successiva"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "Pausa su Massimizza o Schermo intero"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
