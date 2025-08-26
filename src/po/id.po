@@ -2,13 +2,14 @@
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # Arif Ardiansyah <arifard49@gmail.com>, 2025.
+# Farhan SP <fdemogod@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2025-05-13 04:01+0000\n"
-"Last-Translator: Arif Ardiansyah <arifard49@gmail.com>\n"
+"PO-Revision-Date: 2025-08-27 04:02+0000\n"
+"Last-Translator: Farhan SP <fdemogod@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/"
 "gnome-ext-hanabi/gnome-ext-hanabi/id/>\n"
 "Language: id\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12-dev\n"
+"X-Generator: Weblate 5.13\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -24,7 +25,7 @@ msgstr "Jeda"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Play"
-msgstr ""
+msgstr "Mulai"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103
 msgid "Unmute Audio"
@@ -36,11 +37,11 @@ msgstr ""
 
 #: src/panelMenu.js:110
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "Wallpaper Selanjutnya"
 
 #: src/panelMenu.js:125
 msgid "Preferences"
-msgstr ""
+msgstr "Preferensi"
 
 #: src/prefs.js:38
 msgid "General"
@@ -48,11 +49,11 @@ msgstr ""
 
 #: src/prefs.js:44
 msgid "Volume Level"
-msgstr ""
+msgstr "Tingkat Suara"
 
 #: src/prefs.js:45
 msgid "Show Panel Menu"
-msgstr ""
+msgstr "Tampilkan Panel Menu"
 
 #: src/prefs.js:51
 msgid "Auto Pause"
@@ -60,15 +61,15 @@ msgstr "Jeda Otomatis"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr ""
+msgstr "Ambang Batas Baterai Rendah"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "Atur persentase ambang batas untuk tingkat baterai rendah"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr ""
+msgstr "Jeda saat Memulai Media Player"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
@@ -76,7 +77,7 @@ msgstr ""
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "Pengubah Wallpaper"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
@@ -92,12 +93,14 @@ msgstr "Eksperimental"
 
 #: src/prefs.js:87
 msgid "Experimental VA Plugin"
-msgstr ""
+msgstr "Eksperimental VA Plugin"
 
 #: src/prefs.js:89
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
+"Aktifkan VA decoder untuk meningkatkan performa dari pengguna Intel/AMD "
+"Wayland"
 
 #: src/prefs.js:94
 msgid "NVIDIA Stateless Decoders"
@@ -109,7 +112,7 @@ msgstr ""
 
 #: src/prefs.js:103
 msgid "Developer"
-msgstr ""
+msgstr "Pengembang"
 
 #: src/prefs.js:109
 msgid "Debug Mode"
@@ -117,23 +120,23 @@ msgstr ""
 
 #: src/prefs.js:111
 msgid "Print debug messages to log"
-msgstr ""
+msgstr "Cetak pesan debug ke log"
 
 #: src/prefs.js:116
 msgid "Force gtk4paintablesink"
-msgstr ""
+msgstr "Paksa gtk4paintablesin"
 
 #: src/prefs.js:118
 msgid "Force use of gtk4paintablesink for video playback"
-msgstr ""
+msgstr "Paksa penggunaan dari gtk4paintablesink untuk video playback"
 
 #: src/prefs.js:123
 msgid "Force GtkMediaFile"
-msgstr ""
+msgstr "Paksa GtkMediaFile"
 
 #: src/prefs.js:125
 msgid "Force use of GtkMediaFile for video playback"
-msgstr ""
+msgstr "Paksa penggunaan dari GtkMediaFile untuk video playback"
 
 #: src/prefs.js:127
 msgid "Startup Delay"
@@ -149,7 +152,7 @@ msgstr ""
 
 #: src/prefs.js:214
 msgid "Video Path"
-msgstr ""
+msgstr "Lokasi Video"
 
 #: src/prefs.js:220 src/prefs.js:245 src/prefs.js:279 src/prefs.js:300
 msgid "None"
@@ -173,7 +176,7 @@ msgstr "Ubah Jalur Direktori Wallpaper"
 
 #: src/prefs.js:288
 msgid "Select Directory"
-msgstr ""
+msgstr "Pilih Direktori"
 
 #: src/prefs.js:328
 msgid "Fit Mode"
@@ -181,7 +184,7 @@ msgstr ""
 
 #: src/prefs.js:329
 msgid "Control how wallpaper fits within the monitor"
-msgstr ""
+msgstr "Kontrol bagaimana wallpaper dapat sesuai di monitor"
 
 #: src/prefs.js:330
 msgid ""
@@ -214,7 +217,7 @@ msgstr ""
 
 #: src/prefs.js:354
 msgid "This feature requires Gtk 4.8 or above"
-msgstr ""
+msgstr "FItur ini memerlukan Gtk 4.8 atau diatasnya"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
@@ -237,7 +240,7 @@ msgstr ""
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "Jangan Pernah"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
@@ -267,7 +270,7 @@ msgstr ""
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "Baterai Rendah"
 
 #: src/prefs.js:418
 msgid "Always"
@@ -293,12 +296,12 @@ msgstr ""
 
 #: src/prefs.js:452
 msgid "Sequential"
-msgstr ""
+msgstr "Berurutan"
 
 #: src/prefs.js:453
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "Berurutan Terbalik"
 
 #: src/prefs.js:454
 msgid "Random"
-msgstr ""
+msgstr "Acak"
