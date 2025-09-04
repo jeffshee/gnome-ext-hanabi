@@ -121,7 +121,15 @@ export class GnomeShellOverride {
         // Call `global.get_window_actors(false)` explicitly to bypass the override.
         this._injectionManager.overrideMethod(Shell.Global.prototype, 'get_window_actors',
             originalMethod => {
-                // TODO: pass originalMethod to wallpaper instead
+                // Ensure that we have a valid original method
+                if (originalMethod === undefined) {
+                    // If originalMethod is undefined, we create a fallback that simply returns an empty array
+                    // This prevents the "replaceData.old_get_window_actors is undefined" error
+                    originalMethod = function() {
+                        return [];
+                    };
+                }
+                
                 return function (hideRenderer = true) {
                     let windowActors = originalMethod.call(this);
                     let result = hideRenderer
