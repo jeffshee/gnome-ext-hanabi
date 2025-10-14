@@ -684,11 +684,11 @@ const HanabiRendererWindow = GObject.registerClass(
             this.set_child(widget);
             if (!windowed) {
                 if (fullscreened) {
-                   // this.fullscreen_on_monitor(gdkMonitor);
+                   this.fullscreen_on_monitor(gdkMonitor);
                 } else {
-                   // let geometry = gdkMonitor.get_geometry();
-                   // let [width, height] = [geometry.width, geometry.height];
-                   // this.set_size_request(width, height);
+                   let geometry = gdkMonitor.get_geometry();
+                   let [width, height] = [geometry.width, geometry.height];
+                   this.set_size_request(width, height);
                 }
             }
         }
