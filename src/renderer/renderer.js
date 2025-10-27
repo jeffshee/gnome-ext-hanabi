@@ -271,7 +271,7 @@ const HanabiRenderer = GObject.registerClass(
         }
 
         _setupGst() {
-            this._setPluginDecodersRank('va', Gst.Rank.PRIMARY + 3);
+            this._setPluginDecodersRank('vaapi', Gst.Rank.PRIMARY + 3);
         }
 
         _setPluginDecodersRank(pluginName, rank, useStateless = false) {
@@ -415,7 +415,6 @@ const HanabiRenderer = GObject.registerClass(
             if (!widget)
                 return null;
 
-            /*
             if (useGstGL) {
                 console.log("useGstGL is true")
                 let glsink = Gst.ElementFactory.make(
@@ -428,7 +427,7 @@ const HanabiRenderer = GObject.registerClass(
                     sink = glsink;
                 }
             }
-            */
+            
             let vo = GstPlayer.PlayerVideoOverlayVideoRenderer.new_with_sink(null, sink);
             this._play = GstPlayer.Player.new(
                 vo,
