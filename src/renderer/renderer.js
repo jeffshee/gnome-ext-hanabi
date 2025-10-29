@@ -271,6 +271,12 @@ const HanabiRenderer = GObject.registerClass(
         }
 
         _setupGst() {
+            this._setPluginDecodersRank(
+                'nvcodec',
+                Gst.Rank.PRIMARY + 1,
+                isEnableNvSl
+            );
+
             this._setPluginDecodersRank('vaapi', Gst.Rank.PRIMARY + 3);
         }
 
@@ -478,7 +484,7 @@ const HanabiRenderer = GObject.registerClass(
             let widget = this._getWidgetFromSharedPaintable();
 
             this.setPlay();
-            // this.setAutoWallpaper();
+            this.setAutoWallpaper();
 
             return widget;
         }
