@@ -276,8 +276,8 @@ const HanabiRenderer = GObject.registerClass(
                 Gst.Rank.PRIMARY + 1,
                 isEnableNvSl
             );
-
-            this._setPluginDecodersRank('vaapi', Gst.Rank.PRIMARY + 3);
+            if (isEnableVADecoders)
+                this._setPluginDecodersRank('vaapi', Gst.Rank.PRIMARY + 3);
         }
 
         _setPluginDecodersRank(pluginName, rank, useStateless = false) {
