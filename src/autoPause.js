@@ -224,10 +224,10 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
             const monitors = Main.layoutManager.monitors;
 
             this.states.maximizedOrFullscreenOnAnyMonitor = metaWindows.some(metaWindow =>
-                metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH || metaWindow.fullscreen);
+                metaWindow.get_maximize_flags() === Meta.MaximizeFlags.BOTH || metaWindow.fullscreen);
 
             let monitorsWithMaximizedOrFullscreen = metaWindows.reduce((acc, metaWindow) => {
-                if (metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH || metaWindow.fullscreen)
+                if (metaWindow.get_maximize_flags() === Meta.MaximizeFlags.BOTH || metaWindow.fullscreen)
                     acc[metaWindow.get_monitor()] = true;
                 return acc;
             }, {});

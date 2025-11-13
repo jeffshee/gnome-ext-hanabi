@@ -41,18 +41,21 @@ export class LaunchSubprocess {
 
         this.cancellable = new Gio.Cancellable();
         this._launcher = new Gio.SubprocessLauncher({flags: this._flags});
-        if (!this._isX11)
-            this._waylandClient = Meta.WaylandClient.new(global.context, this._launcher);
+        // if (!this._isX11)
+        //     this._waylandClient = Meta.WaylandClient.new(global.context, this._launcher);
 
         this.subprocess = null;
         this.running = false;
     }
 
     spawnv(argv) {
-        if (!this._isX11)
-            this.subprocess = this._waylandClient.spawnv(global.display, argv);
-        else
+        if (!this._isX11) {
+            // this.subprocess = this._waylandClient.spawnv(global.display, argv);
+            this._waylandClient = Meta.WaylandClient.new_subprocess(global.context, this._launcher, argv);
+            this.subprocess = this._waylandClient.get_subprocess();
+        } else {
             this.subprocess = this._launcher.spawnv(argv);
+        }
 
         // This is for GLib 2.68 or greater
         if (this._launcher.close)
@@ -130,13 +133,13 @@ export class LaunchSubprocess {
         return pid ? parseInt(pid) : 0;
     }
 
-    show_in_window_list(window) {
-        if (!this._isX11 && this.running)
-            this._waylandClient.show_in_window_list(window);
-    }
+    // show_in_window_list(window) {
+    //     if (!this._isX11 && this.running)
+    //         this._waylandClient.show_in_window_list(window);
+    // }
 
-    hide_from_window_list(window) {
-        if (!this._isX11 && this.running)
-            this._waylandClient.hide_from_window_list(window);
-    }
+    // hide_from_window_list(window) {
+    //     if (!this._isX11 && this.running)
+    //         this._waylandClient.hide_from_window_list(window);
+    // }
 }
