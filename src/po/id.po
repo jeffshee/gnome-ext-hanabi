@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # Arif Ardiansyah <arifard49@gmail.com>, 2025.
 # Farhan SP <fdemogod@gmail.com>, 2025.
+# Naufal F <nfatihussalam@students.unnes.ac.id>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2025-08-27 04:02+0000\n"
-"Last-Translator: Farhan SP <fdemogod@gmail.com>\n"
+"PO-Revision-Date: 2025-11-17 23:51+0000\n"
+"Last-Translator: Naufal F <nfatihussalam@students.unnes.ac.id>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/"
 "gnome-ext-hanabi/gnome-ext-hanabi/id/>\n"
 "Language: id\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -29,11 +30,11 @@ msgstr "Mulai"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103
 msgid "Unmute Audio"
-msgstr ""
+msgstr "Mulai suara"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:43
 msgid "Mute Audio"
-msgstr ""
+msgstr "Diamkan Suara"
 
 #: src/panelMenu.js:110
 msgid "Next Wallpaper"
@@ -45,7 +46,7 @@ msgstr "Preferensi"
 
 #: src/prefs.js:38
 msgid "General"
-msgstr ""
+msgstr "Menu"
 
 #: src/prefs.js:44
 msgid "Volume Level"
@@ -73,7 +74,7 @@ msgstr "Jeda saat Memulai Media Player"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
-msgstr ""
+msgstr "Jeda video jika MPRIS memainkan media"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
@@ -108,15 +109,16 @@ msgstr ""
 
 #: src/prefs.js:96
 msgid "Use new stateless NVIDIA decoders"
-msgstr ""
+msgstr "Gunakan dekoder NVIDIA stateless terbaru"
 
 #: src/prefs.js:103
 msgid "Developer"
 msgstr "Pengembang"
 
 #: src/prefs.js:109
+#, fuzzy
 msgid "Debug Mode"
-msgstr ""
+msgstr "Mode Debug"
 
 #: src/prefs.js:111
 msgid "Print debug messages to log"
@@ -140,7 +142,7 @@ msgstr "Paksa penggunaan dari GtkMediaFile untuk video playback"
 
 #: src/prefs.js:127
 msgid "Startup Delay"
-msgstr ""
+msgstr "Jeda Memulai"
 
 #: src/prefs.js:127
 msgid ""
@@ -198,22 +200,32 @@ msgid ""
 "needed, otherwise keep its original size.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>Fill</b>: Regangkan latar belakang untuk memenuhi monitor.\n"
+"<b>Contain</b>: Perbesar latar belakang agar sesuai dengan monitor "
+"(rasio aspek yang tajam).\n"
+"<b>Cover</b>: Ukur latar belakang untuk menutupi monitor (rasio aspek tajam)."
+"\n"
+"<b>Scale-down</b>: Meningkatkan latar belakang agar sesuai dengan monitor "
+"jika diperlukan. Jika tidak, menjaga ukuran asli latar belakang.\n"
+".\n"
+"    "
 
 #: src/prefs.js:338
 msgid "Fill"
-msgstr ""
+msgstr "Penuh"
 
 #: src/prefs.js:339
 msgid "Contain"
-msgstr ""
+msgstr "Perbesar"
 
 #: src/prefs.js:340
 msgid "Cover"
-msgstr ""
+msgstr "Menutup"
 
 #: src/prefs.js:341
 msgid "Scale-down"
-msgstr ""
+msgstr "Turunkan"
 
 #: src/prefs.js:354
 msgid "This feature requires Gtk 4.8 or above"
@@ -221,11 +233,11 @@ msgstr "FItur ini memerlukan Gtk 4.8 atau diatasnya"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "Jeda saat jendela maksimal atau layar penuh"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
-msgstr ""
+msgstr "Jeda pemutaran ketika  jendela maksimum atau layar penuh"
 
 #: src/prefs.js:373
 msgid ""
@@ -252,11 +264,11 @@ msgstr "Semua Monitor"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
-msgstr ""
+msgstr "Jeda saat menggunakan baterai"
 
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
-msgstr ""
+msgstr "Jeda video jika perangkat menggunakan baterai atau baterai lemah"
 
 #: src/prefs.js:409
 msgid ""
@@ -282,7 +294,7 @@ msgstr "Ubah Mode Wallpaper"
 
 #: src/prefs.js:444
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "Kontrol bagaimana cara untuk mengubah latar belakang secara otomatis"
 
 #: src/prefs.js:445
 msgid ""
