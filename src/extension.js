@@ -139,7 +139,7 @@ export default class HanabiExtension extends Extension {
         argv.push('-P', this.path);
         argv.push('-F', videoPath);
 
-        this.currentProcess = new Launcher.LaunchSubprocess();
+        this.currentProcess = new Launcher.LaunchSubprocess(argv);
         this.currentProcess.set_cwd(GLib.get_home_dir());
         this.currentProcess.spawnv(argv);
         this.manager.set_wayland_client(this.currentProcess);
@@ -181,14 +181,10 @@ export default class HanabiExtension extends Extension {
     }
 
     disable() {
-        GLib.timeout_add(GLib.PRIORITY_DEFAULT, this.settings.get_int('startup-delay'), () => {
-            this.override.disable();
-            return false;
-        });
-
         this.settings = null;
         this.panelMenu.disable();
         Main.sessionMode.hasOverview = this.old_hasOverview;
+        this.override.disable();
         this.manager.disable();
         this.autoPause.disable();
 

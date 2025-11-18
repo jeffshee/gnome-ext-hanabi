@@ -31,7 +31,7 @@ const logger = new Logger.Logger();
 const rendererLogger = new Logger.Logger('renderer');
 
 export class LaunchSubprocess {
-    constructor(flags = Gio.SubprocessFlags.NONE) {
+    constructor(argv, flags = Gio.SubprocessFlags.NONE) {
         this._isX11 = !Meta.is_wayland_compositor();
 
         this._flags =
@@ -42,7 +42,7 @@ export class LaunchSubprocess {
         this.cancellable = new Gio.Cancellable();
         this._launcher = new Gio.SubprocessLauncher({flags: this._flags});
         if (!this._isX11)
-            this._waylandClient = Meta.WaylandClient.new(global.context, this._launcher);
+            this._waylandClient = Meta.WaylandClient.new_subprocess(global.context, this._launcher, argv);
 
         this.subprocess = null;
         this.running = false;
@@ -50,7 +50,7 @@ export class LaunchSubprocess {
 
     spawnv(argv) {
         if (!this._isX11)
-            this.subprocess = this._waylandClient.spawnv(global.display, argv);
+            this.subprocess = this._waylandClient.get_subprocess();
         else
             this.subprocess = this._launcher.spawnv(argv);
 
