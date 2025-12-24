@@ -7,14 +7,16 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-12-25 16:00+0000\n"
+"Last-Translator: MojArch <Maemo5d@gmail.com>\n"
+"Language-Team: Persian <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
+"gnome-ext-hanabi/fa/>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.15.1\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -54,7 +56,7 @@ msgstr ""
 
 #: src/prefs.js:51
 msgid "Auto Pause"
-msgstr ""
+msgstr "توقف خودکار"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
@@ -78,7 +80,7 @@ msgstr ""
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "تغییر خودکار پس زمینه"
 
 #: src/prefs.js:75
 msgid "Change Wallpaper Interval (minutes)"
@@ -142,6 +144,8 @@ msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
+"اضافه کردن تاخیر اجرا(بر حسب میلی ثانیه) برای جلوگیری از تداخل با دیگر "
+"افزونه‌ها"
 
 #: src/prefs.js:214
 msgid "Video Path"
@@ -157,7 +161,7 @@ msgstr ""
 
 #: src/prefs.js:237 src/prefs.js:293
 msgid "Cancel"
-msgstr ""
+msgstr "لغو"
 
 #: src/prefs.js:238 src/prefs.js:254 src/prefs.js:294 src/prefs.js:309
 msgid "Open"
@@ -165,7 +169,7 @@ msgstr ""
 
 #: src/prefs.js:273
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "تغییر مسیر پوشه پس زمینه‌ها"
 
 #: src/prefs.js:288
 msgid "Select Directory"
@@ -230,6 +234,13 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>هرگز</b>: غیرفعال کردن این امان.\n"
+"    <b>هر صفحه نمایشی</b>: پخش تصویر رو در صورت تمام صفحه شدن پنجره در هر "
+"صفحه نمایشی متوقف کن.\n"
+"    <b>همه صفحه نمایش‌ها</b>: پخش تصویر رو در صورت تمام صفحه شدن پنجره در همه "
+"صفحه نمایش‌ها متوقف کن.\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
@@ -237,11 +248,11 @@ msgstr ""
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "هر صفحه نمایشی"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "تمام صفحه نمایش‌ها"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
@@ -260,6 +271,12 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>هرگز</b>: غیرفعال کردن این امکان.\n"
+"    <b>سطح پایین باتری</b>: پخش تصویر رو در صورت کم بودن باتری دستگاه متوقف "
+"کن(کمتر از استانه مشخص شده).\n"
+"    <b>همیشه</b>: پخش تصویر رو در صورت استفاده از باتری دستگاه متوقف کن.\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
@@ -267,7 +284,7 @@ msgstr ""
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "همیشه"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
@@ -286,6 +303,13 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    <b>نمایش پشت سر هم:</b> محتویات پوشه را پشت سر هم نشان بده(به ترتیب "
+"نزولی).\n"
+"    <b>نمایش برعکس:</b>  محتویات پوشه را پشت سر هم نشان بده(به ترتیب صعودی)"
+".\n"
+"    <b>تصادفی:</b> محتویات پوشه را تصادفی هم نشان بده.\n"
+"    "
 
 #: src/prefs.js:452
 msgid "Sequential"
