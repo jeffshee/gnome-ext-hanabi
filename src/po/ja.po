@@ -2,20 +2,22 @@
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # Jeff Shee <jeffshee8969@gmail.com>, 2023.
-#
+# sora kashiwazaki <kashiwasora0512@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2023-09-02 19:15+0900\n"
-"Last-Translator: Jeff Shee <jeffshee8969@gmail.com>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2025-12-27 20:00+0000\n"
+"Last-Translator: sora kashiwazaki <kashiwasora0512@gmail.com>\n"
+"Language-Team: Japanese <https://hosted.weblate.org/projects/gnome-ext-"
+"hanabi/gnome-ext-hanabi/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.3.2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.15.1\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -35,7 +37,7 @@ msgstr "音声をミュート"
 
 #: src/panelMenu.js:110
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "次の壁紙"
 
 #: src/panelMenu.js:125
 msgid "Preferences"
@@ -61,19 +63,19 @@ msgstr "一時停止"
 
 #: src/prefs.js:56
 msgid "Low Battery Threshold"
-msgstr ""
+msgstr "バッテリー低下のしきい値"
 
 #: src/prefs.js:56
 msgid "Set the threshold percentage for low battery level"
-msgstr ""
+msgstr "バッテリーが少ないときのしきい値を設定する"
 
 #: src/prefs.js:60
 msgid "Pause on Media Player Playing"
-msgstr ""
+msgstr "メディアプレイヤーの再生を一時停止"
 
 #: src/prefs.js:62
 msgid "Pause playback when an MPRIS media player is playing media"
-msgstr ""
+msgstr "MPRISを使用しているとき再生を停止する"
 
 #: src/prefs.js:69
 msgid "Wallpaper Changer"
@@ -81,11 +83,11 @@ msgstr ""
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "壁紙を自動で変更する"
 
 #: src/prefs.js:75
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "壁紙を一定間隔で変更する(分)"
 
 #: src/prefs.js:81
 msgid "Experimental"
@@ -171,11 +173,11 @@ msgstr "開く"
 
 #: src/prefs.js:273
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "変更する壁紙のディレクトリ"
 
 #: src/prefs.js:288
 msgid "Select Directory"
-msgstr ""
+msgstr "ディレクトリを選択"
 
 #: src/prefs.js:328
 msgid "Fit Mode"
@@ -229,11 +231,11 @@ msgstr "この機能を使用するには、Gtk 4.8以上が必要です"
 
 #: src/prefs.js:371
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "最大化またはフルスクリーン中に一時停止"
 
 #: src/prefs.js:372
 msgid "Pause playback when there is maximized or fullscreen window"
-msgstr ""
+msgstr "最大化またはフルスクリーンのウィンドウがあるとき再生を停止する"
 
 #: src/prefs.js:373
 msgid ""
@@ -252,11 +254,11 @@ msgstr ""
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "いづれかのディスプレイ"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "すべてのディスプレイ"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
@@ -265,6 +267,8 @@ msgstr ""
 #: src/prefs.js:408
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
+"デバイスがバッテリー駆動中またはバッテリーが低下しているときに再生を一時停止"
+"する"
 
 #: src/prefs.js:409
 msgid ""
@@ -278,19 +282,19 @@ msgstr ""
 
 #: src/prefs.js:417
 msgid "Low Battery"
-msgstr ""
+msgstr "低バッテリー"
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "常に"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "壁紙のモードを変更"
 
 #: src/prefs.js:444
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "どのように壁紙を自動で変更するか設定する"
 
 #: src/prefs.js:445
 msgid ""
@@ -304,12 +308,12 @@ msgstr ""
 
 #: src/prefs.js:452
 msgid "Sequential"
-msgstr ""
+msgstr "順次再生"
 
 #: src/prefs.js:453
 msgid "Inverse Sequential"
-msgstr ""
+msgstr "逆順再生"
 
 #: src/prefs.js:454
 msgid "Random"
-msgstr ""
+msgstr "ランダム"
