@@ -16,7 +16,6 @@
  */
 
 import GObject from 'gi://GObject';
-import Meta from 'gi://Meta';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
