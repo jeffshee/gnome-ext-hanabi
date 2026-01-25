@@ -181,16 +181,10 @@ export default class HanabiExtension extends Extension {
     }
 
     disable() {
-        // TODO: check this
-        GLib.timeout_add(GLib.PRIORITY_DEFAULT, this.settings.get_int('startup-delay'), () => {
-            this.override.disable();
-            return false;
-        });
         this.settings = null;
         this.panelMenu.disable();
         Main.sessionMode.hasOverview = this.old_hasOverview;
-        // TODO: check this
-        // this.override.disable();
+        this.override.disable();
         this.manager.disable();
         this.autoPause.disable();
 
