@@ -31,7 +31,7 @@ const logger = new Logger.Logger();
 const rendererLogger = new Logger.Logger('renderer');
 
 export class LaunchSubprocess {
-    constructor(argv, flags = Gio.SubprocessFlags.NONE) {
+    constructor(flags = Gio.SubprocessFlags.NONE) {
         this._isX11 = !Meta.is_wayland_compositor();
 
         this._flags =

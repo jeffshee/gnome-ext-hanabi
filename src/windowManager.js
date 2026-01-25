@@ -95,7 +95,8 @@ class ManagedWindow {
         );
         if (surfaceContainer) {
             this._notifyPositionId = surfaceContainer.connect('notify::position', () => {
-                // surfaceContainer.set_position(0, 0);
+                // TODO: this only affect Gnome 45
+                surfaceContainer.set_position(0, 0);
             });
         }
 
@@ -157,10 +158,7 @@ export class WindowManager {
             (_wm, windowActor) => {
                 const window = windowActor.get_meta_window();
                 if (this._waylandClient && this._waylandClient.query_window_belongs_to(window))
-                {
                     this.addWindow(window);
-                    console.log("addedWindow.");
-                }
 
                 if (this._isX11) {
                     let appid = window.get_gtk_application_id();

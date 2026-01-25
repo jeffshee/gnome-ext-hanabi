@@ -20,9 +20,6 @@
 imports.gi.versions.Gtk = '4.0';
 const {GObject, Gtk, Gio, GLib, Gdk, Gst} = imports.gi;
 
-let mpvInstance = null;
-let videoWidget = null;
-
 // [major, minor, micro, nano]
 const gstVersion = Gst.version();
 console.log(`GStreamer version: ${gstVersion.join('.')}`);
@@ -39,17 +36,16 @@ const isGtkVersionAtLeast = (major, minor) => {
     return gtkVersion[0] > major || (gtkVersion[0] === major && gtkVersion[1] >= minor);
 };
 
-let GstPlayer = null;
-// GstPlayer is available from GStreamer 1.20+
+let GstPlay = null;
+// GstPlay is available from GStreamer 1.20+
 try {
-    GstPlayer = imports.gi.GstPlayer;
+    GstPlay = imports.gi.GstPlay;
 } catch (e) {
     console.error(e);
     console.warn('GstPlay, or the typelib is not installed. Renderer will fallback to GtkMediaFile!');
 }
-const haveGstPlayer = GstPlayer !== null;
+const haveGstPlay = GstPlay !== null;
 
-let dispatcher = GstPlayer.PlayerGMainContextSignalDispatcher.new(null);
 let GstAudio = null;
 // Might not pre-installed on some distributions
 try {
@@ -65,7 +61,8 @@ const haveContentFit = isGtkVersionAtLeast(4, 8);
 
 // Support for dmabus and graphics offload is available from Gtk 4.14+
 // FIXME: Disabled for now as it has issue with Ubuntu 24.04
-const haveGraphicsOffload = isGtkVersionAtLeast(4, 14);
+// TODO: Offer an option to toggle this
+const haveGraphicsOffload = isGtkVersionAtLeast(4, 14) && false;
 
 // Use glsinkbin for Gst 1.24+
 const useGstGL = isGstVersionAtLeast(1, 24);
@@ -271,13 +268,18 @@ const HanabiRenderer = GObject.registerClass(
         }
 
         _setupGst() {
+            // Software libav decoders have "primary" rank, set Nvidia higher
+            // to use NVDEC hardware acceleration.
             this._setPluginDecodersRank(
                 'nvcodec',
                 Gst.Rank.PRIMARY + 1,
                 isEnableNvSl
             );
+
+            // Legacy "vaapidecodebin" have rank "primary + 2",
+            // we need to set VA higher then that to be used
             if (isEnableVADecoders)
-                this._setPluginDecodersRank('vaapi', Gst.Rank.PRIMARY + 3);
+                this._setPluginDecodersRank('va', Gst.Rank.PRIMARY + 3);
         }
 
         _setPluginDecodersRank(pluginName, rank, useStateless = false) {
@@ -304,13 +306,12 @@ const HanabiRenderer = GObject.registerClass(
                     continue;
 
                 feature.set_rank(rank);
-                console.log(`changed rank: ${oldRank} -> ${rank} for ${featureName}`);
+                console.debug(`changed rank: ${oldRank} -> ${rank} for ${featureName}`);
             }
         }
 
         _buildUI() {
             this._monitors.forEach((gdkMonitor, index) => {
-                console.log(`start build ui.`)
                 let widget = this._getWidgetFromSharedPaintable();
 
                 // Avoid creating another instance if we couldn't get the shared paintable
@@ -318,11 +319,10 @@ const HanabiRenderer = GObject.registerClass(
                     return;
 
                 if (!widget) {
-                    if (!forceMediaFile && haveGstPlayer) {
+                    if (!forceMediaFile && haveGstPlay) {
                         let sink = null;
                         if (!forceGtk4PaintableSink) {
                             // Try to find "clappersink" for best performance
-                            console.log("use clappersink")
                             sink = Gst.ElementFactory.make(
                                 'clappersink',
                                 'clappersink'
@@ -330,8 +330,7 @@ const HanabiRenderer = GObject.registerClass(
                         }
 
                         // Try "gtk4paintablesink" from gstreamer-rs plugins as 2nd best choice
-                        if (!sink)
-                        {
+                        if (!sink) {
                             sink = Gst.ElementFactory.make(
                                 'gtk4paintablesink',
                                 'gtk4paintablesink'
@@ -364,7 +363,7 @@ const HanabiRenderer = GObject.registerClass(
 
                 this._hanabiWindows.push(window);
             });
-            console.log(`phase. using ${this._gstImplName} for video output.`);
+            console.log(`using ${this._gstImplName} for video output`);
         }
 
         _getWidgetFromSharedPaintable() {
@@ -380,7 +379,6 @@ const HanabiRenderer = GObject.registerClass(
                 this._pictures.push(picture);
 
                 if (haveGraphicsOffload) {
-                    console.log("haveGraphicsOffload is true")
                     let offload = Gtk.GraphicsOffload.new(picture);
                     offload.set_enabled(Gtk.GraphicsOffloadEnabled.ENABLED);
                     return offload;
@@ -392,15 +390,18 @@ const HanabiRenderer = GObject.registerClass(
         }
 
         _getWidgetFromSink(sink) {
-            console.log("_getWidgetFromSink(sink)")
-
             this._gstImplName = sink.name;
 
+            // If sink already offers GTK widget, use it.
+            // Otherwise use GtkPicture with paintable from sink.
             let widget = null;
 
             if (sink.widget) {
                 if (sink.widget instanceof Gtk.Picture) {
-                    console.log("if (sink.widget instanceof Gtk.Picture) is true")
+                    // Workaround for clappersink.
+                    // We use a Gtk.Box here to piggyback the sink.widget from clappersink,
+                    // otherwise the sink.widget will spawn a window for itself.
+                    // This workaround is only needed for the first window.
                     this._sharedPaintable = sink.widget.paintable;
                     let box = new Gtk.Box();
                     box.append(sink.widget);
@@ -413,16 +414,14 @@ const HanabiRenderer = GObject.registerClass(
                     widget = sink.widget;
                 }
             } else if (sink.paintable) {
-                console.log("if (sink.widget instanceof Gtk.Picture) is false")
                 this._sharedPaintable = sink.paintable;
-                widget = this._getWidgetFromSharedPaintable()
+                widget = this._getWidgetFromSharedPaintable();
             }
 
             if (!widget)
                 return null;
 
             if (useGstGL) {
-                console.log("useGstGL is true")
                 let glsink = Gst.ElementFactory.make(
                     'glsinkbin',
                     'glsinkbin'
@@ -433,22 +432,46 @@ const HanabiRenderer = GObject.registerClass(
                     sink = glsink;
                 }
             }
-            
-            let vo = GstPlayer.PlayerVideoOverlayVideoRenderer.new_with_sink(null, sink);
-            this._play = GstPlayer.Player.new(
-                vo,
-                dispatcher    
+            this._play = GstPlay.Play.new(
+                GstPlay.PlayVideoOverlayVideoRenderer.new_with_sink(null, sink)
             );
-            this.setMute(true);
+            this._adapter = GstPlay.PlaySignalAdapter.new(this._play);
+
+            // Loop video
+            this._adapter.connect('end-of-stream', adapter =>
+                adapter.play.seek(0)
+            );
+
+            // Error handling
+            this._adapter.connect('warning', (_adapter, err) => console.warn(err));
+            this._adapter.connect('error', (_adapter, err) => console.error(err));
+
+            // Set the volume and mute after paused state, otherwise it won't work.
+            // Use paused or greater, as some states might be skipped.
+            let stateSignal = this._adapter.connect(
+                'state-changed',
+                (adapter, state) => {
+                    if (state >= GstPlay.PlayState.PAUSED) {
+                        this.setVolume(volume);
+                        this.setMute(mute);
+
+                        this._adapter.disconnect(stateSignal);
+                        stateSignal = null;
+                    }
+                }
+            );
+            // Monitor playing state.
+            this._adapter.connect(
+                'state-changed',
+                (adapter, state) => {
+                    // Monitor playing state.
+                    this._isPlaying = state === GstPlay.PlayState.PLAYING;
+                    this._dbus.emit_signal('isPlayingChanged', new GLib.Variant('(b)', [this._isPlaying]));
+                }
+            );
 
             let file = Gio.File.new_for_path(videoPath);
             this._play.set_uri(file.get_uri());
-
-            this._play.connect('position-updated', (player, pos) => {
-                if(pos >= this._play.get_duration() - 1000 * 1000 * 400)
-                    player.seek(0);
-                console.log(pos);
-            });
 
             this.setPlay();
             this.setAutoWallpaper();
@@ -458,12 +481,13 @@ const HanabiRenderer = GObject.registerClass(
 
         _getGtkStockWidget() {
             this._gstImplName = 'GtkMediaFile';
-             console.log("_getGtkStockWidget()");
 
             // The constructor of MediaFile doesn't work in gjs.
             // Have to call the `new_for_xxx` function here.
             this._media = Gtk.MediaFile.new_for_filename(videoPath);
-        
+            this._media.set({
+                loop: true,
+            });
             // Set the volume and mute after prepared, otherwise it won't work.
             this._media.connect('notify::prepared', () => {
                 this.setVolume(volume);
@@ -473,13 +497,8 @@ const HanabiRenderer = GObject.registerClass(
             this._media.connect('notify::playing', media => {
                 this._isPlaying = media.get_playing();
                 this._dbus.emit_signal('isPlayingChanged', new GLib.Variant('(b)', [this._isPlaying]));
-                console.log(this._isPlaying);
             });
 
-            this._media.set({
-                loop: true,
-            });
-            
             this._sharedPaintable = this._media;
             let widget = this._getWidgetFromSharedPaintable();
 
@@ -527,7 +546,7 @@ const HanabiRenderer = GObject.registerClass(
         setVolume(_volume) {
             let player = this._play != null ? this._play : this._media;
 
-            // GstPlayer uses linear volume
+            // GstPlay uses linear volume
             if (this._play) {
                 if (haveGstAudio) {
                     _volume = GstAudio.StreamVolume.convert_volume(
@@ -689,11 +708,11 @@ const HanabiRendererWindow = GObject.registerClass(
             this.set_child(widget);
             if (!windowed) {
                 if (fullscreened) {
-                   this.fullscreen_on_monitor(gdkMonitor);
+                    this.fullscreen_on_monitor(gdkMonitor);
                 } else {
-                   let geometry = gdkMonitor.get_geometry();
-                   let [width, height] = [geometry.width, geometry.height];
-                   this.set_size_request(width, height);
+                    let geometry = gdkMonitor.get_geometry();
+                    let [width, height] = [geometry.width, geometry.height];
+                    this.set_size_request(width, height);
                 }
             }
         }
