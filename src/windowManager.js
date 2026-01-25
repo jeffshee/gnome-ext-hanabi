@@ -24,11 +24,15 @@
 import Meta from 'gi://Meta';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
+import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 
 import * as Logger from './logger.js';
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const logger = new Logger.Logger();
+
+// Get GNOME Shell major version
+const shellVersion = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
 class ManagedWindow {
     constructor(window) {
@@ -86,18 +90,19 @@ class ManagedWindow {
             })
         );
 
-        // Workaround a weird behavior in MetaSurfaceContainerActorWayland,
+        // Workaround a weird behavior in MetaSurfaceContainerActorWayland on GNOME 45,
         // which sets the position x, y to (child_actor_width - surfaces_width)/2, (child_actor_height - surfaces_height)/2 when the window is minimized.
-        // Ref: https://gitlab.gnome.org/GNOME/mutter/-/blob/b59fb7c08c7e8c7f5de493602154e4341f867835/src/compositor/meta-window-actor-wayland.c#L526
-        let windowActor = window.get_compositor_private();
-        let surfaceContainer = windowActor.get_children().find(
-            child => GObject.type_name(child) === 'MetaSurfaceContainerActorWayland'
-        );
-        if (surfaceContainer) {
-            this._notifyPositionId = surfaceContainer.connect('notify::position', () => {
-                // TODO: this only affect Gnome 45
-                surfaceContainer.set_position(0, 0);
-            });
+        // Ref: https://gitlab.gnome.org/GNOME/mutter/-/issues/3159
+        if (shellVersion === 45) {
+            let windowActor = window.get_compositor_private();
+            let surfaceContainer = windowActor.get_children().find(
+                child => GObject.type_name(child) === 'MetaSurfaceContainerActorWayland'
+            );
+            if (surfaceContainer) {
+                this._notifyPositionId = surfaceContainer.connect('notify::position', () => {
+                    surfaceContainer.set_position(0, 0);
+                });
+            }
         }
 
         this._parseTitle();
