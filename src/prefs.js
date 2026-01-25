@@ -124,6 +124,13 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
             'force-mediafile',
             _('Force use of GtkMediaFile for video playback')
         );
+        prefsRowBoolean(
+            window,
+            developerGroup,
+            _('Enable Graphics Offload'),
+            'enable-graphics-offload',
+            _('Enable graphics offload for improved performance (requires GTK 4.14+)')
+        );
         prefsRowInt(window, developerGroup, _('Startup Delay'), 'startup-delay', _('Add a startup delay (in milliseconds) to mitigate compatibility issues with other extensions'), 0, 10000, 100, 500);
 
         // Add our page to the window

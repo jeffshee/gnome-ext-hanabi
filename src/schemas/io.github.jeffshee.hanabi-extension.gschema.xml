@@ -101,6 +101,12 @@
             <description>Force the use of GtkMediaFile for video playback</description>
         </key>
 
+        <key name="enable-graphics-offload" type="b">
+            <default>false</default>
+            <summary>Enable Graphics Offload</summary>
+            <description>Enable graphics offload for improved performance (requires GTK 4.14+)</description>
+        </key>
+
         <key name="content-fit" type="i">
             <range min="0" max="3" />
             <default>1</default>

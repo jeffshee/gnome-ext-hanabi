@@ -59,11 +59,6 @@ const haveGstAudio = GstAudio !== null;
 // ContentFit is available from Gtk 4.8+
 const haveContentFit = isGtkVersionAtLeast(4, 8);
 
-// Support for dmabus and graphics offload is available from Gtk 4.14+
-// FIXME: Disabled for now as it has issue with Ubuntu 24.04
-// TODO: Offer an option to toggle this
-const haveGraphicsOffload = isGtkVersionAtLeast(4, 14) && false;
-
 // Use glsinkbin for Gst 1.24+
 const useGstGL = isGstVersionAtLeast(1, 24);
 
@@ -88,6 +83,12 @@ const isEnableVADecoders = extSettings
 const isEnableNvSl = extSettings
     ? extSettings.get_boolean('enable-nvsl')
     : false;
+
+// Support for dmabus and graphics offload is available from Gtk 4.14+
+const isEnableGraphicsOffload = extSettings
+    ? extSettings.get_boolean('enable-graphics-offload')
+    : false;
+const haveGraphicsOffload = isGtkVersionAtLeast(4, 14) && isEnableGraphicsOffload;
 
 let codePath = 'src';
 let contentFit = null;
