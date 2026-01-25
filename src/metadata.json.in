@@ -4,7 +4,7 @@
   "name": "Hanabi Extension",
   "settings-schema": "@settings_schema@",
   "shell-version": [
-    "49"
+    "45", "46", "47", "48", "49"
   ],
   "url": "https://github.com/jeffshee/gnome-ext-hanabi",
   "uuid": "@uuid@",

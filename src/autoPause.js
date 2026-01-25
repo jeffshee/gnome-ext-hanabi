@@ -16,6 +16,8 @@
  */
 
 import GObject from 'gi://GObject';
+import Meta from 'gi://Meta';
+import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
@@ -25,6 +27,9 @@ import UPower from 'gi://UPowerGlib';
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const logger = new Logger.Logger('autoPause');
+
+// Get GNOME Shell major version
+const shellVersion = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
 export class AutoPause {
     constructor(extension) {
@@ -222,18 +227,34 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
 
             const monitors = Main.layoutManager.monitors;
 
-            this.states.maximizedOrFullscreenOnAnyMonitor = metaWindows.some(metaWindow =>
-                metaWindow.is_maximized() || metaWindow.fullscreen);
+            // GNOME Shell < 49 uses get_maximized(), >= 49 uses is_maximized()
+            if (shellVersion < 49) {
+                this.states.maximizedOrFullscreenOnAnyMonitor = metaWindows.some(metaWindow =>
+                    metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH || metaWindow.fullscreen);
 
-            let monitorsWithMaximizedOrFullscreen = metaWindows.reduce((acc, metaWindow) => {
-                if (metaWindow.is_maximized() || metaWindow.fullscreen)
-                    acc[metaWindow.get_monitor()] = true;
-                return acc;
-            }, {});
+                let monitorsWithMaximizedOrFullscreen = metaWindows.reduce((acc, metaWindow) => {
+                    if (metaWindow.get_maximized() === Meta.MaximizeFlags.BOTH || metaWindow.fullscreen)
+                        acc[metaWindow.get_monitor()] = true;
+                    return acc;
+                }, {});
 
-            this.states.maximizedOrFullscreenOnAllMonitors = monitors.every(
-                monitor => monitorsWithMaximizedOrFullscreen[monitor.index]
-            );
+                this.states.maximizedOrFullscreenOnAllMonitors = monitors.every(
+                    monitor => monitorsWithMaximizedOrFullscreen[monitor.index]
+                );
+            } else {
+                this.states.maximizedOrFullscreenOnAnyMonitor = metaWindows.some(metaWindow =>
+                    metaWindow.is_maximized() || metaWindow.fullscreen);
+
+                let monitorsWithMaximizedOrFullscreen = metaWindows.reduce((acc, metaWindow) => {
+                    if (metaWindow.is_maximized() || metaWindow.fullscreen)
+                        acc[metaWindow.get_monitor()] = true;
+                    return acc;
+                }, {});
+
+                this.states.maximizedOrFullscreenOnAllMonitors = monitors.every(
+                    monitor => monitorsWithMaximizedOrFullscreen[monitor.index]
+                );
+            }
 
             super._update();
         }

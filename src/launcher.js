@@ -24,11 +24,15 @@
 import Meta from 'gi://Meta';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
+import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 
 import * as Logger from './logger.js';
 
 const logger = new Logger.Logger();
 const rendererLogger = new Logger.Logger('renderer');
+
+// Get GNOME Shell major version
+const shellVersion = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
 export class LaunchSubprocess {
     constructor(flags = Gio.SubprocessFlags.NONE) {
@@ -41,8 +45,10 @@ export class LaunchSubprocess {
 
         this.cancellable = new Gio.Cancellable();
         this._launcher = new Gio.SubprocessLauncher({flags: this._flags});
-        // if (!this._isX11)
-        //     this._waylandClient = Meta.WaylandClient.new(global.context, this._launcher);
+
+        // For GNOME Shell < 49, initialize WaylandClient in constructor
+        if (!this._isX11 && shellVersion < 49)
+            this._waylandClient = Meta.WaylandClient.new(global.context, this._launcher);
 
         this.subprocess = null;
         this.running = false;
@@ -50,9 +56,14 @@ export class LaunchSubprocess {
 
     spawnv(argv) {
         if (!this._isX11) {
-            // this.subprocess = this._waylandClient.spawnv(global.display, argv);
-            this._waylandClient = Meta.WaylandClient.new_subprocess(global.context, this._launcher, argv);
-            this.subprocess = this._waylandClient.get_subprocess();
+            if (shellVersion < 49) {
+                // GNOME Shell < 49: Use spawnv on pre-initialized WaylandClient
+                this.subprocess = this._waylandClient.spawnv(global.display, argv);
+            } else {
+                // GNOME Shell >= 49: Use new_subprocess to create WaylandClient
+                this._waylandClient = Meta.WaylandClient.new_subprocess(global.context, this._launcher, argv);
+                this.subprocess = this._waylandClient.get_subprocess();
+            }
         } else {
             this.subprocess = this._launcher.spawnv(argv);
         }
