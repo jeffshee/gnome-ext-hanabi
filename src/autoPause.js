@@ -331,16 +331,12 @@ const PauseOnFocusModule = GObject.registerClass(
         }
 
         _trackFocusWindow() {
-            // Disconnect from previously tracked window
             if (this._appearsFocusedId && this._trackedWindow) {
                 this._trackedWindow.disconnect(this._appearsFocusedId);
                 this._appearsFocusedId = null;
                 this._trackedWindow = null;
             }
 
-            // Track the new focus window's appears-focused property.
-            // On Wayland, display.focus_window may NOT become null when
-            // clicking the desktop, but appears_focused will turn false.
             let focusWindow = this._display?.focus_window;
             if (focusWindow) {
                 this._trackedWindow = focusWindow;
@@ -354,12 +350,6 @@ const PauseOnFocusModule = GObject.registerClass(
         _update() {
             let focusWindow = this._display?.focus_window;
 
-            // A window is considered focused only if:
-            // - There is a focus window
-            // - The window actually appears focused (handles clicking on desktop)
-            // - The window is not minimized
-            // - The window is not the renderer window
-            // - The window is not a skip_taskbar window
             this.states.windowFocused = focusWindow !== null &&
                 focusWindow.appears_focused &&
                 !focusWindow.minimized &&
