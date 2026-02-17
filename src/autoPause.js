@@ -38,6 +38,7 @@ export class AutoPause {
         // Modules
         this.modules = [];
         this.modules.push(new PauseOnMaximizeOrFullscreenModule(extension));
+        this.modules.push(new PauseOnFocusModule(extension));
         this.modules.push(new PauseOnBatteryModule(extension));
         this.modules.push(new PauseOnMprisPlayingModule(extension));
         this.modules.forEach(module => module.connect('updated', () => this.eval()));
@@ -287,6 +288,109 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
             this._windows = [];
             this._windowAddedId = null;
             this._windowRemovedId = null;
+        }
+    }
+);
+
+
+/**
+ * Pause On Window Focus
+ */
+
+const PauseOnFocusModule = GObject.registerClass(
+    class PauseOnFocusModule extends AutoPauseModule {
+        constructor(extension) {
+            super(extension, 'focus');
+            this.states = {
+                windowFocused: false,
+            };
+            this.conditions = {
+                pauseOnFocus: this._settings.get_boolean('pause-on-focus'),
+            };
+            this._settings.connect('changed::pause-on-focus', () => {
+                this.conditions.pauseOnFocus = this._settings.get_boolean('pause-on-focus');
+                this._update();
+            });
+
+            this._display = null;
+            this._focusWindowChangedId = null;
+            this._trackedWindow = null;
+            this._appearsFocusedId = null;
+        }
+
+        enable() {
+            this._display = global.display;
+            this._focusWindowChangedId = this._display.connect('notify::focus-window', () => {
+                this._logger.debug('focus-window changed');
+                this._trackFocusWindow();
+                this._update();
+            });
+
+            this._trackFocusWindow();
+            this._update();
+        }
+
+        _trackFocusWindow() {
+            // Disconnect from previously tracked window
+            if (this._appearsFocusedId && this._trackedWindow) {
+                this._trackedWindow.disconnect(this._appearsFocusedId);
+                this._appearsFocusedId = null;
+                this._trackedWindow = null;
+            }
+
+            // Track the new focus window's appears-focused property.
+            // On Wayland, display.focus_window may NOT become null when
+            // clicking the desktop, but appears_focused will turn false.
+            let focusWindow = this._display?.focus_window;
+            if (focusWindow) {
+                this._trackedWindow = focusWindow;
+                this._appearsFocusedId = focusWindow.connect('notify::appears-focused', () => {
+                    this._logger.debug(`appears-focused changed: ${focusWindow.appears_focused} for ${focusWindow.title}`);
+                    this._update();
+                });
+            }
+        }
+
+        _update() {
+            let focusWindow = this._display?.focus_window;
+
+            // A window is considered focused only if:
+            // - There is a focus window
+            // - The window actually appears focused (handles clicking on desktop)
+            // - The window is not minimized
+            // - The window is not the renderer window
+            // - The window is not a skip_taskbar window
+            this.states.windowFocused = focusWindow !== null &&
+                focusWindow.appears_focused &&
+                !focusWindow.minimized &&
+                !focusWindow.title?.includes(applicationId) &&
+                !focusWindow.skip_taskbar;
+
+            this._logger.debug(`Window focused: ${this.states.windowFocused}, title: ${focusWindow?.title}, appears_focused: ${focusWindow?.appears_focused}`);
+
+            super._update();
+        }
+
+        shouldAutoPause() {
+            let res = false;
+            if (this.conditions.pauseOnFocus && this.states.windowFocused)
+                res = true;
+
+            this._logger.debug('shouldAutoPause:', res);
+            return res;
+        }
+
+        disable() {
+            if (this._focusWindowChangedId && this._display) {
+                this._display.disconnect(this._focusWindowChangedId);
+                this._focusWindowChangedId = null;
+            }
+            if (this._appearsFocusedId && this._trackedWindow) {
+                this._trackedWindow.disconnect(this._appearsFocusedId);
+                this._appearsFocusedId = null;
+            }
+            this._trackedWindow = null;
+            this._display = null;
         }
     }
 );
