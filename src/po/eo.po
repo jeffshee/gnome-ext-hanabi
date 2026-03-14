@@ -1,13 +1,13 @@
 # Gnome Shell Extension - Hanabi
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
-# phlostically <phlostically@mailinator.com>, 2024.
+# phlostically <phlostically@mailinator.com>, 2024, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-04-12 03:01+0000\n"
+"PO-Revision-Date: 2026-03-15 01:09+0000\n"
 "Last-Translator: phlostically <phlostically@mailinator.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/gnome-ext-"
 "hanabi/gnome-ext-hanabi/eo/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -32,7 +32,7 @@ msgstr "Malsilentigi"
 
 #: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:43
 msgid "Mute Audio"
-msgstr ""
+msgstr "Silentigi"
 
 #: src/panelMenu.js:110
 msgid "Next Wallpaper"
@@ -52,7 +52,7 @@ msgstr "Laŭto"
 
 #: src/prefs.js:45
 msgid "Show Panel Menu"
-msgstr ""
+msgstr "Montri panelan menuon"
 
 #: src/prefs.js:51
 #, fuzzy
@@ -115,7 +115,7 @@ msgstr ""
 
 #: src/prefs.js:109
 msgid "Debug Mode"
-msgstr ""
+msgstr "Sencimiga reĝimo"
 
 #: src/prefs.js:111
 msgid "Print debug messages to log"
@@ -173,7 +173,7 @@ msgstr ""
 
 #: src/prefs.js:288
 msgid "Select Directory"
-msgstr ""
+msgstr "Elekti dosierujon"
 
 #: src/prefs.js:328
 msgid "Fit Mode"
@@ -237,15 +237,15 @@ msgstr ""
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
-msgstr ""
+msgstr "Neniam"
 
 #: src/prefs.js:381
 msgid "Any Monitor"
-msgstr ""
+msgstr "Ajna ekrano"
 
 #: src/prefs.js:382
 msgid "All Monitors"
-msgstr ""
+msgstr "Ĉiuj ekranoj"
 
 #: src/prefs.js:407
 msgid "Pause on Battery"
@@ -271,7 +271,7 @@ msgstr ""
 
 #: src/prefs.js:418
 msgid "Always"
-msgstr ""
+msgstr "Ĉiam"
 
 #: src/prefs.js:443
 msgid "Change Wallpaper Mode"
