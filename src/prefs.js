@@ -52,6 +52,13 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
         });
         page.add(autoPauseGroup);
         prefsRowPauseOnMaximizeOrFullscreen(window, autoPauseGroup);
+        prefsRowBoolean(
+            window,
+            autoPauseGroup,
+            _('Pause on Window Focus'),
+            'pause-on-focus',
+            _('Pause playback when any window is focused')
+        );
         prefsRowPauseOnBattery(window, autoPauseGroup);
         prefsRowInt(window, autoPauseGroup, _('Low Battery Threshold'), 'low-battery-threshold', _('Set the threshold percentage for low battery level'), 0, 100, 5, 10);
         prefsRowBoolean(
