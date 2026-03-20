@@ -65,6 +65,19 @@ export class HanabiPanelMenu {
 
         Main.panel.addToStatusArea(indicatorName, this.indicator);
 
+        // Current Wallpaper Name
+        const currentWallpaperItem = new PopupMenu.PopupMenuItem(
+            this._getCurrentWallpaperName(),
+            {reactive: false, style_class: 'popup-inactive-menu-item'}
+        );
+        menu.addMenuItem(currentWallpaperItem);
+
+        this._settings.connect('changed::video-path', () => {
+            currentWallpaperItem.label.set_text(this._getCurrentWallpaperName());
+        });
+
+        menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+
         // Play Pause
         const playPause = new PopupMenu.PopupMenuItem(
             this._isPlaying ? _('Pause') : _('Play')
@@ -111,15 +124,27 @@ export class HanabiPanelMenu {
             this._setNextWallpaper();
         });
 
-        if (!this._getChangeWallpaper())
+        // Previous wallpaper
+        const prevWallpaperMenuItem = menu.addAction(_('Previous Wallpaper'), () => {
+            this._setPreviousWallpaper();
+        });
+
+        if (!this._getChangeWallpaper()) {
             nextWallpaperMenuItem.hide();
+            prevWallpaperMenuItem.hide();
+        }
 
         this._settings.connect('changed::change-wallpaper', () => {
-            if (this._getChangeWallpaper())
+            if (this._getChangeWallpaper()) {
                 nextWallpaperMenuItem.show();
-            else
+                prevWallpaperMenuItem.show();
+            } else {
                 nextWallpaperMenuItem.hide();
+                prevWallpaperMenuItem.hide();
+            }
         });
+
+        menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
         // Preferences
         menu.addAction(_('Preferences'), () => {
@@ -140,6 +165,12 @@ export class HanabiPanelMenu {
     _getChangeWallpaper = () => {
         return this._settings.get_boolean('change-wallpaper');
     };
+
+    _getCurrentWallpaperName() {
+        let path = this._settings.get_string('video-path');
+        if (!path) return _('No wallpaper');
+        return GLib.path_get_basename(path);
+    }
 
     /**
      *
@@ -175,6 +206,42 @@ export class HanabiPanelMenu {
         if (currentIndex !== -1)
             nextIndex = (currentIndex + 1) % videoPaths.length;
         this._settings.set_string('video-path', videoPaths[nextIndex]);
+    };
+
+    /**
+     *
+     * Set previous wallpaper based in directory.
+     */
+    _setPreviousWallpaper = () => {
+        let changeWallpaperDirectoryPath = this._settings.get_string('change-wallpaper-directory-path');
+        let videoPaths = [];
+        let dir = Gio.File.new_for_path(changeWallpaperDirectoryPath);
+        // Check if dir exists and is a directory
+        if (dir.query_file_type(Gio.FileQueryInfoFlags.NONE, null) !== Gio.FileType.DIRECTORY)
+            return;
+
+        let enumerator = dir.enumerate_children(
+            'standard::*',
+            Gio.FileQueryInfoFlags.NONE,
+            null
+        );
+
+        // Get files to push into array
+        let fileInfo;
+        while ((fileInfo = enumerator.next_file(null))) {
+            if (fileInfo.get_content_type().startsWith('video/')) {
+                let file = dir.get_child(fileInfo.get_name());
+                videoPaths.push(file.get_path());
+            }
+        }
+
+        videoPaths = videoPaths.sort();
+        let currentVideoPath = this._settings.get_string('video-path');
+        let currentIndex = videoPaths.findIndex(videoPath => videoPath === currentVideoPath);
+        let prevIndex = 0;
+        if (currentIndex !== -1)
+            prevIndex = (currentIndex - 1 + videoPaths.length) % videoPaths.length;
+        this._settings.set_string('video-path', videoPaths[prevIndex]);
     };
 
     disable() {

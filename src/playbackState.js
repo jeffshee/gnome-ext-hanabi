@@ -53,6 +53,10 @@ export class PlaybackState {
     constructor() {
         this._logger = new Logger.Logger('playbackState');
         this._renderer = new DBus.RendererWrapper();
+        // When true, the isPlayingChanged mismatch handler is suppressed.
+        // Used during startup and wake-from-sleep to let the renderer start
+        // playing without being immediately force-paused.
+        this.suppressMismatch = false;
         this._machineDefinition = {
             initialState: 'playing',
             playing: {
@@ -153,6 +157,10 @@ export class PlaybackState {
         this._renderer.proxy.connectSignal(
             'isPlayingChanged',
             (_proxy, _sender, [isPlaying]) => {
+                if (this.suppressMismatch) {
+                    this._logger.debug('isPlayingChanged mismatch check suppressed');
+                    return;
+                }
                 if (isPlaying && this.getCurrentState() !== 'playing') {
                     // The renderer is playing the media but the current playback state isn't 'playing'
                     // This discrepancy can happen when the shell reload, renderer process reload,

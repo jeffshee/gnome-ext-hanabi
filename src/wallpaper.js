@@ -71,6 +71,8 @@ export const LiveWallpaper = GObject.registerClass(
             backgroundActor.add_child(this);
 
             this._wallpaper = null;
+            this._applyWallpaperTimeoutId = 0;
+            this._isDestroyed = false;
             this._applyWallpaper();
 
             this._roundedCornersEffect =
@@ -93,6 +95,14 @@ export const LiveWallpaper = GObject.registerClass(
             //         ].map(e => e * this._monitorScale)
             //     );
             // });
+
+            this.connect('destroy', () => {
+                this._isDestroyed = true;
+                if (this._applyWallpaperTimeoutId) {
+                    GLib.source_remove(this._applyWallpaperTimeoutId);
+                    this._applyWallpaperTimeoutId = 0;
+                }
+            });
         }
 
         setPixelStep(width, height) {
@@ -117,8 +127,14 @@ export const LiveWallpaper = GObject.registerClass(
         _applyWallpaper() {
             logger.debug('Applying wallpaper...');
             const operation = () => {
+                if (this._isDestroyed) {
+                    this._applyWallpaperTimeoutId = 0;
+                    return false;
+                }
                 const renderer = this._getRenderer();
                 if (renderer) {
+                    if (this._isDestroyed)
+                        return false;
                     this._wallpaper = new Clutter.Clone({
                         source: renderer,
                         // The point around which the scaling and rotation transformations occur.
@@ -130,6 +146,7 @@ export const LiveWallpaper = GObject.registerClass(
                     this.add_child(this._wallpaper);
                     this._fade();
                     logger.debug('Wallpaper applied');
+                    this._applyWallpaperTimeoutId = 0;
                     // Stop the timeout.
                     return false;
                 } else {
@@ -139,12 +156,23 @@ export const LiveWallpaper = GObject.registerClass(
             };
 
             // Perform intial operation without timeout
-            if (operation())
-                GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, operation);
+            if (operation()) {
+                this._applyWallpaperTimeoutId = GLib.timeout_add(
+                    GLib.PRIORITY_DEFAULT,
+                    1000,
+                    operation
+                );
+            }
         }
 
         _getRenderer() {
-            let windowActors = global.get_window_actors(false);
+            let windowActors;
+            try {
+                windowActors = global.get_window_actors(false);
+            } catch (e) {
+                logger.warn(`Failed to query window actors: ${e}`);
+                return null;
+            }
 
             const hanabiWindowActors = windowActors.filter(window =>
                 window.meta_window.title?.includes(applicationId)
