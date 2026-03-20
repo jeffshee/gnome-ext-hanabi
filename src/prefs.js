@@ -42,6 +42,7 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
         prefsRowFitMode(window, generalGroup);
         prefsRowBoolean(window, generalGroup, _('Mute Audio'), 'mute', '');
         prefsRowInt(window, generalGroup, _('Volume Level'), 'volume', '', 0, 100, 1, 10);
+        prefsRowBoolean(window, generalGroup, _('Random Start Position'), 'random-start-position', _('Start playback from a random position each time a video starts'));
         prefsRowBoolean(window, generalGroup, _('Show Panel Menu'), 'show-panel-menu', '');
 
         /**

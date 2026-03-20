@@ -50,137 +50,145 @@ msgid "Volume Level"
 msgstr ""
 
 #: src/prefs.js:45
+msgid "Random Start Position"
+msgstr ""
+
+#: src/prefs.js:45
+msgid "Start playback from a random position each time a video starts"
+msgstr ""
+
+#: src/prefs.js:46
 msgid "Show Panel Menu"
 msgstr ""
 
-#: src/prefs.js:51
+#: src/prefs.js:52
 msgid "Auto Pause"
 msgstr ""
 
-#: src/prefs.js:56
+#: src/prefs.js:57
 msgid "Low Battery Threshold"
 msgstr ""
 
-#: src/prefs.js:56
+#: src/prefs.js:57
 msgid "Set the threshold percentage for low battery level"
 msgstr ""
 
-#: src/prefs.js:60
+#: src/prefs.js:61
 msgid "Pause on Media Player Playing"
 msgstr ""
 
-#: src/prefs.js:62
+#: src/prefs.js:63
 msgid "Pause playback when an MPRIS media player is playing media"
 msgstr ""
 
-#: src/prefs.js:69
+#: src/prefs.js:70
 msgid "Wallpaper Changer"
 msgstr ""
 
-#: src/prefs.js:72
+#: src/prefs.js:73
 msgid "Change Wallpaper Automatically"
 msgstr ""
 
-#: src/prefs.js:75
+#: src/prefs.js:76
 msgid "Change Wallpaper Interval (minutes)"
 msgstr ""
 
-#: src/prefs.js:81
+#: src/prefs.js:82
 msgid "Experimental"
 msgstr ""
 
-#: src/prefs.js:87
+#: src/prefs.js:88
 msgid "Experimental VA Plugin"
 msgstr ""
 
-#: src/prefs.js:89
+#: src/prefs.js:90
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
 
-#: src/prefs.js:94
+#: src/prefs.js:95
 msgid "NVIDIA Stateless Decoders"
 msgstr ""
 
-#: src/prefs.js:96
+#: src/prefs.js:97
 msgid "Use new stateless NVIDIA decoders"
 msgstr ""
 
-#: src/prefs.js:103
+#: src/prefs.js:104
 msgid "Developer"
 msgstr ""
 
-#: src/prefs.js:109
+#: src/prefs.js:110
 msgid "Debug Mode"
 msgstr ""
 
-#: src/prefs.js:111
+#: src/prefs.js:112
 msgid "Print debug messages to log"
 msgstr ""
 
-#: src/prefs.js:116
+#: src/prefs.js:117
 msgid "Force gtk4paintablesink"
 msgstr ""
 
-#: src/prefs.js:118
+#: src/prefs.js:119
 msgid "Force use of gtk4paintablesink for video playback"
 msgstr ""
 
-#: src/prefs.js:123
+#: src/prefs.js:124
 msgid "Force GtkMediaFile"
 msgstr ""
 
-#: src/prefs.js:125
+#: src/prefs.js:126
 msgid "Force use of GtkMediaFile for video playback"
 msgstr ""
 
-#: src/prefs.js:127
+#: src/prefs.js:128
 msgid "Startup Delay"
 msgstr ""
 
-#: src/prefs.js:127
+#: src/prefs.js:128
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
 
-#: src/prefs.js:214
+#: src/prefs.js:215
 msgid "Video Path"
 msgstr ""
 
-#: src/prefs.js:220 src/prefs.js:245 src/prefs.js:279 src/prefs.js:300
+#: src/prefs.js:221 src/prefs.js:246 src/prefs.js:280 src/prefs.js:301
 msgid "None"
 msgstr ""
 
-#: src/prefs.js:232
+#: src/prefs.js:233
 msgid "Open File"
 msgstr ""
 
-#: src/prefs.js:237 src/prefs.js:293
+#: src/prefs.js:238 src/prefs.js:294
 msgid "Cancel"
 msgstr ""
 
-#: src/prefs.js:238 src/prefs.js:254 src/prefs.js:294 src/prefs.js:309
+#: src/prefs.js:239 src/prefs.js:255 src/prefs.js:295 src/prefs.js:310
 msgid "Open"
 msgstr ""
 
-#: src/prefs.js:273
+#: src/prefs.js:274
 msgid "Change Wallpaper Directory Path"
 msgstr ""
 
-#: src/prefs.js:288
+#: src/prefs.js:289
 msgid "Select Directory"
 msgstr ""
 
-#: src/prefs.js:328
+#: src/prefs.js:329
 msgid "Fit Mode"
 msgstr ""
 
-#: src/prefs.js:329
+#: src/prefs.js:330
 msgid "Control how wallpaper fits within the monitor"
 msgstr ""
 
-#: src/prefs.js:330
+#: src/prefs.js:331
 msgid ""
 "\n"
 "    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
@@ -193,35 +201,35 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/prefs.js:338
+#: src/prefs.js:339
 msgid "Fill"
 msgstr ""
 
-#: src/prefs.js:339
+#: src/prefs.js:340
 msgid "Contain"
 msgstr ""
 
-#: src/prefs.js:340
+#: src/prefs.js:341
 msgid "Cover"
 msgstr ""
 
-#: src/prefs.js:341
+#: src/prefs.js:342
 msgid "Scale-down"
 msgstr ""
 
-#: src/prefs.js:354
+#: src/prefs.js:355
 msgid "This feature requires Gtk 4.8 or above"
 msgstr ""
 
-#: src/prefs.js:371
+#: src/prefs.js:372
 msgid "Pause on Maximize or Fullscreen"
 msgstr ""
 
-#: src/prefs.js:372
+#: src/prefs.js:373
 msgid "Pause playback when there is maximized or fullscreen window"
 msgstr ""
 
-#: src/prefs.js:373
+#: src/prefs.js:374
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -232,27 +240,27 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/prefs.js:380 src/prefs.js:416
+#: src/prefs.js:381 src/prefs.js:417
 msgid "Never"
 msgstr ""
 
-#: src/prefs.js:381
+#: src/prefs.js:382
 msgid "Any Monitor"
 msgstr ""
 
-#: src/prefs.js:382
+#: src/prefs.js:383
 msgid "All Monitors"
 msgstr ""
 
-#: src/prefs.js:407
+#: src/prefs.js:408
 msgid "Pause on Battery"
 msgstr ""
 
-#: src/prefs.js:408
+#: src/prefs.js:409
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
 
-#: src/prefs.js:409
+#: src/prefs.js:410
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -262,23 +270,23 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/prefs.js:417
+#: src/prefs.js:418
 msgid "Low Battery"
 msgstr ""
 
-#: src/prefs.js:418
+#: src/prefs.js:419
 msgid "Always"
 msgstr ""
 
-#: src/prefs.js:443
+#: src/prefs.js:444
 msgid "Change Wallpaper Mode"
 msgstr ""
 
-#: src/prefs.js:444
+#: src/prefs.js:445
 msgid "Control how to change wallpapers automatically"
 msgstr ""
 
-#: src/prefs.js:445
+#: src/prefs.js:446
 msgid ""
 "\n"
 "    <b>Sequential:</b> Preserve the directory sequence (descending order).\n"
@@ -288,14 +296,14 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/prefs.js:452
+#: src/prefs.js:453
 msgid "Sequential"
 msgstr ""
 
-#: src/prefs.js:453
+#: src/prefs.js:454
 msgid "Inverse Sequential"
 msgstr ""
 
-#: src/prefs.js:454
+#: src/prefs.js:455
 msgid "Random"
 msgstr ""
