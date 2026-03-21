@@ -221,11 +221,15 @@ export class GnomeShellOverride {
             }
         );
 
-        this._reloadBackgrounds();
+        if (!Main.sessionMode.isLocked) {
+            this._reloadBackgrounds();
+        }
     }
 
     disable() {
         this._injectionManager.clear();
-        this._reloadBackgrounds();
+        if (!Main.sessionMode.isLocked) {
+            this._reloadBackgrounds();
+        }
     }
 }
