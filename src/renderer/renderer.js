@@ -720,7 +720,7 @@ const HanabiRendererWindow = GObject.registerClass(
     }
 );
 
-Gst.init(null);
+Gst.init([]);
 
 let renderer = new HanabiRenderer();
 renderer.run(ARGV);
