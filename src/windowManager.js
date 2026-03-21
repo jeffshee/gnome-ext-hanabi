@@ -164,13 +164,6 @@ export class WindowManager {
                 if (this._waylandClient && this._waylandClient.query_window_belongs_to(window))
                     this.addWindow(window);
 
-                if (this._isX11) {
-                    let appid = window.get_gtk_application_id();
-                    let windowpid = window.get_pid();
-                    let mypid = this._waylandClient.query_pid_of_program();
-                    if (appid === applicationId && windowpid === mypid)
-                        this.addWindow(window);
-                }
             }
         );
     }

@@ -46,26 +46,15 @@ export class LaunchSubprocess {
         this._launcher = new Gio.SubprocessLauncher({flags: this._flags});
 
         // For GNOME Shell < 49, initialize WaylandClient in constructor
-        if (!this._isX11 && shellVersion < 49)
-            this._waylandClient = Meta.WaylandClient.new(global.context, this._launcher);
 
         this.subprocess = null;
         this.running = false;
     }
 
     spawnv(argv) {
-        if (!this._isX11) {
-            if (shellVersion < 49) {
-                // GNOME Shell < 49: Use spawnv on pre-initialized WaylandClient
-                this.subprocess = this._waylandClient.spawnv(global.display, argv);
-            } else {
-                // GNOME Shell >= 49: Use new_subprocess to create WaylandClient
-                this._waylandClient = Meta.WaylandClient.new_subprocess(global.context, this._launcher, argv);
-                this.subprocess = this._waylandClient.get_subprocess();
-            }
-        } else {
-            this.subprocess = this._launcher.spawnv(argv);
-        }
+
+        this._waylandClient = Meta.WaylandClient.new_subprocess(global.context, this._launcher, argv);
+        this.subprocess = this._waylandClient.get_subprocess();
 
         // This is for GLib 2.68 or greater
         if (this._launcher.close)
@@ -121,9 +110,6 @@ export class LaunchSubprocess {
      * @param {MetaWindow} window The window to check.
      */
     query_window_belongs_to(window) {
-        if (this._isX11)
-            return false;
-
         if (!this.running)
             return false;
 
@@ -143,13 +129,4 @@ export class LaunchSubprocess {
         return pid ? parseInt(pid) : 0;
     }
 
-    // show_in_window_list(window) {
-    //     if (!this._isX11 && this.running)
-    //         this._waylandClient.show_in_window_list(window);
-    // }
-
-    // hide_from_window_list(window) {
-    //     if (!this._isX11 && this.running)
-    //         this._waylandClient.hide_from_window_list(window);
-    // }
 }
