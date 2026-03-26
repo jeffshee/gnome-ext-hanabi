@@ -57,7 +57,11 @@ export class GnomeShellOverride {
          * WorkspaceBackground has its own bgManager,
          * we have to recreate it to use our actors, so it can set radius to our actor.
          */
-        Main.overview._overview._controls._workspacesDisplay._updateWorkspacesViews();
+        try {
+            Main.overview._overview._controls._workspacesDisplay._updateWorkspacesViews();
+        } catch (e) {
+            // Suppress errors from extension conflicts (e.g. DING) during background reload
+        }
 
         /**
          *  Blur My Shell
@@ -108,7 +112,7 @@ export class GnomeShellOverride {
                     const cornerRadius = scaleFactor * BACKGROUND_CORNER_RADIUS_PIXELS;
 
                     const radius = Util.lerp(0, cornerRadius, this._stateAdjustment.value);
-                    this._bgManager.videoActor.setRoundedClipRadius(radius);
+                    this._bgManager.videoActor?.setRoundedClipRadius(radius);
                 };
             }
         );
