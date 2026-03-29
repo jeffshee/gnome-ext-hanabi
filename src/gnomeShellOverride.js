@@ -57,8 +57,12 @@ export class GnomeShellOverride {
          * WorkspaceBackground has its own bgManager,
          * we have to recreate it to use our actors, so it can set radius to our actor.
          */
-        Main.overview._overview._controls._workspacesDisplay._updateWorkspacesViews();
-
+        try {
+            Main.overview._overview._controls._workspacesDisplay._updateWorkspacesViews();
+        } catch (e) {
+            // Suppress potential null pointer exception during session transitions (e.g., lock/unlock)
+            // as discussed in issue #213.
+        }
         /**
          *  Blur My Shell
          */
