@@ -29,9 +29,9 @@ Please click on the image to view <i>(redirect to YouTube)</i>
 
 ## GNOME Shell Support
 
-| Version | ≤41 | 42  | 43  | 44  | 45  | 46  | 47  | 48  | 49  |
-| :-----: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| Status  | ⛔  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  |
+| Version | ≤41 | 42  | 43  | 44  | 45  | 46  | 47  | 48  | 49  | 50  |
+| :-----: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| Status  | ⛔  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  |
 
 See also the section [Troubleshooting](#troubleshooting), for version-specific known issues.
 
