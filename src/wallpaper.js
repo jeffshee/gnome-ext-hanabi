@@ -46,11 +46,32 @@ export const LiveWallpaper = GObject.registerClass(
                 // Layout manager will allocate extra space for the actor, if possible.
                 x_expand: true,
                 y_expand: true,
+                x_align: Clutter.ActorAlign.FILL,
+                y_align: Clutter.ActorAlign.FILL,
                 opacity: 0,
             });
             this._backgroundActor = backgroundActor;
             this._metaBackgroundGroup = backgroundActor.get_parent();
             this._monitorIndex = backgroundActor.monitor;
+
+            this._isDisposed = false;
+            this._timeoutId = null;
+            this.connect('destroy', () => {
+                this._isDisposed = true;
+                if (this._timeoutId) {
+                    GLib.Source.remove(this._timeoutId);
+                    this._timeoutId = null;
+                }
+                if (this._sizeChangedId) {
+                    backgroundActor.disconnect(this._sizeChangedId);
+                    this._sizeChangedId = null;
+                }
+                if (this._wallpaper) {
+                    this._wallpaper.source = null;
+                    this._wallpaper.destroy();
+                    this._wallpaper = null;
+                }
+            });
 
             /**
              * _monitorScale is fractional scale factor
@@ -67,8 +88,15 @@ export const LiveWallpaper = GObject.registerClass(
             this._monitorWidth = width;
             this._monitorHeight = height;
 
-            backgroundActor.layout_manager = new Clutter.BinLayout();
             backgroundActor.add_child(this);
+            const updateSize = () => {
+                if (this._isDisposed) return;
+                this.set_size(backgroundActor.width, backgroundActor.height);
+                if (this._wallpaper)
+                    this._wallpaper.set_size(this.width, this.height);
+            };
+            this._sizeChangedId = backgroundActor.connect('notify::size', updateSize);
+            updateSize();
 
             this._wallpaper = null;
             this._applyWallpaper();
@@ -96,51 +124,88 @@ export const LiveWallpaper = GObject.registerClass(
         }
 
         setPixelStep(width, height) {
-            this._roundedCornersEffect.setPixelStep([
-                1.0 / (width * this._monitorScale),
-                1.0 / (height * this._monitorScale),
-            ]);
+            if (this._isDisposed) return;
+            try {
+                this._roundedCornersEffect.setPixelStep([
+                    1.0 / (width * this._monitorScale),
+                    1.0 / (height * this._monitorScale),
+                ]);
+            } catch (e) {
+                // Ignore if disposed
+            }
         }
 
         setRoundedClipRadius(radius) {
-            this._roundedCornersEffect.setClipRadius(
-                radius * this._monitorScale
-            );
+            if (this._isDisposed) return;
+            try {
+                this._roundedCornersEffect.setClipRadius(
+                    radius * this._monitorScale
+                );
+            } catch (e) {
+                // Ignore if disposed
+            }
         }
 
         setRoundedClipBounds(x1, y1, x2, y2) {
-            this._roundedCornersEffect.setBounds(
-                [x1, y1, x2, y2].map(e => e * this._monitorScale)
-            );
+            if (this._isDisposed) return;
+            try {
+                this._roundedCornersEffect.setBounds(
+                    [x1, y1, x2, y2].map(e => e * this._monitorScale)
+                );
+            } catch (e) {
+                // Ignore if disposed
+            }
         }
 
         _applyWallpaper() {
             logger.debug('Applying wallpaper...');
             const operation = () => {
-                const renderer = this._getRenderer();
-                if (renderer) {
-                    this._wallpaper = new Clutter.Clone({
-                        source: renderer,
-                        // The point around which the scaling and rotation transformations occur.
-                        pivot_point: new Graphene.Point({x: 0.5, y: 0.5}),
-                    });
-                    this._wallpaper.connect('destroy', () => {
-                        this._wallpaper = null;
-                    });
-                    this.add_child(this._wallpaper);
-                    this._fade();
-                    logger.debug('Wallpaper applied');
-                    // Stop the timeout.
+                if (this._isDisposed) {
+                    logger.debug('LiveWallpaper disposed, stopping wallpaper operation');
                     return false;
-                } else {
-                    // Keep waiting.
-                    return true;
+                }
+
+                try {
+                    const renderer = this._getRenderer();
+                    if (renderer) {
+                        this._wallpaper = new Clutter.Clone({
+                            source: renderer,
+                            // The point around which the scaling and rotation transformations occur.
+                            pivot_point: new Graphene.Point({x: 0.5, y: 0.5}),
+                            x_expand: true,
+                            y_expand: true,
+                            x_align: Clutter.ActorAlign.FILL,
+                            y_align: Clutter.ActorAlign.FILL,
+                        });
+                        this._wallpaper.connect('destroy', () => {
+                            this._wallpaper = null;
+                        });
+                        this._wallpaper.source.connect('destroy', () => {
+                            if (this._wallpaper) {
+                                this._wallpaper.destroy();
+                            }
+                            // Restart the loop if our source is destroyed
+                            this._applyWallpaper();
+                        });
+                        this.add_child(this._wallpaper);
+                        this._fade();
+                        logger.debug('Wallpaper applied');
+                        // Stop this specific timeout instance, but we've queued a restart on source destruction.
+                        return false;
+                    } else {
+                        // Keep waiting.
+                        return true;
+                    }
+                } catch (e) {
+                    logger.debug(`Could not apply wallpaper (possibly disposed): ${e}`);
+                    return false;
                 }
             };
 
             // Perform intial operation without timeout
-            if (operation())
-                GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, operation);
+            if (operation()) {
+                this._timeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, operation);
+            }
         }
 
         _getRenderer() {
@@ -149,38 +214,31 @@ export const LiveWallpaper = GObject.registerClass(
             const hanabiWindowActors = windowActors.filter(window =>
                 window.meta_window.title?.includes(applicationId)
             );
-            logger.debug(`Found ${hanabiWindowActors.length} Hanabi window actors`);
-            logger.debug(`Hanabi window actors monitor: ${hanabiWindowActors.map(w => w.meta_window.get_monitor())}, target monitor: ${this._monitorIndex}`);
-
-            // Reject if number of hanabi windows is less than the number of monitors
-            const numMonitors = global.display.get_n_monitors();
-            if (hanabiWindowActors.length < numMonitors) {
-                logger.debug(`Hanabi windows (${hanabiWindowActors.length}) < monitors (${numMonitors}), rejecting`);
-                return null;
-            }
-
-            // Reject if monitor indices are not unique (duplicate monitor assignments)
-            const monitorIndices = hanabiWindowActors.map(w => w.meta_window.get_monitor());
-            const uniqueMonitorIndices = new Set(monitorIndices);
-            if (uniqueMonitorIndices.size !== monitorIndices.length) {
-                logger.debug('Non-unique monitor indices detected, rejecting');
-                return null;
-            }
 
             // Find renderer by `applicationId` and monitor index.
+            // We use the monitor index from the backgroundActor dynamically to handle re-indexing.
             const renderer = hanabiWindowActors.find(
-                window => window.meta_window.get_monitor() === this._monitorIndex
+                window => window.meta_window.get_monitor() === this._backgroundActor.monitor
             );
+
+            if (!renderer) {
+                logger.debug(`No renderer found for monitor ${this._backgroundActor.monitor}. Found actors for monitors: ${hanabiWindowActors.map(w => w.meta_window.get_monitor())}`);
+            }
 
             return renderer ?? null;
         }
 
         _fade(visible = true) {
-            this.ease({
-                opacity: visible ? 255 : 0,
-                duration: BACKGROUND_FADE_ANIMATION_TIME,
-                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-            });
+            if (this._isDisposed) return;
+            try {
+                this.ease({
+                    opacity: visible ? 255 : 0,
+                    duration: BACKGROUND_FADE_ANIMATION_TIME,
+                    mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+                });
+            } catch (e) {
+                logger.debug(`Could not fade wallpaper (possibly disposed): ${e}`);
+            }
         }
     }
 );

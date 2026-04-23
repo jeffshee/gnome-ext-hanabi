@@ -379,7 +379,9 @@ const HanabiRenderer = GObject.registerClass(
                     picture.set_content_fit(contentFit);
                 this._pictures.push(picture);
 
-                if (haveGraphicsOffload) {
+                // Graphics Offload is incompatible with window cloning used for wallpapers.
+                // We only enable it in standalone mode (nohide) to avoid GBM buffer locking errors.
+                if (haveGraphicsOffload && nohide) {
                     let offload = Gtk.GraphicsOffload.new(picture);
                     offload.set_enabled(Gtk.GraphicsOffloadEnabled.ENABLED);
                     return offload;
@@ -720,7 +722,7 @@ const HanabiRendererWindow = GObject.registerClass(
     }
 );
 
-Gst.init([]);
+Gst.init(null);
 
 let renderer = new HanabiRenderer();
 renderer.run(ARGV);

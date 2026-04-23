@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import Cogl from 'gi://Cogl';
 import GObject from 'gi://GObject';
 import Shell from 'gi://Shell';
 
@@ -81,12 +82,14 @@ const fragmentShaderCode = [
     'cogl_color_out *= rounded_rect_coverage (texture_coord);                 \n',
 ].join('');
 
+const FragmentHook = Shell?.SnippetHook?.FRAGMENT ?? Cogl.SnippetHook.FRAGMENT;
+
 // A naive pipeline that just updates uniforms.
 export const RoundedCornersEffect = GObject.registerClass(
     class RoundedCornersEffect extends Shell.GLSLEffect {
         vfunc_build_pipeline() {
             this.add_glsl_snippet(
-                Shell.SnippetHook.FRAGMENT,
+                FragmentHook,
                 fragmentShaderDeclarations,
                 fragmentShaderCode,
                 false

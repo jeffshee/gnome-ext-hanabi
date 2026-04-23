@@ -53,7 +53,7 @@ export default class HanabiExtension extends Extension {
         if (this.settings.get_boolean('show-panel-menu'))
             this.panelMenu.enable();
 
-        this.settings.connect('changed::show-panel-menu', () => {
+        this._showPanelMenuChangedId = this.settings.connect('changed::show-panel-menu', () => {
             if (this.settings.get_boolean('show-panel-menu'))
                 this.panelMenu.enable();
             else
@@ -108,6 +108,16 @@ export default class HanabiExtension extends Extension {
         this.manager.enable();
         this.autoPause.enable();
 
+        this._monitorsChangedId = Main.layoutManager.connect('monitors-changed', () => {
+            if (this._monitorsChangedTimeoutId)
+                GLib.source_remove(this._monitorsChangedTimeoutId);
+            this._monitorsChangedTimeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
+                this._monitorsChangedTimeoutId = 0;
+                this.killCurrentProcess();
+                return GLib.SOURCE_REMOVE;
+            });
+        });
+
         this.isEnabled = true;
         if (this.launchRendererId)
             GLib.source_remove(this.launchRendererId);
@@ -115,11 +125,15 @@ export default class HanabiExtension extends Extension {
         this.launchRenderer();
     }
 
+
     getPlaybackState() {
         return this.playbackState;
     }
 
     launchRenderer() {
+        if (!this.settings)
+            return;
+
         // Launch preferences dialog for first-time user
         let videoPath = this.settings.get_string('video-path');
         // TODO: check if the path is exist or not instead
@@ -181,6 +195,13 @@ export default class HanabiExtension extends Extension {
     }
 
     disable() {
+        this.killCurrentProcess();
+
+        if (this._showPanelMenuChangedId) {
+            this.settings.disconnect(this._showPanelMenuChangedId);
+            this._showPanelMenuChangedId = null;
+        }
+
         this.settings = null;
         this.panelMenu.disable();
         Main.sessionMode.hasOverview = this.old_hasOverview;
@@ -188,8 +209,17 @@ export default class HanabiExtension extends Extension {
         this.manager.disable();
         this.autoPause.disable();
 
+        if (this._monitorsChangedId) {
+            Main.layoutManager.disconnect(this._monitorsChangedId);
+            this._monitorsChangedId = null;
+        }
+
+        if (this._monitorsChangedTimeoutId) {
+            GLib.source_remove(this._monitorsChangedTimeoutId);
+            this._monitorsChangedTimeoutId = 0;
+        }
+
         this.isEnabled = false;
-        this.killCurrentProcess();
     }
 
     killCurrentProcess() {
