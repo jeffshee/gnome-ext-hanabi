@@ -46,8 +46,6 @@ export const LiveWallpaper = GObject.registerClass(
                 // Layout manager will allocate extra space for the actor, if possible.
                 x_expand: true,
                 y_expand: true,
-                x_align: Clutter.ActorAlign.FILL,
-                y_align: Clutter.ActorAlign.FILL,
                 opacity: 0,
             });
             this._backgroundActor = backgroundActor;
@@ -62,11 +60,11 @@ export const LiveWallpaper = GObject.registerClass(
                     GLib.Source.remove(this._timeoutId);
                     this._timeoutId = null;
                 }
-                if (this._sizeChangedId) {
-                    backgroundActor.disconnect(this._sizeChangedId);
-                    this._sizeChangedId = null;
-                }
                 if (this._wallpaper) {
+                    if (this._sourceDestroyId) {
+                        this._wallpaper.source?.disconnect(this._sourceDestroyId);
+                        this._sourceDestroyId = null;
+                    }
                     this._wallpaper.source = null;
                     this._wallpaper.destroy();
                     this._wallpaper = null;
@@ -88,15 +86,8 @@ export const LiveWallpaper = GObject.registerClass(
             this._monitorWidth = width;
             this._monitorHeight = height;
 
+            backgroundActor.layout_manager = new Clutter.BinLayout();
             backgroundActor.add_child(this);
-            const updateSize = () => {
-                if (this._isDisposed) return;
-                this.set_size(backgroundActor.width, backgroundActor.height);
-                if (this._wallpaper)
-                    this._wallpaper.set_size(this.width, this.height);
-            };
-            this._sizeChangedId = backgroundActor.connect('notify::size', updateSize);
-            updateSize();
 
             this._wallpaper = null;
             this._applyWallpaper();
@@ -158,6 +149,7 @@ export const LiveWallpaper = GObject.registerClass(
         }
 
         _applyWallpaper() {
+            if (this._isDisposed) return;
             logger.debug('Applying wallpaper...');
             const operation = () => {
                 if (this._isDisposed) {
@@ -165,40 +157,30 @@ export const LiveWallpaper = GObject.registerClass(
                     return false;
                 }
 
-                try {
-                    const renderer = this._getRenderer();
-                    if (renderer) {
-                        this._wallpaper = new Clutter.Clone({
-                            source: renderer,
-                            // The point around which the scaling and rotation transformations occur.
-                            pivot_point: new Graphene.Point({x: 0.5, y: 0.5}),
-                            x_expand: true,
-                            y_expand: true,
-                            x_align: Clutter.ActorAlign.FILL,
-                            y_align: Clutter.ActorAlign.FILL,
-                        });
-                        this._wallpaper.connect('destroy', () => {
-                            this._wallpaper = null;
-                        });
-                        this._wallpaper.source.connect('destroy', () => {
-                            if (this._wallpaper) {
-                                this._wallpaper.destroy();
-                            }
-                            // Restart the loop if our source is destroyed
+                const renderer = this._getRenderer();
+                if (renderer) {
+                    this._wallpaper = new Clutter.Clone({
+                        source: renderer,
+                        // The point around which the scaling and rotation transformations occur.
+                        pivot_point: new Graphene.Point({x: 0.5, y: 0.5}),
+                    });
+                    this._wallpaper.connect('destroy', () => {
+                        this._wallpaper = null;
+                    });
+                    this._sourceDestroyId = this._wallpaper.source.connect('destroy', () => {
+                        if (this._wallpaper)
+                            this._wallpaper.destroy();
+                        if (!this._isDisposed)
                             this._applyWallpaper();
-                        });
-                        this.add_child(this._wallpaper);
-                        this._fade();
-                        logger.debug('Wallpaper applied');
-                        // Stop this specific timeout instance, but we've queued a restart on source destruction.
-                        return false;
-                    } else {
-                        // Keep waiting.
-                        return true;
-                    }
-                } catch (e) {
-                    logger.debug(`Could not apply wallpaper (possibly disposed): ${e}`);
+                    });
+                    this.add_child(this._wallpaper);
+                    this._fade();
+                    logger.debug('Wallpaper applied');
+                    // Stop this specific timeout instance, but we've queued a restart on source destruction.
                     return false;
+                } else {
+                    // Keep waiting.
+                    return true;
                 }
             };
 
@@ -215,6 +197,21 @@ export const LiveWallpaper = GObject.registerClass(
                 window.meta_window.title?.includes(applicationId)
             );
 
+            // Reject if number of hanabi windows is less than the number of monitors
+            const numMonitors = global.display.get_n_monitors();
+            if (hanabiWindowActors.length < numMonitors) {
+                logger.debug(`Hanabi windows (${hanabiWindowActors.length}) < monitors (${numMonitors}), rejecting`);
+                return null;
+            }
+
+            // Reject if monitor indices are not unique (duplicate monitor assignments)
+            const monitorIndices = hanabiWindowActors.map(w => w.meta_window.get_monitor());
+            const uniqueMonitorIndices = new Set(monitorIndices);
+            if (uniqueMonitorIndices.size !== monitorIndices.length) {
+                logger.debug('Non-unique monitor indices detected, rejecting');
+                return null;
+            }
+
             // Find renderer by `applicationId` and monitor index.
             // We use the monitor index from the backgroundActor dynamically to handle re-indexing.
             const renderer = hanabiWindowActors.find(
@@ -230,15 +227,11 @@ export const LiveWallpaper = GObject.registerClass(
 
         _fade(visible = true) {
             if (this._isDisposed) return;
-            try {
-                this.ease({
-                    opacity: visible ? 255 : 0,
-                    duration: BACKGROUND_FADE_ANIMATION_TIME,
-                    mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-                });
-            } catch (e) {
-                logger.debug(`Could not fade wallpaper (possibly disposed): ${e}`);
-            }
+            this.ease({
+                opacity: visible ? 255 : 0,
+                duration: BACKGROUND_FADE_ANIMATION_TIME,
+                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+            });
         }
     }
 );

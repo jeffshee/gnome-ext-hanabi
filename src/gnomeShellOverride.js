@@ -68,14 +68,6 @@ export class GnomeShellOverride {
                 }
                 return GLib.SOURCE_REMOVE;
             });
-        } else {
-            // Fallback for unexpected environments
-            Main.layoutManager._updateBackgrounds();
-            try {
-                Main.overview._overview._controls._workspacesDisplay._updateWorkspacesViews();
-            } catch (e) {
-                // Suppress errors from extension conflicts (e.g. DING) during background reload
-            }
         }
 
         /**
@@ -83,13 +75,14 @@ export class GnomeShellOverride {
          *  We defer these slightly to ensure Hanabi's backgrounds are allocated
          *  before other extensions try to blur or react to the change.
          */
-        if (Main.extensionManager._enabledExtensions.includes('blur-my-shell@aunetx')) {
-            GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
+        GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
+            if (Main.extensionManager._enabledExtensions.includes('blur-my-shell@aunetx')) {
                 Main.layoutManager.emit('monitors-changed');
-                global.display.emit('workareas-changed');
-                return GLib.SOURCE_REMOVE;
-            });
-        }
+            }
+            // Trigger a refresh of the panel and other UI elements
+            global.display.emit('workareas-changed');
+            return GLib.SOURCE_REMOVE;
+        });
     }
 
     _getLaters() {
