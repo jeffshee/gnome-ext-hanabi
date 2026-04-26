@@ -120,12 +120,20 @@ export default class HanabiExtension extends Extension {
         //  handler would immediately pause it.)
         this.launchRenderer();
 
+        // Handle monitor configuration changes (connect/disconnect)
+        this._monitorsChangedId = Main.layoutManager.connect('monitors-changed', () => {
+            this._onMonitorsChanged();
+        });
+
         this.playbackState.suppressMismatch = true;
         this._autoPauseDelayId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 5000, () => {
             this._autoPauseDelayId = null;
             this.playbackState.suppressMismatch = false;
+            
             if (this.isEnabled)
                 this.autoPause.enable();
+
+            this.playbackState.sync();
             return false;
         });
 
@@ -133,6 +141,56 @@ export default class HanabiExtension extends Extension {
         // After sleep, the GStreamer pipeline may stall and take a long time to recover.
         // Killing and relaunching the renderer ensures a fresh pipeline on wake.
         this._setupSleepWatch();
+    }
+
+    _onMonitorsChanged() {
+        if (!this.isEnabled || this._isSuspending)
+            return;
+
+        // Debounce rapid monitor changes
+        if (this._monitorChangeTimeoutId) {
+            GLib.source_remove(this._monitorChangeTimeoutId);
+            this._monitorChangeTimeoutId = null;
+        }
+
+        this._monitorChangeTimeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
+            this._monitorChangeTimeoutId = null;
+
+            if (!this.isEnabled || this._isSuspending)
+                return false;
+
+            // Disable autoPause during transition
+            this.autoPause.disable();
+
+            // Cancel any pending autoPause delay
+            if (this._autoPauseDelayId) {
+                GLib.source_remove(this._autoPauseDelayId);
+                this._autoPauseDelayId = null;
+            }
+
+            // Reset playback state for fresh start
+            this.playbackState.reset();
+
+            // Restart renderer for new monitor configuration
+            this.killCurrentProcess();
+
+            // If no process was running and no relaunch is pending, launch directly
+            if (!this.currentProcess && !this.launchRendererId)
+                this.launchRenderer();
+
+            // Suppress mismatch and re-enable autoPause after renderer stabilizes
+            this.playbackState.suppressMismatch = true;
+            this._autoPauseDelayId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 5000, () => {
+                this._autoPauseDelayId = null;
+                this.playbackState.suppressMismatch = false;
+                if (this.isEnabled && !this._isSuspending)
+                    this.autoPause.enable();
+                this.playbackState.sync();
+                return false;
+            });
+
+            return false;
+        });
     }
 
     _setupSleepWatch() {
@@ -175,19 +233,16 @@ export default class HanabiExtension extends Extension {
                         }
                         this._cancelRendererWait();
 
-                        // Suppress the mismatch handler so the renderer isn't
-                        // force-paused while starting up.
-                        this.playbackState.suppressMismatch = true;
-
-                        // After 5 seconds, force-sync: directly tell renderer to
-                        // play via D-Bus (bypassing state machine which has no
-                        // transition from 'playing'), then re-enable autoPause.
-                        this._autoPauseDelayId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 5000, () => {
+                        // Small grace period for the renderer process to come
+                        // up and export its D-Bus interface before we start
+                        // sending it commands. This is just a launch race
+                        // guard, not a "wait for GStreamer to stabilize" hack.
+                        // The actual post-wake play/pause loop is prevented
+                        // by the mismatch-handler and autoPause changes in
+                        // playbackState.js (see comments there).
+                        const POST_WAKE_GRACE_MS = 1500;
+                        this._autoPauseDelayId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, POST_WAKE_GRACE_MS, () => {
                             this._autoPauseDelayId = null;
-                            this.playbackState.suppressMismatch = false;
-                            // Force renderer to play - reset() set state to 'playing'
-                            // but never sent a D-Bus command.
-                            this.playbackState._renderer.setPlay();
                             if (this.isEnabled && !this._isSuspending)
                                 this.autoPause.enable();
                             return false;
@@ -196,7 +251,7 @@ export default class HanabiExtension extends Extension {
                 }
             });
         } catch (e) {
-            Logger.Logger.prototype.warn?.call(null, `Failed to setup sleep watch: ${e}`);
+            console.warn(`Failed to setup sleep watch: ${e}`);
         }
     }
 
@@ -315,6 +370,21 @@ export default class HanabiExtension extends Extension {
         if (this._autoPauseDelayId) {
             GLib.source_remove(this._autoPauseDelayId);
             this._autoPauseDelayId = null;
+        }
+
+        // Cancel any pending post-wake mismatch-resume timer.
+        if (this._mismatchResumeId) {
+            GLib.source_remove(this._mismatchResumeId);
+            this._mismatchResumeId = 0;
+        }
+
+        if (this._monitorsChangedId) {
+            Main.layoutManager.disconnect(this._monitorsChangedId);
+            this._monitorsChangedId = null;
+        }
+        if (this._monitorChangeTimeoutId) {
+            GLib.source_remove(this._monitorChangeTimeoutId);
+            this._monitorChangeTimeoutId = null;
         }
 
         this._cancelRendererWait();

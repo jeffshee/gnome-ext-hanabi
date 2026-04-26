@@ -75,9 +75,14 @@ export const LiveWallpaper = GObject.registerClass(
             this._isDestroyed = false;
             this._applyWallpaper();
 
-            this._roundedCornersEffect =
-                new RoundedCornersEffect.RoundedCornersEffect();
-            // this._backgroundActor.add_effect(this._roundedCornersEffect);
+            try {
+                this._roundedCornersEffect =
+                    new RoundedCornersEffect.RoundedCornersEffect();
+                // this._backgroundActor.add_effect(this._roundedCornersEffect);
+            } catch (e) {
+                logger.warn(`Failed to create rounded corners effect: ${e}`);
+                this._roundedCornersEffect = null;
+            }
 
             this.setPixelStep(this._monitorWidth, this._monitorHeight);
             this.setRoundedClipRadius(0.0);
@@ -96,36 +101,58 @@ export const LiveWallpaper = GObject.registerClass(
             //     );
             // });
 
+            this._rendererActor = null;
+            this._rendererDestroyId = null;
+
             this.connect('destroy', () => {
                 this._isDestroyed = true;
                 if (this._applyWallpaperTimeoutId) {
                     GLib.source_remove(this._applyWallpaperTimeoutId);
                     this._applyWallpaperTimeoutId = 0;
                 }
+                if (this._rendererActor && this._rendererDestroyId) {
+                    this._rendererActor.disconnect(this._rendererDestroyId);
+                    this._rendererActor = null;
+                    this._rendererDestroyId = null;
+                }
             });
         }
 
         setPixelStep(width, height) {
-            this._roundedCornersEffect.setPixelStep([
+            this._roundedCornersEffect?.setPixelStep([
                 1.0 / (width * this._monitorScale),
                 1.0 / (height * this._monitorScale),
             ]);
         }
 
         setRoundedClipRadius(radius) {
-            this._roundedCornersEffect.setClipRadius(
+            this._roundedCornersEffect?.setClipRadius(
                 radius * this._monitorScale
             );
         }
 
         setRoundedClipBounds(x1, y1, x2, y2) {
-            this._roundedCornersEffect.setBounds(
+            this._roundedCornersEffect?.setBounds(
                 [x1, y1, x2, y2].map(e => e * this._monitorScale)
             );
         }
 
         _applyWallpaper() {
             logger.debug('Applying wallpaper...');
+
+            // Cancel any existing poll
+            if (this._applyWallpaperTimeoutId) {
+                GLib.source_remove(this._applyWallpaperTimeoutId);
+                this._applyWallpaperTimeoutId = 0;
+            }
+
+            // Disconnect any previous renderer destroy watch
+            if (this._rendererActor && this._rendererDestroyId) {
+                this._rendererActor.disconnect(this._rendererDestroyId);
+                this._rendererActor = null;
+                this._rendererDestroyId = null;
+            }
+
             const operation = () => {
                 if (this._isDestroyed) {
                     this._applyWallpaperTimeoutId = 0;
@@ -146,6 +173,24 @@ export const LiveWallpaper = GObject.registerClass(
                     this.add_child(this._wallpaper);
                     this._fade();
                     logger.debug('Wallpaper applied');
+
+                    // Watch for renderer destruction (process kill, sleep/wake)
+                    // to automatically re-poll for the new renderer.
+                    this._rendererActor = renderer;
+                    this._rendererDestroyId = renderer.connect('destroy', () => {
+                        this._rendererActor = null;
+                        this._rendererDestroyId = null;
+                        if (!this._isDestroyed) {
+                            logger.debug('Renderer destroyed, re-polling for new renderer...');
+                            this._fade(false);
+                            if (this._wallpaper) {
+                                this._wallpaper.destroy();
+                                this._wallpaper = null;
+                            }
+                            this._applyWallpaper();
+                        }
+                    });
+
                     this._applyWallpaperTimeoutId = 0;
                     // Stop the timeout.
                     return false;
@@ -155,7 +200,7 @@ export const LiveWallpaper = GObject.registerClass(
                 }
             };
 
-            // Perform intial operation without timeout
+            // Perform initial operation without timeout
             if (operation()) {
                 this._applyWallpaperTimeoutId = GLib.timeout_add(
                     GLib.PRIORITY_DEFAULT,

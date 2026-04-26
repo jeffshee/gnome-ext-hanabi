@@ -16,6 +16,7 @@
  */
 
 import GObject from 'gi://GObject';
+import GLib from 'gi://GLib';
 import Meta from 'gi://Meta';
 import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 
@@ -122,6 +123,20 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
             this._windows = []; // [{metaWindow, signals: [...]}, ...]
             this._windowAddedId = null;
             this._windowRemovedId = null;
+            // Coalesce bursts of window-state notifies (a single user
+            // (un)maximize fires 2-4 notify signals back-to-back) into one
+            // _update() per idle tick.
+            this._pendingUpdateId = 0;
+        }
+
+        _scheduleUpdate() {
+            if (this._pendingUpdateId)
+                return;
+            this._pendingUpdateId = GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+                this._pendingUpdateId = 0;
+                this._update();
+                return GLib.SOURCE_REMOVE;
+            });
         }
 
         enable() {
@@ -146,23 +161,19 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
             let signals = [];
             signals.push(
                 metaWindow.connect('notify::maximized-horizontally', () => {
-                    this._logger.debug('maximized-horizontally changed');
-                    this._update();
+                    this._scheduleUpdate();
                 }));
             signals.push(
                 metaWindow.connect('notify::maximized-vertically', () => {
-                    this._logger.debug('maximized-vertically changed');
-                    this._update();
+                    this._scheduleUpdate();
                 }));
             signals.push(
                 metaWindow.connect('notify::fullscreen', () => {
-                    this._logger.debug('fullscreen changed');
-                    this._update();
+                    this._scheduleUpdate();
                 }));
             signals.push(
                 metaWindow.connect('notify::minimized', () => {
-                    this._logger.debug('minimized changed');
-                    this._update();
+                    this._scheduleUpdate();
                 })
             );
             this._windows.push(
@@ -274,6 +285,10 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
         }
 
         disable() {
+            if (this._pendingUpdateId) {
+                GLib.source_remove(this._pendingUpdateId);
+                this._pendingUpdateId = 0;
+            }
             this._workspaceManager?.disconnect(this._activeWorkspaceChangedId);
             this._windows.forEach(({metaWindow, signals}) => {
                 signals.forEach(signal => metaWindow.disconnect(signal));

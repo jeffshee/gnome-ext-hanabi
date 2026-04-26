@@ -16,10 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import Cogl from 'gi://Cogl';
 import GObject from 'gi://GObject';
 import Shell from 'gi://Shell';
 
 import * as Logger from './logger.js';
+
+// Shell.SnippetHook was removed in GNOME Shell 47+, use Cogl as fallback
+const SnippetHook = Shell.SnippetHook ?? Cogl.SnippetHook;
 
 const logger = new Logger.Logger('roundedCorners');
 
@@ -86,7 +90,7 @@ export const RoundedCornersEffect = GObject.registerClass(
     class RoundedCornersEffect extends Shell.GLSLEffect {
         vfunc_build_pipeline() {
             this.add_glsl_snippet(
-                Shell.SnippetHook.FRAGMENT,
+                SnippetHook.FRAGMENT,
                 fragmentShaderDeclarations,
                 fragmentShaderCode,
                 false

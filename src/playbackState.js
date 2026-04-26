@@ -15,8 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import GLib from 'gi://GLib';
+
 import * as DBus from './dbus.js';
 import * as Logger from './logger.js';
+
+// Debounce window for the renderer/state-machine mismatch corrector.
+// GStreamer can rapidly oscillate between PAUSED and PLAYING while a hardware
+// decoder pipeline is warming up (especially right after suspend/resume). If
+// we react to every isPlayingChanged immediately, our forced setPlay/setPause
+// calls amplify that oscillation and the video can stay frozen for tens of
+// seconds. Only act on a mismatch that has remained stable for this long.
+const MISMATCH_DEBOUNCE_MS = 1500;
 
 
 /**
@@ -57,6 +67,8 @@ export class PlaybackState {
         // Used during startup and wake-from-sleep to let the renderer start
         // playing without being immediately force-paused.
         this.suppressMismatch = false;
+        // GLib source id for the debounced mismatch corrector (0 = none).
+        this._mismatchTimeoutId = 0;
         this._machineDefinition = {
             initialState: 'playing',
             playing: {
@@ -154,24 +166,26 @@ export class PlaybackState {
                 },
             },
         };
-        this._renderer.proxy.connectSignal(
-            'isPlayingChanged',
-            (_proxy, _sender, [isPlaying]) => {
-                if (this.suppressMismatch) {
-                    this._logger.debug('isPlayingChanged mismatch check suppressed');
-                    return;
-                }
-                if (isPlaying && this.getCurrentState() !== 'playing') {
-                    // The renderer is playing the media but the current playback state isn't 'playing'
-                    // This discrepancy can happen when the shell reload, renderer process reload,
-                    // or when the user restarts the playback (e.g. select another video file in prefs).
-                    // Pause the renderer if that's the case.
-                    this._renderer.setPause();
-                }
-            }
-        );
+        // Note: we do NOT install an `isPlayingChanged` corrector that fights
+        // the renderer when its reported state diverges from ours. The signal
+        // is reported by GStreamer's state-changed callback in the renderer,
+        // which can fire transient PAUSED reports while the pipeline is
+        // mid-recovery (very common after suspend/resume with hardware video
+        // decode). Any auto-correction here re-sends setPlay()/setPause() into
+        // a recovering pipeline on a fixed cadence and creates a self-
+        // sustaining play/pause loop. The state machine here is the single
+        // source of truth for what we WANT; what the renderer momentarily
+        // REPORTS is best-effort and only used for UI labels.
         // Initialize
         this.reset();
+    }
+
+    sync() {
+        if (this.getCurrentState() === 'playing') {
+            this._renderer.setPlay();
+        } else {
+            this._renderer.setPause();
+        }
     }
 
     getCurrentState() {
