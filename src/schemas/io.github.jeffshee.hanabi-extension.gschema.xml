@@ -135,5 +135,12 @@
             <description>Show the panel menu for the extension</description>
         </key>
 
+        <key name="media-keys-enabled" type="b">
+            <default>true</default>
+            <summary>Enable Media Keys</summary>
+            <description>Use Play/Pause, Next, and Previous media keys to control the
+                wallpaper when no media player is currently playing</description>
+        </key>
+
     </schema>
 </schemalist>

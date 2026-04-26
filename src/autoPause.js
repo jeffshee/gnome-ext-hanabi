@@ -403,11 +403,19 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
 
             this._dbus = new DBus.DBusWrapper();
             this._mediaPlayers = {}; // {$mprisName: {playbackStatus, mpris, mprisPropertiesChangedId}, ...}
+            // Our own MPRIS bus name registered by mediaKeys.js. We MUST NOT
+            // monitor ourselves here, otherwise PauseOnMpris would react to
+            // Hanabi's own play/pause state and create a feedback loop
+            // (Hanabi reports Playing -> autoPause pauses Hanabi -> Hanabi
+            //  reports Paused -> autoPause unpauses -> ...).
+            this._ownMprisName = 'org.mpris.MediaPlayer2.hanabi';
         }
 
         enable() {
             let mprisNames = this._queryMprisNames();
             mprisNames.forEach(mprisName => {
+                if (mprisName === this._ownMprisName)
+                    return;
                 this._logger.debug('Media Player found:', mprisName);
                 let mpris = new DBus.MprisWrapper(mprisName);
                 let playbackStatus = mpris.getPlaybackStatus();
@@ -422,7 +430,11 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
             this._dbus.proxy.connectSignal('NameOwnerChanged', (_proxy, _sender, [name, oldOwner, newOwner]) => {
                 if (name.startsWith('org.mpris.MediaPlayer2.')) {
                     let mprisName = name;
+                    if (mprisName === this._ownMprisName)
+                        return;
                     if (oldOwner === '') {
+                        if (this._mediaPlayers[mprisName])
+                            return;
                         this._logger.debug('Media Player created:', mprisName);
                         let mpris = new DBus.MprisWrapper(mprisName);
                         let playbackStatus = mpris.getPlaybackStatus();
@@ -432,6 +444,8 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
                             playbackStatus, mpris, mprisPropertiesChangedId,
                         };
                     } else if (newOwner === '') {
+                        if (!this._mediaPlayers[mprisName])
+                            return;
                         this._logger.debug('Media Player destroyed:', mprisName);
                         let mpris = this._mediaPlayers[mprisName].mpris;
                         let mprisPropertiesChangedId = this._mediaPlayers[mprisName].mprisPropertiesChangedId;
