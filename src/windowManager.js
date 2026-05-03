@@ -148,7 +148,7 @@ class ManagedWindow {
 
 export class WindowManager {
     constructor() {
-        this._isX11 = !Meta.is_wayland_compositor();
+        this._isX11 = GLib.getenv('XDG_SESSION_TYPE') === 'x11';
         this._windows = new Set();
         this._waylandClient = null;
     }
