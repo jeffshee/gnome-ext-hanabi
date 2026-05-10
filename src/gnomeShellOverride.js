@@ -20,6 +20,7 @@
 import Meta from 'gi://Meta';
 import St from 'gi://St';
 import Shell from 'gi://Shell';
+import GLib from 'gi://GLib';
 
 import {InjectionManager, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Background from 'resource:///org/gnome/shell/ui/background.js';
@@ -48,30 +49,48 @@ export class GnomeShellOverride {
         this._wallpaperActors.forEach(actor => actor.destroy());
         this._wallpaperActors.clear();
 
-        Main.layoutManager._updateBackgrounds();
-        // `Main.screenShield` is null if the user doesn't use Gnome Shell locking.
-        if (Main.screenShield?._dialog?._updateBackgrounds != null)
-            Main.screenShield._dialog._updateBackgrounds();
+        const laters = this._getLaters();
+        if (laters) {
+            laters.add(Meta.LaterType.BEFORE_REDRAW, () => {
+                Main.layoutManager._updateBackgrounds();
+                // `Main.screenShield` is null if the user doesn't use Gnome Shell locking.
+                if (Main.screenShield?._dialog?._updateBackgrounds != null)
+                    Main.screenShield._dialog._updateBackgrounds();
 
-        /**
-         * WorkspaceBackground has its own bgManager,
-         * we have to recreate it to use our actors, so it can set radius to our actor.
-         */
-        try {
-            Main.overview._overview._controls._workspacesDisplay._updateWorkspacesViews();
-        } catch (e) {
-            // Suppress errors from extension conflicts (e.g. DING) during background reload
+                /**
+                 * WorkspaceBackground has its own bgManager,
+                 * we have to recreate it to use our actors, so it can set radius to our actor.
+                 */
+                try {
+                    Main.overview._overview._controls._workspacesDisplay._updateWorkspacesViews();
+                } catch (e) {
+                    // Suppress errors from extension conflicts (e.g. DING) during background reload
+                }
+                return GLib.SOURCE_REMOVE;
+            });
         }
 
         /**
-         *  Blur My Shell
+         *  Blur My Shell & Dash to Dock refresh
+         *  We defer these slightly to ensure Hanabi's backgrounds are allocated
+         *  before other extensions try to blur or react to the change.
          */
-        if (Main.extensionManager._enabledExtensions.includes('blur-my-shell@aunetx')) {
-            // This will trigger the `update_backgrounds` method of overview, sceenshot and coverflow alt tab.
-            Main.layoutManager.emit('monitors-changed');
-            // This will trigger the `reset` method of panel.
+        GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
+            if (Main.extensionManager._enabledExtensions.includes('blur-my-shell@aunetx')) {
+                Main.layoutManager.emit('monitors-changed');
+            }
+            // Trigger a refresh of the panel and other UI elements
             global.display.emit('workareas-changed');
-        }
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
+    _getLaters() {
+        if (global.compositor?.get_laters)
+            return global.compositor.get_laters();
+        if (Meta.Laters?.get)
+            return Meta.Laters.get();
+        return null;
     }
 
     enable() {
@@ -91,6 +110,9 @@ export class GnomeShellOverride {
 
                     this.videoActor.connect('destroy', actor => {
                         thisRef._wallpaperActors.delete(actor);
+                        if (this.videoActor === actor) {
+                            this.videoActor = null;
+                        }
                     });
 
                     return backgroundActor;
@@ -125,12 +147,11 @@ export class GnomeShellOverride {
         // Call `global.get_window_actors(false)` explicitly to bypass the override.
         this._injectionManager.overrideMethod(Shell.Global.prototype, 'get_window_actors',
             originalMethod => {
-                // TODO: pass originalMethod to wallpaper instead
                 return function (hideRenderer = true) {
                     let windowActors = originalMethod.call(this);
                     let result = hideRenderer
                         ? windowActors.filter(
-                            window => !window.meta_window.title?.includes(applicationId)
+                            actor => !actor.meta_window.title?.includes(applicationId)
                         )
                         : windowActors;
                     return result;
@@ -225,15 +246,11 @@ export class GnomeShellOverride {
             }
         );
 
-        if (!Main.sessionMode.isLocked) {
-            this._reloadBackgrounds();
-        }
+        this._reloadBackgrounds();
     }
 
     disable() {
         this._injectionManager.clear();
-        if (!Main.sessionMode.isLocked) {
-            this._reloadBackgrounds();
-        }
+        this._reloadBackgrounds();
     }
 }

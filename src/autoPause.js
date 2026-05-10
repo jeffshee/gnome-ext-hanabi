@@ -140,7 +140,7 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
 
         _windowAdded(metaWindow, doUpdate = true) {
             // Not need to track renderer window or skip taskbar window
-            if (metaWindow.title?.includes(applicationId) | metaWindow.skip_taskbar)
+            if (metaWindow.title?.includes(applicationId) || metaWindow.skip_taskbar)
                 return;
 
             let signals = [];
@@ -177,7 +177,7 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
         }
 
         _windowRemoved(metaWindow) {
-            if (metaWindow.title?.includes(applicationId) | metaWindow.skip_taskbar)
+            if (metaWindow.title?.includes(applicationId) || metaWindow.skip_taskbar)
                 return;
 
             this._windows = this._windows.filter(window => {

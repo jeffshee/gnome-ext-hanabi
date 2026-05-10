@@ -35,6 +35,11 @@ export class HanabiPanelMenu {
         this._playbackState = extension.getPlaybackState();
         this._isPlaying = false;
         this._renderer = new DBus.RendererWrapper();
+
+        // Signal/subscription IDs tracked for cleanup in disable()
+        this._isPlayingChangedSubId = null;
+        this._muteChangedId = null;
+        this._changeWallpaperChangedId = null;
     }
 
     enable() {
@@ -77,7 +82,7 @@ export class HanabiPanelMenu {
                 this._playbackState.userPlay();
         });
 
-        this._renderer.proxy.connectSignal(
+        this._isPlayingChangedSubId = this._renderer.proxy.connectSignal(
             'isPlayingChanged',
             (_proxy, _sender, [isPlaying]) => {
                 this._isPlaying = isPlaying;
@@ -98,7 +103,7 @@ export class HanabiPanelMenu {
             this._setMute(!this._getMute());
         });
 
-        this._settings.connect('changed::mute', () => {
+        this._muteChangedId = this._settings.connect('changed::mute', () => {
             muteAudio.label.set_text(
                 this._getMute() ? _('Unmute Audio') : _('Mute Audio')
             );
@@ -114,7 +119,7 @@ export class HanabiPanelMenu {
         if (!this._getChangeWallpaper())
             nextWallpaperMenuItem.hide();
 
-        this._settings.connect('changed::change-wallpaper', () => {
+        this._changeWallpaperChangedId = this._settings.connect('changed::change-wallpaper', () => {
             if (this._getChangeWallpaper())
                 nextWallpaperMenuItem.show();
             else
@@ -180,6 +185,22 @@ export class HanabiPanelMenu {
     disable() {
         if (!this.isEnabled)
             return;
+
+        // Disconnect the D-Bus proxy signal subscription
+        if (this._isPlayingChangedSubId !== null) {
+            this._renderer.proxy.disconnectSignal(this._isPlayingChangedSubId);
+            this._isPlayingChangedSubId = null;
+        }
+
+        // Disconnect GSettings signal handlers
+        if (this._muteChangedId !== null) {
+            this._settings.disconnect(this._muteChangedId);
+            this._muteChangedId = null;
+        }
+        if (this._changeWallpaperChangedId !== null) {
+            this._settings.disconnect(this._changeWallpaperChangedId);
+            this._changeWallpaperChangedId = null;
+        }
 
         this.indicator.destroy();
         this.isEnabled = false;

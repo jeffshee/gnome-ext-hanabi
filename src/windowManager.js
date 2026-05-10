@@ -45,8 +45,11 @@ class ManagedWindow {
             keepPosition: false,
         };
 
+        this._isDisposed = false;
+
         this._signals.push(
             window.connect('notify::title', () => {
+                if (this._isDisposed) return;
                 this._parseTitle();
             })
         );
@@ -54,6 +57,7 @@ class ManagedWindow {
         this._signals.push(
             // TODO: `connect` or `connect_after`?
             window.connect_after('shown', () => {
+                if (this._isDisposed) return;
                 if (this._states.keepMinimized)
                     this._window.minimize();
             })
@@ -62,6 +66,7 @@ class ManagedWindow {
         this._signals.push(
             // TODO: `connect` or `connect_after`?
             window.connect_after('raised', () => {
+                if (this._isDisposed) return;
                 if (this._states.keepAtBottom)
                     this._window.lower();
             })
@@ -69,6 +74,7 @@ class ManagedWindow {
 
         this._signals.push(
             window.connect('notify::above', () => {
+                if (this._isDisposed) return;
                 if (this._states.keepAtBottom && this._window.above)
                     this._window.unmake_above();
             })
@@ -76,6 +82,7 @@ class ManagedWindow {
 
         this._signals.push(
             window.connect('notify::minimized', () => {
+                if (this._isDisposed) return;
                 if (this._states.keepMinimized && !this._window.minimized)
                     this._window.minimize();
             })
@@ -83,6 +90,7 @@ class ManagedWindow {
 
         this._signals.push(
             window.connect('position-changed', () => {
+                if (this._isDisposed) return;
                 if (this._states.keepPosition) {
                     const [x, y] = this._states.position;
                     this._window.move_frame(true, x, y);
@@ -135,6 +143,8 @@ class ManagedWindow {
     }
 
     disconnect() {
+        this._isDisposed = true;
+
         if (this._notifyPositionId)
             GLib.source_remove(this._notifyPositionId);
 
@@ -148,10 +158,14 @@ class ManagedWindow {
 
 export class WindowManager {
     constructor() {
-        if (shellVersion < 50)
+        // Feature detection: Use Meta.is_wayland_compositor if available (GNOME < 50)
+        // On GNOME 50+, the function was removed and X11 support was dropped
+        if (shellVersion < 50) {
             this._isX11 = !Meta.is_wayland_compositor();
-        else
-            this._isX11 = false
+        } else {
+            // GNOME 50+: X11 backend removed, assume Wayland
+            this._isX11 = false;
+        }
         this._windows = new Set();
         this._waylandClient = null;
     }

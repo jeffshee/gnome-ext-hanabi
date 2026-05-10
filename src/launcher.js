@@ -36,10 +36,14 @@ const shellVersion = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
 export class LaunchSubprocess {
     constructor(flags = Gio.SubprocessFlags.NONE) {
-        if (shellVersion < 50)
+        // Feature detection: Use Meta.is_wayland_compositor if available (GNOME < 50)
+        // On GNOME 50+, the function was removed and X11 support was dropped
+        if (shellVersion < 50) {
             this._isX11 = !Meta.is_wayland_compositor();
-        else
-            this._isX11 = false
+        } else {
+            // GNOME 50+: X11 backend removed, assume Wayland
+            this._isX11 = false;
+        }
 
         this._flags =
             flags |
