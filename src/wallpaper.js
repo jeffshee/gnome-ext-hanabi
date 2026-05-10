@@ -116,36 +116,24 @@ export const LiveWallpaper = GObject.registerClass(
 
         setPixelStep(width, height) {
             if (this._isDisposed) return;
-            try {
-                this._roundedCornersEffect.setPixelStep([
-                    1.0 / (width * this._monitorScale),
-                    1.0 / (height * this._monitorScale),
-                ]);
-            } catch (e) {
-                // Ignore if disposed
-            }
+            this._roundedCornersEffect.setPixelStep([
+                1.0 / (width * this._monitorScale),
+                1.0 / (height * this._monitorScale),
+            ]);
         }
 
         setRoundedClipRadius(radius) {
             if (this._isDisposed) return;
-            try {
-                this._roundedCornersEffect.setClipRadius(
-                    radius * this._monitorScale
-                );
-            } catch (e) {
-                // Ignore if disposed
-            }
+            this._roundedCornersEffect.setClipRadius(
+                radius * this._monitorScale
+            );
         }
 
         setRoundedClipBounds(x1, y1, x2, y2) {
             if (this._isDisposed) return;
-            try {
-                this._roundedCornersEffect.setBounds(
-                    [x1, y1, x2, y2].map(e => e * this._monitorScale)
-                );
-            } catch (e) {
-                // Ignore if disposed
-            }
+            this._roundedCornersEffect.setBounds(
+                [x1, y1, x2, y2].map(e => e * this._monitorScale)
+            );
         }
 
         _applyWallpaper() {

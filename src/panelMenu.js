@@ -40,7 +40,6 @@ export class HanabiPanelMenu {
         this._isPlayingChangedSubId = null;
         this._muteChangedId = null;
         this._changeWallpaperChangedId = null;
-        this._isDestroyed = false;
     }
 
     enable() {
@@ -86,8 +85,6 @@ export class HanabiPanelMenu {
         this._isPlayingChangedSubId = this._renderer.proxy.connectSignal(
             'isPlayingChanged',
             (_proxy, _sender, [isPlaying]) => {
-                if (this._isDestroyed)
-                    return;
                 this._isPlaying = isPlaying;
                 playPause.label.set_text(
                     this._isPlaying ? _('Pause') : _('Play')
@@ -107,8 +104,6 @@ export class HanabiPanelMenu {
         });
 
         this._muteChangedId = this._settings.connect('changed::mute', () => {
-            if (this._isDestroyed)
-                return;
             muteAudio.label.set_text(
                 this._getMute() ? _('Unmute Audio') : _('Mute Audio')
             );
@@ -125,8 +120,6 @@ export class HanabiPanelMenu {
             nextWallpaperMenuItem.hide();
 
         this._changeWallpaperChangedId = this._settings.connect('changed::change-wallpaper', () => {
-            if (this._isDestroyed)
-                return;
             if (this._getChangeWallpaper())
                 nextWallpaperMenuItem.show();
             else
@@ -192,8 +185,6 @@ export class HanabiPanelMenu {
     disable() {
         if (!this.isEnabled)
             return;
-
-        this._isDestroyed = true;
 
         // Disconnect the D-Bus proxy signal subscription
         if (this._isPlayingChangedSubId !== null) {

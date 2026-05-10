@@ -82,7 +82,7 @@ const fragmentShaderCode = [
     'cogl_color_out *= rounded_rect_coverage (texture_coord);                 \n',
 ].join('');
 
-const FragmentHook = Shell?.SnippetHook?.FRAGMENT ?? Cogl.SnippetHook.FRAGMENT;
+const FragmentHook = Shell.SnippetHook?.FRAGMENT ?? Cogl.SnippetHook.FRAGMENT;
 
 // A naive pipeline that just updates uniforms.
 export const RoundedCornersEffect = GObject.registerClass(

@@ -151,15 +151,7 @@ export class GnomeShellOverride {
                     let windowActors = originalMethod.call(this);
                     let result = hideRenderer
                         ? windowActors.filter(
-                            actor => {
-                                try {
-                                    const window = actor.meta_window || (typeof actor.get_meta_window === 'function' ? actor.get_meta_window() : null);
-                                    if (!window) return true;
-                                    return !window.title?.includes(applicationId);
-                                } catch (e) {
-                                    return true;
-                                }
-                            }
+                            actor => !actor.meta_window.title?.includes(applicationId)
                         )
                         : windowActors;
                     return result;
@@ -171,7 +163,6 @@ export class GnomeShellOverride {
         this._injectionManager.overrideMethod(Workspace.Workspace.prototype, '_isOverviewWindow',
             originalMethod => {
                 return function (window) {
-                    if (!window) return originalMethod.apply(this, [window]);
                     let isRenderer = window.title?.includes(applicationId);
                     return isRenderer
                         ? false
@@ -183,7 +174,6 @@ export class GnomeShellOverride {
         this._injectionManager.overrideMethod(WorkspaceThumbnail.WorkspaceThumbnail.prototype, '_isOverviewWindow',
             originalMethod => {
                 return function (window) {
-                    if (!window) return originalMethod.apply(this, [window]);
                     let isRenderer = window.title?.includes(applicationId);
                     return isRenderer
                         ? false
@@ -201,10 +191,7 @@ export class GnomeShellOverride {
                         workspace,
                     ]);
                     let result = metaWindows.filter(
-                        metaWindow => {
-                            if (!metaWindow) return true;
-                            return !metaWindow.title?.includes(applicationId);
-                        }
+                        metaWindow => !metaWindow.title?.includes(applicationId)
                     );
                     return result;
                 };
