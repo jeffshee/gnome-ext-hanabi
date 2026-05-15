@@ -141,6 +141,7 @@ export default class HanabiExtension extends Extension {
         this._autoPauseDelayId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 5000, () => {
             this._autoPauseDelayId = null;
             this.playbackState.suppressMismatch = false;
+
             if (this.isEnabled)
                 this.autoPause.enable();
 

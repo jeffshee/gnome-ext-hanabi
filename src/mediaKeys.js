@@ -104,6 +104,8 @@ export class MediaKeys {
         this._dirMonitor = null;
         this._dirMonitorChangedId = 0;
         this._refreshTimeoutId = 0;
+        this._refreshToken = 0;
+        this._refreshEnumerator = null;
         this._dirChangedSettingsId = 0;
     }
 
@@ -137,7 +139,15 @@ export class MediaKeys {
             'changed::change-wallpaper-directory-path',
             () => this._scheduleRefresh()
         );
-        this._scheduleRefresh();
+        // Defer initial directory scan to avoid blocking startup
+        // Use low priority idle to ensure this happens after other startup tasks
+        if (!this._refreshTimeoutId) {
+            this._refreshTimeoutId = GLib.idle_add(GLib.PRIORITY_LOW, () => {
+                this._refreshTimeoutId = 0;
+                this._scheduleRefresh();
+                return GLib.SOURCE_REMOVE;
+            });
+        }
     }
 
     disable() {
@@ -149,6 +159,7 @@ export class MediaKeys {
             this._settings.disconnect(this._dirChangedSettingsId);
             this._dirChangedSettingsId = 0;
         }
+        this._cancelRefresh();
         this._teardownDirMonitor();
         if (this._refreshTimeoutId) {
             GLib.source_remove(this._refreshTimeoutId);
@@ -384,8 +395,98 @@ export class MediaKeys {
     _refreshVideoPaths() {
         const dirPath = this._settings.get_string('change-wallpaper-directory-path');
         this._videoPathsCacheDir = dirPath;
-        this._videoPathsCache = this._enumerateVideoPaths(dirPath);
-        this._setupDirMonitor(dirPath);
+        this._videoPathsCache = [];
+        this._cancelRefreshEnumerator();
+
+        if (!dirPath) {
+            this._teardownDirMonitor();
+            return;
+        }
+
+        const token = ++this._refreshToken;
+        const dir = Gio.File.new_for_path(dirPath);
+
+        // Avoid blocking the main thread on large or slow directories.
+        dir.query_info_async(
+            'standard::type',
+            Gio.FileQueryInfoFlags.NONE,
+            GLib.PRIORITY_LOW,
+            null,
+            (_file, res) => {
+                if (!this._enabled || token !== this._refreshToken)
+                    return;
+
+                let info;
+                try {
+                    info = dir.query_info_finish(res);
+                } catch (e) {
+                    return;
+                }
+
+                if (info.get_file_type() !== Gio.FileType.DIRECTORY)
+                    return;
+
+                dir.enumerate_children_async(
+                    'standard::name,standard::content-type',
+                    Gio.FileQueryInfoFlags.NONE,
+                    GLib.PRIORITY_LOW,
+                    null,
+                    (_dirFile, enumRes) => {
+                        if (!this._enabled || token !== this._refreshToken)
+                            return;
+
+                        let enumerator;
+                        try {
+                            enumerator = dir.enumerate_children_finish(enumRes);
+                        } catch (e) {
+                            return;
+                        }
+
+                        this._refreshEnumerator = enumerator;
+                        const paths = [];
+
+                        const readNext = () => {
+                            enumerator.next_files_async(
+                                200,
+                                GLib.PRIORITY_LOW,
+                                null,
+                                (_enumObj, nextRes) => {
+                                    if (!this._enabled || token !== this._refreshToken) {
+                                        this._cancelRefreshEnumerator();
+                                        return;
+                                    }
+
+                                    let infos;
+                                    try {
+                                        infos = enumerator.next_files_finish(nextRes);
+                                    } catch (e) {
+                                        this._cancelRefreshEnumerator();
+                                        return;
+                                    }
+
+                                    if (!infos || infos.length === 0) {
+                                        this._cancelRefreshEnumerator();
+                                        this._videoPathsCache = paths.sort();
+                                        this._setupDirMonitor(dirPath);
+                                        return;
+                                    }
+
+                                    for (const child of infos) {
+                                        const ct = child.get_content_type();
+                                        if (ct && ct.startsWith('video/'))
+                                            paths.push(dir.get_child(child.get_name()).get_path());
+                                    }
+
+                                    readNext();
+                                }
+                            );
+                        };
+
+                        readNext();
+                    }
+                );
+            }
+        );
     }
 
     _setupDirMonitor(dirPath) {
@@ -421,48 +522,6 @@ export class MediaKeys {
         }
     }
 
-    _enumerateVideoPaths(dirPath) {
-        if (!dirPath)
-            return [];
-        const dir = Gio.File.new_for_path(dirPath);
-        let info;
-        try {
-            info = dir.query_info(
-                'standard::type',
-                Gio.FileQueryInfoFlags.NONE,
-                null
-            );
-        } catch (e) {
-            return [];
-        }
-        if (info.get_file_type() !== Gio.FileType.DIRECTORY)
-            return [];
-
-        let enumerator;
-        try {
-            enumerator = dir.enumerate_children(
-                'standard::name,standard::content-type',
-                Gio.FileQueryInfoFlags.NONE,
-                null
-            );
-        } catch (e) {
-            return [];
-        }
-        const paths = [];
-        let child;
-        while ((child = enumerator.next_file(null))) {
-            const ct = child.get_content_type();
-            if (ct && ct.startsWith('video/'))
-                paths.push(dir.get_child(child.get_name()).get_path());
-        }
-        try {
-            enumerator.close(null);
-        } catch (e) {
-            // ignore
-        }
-        return paths.sort();
-    }
-
     _getVideoPaths() {
         // Prefer cached list. If the directory setting changed since the
         // cache was populated, fall back to a direct enumeration once and
@@ -471,10 +530,24 @@ export class MediaKeys {
         const dirPath = this._settings.get_string('change-wallpaper-directory-path');
         if (this._videoPathsCache && dirPath === this._videoPathsCacheDir)
             return this._videoPathsCache;
-        const paths = this._enumerateVideoPaths(dirPath);
-        this._videoPathsCache = paths;
-        this._videoPathsCacheDir = dirPath;
-        return paths;
+        this._scheduleRefresh();
+        return [];
+    }
+
+    _cancelRefreshEnumerator() {
+        if (this._refreshEnumerator) {
+            try {
+                this._refreshEnumerator.close(null);
+            } catch (e) {
+                // ignore
+            }
+        }
+        this._refreshEnumerator = null;
+    }
+
+    _cancelRefresh() {
+        this._refreshToken += 1;
+        this._cancelRefreshEnumerator();
     }
 
     _setNextWallpaper() {

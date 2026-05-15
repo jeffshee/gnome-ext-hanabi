@@ -4,7 +4,7 @@
   "name": "Hanabi Extension",
   "settings-schema": "@settings_schema@",
   "shell-version": [
-    "45", "46", "47", "48", "49", "50"
+    "45", "46", "47", "48", "49", "50", "50.1"
   ],
   "wayland-compatible": true,
   "url": "https://github.com/jeffshee/gnome-ext-hanabi",

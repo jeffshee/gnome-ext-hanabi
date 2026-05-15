@@ -480,6 +480,9 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
              * @param properties
              */
             function _mprisPropertiesChanged(_proxy, properties) {
+                // Guard against signals arriving after media player removal
+                if (!thisRef._mediaPlayers[mprisName])
+                    return;
                 let payload = properties.deep_unpack();
                 if (!payload.hasOwnProperty('PlaybackStatus'))
                     return;
