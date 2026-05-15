@@ -148,7 +148,10 @@ class ManagedWindow {
 
 export class WindowManager {
     constructor() {
-        this._isX11 = !Meta.is_wayland_compositor();
+        if (shellVersion < 50)
+            this._isX11 = !Meta.is_wayland_compositor();
+        else
+            this._isX11 = false
         this._windows = new Set();
         this._waylandClient = null;
     }

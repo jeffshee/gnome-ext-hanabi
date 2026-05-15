@@ -68,6 +68,7 @@ export class GnomeShellOverride {
         try {
             Main.overview._overview._controls._workspacesDisplay._updateWorkspacesViews();
         } catch (e) {
+            // Suppress errors from extension conflicts (e.g. DING) during background reload
             logger.warn(`Failed to update workspace views: ${e}`);
         }
 
@@ -124,7 +125,7 @@ export class GnomeShellOverride {
                     const cornerRadius = scaleFactor * BACKGROUND_CORNER_RADIUS_PIXELS;
 
                     const radius = Util.lerp(0, cornerRadius, this._stateAdjustment.value);
-                    this._bgManager.videoActor.setRoundedClipRadius(radius);
+                    this._bgManager.videoActor?.setRoundedClipRadius(radius);
                 };
             }
         );
@@ -242,11 +243,15 @@ export class GnomeShellOverride {
             }
         );
 
-        this._reloadBackgrounds();
+        if (!Main.sessionMode.isLocked) {
+            this._reloadBackgrounds();
+        }
     }
 
     disable() {
         this._injectionManager.clear();
-        this._reloadBackgrounds();
+        if (!Main.sessionMode.isLocked) {
+            this._reloadBackgrounds();
+        }
     }
 }

@@ -36,7 +36,10 @@ const shellVersion = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
 export class LaunchSubprocess {
     constructor(flags = Gio.SubprocessFlags.NONE) {
-        this._isX11 = !Meta.is_wayland_compositor();
+        if (shellVersion < 50)
+            this._isX11 = !Meta.is_wayland_compositor();
+        else
+            this._isX11 = false
 
         this._flags =
             flags |
