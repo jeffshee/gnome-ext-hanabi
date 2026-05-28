@@ -1,15 +1,15 @@
 # Gnome Shell Extension - Hanabi
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
-# Athanasios Nektarios Karachalios Stagkas <nasos.karachalios.stagkas@proton.me>, 2024.
+# Athanasios Nektarios Karachalios Stagkas <nasos.karachalios.stagkas@proton.me>, 2024, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2024-07-29 15:09+0000\n"
-"Last-Translator: Athanasios Nektarios Karachalios Stagkas <nasos.karachalios."
-"stagkas@proton.me>\n"
+"PO-Revision-Date: 2026-05-29 13:01+0000\n"
+"Last-Translator: Athanasios Nektarios Karachalios Stagkas "
+"<nasos.karachalios.stagkas@proton.me>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/el/>\n"
 "Language: el\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.7-dev\n"
+"X-Generator: Weblate 2026.6.dev0\n"
 
 #: src/panelMenu.js:70 src/panelMenu.js:85
 msgid "Pause"
@@ -83,11 +83,11 @@ msgstr "Αλλαγή Ταπετσαρίας"
 
 #: src/prefs.js:72
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "Αλλαγή Ταπετσαρίας Αυτόματα"
 
 #: src/prefs.js:75
 msgid "Change Wallpaper Interval (minutes)"
-msgstr ""
+msgstr "Ρυθμός Αλλαγής Ταπετσαρίας ( Λεπτά)"
 
 #: src/prefs.js:81
 msgid "Experimental"
@@ -166,7 +166,7 @@ msgstr "Άνοιγμα Aρχείου"
 
 #: src/prefs.js:237 src/prefs.js:293
 msgid "Cancel"
-msgstr ""
+msgstr "Ακύρωση"
 
 #: src/prefs.js:238 src/prefs.js:254 src/prefs.js:294 src/prefs.js:309
 msgid "Open"
@@ -174,7 +174,7 @@ msgstr "Άνοιγμα"
 
 #: src/prefs.js:273
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "Αλλαγή Θέσης Φακέλου Ταπετσαριών"
 
 #: src/prefs.js:288
 msgid "Select Directory"
@@ -216,7 +216,7 @@ msgstr "Γέμισμα"
 
 #: src/prefs.js:339
 msgid "Contain"
-msgstr ""
+msgstr "Περιέχει"
 
 #: src/prefs.js:340
 msgid "Cover"
@@ -250,6 +250,14 @@ msgid ""
 "fullscreen windows on all monitors.\n"
 "    "
 msgstr ""
+"\n"
+"    …. <b>Πότε </b>: Απενεργοποίηση Χαρακτηριστικου\n"
+"…. <b>Οποιαδήποτε Οθόνη</b>: Διακοπή αναπαραγωγής όταν υπάρχει παράθυρο "
+"μεγιστοποιημένο ή σε πλήρη οθόνη για οποιαδήποτε οθόνη\n"
+"…. <b>Όλες Οι Οθόνες</b>: Διακοπή αναπαραγωγής όταν υπάρχει παράθυρο "
+"μεγιστοποιημένο ή σε πλήρη οθόνη για ολλες της οθόνες\n"
+"….\n"
+"    "
 
 #: src/prefs.js:380 src/prefs.js:416
 msgid "Never"
@@ -282,6 +290,13 @@ msgid ""
 "    <b>Always</b>: Pause playback when the device is on battery.\n"
 "    "
 msgstr ""
+"\n"
+"    …. <b>Ποτέ</b>: Απενεργοποίηση Χαρακτηριστικού \n"
+"…. <b>Χαμηλή Mπαταρία</b>: Διακοπή αναπαραγωγής όταν η μπαταρία της συσκευής "
+"είναι χαμηλή (κάτω του ορίου).\n"
+"….<b>Πάντα</b>: Διακοπή αναπαραγωγής όταν η συσκευή λειτουργεί με μπαταρία.\n"
+"….\n"
+"    "
 
 #: src/prefs.js:417
 msgid "Low Battery"
@@ -308,6 +323,14 @@ msgid ""
 "    <b>Random:</b> Randomly select wallpapers from the directory.\n"
 "    "
 msgstr ""
+"\n"
+"    ….<b>Διαδοχικά:</b> Διατήρηση της σειράς των φακέλων (κατά φθίνουσα "
+"σειρά).\n"
+"….<b>Αντίστροφη Ακολουθία:</b> Ανάκτηση ταπετσαριών με αντίστροφη σειρά "
+"(αύξουσα σειρά).\n"
+"….<b>Τυχαία:</b> Τυχαία επιλογή ταπετσαριών από τον φάκελο.\n"
+"….\n"
+"    "
 
 #: src/prefs.js:452
 msgid "Sequential"
