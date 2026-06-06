@@ -20,7 +20,6 @@ import Gio from 'gi://Gio';
 import * as DBusUtil from 'resource://org/gnome/shell/misc/dbusUtils.js';
 import * as Logger from './logger.js';
 
-
 // Ref: https://gjs.guide/guides/gio/dbus.html#high-level-proxies
 export class RendererWrapper {
     constructor() {
@@ -71,7 +70,8 @@ export class UPowerWrapper {
     createProxy() {
         const DBUS_INTERFACE = 'org.freedesktop.UPower.Device';
         const DBUS_BUS_NAME = 'org.freedesktop.UPower';
-        const DBUS_OBJECT_PATH = '/org/freedesktop/UPower/devices/DisplayDevice';
+        const DBUS_OBJECT_PATH =
+            '/org/freedesktop/UPower/devices/DisplayDevice';
         const interfaceXml = DBusUtil.loadInterfaceXML(DBUS_INTERFACE);
         const DBusProxy = Gio.DBusProxy.makeProxyWrapper(interfaceXml);
         return DBusProxy(Gio.DBus.system, DBUS_BUS_NAME, DBUS_OBJECT_PATH);
@@ -85,7 +85,6 @@ export class UPowerWrapper {
         return this.proxy.Percentage;
     }
 }
-
 
 export class DBusWrapper {
     constructor() {

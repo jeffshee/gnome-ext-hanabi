@@ -49,7 +49,8 @@ class ManagedWindow {
 
         this._signals.push(
             window.connect('notify::title', () => {
-                if (this._isDisposed) return;
+                if (this._isDisposed)
+                    return;
                 this._parseTitle();
             })
         );
@@ -57,7 +58,8 @@ class ManagedWindow {
         this._signals.push(
             // TODO: `connect` or `connect_after`?
             window.connect_after('shown', () => {
-                if (this._isDisposed) return;
+                if (this._isDisposed)
+                    return;
                 if (this._states.keepMinimized)
                     this._window.minimize();
             })
@@ -66,7 +68,8 @@ class ManagedWindow {
         this._signals.push(
             // TODO: `connect` or `connect_after`?
             window.connect_after('raised', () => {
-                if (this._isDisposed) return;
+                if (this._isDisposed)
+                    return;
                 if (this._states.keepAtBottom)
                     this._window.lower();
             })
@@ -74,7 +77,8 @@ class ManagedWindow {
 
         this._signals.push(
             window.connect('notify::above', () => {
-                if (this._isDisposed) return;
+                if (this._isDisposed)
+                    return;
                 if (this._states.keepAtBottom && this._window.above)
                     this._window.unmake_above();
             })
@@ -82,7 +86,8 @@ class ManagedWindow {
 
         this._signals.push(
             window.connect('notify::minimized', () => {
-                if (this._isDisposed) return;
+                if (this._isDisposed)
+                    return;
                 if (this._states.keepMinimized && !this._window.minimized)
                     this._window.minimize();
             })
@@ -90,7 +95,8 @@ class ManagedWindow {
 
         this._signals.push(
             window.connect('position-changed', () => {
-                if (this._isDisposed) return;
+                if (this._isDisposed)
+                    return;
                 if (this._states.keepPosition) {
                     const [x, y] = this._states.position;
                     this._window.move_frame(true, x, y);
@@ -102,14 +108,21 @@ class ManagedWindow {
         // which sets the position x, y to (child_actor_width - surfaces_width)/2, (child_actor_height - surfaces_height)/2 when the window is minimized.
         // Ref: https://gitlab.gnome.org/GNOME/mutter/-/issues/3159
         if (shellVersion === 45) {
-            let windowActor = window.get_compositor_private();
-            let surfaceContainer = windowActor.get_children().find(
-                child => GObject.type_name(child) === 'MetaSurfaceContainerActorWayland'
-            );
+            const windowActor = window.get_compositor_private();
+            const surfaceContainer = windowActor
+                .get_children()
+                .find(
+                    child =>
+                        GObject.type_name(child) ===
+                        'MetaSurfaceContainerActorWayland'
+                );
             if (surfaceContainer) {
-                this._notifyPositionId = surfaceContainer.connect('notify::position', () => {
-                    surfaceContainer.set_position(0, 0);
-                });
+                this._notifyPositionId = surfaceContainer.connect(
+                    'notify::position',
+                    () => {
+                        surfaceContainer.set_position(0, 0);
+                    }
+                );
             }
         }
 
@@ -179,13 +192,16 @@ export class WindowManager {
             'map',
             (_wm, windowActor) => {
                 const window = windowActor.get_meta_window();
-                if (this._waylandClient && this._waylandClient.query_window_belongs_to(window))
+                if (
+                    this._waylandClient &&
+                    this._waylandClient.query_window_belongs_to(window)
+                )
                     this.addWindow(window);
 
                 if (this._isX11) {
-                    let appid = window.get_gtk_application_id();
-                    let windowpid = window.get_pid();
-                    let mypid = this._waylandClient.query_pid_of_program();
+                    const appid = window.get_gtk_application_id();
+                    const windowpid = window.get_pid();
+                    const mypid = this._waylandClient.query_pid_of_program();
                     if (appid === applicationId && windowpid === mypid)
                         this.addWindow(window);
                 }
@@ -211,13 +227,10 @@ export class WindowManager {
 
         window.managed = new ManagedWindow(window);
         this._windows.add(window);
-        window.managed._unmanagedId = window.connect(
-            'unmanaged',
-            _window => {
-                this._clearWindow(_window);
-                this._windows.delete(_window);
-            }
-        );
+        window.managed._unmanagedId = window.connect('unmanaged', _window => {
+            this._clearWindow(_window);
+            this._windows.delete(_window);
+        });
     }
 
     _clearWindow(window) {

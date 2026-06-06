@@ -28,7 +28,9 @@ export class Logger {
 
         this.logPrefix = logPrefix;
         this.logOpt = opt;
-        this.isDebugMode = this._settings ? this._settings.get_boolean('debug-mode') : false;
+        this.isDebugMode = this._settings
+            ? this._settings.get_boolean('debug-mode')
+            : false;
 
         this._settings?.connect('changed::debug-mode', () => {
             this.isDebugMode = this._settings.get_boolean('debug-mode');
@@ -36,7 +38,9 @@ export class Logger {
     }
 
     _processArgs(args) {
-        args.unshift(this.logOpt ? `${this.logPrefix} (${this.logOpt})` : this.logPrefix);
+        args.unshift(
+            this.logOpt ? `${this.logPrefix} (${this.logOpt})` : this.logPrefix
+        );
         return args;
     }
 
@@ -70,18 +74,19 @@ export class Logger {
     }
 }
 
-
 /**
  * List all methods of an object in JavaScript
  * Ref: https://flaviocopes.com/how-to-list-object-methods-javascript/
  *
- * @param obj
+ * @param {object} obj
  */
 export const getMethods = obj => {
-    let properties = new Set();
+    const properties = new Set();
     let currentObj = obj;
     do
         Object.getOwnPropertyNames(currentObj).map(item => properties.add(item));
     while ((currentObj = Object.getPrototypeOf(currentObj)));
-    return [...properties.keys()].filter(item => typeof obj[item] === 'function');
+    return [...properties.keys()].filter(
+        item => typeof obj[item] === 'function'
+    );
 };

@@ -1,0 +1,15 @@
+{
+  "name": "gnome-ext-hanabi-dev-scripts",
+  "version": "1.0.0",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "lint": "cd .. && ci-run-eslint"
+  },
+  "dependencies": {
+    "ci-run-eslint": "git+https://gitlab.gnome.org/World/javascript/ci-run-eslint.git#f94b653606476d151439793ab8a8a93aa4a146de",
+    "eslint-config-gnome": "git+https://gitlab.gnome.org/World/javascript/eslint-config-gnome.git#c479d059e8d9ea99c3b53c2ea43abf7fdb05eb55",
+    "eslint-formatter-junit": "^9.0.1"
+  }
+}

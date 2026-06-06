@@ -18,24 +18,24 @@
 import * as DBus from './dbus.js';
 import * as Logger from './logger.js';
 
-
 /**
  * Ref: https://kentcdodds.com/blog/implementing-a-simple-state-machine-library-in-javascript
  *
- * @param stateMachineDefinition
+ * @param {*} stateMachineDefinition
  */
 function createMachine(stateMachineDefinition) {
     const machine = {
         value: stateMachineDefinition.initialState,
         transition(currentState, event) {
             const currentStateDefinition = stateMachineDefinition[currentState];
-            const destinationTransition = currentStateDefinition.transitions[event];
+            const destinationTransition =
+                currentStateDefinition.transitions[event];
             if (!destinationTransition)
                 return null;
 
             const destinationState = destinationTransition.target;
             const destinationStateDefinition =
-          stateMachineDefinition[destinationState];
+                stateMachineDefinition[destinationState];
 
             destinationTransition.action();
             currentStateDefinition.actions.onExit();
