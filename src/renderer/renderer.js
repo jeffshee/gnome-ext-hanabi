@@ -82,8 +82,8 @@ const settingsSchemaSource = Gio.SettingsSchemaSource.get_default();
 if (settingsSchemaSource.lookup(extSchemaId, false))
     extSettings = Gio.Settings.new(extSchemaId);
 
-const forceGtk4PaintableSink = extSettings
-    ? extSettings.get_boolean('force-gtk4paintablesink')
+const preferClappersink = extSettings
+    ? extSettings.get_boolean('prefer-clappersink')
     : false;
 const forceMediaFile = extSettings
     ? extSettings.get_boolean('force-mediafile')
@@ -348,15 +348,15 @@ const HanabiRenderer = GObject.registerClass(
                 if (!widget) {
                     if (!forceMediaFile && haveGstPlay) {
                         let sink = null;
-                        if (!forceGtk4PaintableSink) {
-                            // Try to find "clappersink" for best performance
+                        if (preferClappersink) {
+                            // Try clappersink if explicitly preferred
                             sink = Gst.ElementFactory.make(
                                 'clappersink',
                                 'clappersink'
                             );
                         }
 
-                        // Try "gtk4paintablesink" from gstreamer-rs plugins as 2nd best choice
+                        // Default: use gtk4paintablesink
                         if (!sink) {
                             sink = Gst.ElementFactory.make(
                                 'gtk4paintablesink',

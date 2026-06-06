@@ -40,17 +40,17 @@ See also the section [Troubleshooting](#troubleshooting), for version-specific k
 1. Clone the repo
 
 - **For GNOME 45 and later**
-    ```
+    ```bash
     git clone https://github.com/jeffshee/gnome-ext-hanabi.git
     ```
 - **For GNOME 44 and earlier**
-    ```
+    ```bash
     git clone https://github.com/jeffshee/gnome-ext-hanabi.git -b legacy
     ```
 
 2. Run the installation script (Require `meson`)
 
-    ```
+    ```bash
     cd gnome-ext-hanabi
     make install
     ```
@@ -61,9 +61,7 @@ See also the section [Troubleshooting](#troubleshooting), for version-specific k
 
 ### Distro-specific Guides
 
-- [Installation Guide for Ubuntu/Pop!\_OS 22.04](docs/ubuntu-22-04.md)
-- [Installation Guide for Ubuntu 23.04](docs/ubuntu-23-04.md)
-- [Installation Guide for openSUSE Tumbleweed](docs/opensuse-tumbleweed.md)
+See [docs/distro/](docs/distro/) for distro-specific installation guides.
 
 ### Troubleshooting
 
@@ -88,48 +86,28 @@ See also the section [Troubleshooting](#troubleshooting), for version-specific k
 
 ### Optimization
 
-Hanabi extension can utilize `clappersink` from [Clapper](https://github.com/Rafostar/clapper) for the best performance if installed.
+Hanabi uses `gtk4paintablesink` (from GStreamer) as the default video sink, which offers good performance and broad compatibility.
 
-For this to work, Clapper must be installed **from the package manager and not from Flatpak/Snap**.
+Optionally, `clappersink` from [Clapper](https://github.com/Rafostar/clapper) can be used instead via **Preferences → Developer → Prefer clappersink**. Clapper must be installed **from the package manager and not from Flatpak/Snap** for this to work.
 
-<details>
-  <summary>Performance comparison</summary>
-
-- With `clappersink`
-  ![](https://user-images.githubusercontent.com/25530920/190872365-f1cefa30-6e11-40e4-bf99-1b79c3790d6b.png)
-
-- Without `clappersink` (Using `Gtk.MediaFile` as default fallback)
-  ![](https://user-images.githubusercontent.com/25530920/190872366-7fce5703-2310-4c68-81c7-f17a8a15019f.png)
-
-</details>
+> **Note:** There is a known compatibility issue with `clappersink` on native installs with GStreamer 1.26+ ([Rafostar/clapper#560](https://github.com/Rafostar/clapper/issues/560)). If you encounter crashes after enabling this option, please disable it.
 
 ## Advanced Customization
 
 For more advanced customization, learn how to write scripts for Hanabi extension!  
 Check out the [scripting guide](docs/scripting.md) for detailed instructions and examples.
 
-## Development
-
-Common development tasks are available via `make`:
-
-| Command | Description |
-|---|---|
-| `make install` | Build and install the extension |
-| `make enable` | Enable the extension |
-| `make disable` | Disable the extension |
-| `make lint` | Run ESLint |
-| `make log` | Follow the GNOME Shell log |
-| `make pot` | Regenerate the translation template |
-| `make merge-po` | Regenerate `.pot` and merge into all `.po` files |
-
-Run `make help` to see all available targets.
-
 ## Get Involved 🚀
 
-Contributors are welcome! Let's make Hanabi extension better together~  
-If you're interested in translating, you can help on [Hosted Weblate](https://hosted.weblate.org/projects/gnome-ext-hanabi/gnome-ext-hanabi/).
+Contributors are welcome! Let's make Hanabi extension better together~
 
-### Translation Status
+### Development
+
+See [docs/dev.md](docs/dev.md) for development instructions.
+
+### Translation
+
+If you're interested in translating, you can help on [Hosted Weblate](https://hosted.weblate.org/projects/gnome-ext-hanabi/gnome-ext-hanabi/).
 
 [![Translation status](https://hosted.weblate.org/widget/gnome-ext-hanabi/gnome-ext-hanabi/multi-auto.svg)](https://hosted.weblate.org/engage/gnome-ext-hanabi/)
 

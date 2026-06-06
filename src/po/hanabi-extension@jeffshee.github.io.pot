@@ -119,11 +119,11 @@ msgid "Print debug messages to log"
 msgstr ""
 
 #: src/prefs.js:163
-msgid "Force gtk4paintablesink"
+msgid "Prefer clappersink"
 msgstr ""
 
 #: src/prefs.js:165
-msgid "Force use of gtk4paintablesink for video playback"
+msgid "Prefer clappersink over gtk4paintablesink for video playback"
 msgstr ""
 
 #: src/prefs.js:170

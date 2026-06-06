@@ -160,9 +160,9 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
         prefsRowBoolean(
             window,
             developerGroup,
-            _('Force gtk4paintablesink'),
-            'force-gtk4paintablesink',
-            _('Force use of gtk4paintablesink for video playback')
+            _('Prefer clappersink'),
+            'prefer-clappersink',
+            _('Prefer clappersink over gtk4paintablesink for video playback')
         );
         prefsRowBoolean(
             window,
