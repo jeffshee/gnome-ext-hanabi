@@ -744,14 +744,14 @@ const HanabiRenderer = GObject.registerClass(
             if (!this._play || !randomStartPosition || !this._randomStartPending)
                 return;
 
-            let duration = this._play.get_duration();
+            const duration = this._play.get_duration();
             if (!duration || duration <= 0) {
                 this._randomStartPending = false;
                 return;
             }
 
-            let maxPosition = Math.max(duration - (Gst.SECOND || 1000000000), 0);
-            let position = Math.floor(Math.random() * (maxPosition + 1));
+            const maxPosition = Math.max(duration - (Gst.SECOND || 1000000000), 0);
+            const position = Math.floor(Math.random() * (maxPosition + 1));
             this._play.seek(position);
             this._randomStartPending = false;
         }
@@ -760,14 +760,14 @@ const HanabiRenderer = GObject.registerClass(
             if (!this._media || !randomStartPosition || !this._randomStartPending)
                 return;
 
-            let duration = this._media.get_duration();
+            const duration = this._media.get_duration();
             if (!duration || duration <= 0) {
                 this._randomStartPending = false;
                 return;
             }
 
-            let maxPosition = Math.max(duration - GLib.USEC_PER_SEC, 0);
-            let position = Math.floor(Math.random() * (maxPosition + 1));
+            const maxPosition = Math.max(duration - GLib.USEC_PER_SEC, 0);
+            const position = Math.floor(Math.random() * (maxPosition + 1));
             this._media.seek(position);
             this._randomStartPending = false;
         }

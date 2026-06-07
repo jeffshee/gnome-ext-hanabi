@@ -399,7 +399,7 @@ const PauseOnFocusModule = GObject.registerClass(
                 this._trackedWindow = null;
             }
 
-            let focusWindow = this._display?.focus_window;
+            const focusWindow = this._display?.focus_window;
             if (focusWindow) {
                 this._trackedWindow = focusWindow;
                 this._appearsFocusedId = focusWindow.connect('notify::appears-focused', () => {
@@ -410,7 +410,7 @@ const PauseOnFocusModule = GObject.registerClass(
         }
 
         _update() {
-            let focusWindow = this._display?.focus_window;
+            const focusWindow = this._display?.focus_window;
 
             this.states.windowFocused = focusWindow !== null &&
                 focusWindow.appears_focused &&

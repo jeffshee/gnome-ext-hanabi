@@ -155,5 +155,4 @@ export class LaunchSubprocess {
         const pid = this.subprocess.get_identifier();
         return pid ? parseInt(pid) : 0;
     }
-
 }
