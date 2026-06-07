@@ -120,6 +120,25 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
         );
 
         /**
+         * Overview
+         */
+        const overviewGroup = new Adw.PreferencesGroup({
+            title: _('Overview'),
+        });
+        page.add(overviewGroup);
+        prefsRowInt(
+            window,
+            overviewGroup,
+            _('Corner Radius'),
+            'corner-radius',
+            _('Rounded corner radius in pixels for workspace background in the overview'),
+            0,
+            100,
+            1,
+            5
+        );
+
+        /**
          * Experimental
          */
         const experimentalGroup = new Adw.PreferencesGroup({
@@ -193,6 +212,18 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
             100,
             500
         );
+        prefsRowInt(
+            window,
+            developerGroup,
+            _('Border Stroke'),
+            'border-stroke',
+            _('Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)'),
+            0,
+            20,
+            1,
+            1
+        );
+        prefsRowBoundsInset(window, developerGroup);
 
         // Add our page to the window
         window.add(page);
@@ -488,4 +519,32 @@ function prefsRowChangeWallpaperMode(window, prefsGroup) {
     row.connect('notify::selected', () => {
         settings.set_int('change-wallpaper-mode', row.selected);
     });
+}
+
+function prefsRowBoundsInset(window, prefsGroup) {
+    const settings = window._settings;
+    const expander = new Adw.ExpanderRow({
+        title: _('Bounds Inset'),
+        subtitle: _('Adjust edges of the overview rounded-rect bounds (positive = shrink inward)'),
+    });
+    prefsGroup.add(expander);
+
+    for (const [title, key] of [
+        [_('Left'),   'bounds-inset-x1'],
+        [_('Top'),    'bounds-inset-y1'],
+        [_('Right'),  'bounds-inset-x2'],
+        [_('Bottom'), 'bounds-inset-y2'],
+    ]) {
+        const child = new Adw.ActionRow({title});
+        const adjustment = new Gtk.Adjustment({
+            lower: -200,
+            upper: 200,
+            step_increment: 1,
+            page_increment: 10,
+            value: settings.get_int(key),
+        });
+        adjustment.connect('value-changed', () => settings.set_int(key, adjustment.value));
+        child.add_suffix(new Gtk.SpinButton({adjustment, valign: Gtk.Align.CENTER}));
+        expander.add_row(child);
+    }
 }

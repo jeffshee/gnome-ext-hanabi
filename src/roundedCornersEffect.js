@@ -30,6 +30,8 @@ const fragmentShaderDeclarations = [
     'uniform vec4 bounds;           // x, y: top left; z, w: bottom right     \n',
     'uniform float clip_radius;                                               \n',
     'uniform vec2 pixel_step;                                                 \n',
+    'uniform float border_stroke;                                             \n',
+    'uniform vec4 border_color;                                               \n',
     '                                                                         \n',
     'float                                                                    \n',
     'rounded_rect_coverage (vec2 p)                                           \n',
@@ -79,7 +81,22 @@ const fragmentShaderCode = [
     '                                                                         \n',
     'texture_coord = cogl_tex_coord0_in.xy / pixel_step;                      \n',
     '                                                                         \n',
-    'cogl_color_out *= rounded_rect_coverage (texture_coord);                 \n',
+    'bool inside = texture_coord.x >= bounds.x && texture_coord.x <= bounds.z \n',
+    '           && texture_coord.y >= bounds.y && texture_coord.y <= bounds.w;\n',
+    '                                                                         \n',
+    '// border stroke for debug purposes                                      \n',
+    'bool on_border = border_stroke > 0.0 && inside && (                      \n',
+    '    texture_coord.x < bounds.x + border_stroke ||                        \n',
+    '    texture_coord.x > bounds.z - border_stroke ||                        \n',
+    '    texture_coord.y < bounds.y + border_stroke ||                        \n',
+    '    texture_coord.y > bounds.w - border_stroke);                         \n',
+    '                                                                         \n',
+    'if (on_border)                                                           \n',
+    '    cogl_color_out = border_color;                                       \n',
+    'else if (clip_radius > 0.0 && !inside)                                   \n',
+    '    cogl_color_out = vec4 (0.0);                                         \n',
+    'else if (clip_radius > 0.0)                                              \n',
+    '    cogl_color_out *= rounded_rect_coverage (texture_coord);             \n',
 ].join('');
 
 const FragmentHook = Shell.SnippetHook?.FRAGMENT ?? Cogl.SnippetHook.FRAGMENT;
@@ -120,6 +137,24 @@ export const RoundedCornersEffect = GObject.registerClass(
                 this.get_uniform_location('pixel_step'),
                 2,
                 pixelStep
+            );
+        }
+
+        setBorderStroke(stroke) {
+            logger.debug('borderStroke:', stroke);
+            this.set_uniform_float(
+                this.get_uniform_location('border_stroke'),
+                1,
+                [stroke]
+            );
+        }
+
+        setBorderColor(color) {
+            logger.debug('borderColor:', ...color);
+            this.set_uniform_float(
+                this.get_uniform_location('border_color'),
+                4,
+                color
             );
         }
     }

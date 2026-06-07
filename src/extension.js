@@ -84,7 +84,7 @@ export default class HanabiExtension extends Extension {
         /**
          * Other overrides
          */
-        this.override = new GnomeShellOverride.GnomeShellOverride();
+        this.override = new GnomeShellOverride.GnomeShellOverride(this.settings);
         this.manager = new WindowManager.WindowManager();
         this.autoPause = new AutoPause.AutoPause(this);
 

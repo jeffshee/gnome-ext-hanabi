@@ -31,14 +31,13 @@ const logger = new Logger.Logger();
 // Ref: https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/layout.js
 const BACKGROUND_FADE_ANIMATION_TIME = 1000;
 
-// const CUSTOM_BACKGROUND_BOUNDS_PADDING = 2;
 
 /**
  * The widget that holds the window preview of the renderer.
  */
 export const LiveWallpaper = GObject.registerClass(
     class LiveWallpaper extends St.Widget {
-        constructor(backgroundActor) {
+        constructor(backgroundActor, settings = null) {
             super({
                 layout_manager: new Clutter.BinLayout(),
                 width: backgroundActor.width,
@@ -51,15 +50,20 @@ export const LiveWallpaper = GObject.registerClass(
             this._backgroundActor = backgroundActor;
             this._metaBackgroundGroup = backgroundActor.get_parent();
             this._monitorIndex = backgroundActor.monitor;
+            this._settings = settings;
 
             this._isDisposed = false;
             this._timeoutId = null;
+            this._settingsChangedIds = [];
             this.connect('destroy', () => {
                 this._isDisposed = true;
                 if (this._timeoutId) {
                     GLib.Source.remove(this._timeoutId);
                     this._timeoutId = null;
                 }
+                for (const id of this._settingsChangedIds)
+                    this._settings?.disconnect(id);
+                this._settingsChangedIds = [];
                 if (this._wallpaper) {
                     if (this._sourceDestroyId) {
                         this._wallpaper.source?.disconnect(
@@ -96,10 +100,29 @@ export const LiveWallpaper = GObject.registerClass(
 
             this._roundedCornersEffect =
                 new RoundedCornersEffect.RoundedCornersEffect();
-            // this._backgroundActor.add_effect(this._roundedCornersEffect);
+            this._backgroundActor.add_effect(this._roundedCornersEffect);
 
             this.setPixelStep(this._monitorWidth, this._monitorHeight);
             this.setRoundedClipRadius(0.0);
+            this.setBorderStroke(0);
+            this.setBorderColor([1.0, 0.0, 0.0, 1.0]);
+
+            if (this._settings) {
+                this._settingsChangedIds.push(
+                    this._settings.connect('changed::border-stroke', () => {
+                        this.setBorderStroke(this._settings.get_int('border-stroke'));
+                        this._backgroundActor?.queue_redraw();
+                    })
+                );
+                for (const key of ['bounds-inset-x1', 'bounds-inset-y1', 'bounds-inset-x2', 'bounds-inset-y2']) {
+                    this._settingsChangedIds.push(
+                        this._settings.connect(`changed::${key}`, () => {
+                            this._applyBounds();
+                            this._backgroundActor?.queue_redraw();
+                        })
+                    );
+                }
+            }
             this.setRoundedClipBounds(
                 0,
                 0,
@@ -107,18 +130,31 @@ export const LiveWallpaper = GObject.registerClass(
                 this._monitorHeight
             );
 
-            // FIXME: Bounds calculation is wrong if the layout isn't vanilla (with custom dock, panel, etc.), disabled for now.
-            // this.connect('notify::allocation', () => {
-            //     let heightOffset = this.height - this._metaBackgroundGroup.get_parent().height;
-            //     this._roundedCornersEffect.setBounds(
-            //         [
-            //             CUSTOM_BACKGROUND_BOUNDS_PADDING,
-            //             CUSTOM_BACKGROUND_BOUNDS_PADDING + heightOffset,
-            //             this.width,
-            //             this.height,
-            //         ].map(e => e * this._monitorScale)
-            //     );
-            // });
+            this.connect('notify::allocation', () => {
+                try {
+                    this._applyBounds();
+                    const s = this._settings;
+                    const stroke = s ? s.get_int('border-stroke') : 0;
+                    this._roundedCornersEffect.setBorderStroke(stroke * this._monitorScale);
+                } catch (e) {
+                    logError(e, 'LiveWallpaper notify::allocation');
+                }
+            });
+        }
+
+        _applyBounds() {
+            const workArea = Main.layoutManager.getWorkAreaForMonitor(this._monitorIndex);
+            const monitor = Main.layoutManager.monitors[this._monitorIndex];
+            const panelOffset = (workArea.y - monitor.y) / monitor.height * this._backgroundActor.height;
+            const s = this._settings;
+            const ix1 = s ? s.get_int('bounds-inset-x1') : 0;
+            const iy1 = s ? s.get_int('bounds-inset-y1') : 0;
+            const ix2 = s ? s.get_int('bounds-inset-x2') : 0;
+            const iy2 = s ? s.get_int('bounds-inset-y2') : 0;
+            this._roundedCornersEffect.setBounds(
+                [ix1, panelOffset + iy1, this.width - ix2, this.height - iy2]
+                    .map(e => e * this._monitorScale)
+            );
         }
 
         setPixelStep(width, height) {
@@ -144,6 +180,18 @@ export const LiveWallpaper = GObject.registerClass(
             this._roundedCornersEffect.setBounds(
                 [x1, y1, x2, y2].map(e => e * this._monitorScale)
             );
+        }
+
+        setBorderStroke(stroke) {
+            if (this._isDisposed)
+                return;
+            this._roundedCornersEffect.setBorderStroke(stroke);
+        }
+
+        setBorderColor(color) {
+            if (this._isDisposed)
+                return;
+            this._roundedCornersEffect.setBorderColor(color);
         }
 
         _applyWallpaper() {

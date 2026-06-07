@@ -29,3 +29,4 @@ node_modules/
 
 # Hanabi extension specific
 .build
+scratch
