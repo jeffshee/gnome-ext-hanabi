@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-06 14:39+0900\n"
+"POT-Creation-Date: 2026-06-07 17:44+0900\n"
 "PO-Revision-Date: 2024-10-09 02:15+0000\n"
 "Last-Translator: Xarth <g@lzzz.ink>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
@@ -52,172 +52,190 @@ msgstr "通用的"
 msgid "Volume Level"
 msgstr "音量"
 
-#: src/prefs.js:61
+#: src/prefs.js:58
+msgid "Random Start Position"
+msgstr ""
+
+#: src/prefs.js:58
+msgid "Start playback from a random position each time a video starts"
+msgstr ""
+
+#: src/prefs.js:62
 msgid "Show Panel Menu"
 msgstr "顯示面板選單"
 
-#: src/prefs.js:70
+#: src/prefs.js:71
 msgid "Auto Pause"
 msgstr "自動暫停"
 
 #: src/prefs.js:78
+msgid "Pause on Window Focus"
+msgstr ""
+
+#: src/prefs.js:80
+#, fuzzy
+#| msgid "Pause playback when an MPRIS media player is playing media"
+msgid "Pause playback when any window is focused"
+msgstr "當MPRIS媒體播放器正在播放媒體時暫停播放"
+
+#: src/prefs.js:86
 msgid "Low Battery Threshold"
 msgstr "低電量閥值"
 
-#: src/prefs.js:80
+#: src/prefs.js:88
 msgid "Set the threshold percentage for low battery level"
 msgstr "設定低電量水平的閾值百分比"
 
-#: src/prefs.js:89
+#: src/prefs.js:97
 msgid "Pause on Media Player Playing"
 msgstr "媒體播放器播放時暫停"
 
-#: src/prefs.js:91
+#: src/prefs.js:99
 msgid "Pause playback when an MPRIS media player is playing media"
 msgstr "當MPRIS媒體播放器正在播放媒體時暫停播放"
 
-#: src/prefs.js:98
+#: src/prefs.js:106
 msgid "Wallpaper Changer"
 msgstr "壁紙修改器"
 
-#: src/prefs.js:104
+#: src/prefs.js:112
 msgid "Change Wallpaper Automatically"
 msgstr "自動更換壁紙"
 
-#: src/prefs.js:113
+#: src/prefs.js:121
 msgid "Change Wallpaper Interval (minutes)"
 msgstr "更換壁紙間隔（分鐘）"
 
-#: src/prefs.js:126
+#: src/prefs.js:134
 msgid "Overview"
 msgstr ""
 
-#: src/prefs.js:132
+#: src/prefs.js:140
 msgid "Corner Radius"
 msgstr ""
 
-#: src/prefs.js:134
+#: src/prefs.js:142
 msgid ""
 "Rounded corner radius in pixels for workspace background in the overview"
 msgstr ""
 
-#: src/prefs.js:145
+#: src/prefs.js:153
 msgid "Experimental"
 msgstr "實驗性"
 
-#: src/prefs.js:151
+#: src/prefs.js:159
 msgid "Experimental VA Plugin"
 msgstr "實驗性 VA 插件"
 
-#: src/prefs.js:154
+#: src/prefs.js:162
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr "啟用 VA 解碼器，以提升 Intel/AMD Wayland 用戶的效能"
 
-#: src/prefs.js:160
+#: src/prefs.js:168
 msgid "NVIDIA Stateless Decoders"
 msgstr ""
 
-#: src/prefs.js:162
+#: src/prefs.js:170
 msgid "Use new stateless NVIDIA decoders"
 msgstr "使用新的 NVIDIA 無狀態解碼器"
 
-#: src/prefs.js:169
+#: src/prefs.js:177
 msgid "Developer"
 msgstr "開發人員"
 
-#: src/prefs.js:175
+#: src/prefs.js:183
 msgid "Debug Mode"
 msgstr "偵錯模式"
 
-#: src/prefs.js:177
+#: src/prefs.js:185
 msgid "Print debug messages to log"
 msgstr "將偵錯資訊打印到日誌中"
 
-#: src/prefs.js:182
+#: src/prefs.js:190
 #, fuzzy
 #| msgid "Preferences"
 msgid "Prefer clappersink"
 msgstr "偏好設定"
 
-#: src/prefs.js:184
+#: src/prefs.js:192
 #, fuzzy
 #| msgid "Force use of gtk4paintablesink for video playback"
 msgid "Prefer clappersink over gtk4paintablesink for video playback"
 msgstr "強制使用 gtk4paintablesink 進行影片播放"
 
-#: src/prefs.js:189
+#: src/prefs.js:197
 msgid "Force GtkMediaFile"
 msgstr "強制使用 GtkMediaFile"
 
-#: src/prefs.js:191
+#: src/prefs.js:199
 msgid "Force use of GtkMediaFile for video playback"
 msgstr "強制使用 GtkMediaFile 進行影片播放"
 
-#: src/prefs.js:196
+#: src/prefs.js:204
 msgid "Enable Graphics Offload"
 msgstr ""
 
-#: src/prefs.js:199
+#: src/prefs.js:207
 msgid "Enable graphics offload for improved performance (requires GTK 4.14+)"
 msgstr ""
 
-#: src/prefs.js:205
+#: src/prefs.js:213
 msgid "Startup Delay"
 msgstr "啟動延遲"
 
-#: src/prefs.js:208
+#: src/prefs.js:216
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr "增加啟動延遲（以毫秒為單位）以減少與其他擴充功能的相容性問題"
 
-#: src/prefs.js:218
+#: src/prefs.js:226
 msgid "Border Stroke"
 msgstr ""
 
-#: src/prefs.js:220
+#: src/prefs.js:228
 msgid ""
 "Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)"
 msgstr ""
 
-#: src/prefs.js:288
+#: src/prefs.js:296
 msgid "Video Path"
 msgstr "影片路徑"
 
-#: src/prefs.js:294 src/prefs.js:319 src/prefs.js:348 src/prefs.js:369
+#: src/prefs.js:302 src/prefs.js:327 src/prefs.js:356 src/prefs.js:377
 msgid "None"
 msgstr "無"
 
-#: src/prefs.js:306
+#: src/prefs.js:314
 msgid "Open File"
 msgstr "開啟文件"
 
-#: src/prefs.js:311 src/prefs.js:362
+#: src/prefs.js:319 src/prefs.js:370
 msgid "Cancel"
 msgstr "取消"
 
-#: src/prefs.js:312 src/prefs.js:328 src/prefs.js:363 src/prefs.js:378
+#: src/prefs.js:320 src/prefs.js:336 src/prefs.js:371 src/prefs.js:386
 msgid "Open"
 msgstr "打開"
 
-#: src/prefs.js:342
+#: src/prefs.js:350
 msgid "Change Wallpaper Directory Path"
 msgstr "更改壁紙目錄路徑"
 
-#: src/prefs.js:357
+#: src/prefs.js:365
 msgid "Select Directory"
 msgstr "選擇目錄"
 
-#: src/prefs.js:392
+#: src/prefs.js:400
 msgid "Fit Mode"
 msgstr ""
 
-#: src/prefs.js:393
+#: src/prefs.js:401
 msgid "Control how wallpaper fits within the monitor"
 msgstr "控制壁紙在顯示器中的適配方式"
 
-#: src/prefs.js:394
+#: src/prefs.js:402
 msgid ""
 "\n"
 "    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
@@ -236,35 +254,35 @@ msgstr ""
 "    <b>縮小</b>：必要時縮小壁紙以適應顯示器，否則保持原始大小。\n"
 "    "
 
-#: src/prefs.js:402
+#: src/prefs.js:410
 msgid "Fill"
 msgstr "填充"
 
-#: src/prefs.js:403
+#: src/prefs.js:411
 msgid "Contain"
 msgstr "包含"
 
-#: src/prefs.js:404
+#: src/prefs.js:412
 msgid "Cover"
 msgstr "覆蓋"
 
-#: src/prefs.js:405
+#: src/prefs.js:413
 msgid "Scale-down"
 msgstr "縮小"
 
-#: src/prefs.js:418
+#: src/prefs.js:426
 msgid "This feature requires Gtk 4.8 or above"
 msgstr "此功能需要 Gtk 4.8 或更高版本"
 
-#: src/prefs.js:430
+#: src/prefs.js:438
 msgid "Pause on Maximize or Fullscreen"
 msgstr "最大化或全螢幕時暫停"
 
-#: src/prefs.js:432
+#: src/prefs.js:440
 msgid "Pause playback when there is maximized or fullscreen window"
 msgstr "存在最大化窗口或全螢幕窗口時暫停播放"
 
-#: src/prefs.js:434
+#: src/prefs.js:442
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -280,27 +298,27 @@ msgstr ""
 "    <b>所有顯示器</b>：當所有顯示器都有最大化或全螢幕視窗時暫停播放。\n"
 "    "
 
-#: src/prefs.js:441 src/prefs.js:474
+#: src/prefs.js:449 src/prefs.js:482
 msgid "Never"
 msgstr "從不"
 
-#: src/prefs.js:442
+#: src/prefs.js:450
 msgid "Any Monitor"
 msgstr "任一顯示器"
 
-#: src/prefs.js:443
+#: src/prefs.js:451
 msgid "All Monitors"
 msgstr "所有顯示器"
 
-#: src/prefs.js:463
+#: src/prefs.js:471
 msgid "Pause on Battery"
 msgstr "使用電池時暫停"
 
-#: src/prefs.js:465
+#: src/prefs.js:473
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr "當設備使用電池或電池電量低時暫停播放"
 
-#: src/prefs.js:467
+#: src/prefs.js:475
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -315,23 +333,23 @@ msgstr ""
 "    <b>總是</b>：當裝置使用電池時暫停播放。\n"
 "    "
 
-#: src/prefs.js:475
+#: src/prefs.js:483
 msgid "Low Battery"
 msgstr "低電量"
 
-#: src/prefs.js:476
+#: src/prefs.js:484
 msgid "Always"
 msgstr "總是"
 
-#: src/prefs.js:496
+#: src/prefs.js:504
 msgid "Change Wallpaper Mode"
 msgstr "壁紙更換方式"
 
-#: src/prefs.js:497
+#: src/prefs.js:505
 msgid "Control how to change wallpapers automatically"
 msgstr "控制如何自動更換壁紙"
 
-#: src/prefs.js:498
+#: src/prefs.js:506
 msgid ""
 "\n"
 "    <b>Sequential:</b> Preserve the directory sequence (descending order).\n"
@@ -346,40 +364,40 @@ msgstr ""
 "    <b>隨機：</b>從目錄中隨機選擇壁紙。\n"
 "    "
 
-#: src/prefs.js:505
+#: src/prefs.js:513
 msgid "Sequential"
 msgstr "順序"
 
-#: src/prefs.js:506
+#: src/prefs.js:514
 msgid "Inverse Sequential"
 msgstr "逆序"
 
-#: src/prefs.js:507
+#: src/prefs.js:515
 msgid "Random"
 msgstr "隨機"
 
-#: src/prefs.js:527
+#: src/prefs.js:535
 msgid "Bounds Inset"
 msgstr ""
 
-#: src/prefs.js:528
+#: src/prefs.js:536
 msgid ""
 "Adjust edges of the overview rounded-rect bounds (positive = shrink inward)"
 msgstr ""
 
-#: src/prefs.js:533
+#: src/prefs.js:541
 msgid "Left"
 msgstr ""
 
-#: src/prefs.js:534
+#: src/prefs.js:542
 msgid "Top"
 msgstr ""
 
-#: src/prefs.js:535
+#: src/prefs.js:543
 msgid "Right"
 msgstr ""
 
-#: src/prefs.js:536
+#: src/prefs.js:544
 msgid "Bottom"
 msgstr ""
 

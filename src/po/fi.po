@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-06 14:39+0900\n"
+"POT-Creation-Date: 2026-06-07 17:44+0900\n"
 "PO-Revision-Date: 2024-05-27 15:09+0000\n"
 "Last-Translator: Linus Virtanen <linus.virtanen@protonmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
@@ -50,123 +50,141 @@ msgstr "Yleistä"
 msgid "Volume Level"
 msgstr "Äänenvoimakkuus"
 
-#: src/prefs.js:61
+#: src/prefs.js:58
+msgid "Random Start Position"
+msgstr ""
+
+#: src/prefs.js:58
+msgid "Start playback from a random position each time a video starts"
+msgstr ""
+
+#: src/prefs.js:62
 msgid "Show Panel Menu"
 msgstr "Näytä ohjausvalikko"
 
-#: src/prefs.js:70
+#: src/prefs.js:71
 msgid "Auto Pause"
 msgstr "Automaattitauotus"
 
 #: src/prefs.js:78
+msgid "Pause on Window Focus"
+msgstr ""
+
+#: src/prefs.js:80
+#, fuzzy
+#| msgid "Pause playback when an MPRIS media player is playing media"
+msgid "Pause playback when any window is focused"
+msgstr "Tauota MPRIS-mediasoittimen toistaessa jotakin"
+
+#: src/prefs.js:86
 msgid "Low Battery Threshold"
 msgstr "Vähäisen akkuvirran kynnystaso"
 
-#: src/prefs.js:80
+#: src/prefs.js:88
 msgid "Set the threshold percentage for low battery level"
 msgstr "Aseta prosenttimääre vähäisen akkuvirran kynnystasolle"
 
-#: src/prefs.js:89
+#: src/prefs.js:97
 msgid "Pause on Media Player Playing"
 msgstr "Tauota mediaohjelman toistaessa jotakin"
 
-#: src/prefs.js:91
+#: src/prefs.js:99
 msgid "Pause playback when an MPRIS media player is playing media"
 msgstr "Tauota MPRIS-mediasoittimen toistaessa jotakin"
 
-#: src/prefs.js:98
+#: src/prefs.js:106
 msgid "Wallpaper Changer"
 msgstr "Taustakuvan vaihtaja"
 
-#: src/prefs.js:104
+#: src/prefs.js:112
 msgid "Change Wallpaper Automatically"
 msgstr "Vaihda taustakuva automaattisesti"
 
-#: src/prefs.js:113
+#: src/prefs.js:121
 msgid "Change Wallpaper Interval (minutes)"
 msgstr "Muuta taustakuvan vaihtoväli (minuuteissa)"
 
-#: src/prefs.js:126
+#: src/prefs.js:134
 msgid "Overview"
 msgstr ""
 
-#: src/prefs.js:132
+#: src/prefs.js:140
 msgid "Corner Radius"
 msgstr ""
 
-#: src/prefs.js:134
+#: src/prefs.js:142
 msgid ""
 "Rounded corner radius in pixels for workspace background in the overview"
 msgstr ""
 
-#: src/prefs.js:145
+#: src/prefs.js:153
 msgid "Experimental"
 msgstr "Kokeellinen"
 
-#: src/prefs.js:151
+#: src/prefs.js:159
 msgid "Experimental VA Plugin"
 msgstr "Kokeellinen VA-liitännäinen"
 
-#: src/prefs.js:154
+#: src/prefs.js:162
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
 "Ota VA-dekooderit käyttöön; nämä parantavat Wayland-suorituskykyä Intel/AMD "
 "-laitteiden käyttäjille"
 
-#: src/prefs.js:160
+#: src/prefs.js:168
 msgid "NVIDIA Stateless Decoders"
 msgstr "NVIDIA:n tilattomat dekooderit"
 
-#: src/prefs.js:162
+#: src/prefs.js:170
 msgid "Use new stateless NVIDIA decoders"
 msgstr "Käytä uutta tilatonta NVIDIA-dekooderia"
 
-#: src/prefs.js:169
+#: src/prefs.js:177
 msgid "Developer"
 msgstr "Kehittäjä"
 
-#: src/prefs.js:175
+#: src/prefs.js:183
 msgid "Debug Mode"
 msgstr "Virheenkorjauksen tila"
 
-#: src/prefs.js:177
+#: src/prefs.js:185
 msgid "Print debug messages to log"
 msgstr "Kirjaa virheenkorjauksen viestit lokiin"
 
-#: src/prefs.js:182
+#: src/prefs.js:190
 #, fuzzy
 #| msgid "Preferences"
 msgid "Prefer clappersink"
 msgstr "Asetukset"
 
-#: src/prefs.js:184
+#: src/prefs.js:192
 #, fuzzy
 #| msgid "Force use of gtk4paintablesink for video playback"
 msgid "Prefer clappersink over gtk4paintablesink for video playback"
 msgstr "Pakota gtk4paintablesink-käyttö videon toistolle"
 
-#: src/prefs.js:189
+#: src/prefs.js:197
 msgid "Force GtkMediaFile"
 msgstr "Pakota GtkMediaFile"
 
-#: src/prefs.js:191
+#: src/prefs.js:199
 msgid "Force use of GtkMediaFile for video playback"
 msgstr "Pakota GtkMediaFile-käyttö videon toistolle"
 
-#: src/prefs.js:196
+#: src/prefs.js:204
 msgid "Enable Graphics Offload"
 msgstr ""
 
-#: src/prefs.js:199
+#: src/prefs.js:207
 msgid "Enable graphics offload for improved performance (requires GTK 4.14+)"
 msgstr ""
 
-#: src/prefs.js:205
+#: src/prefs.js:213
 msgid "Startup Delay"
 msgstr "Käynnistyksen viive"
 
-#: src/prefs.js:208
+#: src/prefs.js:216
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
@@ -174,52 +192,52 @@ msgstr ""
 "Lisää käynnistysviive (millisekunneissa) lieventääksesi "
 "yhteensopivuusongelmia muiden laajennusten kanssa"
 
-#: src/prefs.js:218
+#: src/prefs.js:226
 msgid "Border Stroke"
 msgstr ""
 
-#: src/prefs.js:220
+#: src/prefs.js:228
 msgid ""
 "Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)"
 msgstr ""
 
-#: src/prefs.js:288
+#: src/prefs.js:296
 msgid "Video Path"
 msgstr "Videopolku"
 
-#: src/prefs.js:294 src/prefs.js:319 src/prefs.js:348 src/prefs.js:369
+#: src/prefs.js:302 src/prefs.js:327 src/prefs.js:356 src/prefs.js:377
 msgid "None"
 msgstr "Tyhjä"
 
-#: src/prefs.js:306
+#: src/prefs.js:314
 msgid "Open File"
 msgstr "Avaa tiedosto"
 
-#: src/prefs.js:311 src/prefs.js:362
+#: src/prefs.js:319 src/prefs.js:370
 msgid "Cancel"
 msgstr "Peruuta"
 
-#: src/prefs.js:312 src/prefs.js:328 src/prefs.js:363 src/prefs.js:378
+#: src/prefs.js:320 src/prefs.js:336 src/prefs.js:371 src/prefs.js:386
 msgid "Open"
 msgstr "Avaa"
 
-#: src/prefs.js:342
+#: src/prefs.js:350
 msgid "Change Wallpaper Directory Path"
 msgstr "Vaihda taustakuvan hakemistopolkua"
 
-#: src/prefs.js:357
+#: src/prefs.js:365
 msgid "Select Directory"
 msgstr "Valitse hakemisto"
 
-#: src/prefs.js:392
+#: src/prefs.js:400
 msgid "Fit Mode"
 msgstr "Sovitustila"
 
-#: src/prefs.js:393
+#: src/prefs.js:401
 msgid "Control how wallpaper fits within the monitor"
 msgstr "Hallinnoi miten taustakuva asettuu näytölle"
 
-#: src/prefs.js:394
+#: src/prefs.js:402
 msgid ""
 "\n"
 "    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
@@ -241,35 +259,35 @@ msgstr ""
 "mutta muutoin säilytä alkuperäinen koko.\n"
 "    "
 
-#: src/prefs.js:402
+#: src/prefs.js:410
 msgid "Fill"
 msgstr "Täytä"
 
-#: src/prefs.js:403
+#: src/prefs.js:411
 msgid "Contain"
 msgstr "Sisällytä"
 
-#: src/prefs.js:404
+#: src/prefs.js:412
 msgid "Cover"
 msgstr "Peitä"
 
-#: src/prefs.js:405
+#: src/prefs.js:413
 msgid "Scale-down"
 msgstr "Pienennä mittakaavassa"
 
-#: src/prefs.js:418
+#: src/prefs.js:426
 msgid "This feature requires Gtk 4.8 or above"
 msgstr "Tämä ominaisuus vaatii Gtk julkaisun 4.8 tai uudemman"
 
-#: src/prefs.js:430
+#: src/prefs.js:438
 msgid "Pause on Maximize or Fullscreen"
 msgstr "Tauota enimmäisikkunoinnin tai kokoruututilan kohdalla"
 
-#: src/prefs.js:432
+#: src/prefs.js:440
 msgid "Pause playback when there is maximized or fullscreen window"
 msgstr "Tauota toisto kun ikkuna suurennetaan tai asetetaan kokoruututilaan"
 
-#: src/prefs.js:434
+#: src/prefs.js:442
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -287,28 +305,28 @@ msgstr ""
 "suurennettuja tai kokoruudun ikkunoita.\n"
 "    "
 
-#: src/prefs.js:441 src/prefs.js:474
+#: src/prefs.js:449 src/prefs.js:482
 msgid "Never"
 msgstr "Ei koskaan"
 
-#: src/prefs.js:442
+#: src/prefs.js:450
 msgid "Any Monitor"
 msgstr "Mikä tahansa näyttö"
 
-#: src/prefs.js:443
+#: src/prefs.js:451
 msgid "All Monitors"
 msgstr "Kaikki näytöt"
 
-#: src/prefs.js:463
+#: src/prefs.js:471
 msgid "Pause on Battery"
 msgstr "Tauota akkuvirralla"
 
-#: src/prefs.js:465
+#: src/prefs.js:473
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
 "Tauota toisto laitteen ollessa akkuvirran varassa tai akun varaus on vähissä"
 
-#: src/prefs.js:467
+#: src/prefs.js:475
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -324,23 +342,23 @@ msgstr ""
 "    <b>Aina</b>: Tauota toisto laitteen ollessa akkuvirran varassa.\n"
 "    "
 
-#: src/prefs.js:475
+#: src/prefs.js:483
 msgid "Low Battery"
 msgstr "Akku vähissä"
 
-#: src/prefs.js:476
+#: src/prefs.js:484
 msgid "Always"
 msgstr "Aina"
 
-#: src/prefs.js:496
+#: src/prefs.js:504
 msgid "Change Wallpaper Mode"
 msgstr "Vaihda taustakuvatila"
 
-#: src/prefs.js:497
+#: src/prefs.js:505
 msgid "Control how to change wallpapers automatically"
 msgstr "Hallinnoi taustakuvien automaattista vaihtoa"
 
-#: src/prefs.js:498
+#: src/prefs.js:506
 msgid ""
 "\n"
 "    <b>Sequential:</b> Preserve the directory sequence (descending order).\n"
@@ -356,40 +374,40 @@ msgstr ""
 "    <b>satunnainen:</b> Valitse taustakuvia hakemistosta satunnaisesti.\n"
 "    "
 
-#: src/prefs.js:505
+#: src/prefs.js:513
 msgid "Sequential"
 msgstr "Järjestyksellinen"
 
-#: src/prefs.js:506
+#: src/prefs.js:514
 msgid "Inverse Sequential"
 msgstr "Käänteinen järjestys"
 
-#: src/prefs.js:507
+#: src/prefs.js:515
 msgid "Random"
 msgstr "Satunnainen"
 
-#: src/prefs.js:527
+#: src/prefs.js:535
 msgid "Bounds Inset"
 msgstr ""
 
-#: src/prefs.js:528
+#: src/prefs.js:536
 msgid ""
 "Adjust edges of the overview rounded-rect bounds (positive = shrink inward)"
 msgstr ""
 
-#: src/prefs.js:533
+#: src/prefs.js:541
 msgid "Left"
 msgstr ""
 
-#: src/prefs.js:534
+#: src/prefs.js:542
 msgid "Top"
 msgstr ""
 
-#: src/prefs.js:535
+#: src/prefs.js:543
 msgid "Right"
 msgstr ""
 
-#: src/prefs.js:536
+#: src/prefs.js:544
 msgid "Bottom"
 msgstr ""
 
