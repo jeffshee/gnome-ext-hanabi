@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-25 18:29+0900\n"
+"POT-Creation-Date: 2026-06-06 14:39+0900\n"
 "PO-Revision-Date: 2025-12-27 20:00+0000\n"
 "Last-Translator: sora kashiwazaki <kashiwasora0512@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/gnome-ext-"
@@ -19,175 +19,209 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.15.1\n"
 
-#: src/panelMenu.js:70 src/panelMenu.js:85
+#: src/panelMenu.js:75 src/panelMenu.js:90
 msgid "Pause"
 msgstr "一時停止"
 
-#: src/panelMenu.js:70 src/panelMenu.js:85
+#: src/panelMenu.js:75 src/panelMenu.js:90
 msgid "Play"
 msgstr "再生"
 
-#: src/panelMenu.js:94 src/panelMenu.js:103
+#: src/panelMenu.js:99 src/panelMenu.js:108
 msgid "Unmute Audio"
 msgstr "音声のミュートを解除"
 
-#: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:43
+#: src/panelMenu.js:99 src/panelMenu.js:108 src/prefs.js:46
 msgid "Mute Audio"
 msgstr "音声をミュート"
 
-#: src/panelMenu.js:110
+#: src/panelMenu.js:116
 msgid "Next Wallpaper"
 msgstr "次の壁紙"
 
-#: src/panelMenu.js:125
+#: src/panelMenu.js:136
 msgid "Preferences"
 msgstr "設定"
 
-#: src/prefs.js:38
+#: src/prefs.js:41
 msgid "General"
 msgstr "一般"
 
-#: src/prefs.js:44
+#: src/prefs.js:50
 msgid "Volume Level"
 msgstr "音量"
 
-#: src/prefs.js:45
+#: src/prefs.js:61
 msgid "Show Panel Menu"
 msgstr "パネルメニューを表示"
 
-#: src/prefs.js:51
+#: src/prefs.js:70
 #, fuzzy
 #| msgid "Pause"
 msgid "Auto Pause"
 msgstr "一時停止"
 
-#: src/prefs.js:56
+#: src/prefs.js:78
 msgid "Low Battery Threshold"
 msgstr "バッテリー低下のしきい値"
 
-#: src/prefs.js:56
+#: src/prefs.js:80
 msgid "Set the threshold percentage for low battery level"
 msgstr "バッテリーが少ないときのしきい値を設定する"
 
-#: src/prefs.js:60
+#: src/prefs.js:89
 msgid "Pause on Media Player Playing"
 msgstr "メディアプレイヤーの再生を一時停止"
 
-#: src/prefs.js:62
+#: src/prefs.js:91
 msgid "Pause playback when an MPRIS media player is playing media"
 msgstr "MPRISを使用しているとき再生を停止する"
 
-#: src/prefs.js:69
+#: src/prefs.js:98
 msgid "Wallpaper Changer"
 msgstr ""
 
-#: src/prefs.js:72
+#: src/prefs.js:104
 msgid "Change Wallpaper Automatically"
 msgstr "壁紙を自動で変更する"
 
-#: src/prefs.js:75
+#: src/prefs.js:113
 msgid "Change Wallpaper Interval (minutes)"
 msgstr "壁紙を一定間隔で変更する(分)"
 
-#: src/prefs.js:81
+#: src/prefs.js:126
+msgid "Overview"
+msgstr ""
+
+#: src/prefs.js:132
+msgid "Corner Radius"
+msgstr ""
+
+#: src/prefs.js:134
+msgid ""
+"Rounded corner radius in pixels for workspace background in the overview"
+msgstr ""
+
+#: src/prefs.js:145
 msgid "Experimental"
 msgstr "実験的機能"
 
-#: src/prefs.js:87
+#: src/prefs.js:151
 msgid "Experimental VA Plugin"
 msgstr "実験的VAプラグイン"
 
-#: src/prefs.js:89
+#: src/prefs.js:154
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
 "パフォーマンスを向上させるためのVAデコーダを有効にします\n"
 "（Intel/AMD Waylandユーザー向け）"
 
-#: src/prefs.js:94
+#: src/prefs.js:160
 msgid "NVIDIA Stateless Decoders"
 msgstr "NVIDIAステートレスデコーダ"
 
-#: src/prefs.js:96
+#: src/prefs.js:162
 msgid "Use new stateless NVIDIA decoders"
 msgstr "新たに実装されたステートレスNVIDIAデコーダを使用します"
 
-#: src/prefs.js:103
+#: src/prefs.js:169
 msgid "Developer"
 msgstr "開発者向けオプション"
 
-#: src/prefs.js:109
+#: src/prefs.js:175
 msgid "Debug Mode"
 msgstr "デバッグモード"
 
-#: src/prefs.js:111
+#: src/prefs.js:177
 msgid "Print debug messages to log"
 msgstr "デバッグメッセージをログに出力します"
 
-#: src/prefs.js:116
-msgid "Force gtk4paintablesink"
-msgstr "gtk4paintablesinkを優先"
+#: src/prefs.js:182
+#, fuzzy
+#| msgid "Preferences"
+msgid "Prefer clappersink"
+msgstr "設定"
 
-#: src/prefs.js:118
-msgid "Force use of gtk4paintablesink for video playback"
+#: src/prefs.js:184
+#, fuzzy
+#| msgid "Force use of gtk4paintablesink for video playback"
+msgid "Prefer clappersink over gtk4paintablesink for video playback"
 msgstr "動画再生にgtk4paintablesinkを優先的に使用します"
 
-#: src/prefs.js:123
+#: src/prefs.js:189
 msgid "Force GtkMediaFile"
 msgstr "GtkMediaFileを優先"
 
-#: src/prefs.js:125
+#: src/prefs.js:191
 msgid "Force use of GtkMediaFile for video playback"
 msgstr "動画再生にGtkMediaFileを優先的に使用します"
 
-#: src/prefs.js:127
+#: src/prefs.js:196
+msgid "Enable Graphics Offload"
+msgstr ""
+
+#: src/prefs.js:199
+msgid "Enable graphics offload for improved performance (requires GTK 4.14+)"
+msgstr ""
+
+#: src/prefs.js:205
 msgid "Startup Delay"
 msgstr "起動遅延"
 
-#: src/prefs.js:127
+#: src/prefs.js:208
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr ""
 "他の拡張機能との相性問題を解消するために、起動を少し遅らせます（ミリ秒単位）"
 
-#: src/prefs.js:214
+#: src/prefs.js:218
+msgid "Border Stroke"
+msgstr ""
+
+#: src/prefs.js:220
+msgid ""
+"Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)"
+msgstr ""
+
+#: src/prefs.js:288
 msgid "Video Path"
 msgstr "動画ファイルのパス"
 
-#: src/prefs.js:220 src/prefs.js:245 src/prefs.js:279 src/prefs.js:300
+#: src/prefs.js:294 src/prefs.js:319 src/prefs.js:348 src/prefs.js:369
 msgid "None"
 msgstr "なし"
 
-#: src/prefs.js:232
+#: src/prefs.js:306
 msgid "Open File"
 msgstr "ファイルを開く"
 
-#: src/prefs.js:237 src/prefs.js:293
+#: src/prefs.js:311 src/prefs.js:362
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: src/prefs.js:238 src/prefs.js:254 src/prefs.js:294 src/prefs.js:309
+#: src/prefs.js:312 src/prefs.js:328 src/prefs.js:363 src/prefs.js:378
 msgid "Open"
 msgstr "開く"
 
-#: src/prefs.js:273
+#: src/prefs.js:342
 msgid "Change Wallpaper Directory Path"
 msgstr "変更する壁紙のディレクトリ"
 
-#: src/prefs.js:288
+#: src/prefs.js:357
 msgid "Select Directory"
 msgstr "ディレクトリを選択"
 
-#: src/prefs.js:328
+#: src/prefs.js:392
 msgid "Fit Mode"
 msgstr "フィットモード"
 
-#: src/prefs.js:329
+#: src/prefs.js:393
 msgid "Control how wallpaper fits within the monitor"
 msgstr "壁紙をモニターにフィットする方法を設定します"
 
-#: src/prefs.js:330
+#: src/prefs.js:394
 msgid ""
 "\n"
 "    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
@@ -209,35 +243,35 @@ msgstr ""
 "\t壁紙のサイズがモニターより小さい場合は元のサイズを維持します。\n"
 "    "
 
-#: src/prefs.js:338
+#: src/prefs.js:402
 msgid "Fill"
 msgstr "Fill"
 
-#: src/prefs.js:339
+#: src/prefs.js:403
 msgid "Contain"
 msgstr "Contain"
 
-#: src/prefs.js:340
+#: src/prefs.js:404
 msgid "Cover"
 msgstr "Cover"
 
-#: src/prefs.js:341
+#: src/prefs.js:405
 msgid "Scale-down"
 msgstr "Scale-down"
 
-#: src/prefs.js:354
+#: src/prefs.js:418
 msgid "This feature requires Gtk 4.8 or above"
 msgstr "この機能を使用するには、Gtk 4.8以上が必要です"
 
-#: src/prefs.js:371
+#: src/prefs.js:430
 msgid "Pause on Maximize or Fullscreen"
 msgstr "最大化またはフルスクリーン中に一時停止"
 
-#: src/prefs.js:372
+#: src/prefs.js:432
 msgid "Pause playback when there is maximized or fullscreen window"
 msgstr "最大化またはフルスクリーンのウィンドウがあるとき再生を停止する"
 
-#: src/prefs.js:373
+#: src/prefs.js:434
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -248,29 +282,29 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/prefs.js:380 src/prefs.js:416
+#: src/prefs.js:441 src/prefs.js:474
 msgid "Never"
 msgstr ""
 
-#: src/prefs.js:381
+#: src/prefs.js:442
 msgid "Any Monitor"
 msgstr "いづれかのディスプレイ"
 
-#: src/prefs.js:382
+#: src/prefs.js:443
 msgid "All Monitors"
 msgstr "すべてのディスプレイ"
 
-#: src/prefs.js:407
+#: src/prefs.js:463
 msgid "Pause on Battery"
 msgstr ""
 
-#: src/prefs.js:408
+#: src/prefs.js:465
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
 "デバイスがバッテリー駆動中またはバッテリーが低下しているときに再生を一時停止"
 "する"
 
-#: src/prefs.js:409
+#: src/prefs.js:467
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -280,23 +314,23 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/prefs.js:417
+#: src/prefs.js:475
 msgid "Low Battery"
 msgstr "低バッテリー"
 
-#: src/prefs.js:418
+#: src/prefs.js:476
 msgid "Always"
 msgstr "常に"
 
-#: src/prefs.js:443
+#: src/prefs.js:496
 msgid "Change Wallpaper Mode"
 msgstr "壁紙のモードを変更"
 
-#: src/prefs.js:444
+#: src/prefs.js:497
 msgid "Control how to change wallpapers automatically"
 msgstr "どのように壁紙を自動で変更するか設定する"
 
-#: src/prefs.js:445
+#: src/prefs.js:498
 msgid ""
 "\n"
 "    <b>Sequential:</b> Preserve the directory sequence (descending order).\n"
@@ -306,14 +340,42 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/prefs.js:452
+#: src/prefs.js:505
 msgid "Sequential"
 msgstr "順次再生"
 
-#: src/prefs.js:453
+#: src/prefs.js:506
 msgid "Inverse Sequential"
 msgstr "逆順再生"
 
-#: src/prefs.js:454
+#: src/prefs.js:507
 msgid "Random"
 msgstr "ランダム"
+
+#: src/prefs.js:527
+msgid "Bounds Inset"
+msgstr ""
+
+#: src/prefs.js:528
+msgid ""
+"Adjust edges of the overview rounded-rect bounds (positive = shrink inward)"
+msgstr ""
+
+#: src/prefs.js:533
+msgid "Left"
+msgstr ""
+
+#: src/prefs.js:534
+msgid "Top"
+msgstr ""
+
+#: src/prefs.js:535
+msgid "Right"
+msgstr ""
+
+#: src/prefs.js:536
+msgid "Bottom"
+msgstr ""
+
+#~ msgid "Force gtk4paintablesink"
+#~ msgstr "gtk4paintablesinkを優先"
