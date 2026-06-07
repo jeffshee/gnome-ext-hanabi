@@ -6,13 +6,13 @@ Lint tooling borrowed from [gnome-shell-extensions](https://gitlab.gnome.org/GNO
 
 Run from the project root:
 
-```sh
+```bash
 npm run lint
 ```
 
 Or directly:
 
-```sh
+```bash
 ./tools/run-eslint.sh
 ```
 

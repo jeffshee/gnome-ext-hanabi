@@ -14,3 +14,19 @@ Common development tasks are available via `make`:
 | `make merge-po` | Regenerate `.pot` and merge into all `.po` files |
 
 Run `make help` to see all available targets.
+
+## License Headers
+
+License headers in `src/` are managed with [licensure](https://github.com/chasinglogic/licensure). Configuration is in [`.licensure.yml`](../.licensure.yml).
+
+To check that all files have correct headers:
+
+```bash
+licensure --project --check
+```
+
+To apply or update headers in-place:
+
+```bash
+licensure --project --in-place
+```
