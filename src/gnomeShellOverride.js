@@ -140,9 +140,10 @@ export class GnomeShellOverride {
         this._injectionManager.overrideMethod(
             Workspace.WorkspaceBackground.prototype,
             '_updateBorderRadius',
-            // Don't call the orginal method, use our implementation of rounded corners instead.
-            _originalMethod => {
+            originalMethod => {
                 return function () {
+                    originalMethod.call(this);
+
                     // The scale factor here is an integer, not the fractional scale factor.
                     // Ref: https://gjs-docs.gnome.org/st13~13/st.themecontext#method-get_scale_factor
                     const {scaleFactor} = St.ThemeContext.get_for_stage(
@@ -157,6 +158,12 @@ export class GnomeShellOverride {
                         this._stateAdjustment.value
                     );
                     this._bgManager.videoActor?.setRoundedClipRadius(radius);
+                    const backgroundContent = this._bgManager.backgroundActor?.content;
+                    if (backgroundContent)
+                        backgroundContent.rounded_clip_radius = radius;
+
+                    // Override the CSS border-radius so the shadow follows our radius.
+                    this.style = `border-radius: ${thisRef._settings?.get_int('corner-radius') ?? BACKGROUND_CORNER_RADIUS_PIXELS}px`;
                 };
             }
         );
