@@ -2,7 +2,7 @@ UUID    := hanabi-extension@jeffshee.github.io
 POT_DIR := src/po
 POT_FILE := $(POT_DIR)/$(UUID).pot
 
-.PHONY: install enable disable prefs reset uninstall renderer log lint pot merge-po help
+.PHONY: install enable disable prefs reset uninstall renderer log lint lint-fix pot merge-po help
 
 help:
 	@echo "Targets:"
@@ -15,6 +15,7 @@ help:
 	@echo "  renderer   Run the renderer (pass args via ARGS=...)"
 	@echo "  log        Follow the GNOME Shell log"
 	@echo "  lint       Run ESLint"
+	@echo "  lint-fix   Run ESLint with --fix"
 	@echo "  pot        Generate the translation template (.pot)"
 	@echo "  merge-po   Merge updated .pot into all .po files"
 
@@ -44,7 +45,10 @@ log:
 	journalctl -f -o cat /usr/bin/gnome-shell
 
 lint:
-	npm run lint
+	npm run lint -- src/
+
+lint-fix:
+	npm run lint -- src/ --fix
 
 pot:
 	find src/ -iname "*.js" -print0 | xargs -0 xgettext \
