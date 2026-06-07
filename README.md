@@ -78,11 +78,11 @@ See [docs/distro/](docs/distro/) for distro-specific installation guides.
      `rm -rf ~/.cache/gstreamer-1.0/`  
      After that, check if `gst-inspect-1.0 nvcodec` reports all its features.
 
-3. The GNOME Shell keeps crashing after enabling Hanabi, help!  
-   You can try to disable the extension from tty ( <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>F3</kbd> ):
-    ```
-    gnome-extensions disable hanabi-extension@jeffshee.github.io
-    ```
+3. Blur My Shell — wallpaper becomes semi-transparent  
+   If you use the [Blur My Shell](https://github.com/aunetx/blur-my-shell) extension with **Applications → Applications blur → Enable all by default** turned on, add an exception for the Hanabi renderer.
+
+    In Blur My Shell settings, go to **Applications → Applications blur → Blacklist** and add:  
+     `io.github.jeffshee.HanabiRenderer`
 
 ### Optimization
 
