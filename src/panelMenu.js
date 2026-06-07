@@ -1,19 +1,19 @@
-/**
- * Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// Copyright (C) 2026 Jeff Shee <jeffshee8969@gmail.com> and contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
@@ -35,6 +35,11 @@ export class HanabiPanelMenu {
         this._playbackState = extension.getPlaybackState();
         this._isPlaying = false;
         this._renderer = new DBus.RendererWrapper();
+
+        // Signal/subscription IDs tracked for cleanup in disable()
+        this._isPlayingChangedSubId = null;
+        this._muteChangedId = null;
+        this._changeWallpaperChangedId = null;
     }
 
     enable() {
@@ -77,7 +82,7 @@ export class HanabiPanelMenu {
                 this._playbackState.userPlay();
         });
 
-        this._renderer.proxy.connectSignal(
+        this._isPlayingChangedSubId = this._renderer.proxy.connectSignal(
             'isPlayingChanged',
             (_proxy, _sender, [isPlaying]) => {
                 this._isPlaying = isPlaying;
@@ -98,7 +103,7 @@ export class HanabiPanelMenu {
             this._setMute(!this._getMute());
         });
 
-        this._settings.connect('changed::mute', () => {
+        this._muteChangedId = this._settings.connect('changed::mute', () => {
             muteAudio.label.set_text(
                 this._getMute() ? _('Unmute Audio') : _('Mute Audio')
             );
@@ -107,19 +112,25 @@ export class HanabiPanelMenu {
         menu.addMenuItem(muteAudio);
 
         // Next wallpaper
-        const nextWallpaperMenuItem = menu.addAction(_('Next Wallpaper'), () => {
-            this._setNextWallpaper();
-        });
+        const nextWallpaperMenuItem = menu.addAction(
+            _('Next Wallpaper'),
+            () => {
+                this._setNextWallpaper();
+            }
+        );
 
         if (!this._getChangeWallpaper())
             nextWallpaperMenuItem.hide();
 
-        this._settings.connect('changed::change-wallpaper', () => {
-            if (this._getChangeWallpaper())
-                nextWallpaperMenuItem.show();
-            else
-                nextWallpaperMenuItem.hide();
-        });
+        this._changeWallpaperChangedId = this._settings.connect(
+            'changed::change-wallpaper',
+            () => {
+                if (this._getChangeWallpaper())
+                    nextWallpaperMenuItem.show();
+                else
+                    nextWallpaperMenuItem.hide();
+            }
+        );
 
         // Preferences
         menu.addAction(_('Preferences'), () => {
@@ -146,14 +157,19 @@ export class HanabiPanelMenu {
      * Set next wallpaper based in directory.
      */
     _setNextWallpaper = () => {
-        let changeWallpaperDirectoryPath = this._settings.get_string('change-wallpaper-directory-path');
+        const changeWallpaperDirectoryPath = this._settings.get_string(
+            'change-wallpaper-directory-path'
+        );
         let videoPaths = [];
-        let dir = Gio.File.new_for_path(changeWallpaperDirectoryPath);
+        const dir = Gio.File.new_for_path(changeWallpaperDirectoryPath);
         // Check if dir exists and is a directory
-        if (dir.query_file_type(Gio.FileQueryInfoFlags.NONE, null) !== Gio.FileType.DIRECTORY)
+        if (
+            dir.query_file_type(Gio.FileQueryInfoFlags.NONE, null) !==
+            Gio.FileType.DIRECTORY
+        )
             return;
 
-        let enumerator = dir.enumerate_children(
+        const enumerator = dir.enumerate_children(
             'standard::*',
             Gio.FileQueryInfoFlags.NONE,
             null
@@ -163,14 +179,16 @@ export class HanabiPanelMenu {
         let fileInfo;
         while ((fileInfo = enumerator.next_file(null))) {
             if (fileInfo.get_content_type().startsWith('video/')) {
-                let file = dir.get_child(fileInfo.get_name());
+                const file = dir.get_child(fileInfo.get_name());
                 videoPaths.push(file.get_path());
             }
         }
 
         videoPaths = videoPaths.sort();
-        let currentVideoPath = this._settings.get_string('video-path');
-        let currentIndex = videoPaths.findIndex(videoPath => videoPath === currentVideoPath);
+        const currentVideoPath = this._settings.get_string('video-path');
+        const currentIndex = videoPaths.findIndex(
+            videoPath => videoPath === currentVideoPath
+        );
         let nextIndex = 0;
         if (currentIndex !== -1)
             nextIndex = (currentIndex + 1) % videoPaths.length;
@@ -180,6 +198,22 @@ export class HanabiPanelMenu {
     disable() {
         if (!this.isEnabled)
             return;
+
+        // Disconnect the D-Bus proxy signal subscription
+        if (this._isPlayingChangedSubId !== null) {
+            this._renderer.proxy.disconnectSignal(this._isPlayingChangedSubId);
+            this._isPlayingChangedSubId = null;
+        }
+
+        // Disconnect GSettings signal handlers
+        if (this._muteChangedId !== null) {
+            this._settings.disconnect(this._muteChangedId);
+            this._muteChangedId = null;
+        }
+        if (this._changeWallpaperChangedId !== null) {
+            this._settings.disconnect(this._changeWallpaperChangedId);
+            this._changeWallpaperChangedId = null;
+        }
 
         this.indicator.destroy();
         this.isEnabled = false;

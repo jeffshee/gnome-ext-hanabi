@@ -1,25 +1,21 @@
-/**
- * Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// Copyright (C) 2026 Jeff Shee <jeffshee8969@gmail.com> and contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 
-/**
- * Credit:
- * This code draws significant inspiration from the implementation of
- * ManageWindow and EmulateX11WindowType in the DING extension.
- */
+// Adapted from ManageWindow and EmulateX11WindowType in the DING extension.
 
 import Meta from 'gi://Meta';
 import GLib from 'gi://GLib';
@@ -45,8 +41,12 @@ class ManagedWindow {
             keepPosition: false,
         };
 
+        this._isDisposed = false;
+
         this._signals.push(
             window.connect('notify::title', () => {
+                if (this._isDisposed)
+                    return;
                 this._parseTitle();
             })
         );
@@ -54,6 +54,8 @@ class ManagedWindow {
         this._signals.push(
             // TODO: `connect` or `connect_after`?
             window.connect_after('shown', () => {
+                if (this._isDisposed)
+                    return;
                 if (this._states.keepMinimized)
                     this._window.minimize();
             })
@@ -62,6 +64,8 @@ class ManagedWindow {
         this._signals.push(
             // TODO: `connect` or `connect_after`?
             window.connect_after('raised', () => {
+                if (this._isDisposed)
+                    return;
                 if (this._states.keepAtBottom)
                     this._window.lower();
             })
@@ -69,6 +73,8 @@ class ManagedWindow {
 
         this._signals.push(
             window.connect('notify::above', () => {
+                if (this._isDisposed)
+                    return;
                 if (this._states.keepAtBottom && this._window.above)
                     this._window.unmake_above();
             })
@@ -76,6 +82,8 @@ class ManagedWindow {
 
         this._signals.push(
             window.connect('notify::minimized', () => {
+                if (this._isDisposed)
+                    return;
                 if (this._states.keepMinimized && !this._window.minimized)
                     this._window.minimize();
             })
@@ -83,6 +91,8 @@ class ManagedWindow {
 
         this._signals.push(
             window.connect('position-changed', () => {
+                if (this._isDisposed)
+                    return;
                 if (this._states.keepPosition) {
                     const [x, y] = this._states.position;
                     this._window.move_frame(true, x, y);
@@ -94,14 +104,21 @@ class ManagedWindow {
         // which sets the position x, y to (child_actor_width - surfaces_width)/2, (child_actor_height - surfaces_height)/2 when the window is minimized.
         // Ref: https://gitlab.gnome.org/GNOME/mutter/-/issues/3159
         if (shellVersion === 45) {
-            let windowActor = window.get_compositor_private();
-            let surfaceContainer = windowActor.get_children().find(
-                child => GObject.type_name(child) === 'MetaSurfaceContainerActorWayland'
-            );
+            const windowActor = window.get_compositor_private();
+            const surfaceContainer = windowActor
+                .get_children()
+                .find(
+                    child =>
+                        GObject.type_name(child) ===
+                        'MetaSurfaceContainerActorWayland'
+                );
             if (surfaceContainer) {
-                this._notifyPositionId = surfaceContainer.connect('notify::position', () => {
-                    surfaceContainer.set_position(0, 0);
-                });
+                this._notifyPositionId = surfaceContainer.connect(
+                    'notify::position',
+                    () => {
+                        surfaceContainer.set_position(0, 0);
+                    }
+                );
             }
         }
 
@@ -135,6 +152,8 @@ class ManagedWindow {
     }
 
     disconnect() {
+        this._isDisposed = true;
+
         if (this._notifyPositionId)
             GLib.source_remove(this._notifyPositionId);
 
@@ -148,10 +167,14 @@ class ManagedWindow {
 
 export class WindowManager {
     constructor() {
-        if (shellVersion < 50)
+        // Feature detection: Use Meta.is_wayland_compositor if available (GNOME < 50)
+        // On GNOME 50+, the function was removed and X11 support was dropped
+        if (shellVersion < 50) {
             this._isX11 = !Meta.is_wayland_compositor();
-        else
-            this._isX11 = false
+        } else {
+            // GNOME 50+: X11 backend removed, assume Wayland
+            this._isX11 = false;
+        }
         this._windows = new Set();
         this._waylandClient = null;
     }
@@ -165,13 +188,16 @@ export class WindowManager {
             'map',
             (_wm, windowActor) => {
                 const window = windowActor.get_meta_window();
-                if (this._waylandClient && this._waylandClient.query_window_belongs_to(window))
+                if (
+                    this._waylandClient &&
+                    this._waylandClient.query_window_belongs_to(window)
+                )
                     this.addWindow(window);
 
                 if (this._isX11) {
-                    let appid = window.get_gtk_application_id();
-                    let windowpid = window.get_pid();
-                    let mypid = this._waylandClient.query_pid_of_program();
+                    const appid = window.get_gtk_application_id();
+                    const windowpid = window.get_pid();
+                    const mypid = this._waylandClient.query_pid_of_program();
                     if (appid === applicationId && windowpid === mypid)
                         this.addWindow(window);
                 }
@@ -197,13 +223,10 @@ export class WindowManager {
 
         window.managed = new ManagedWindow(window);
         this._windows.add(window);
-        window.managed._unmanagedId = window.connect(
-            'unmanaged',
-            _window => {
-                this._clearWindow(_window);
-                this._windows.delete(_window);
-            }
-        );
+        window.managed._unmanagedId = window.connect('unmanaged', _window => {
+            this._clearWindow(_window);
+            this._windows.delete(_window);
+        });
     }
 
     _clearWindow(window) {
