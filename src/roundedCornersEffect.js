@@ -23,7 +23,7 @@ import * as Logger from './logger.js';
 
 const logger = new Logger.Logger('roundedCorners');
 
-// This shader is copied from Mutter project.
+// Adapted from the Mutter project.
 // See <https://gitlab.gnome.org/GNOME/mutter/-/blob/main/src/compositor/meta-background-content.c>.
 const fragmentShaderDeclarations = [
     'uniform vec4 bounds;           // x, y: top left; z, w: bottom right     \n',

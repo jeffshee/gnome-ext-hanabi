@@ -15,11 +15,7 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-/**
- * Credit:
- * This code draws significant inspiration from the implementation of
- * LaunchSubprocess in the DING extension.
- */
+// Adapted from LaunchSubprocess in the DING extension.
 
 import Meta from 'gi://Meta';
 import Gio from 'gi://Gio';
@@ -31,7 +27,6 @@ import * as Logger from './logger.js';
 const logger = new Logger.Logger();
 const rendererLogger = new Logger.Logger('renderer');
 
-// Get GNOME Shell major version
 const shellVersion = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
 export class LaunchSubprocess {
@@ -92,7 +87,6 @@ export class LaunchSubprocess {
 
         this._launcher = null;
         if (this.subprocess) {
-            // Read STDOUT and STDERR from the renderer
             this._dataInputStream = Gio.DataInputStream.new(
                 this.subprocess.get_stdout_pipe()
             );
@@ -162,13 +156,4 @@ export class LaunchSubprocess {
         return pid ? parseInt(pid) : 0;
     }
 
-    // show_in_window_list(window) {
-    //     if (!this._isX11 && this.running)
-    //         this._waylandClient.show_in_window_list(window);
-    // }
-
-    // hide_from_window_list(window) {
-    //     if (!this._isX11 && this.running)
-    //         this._waylandClient.hide_from_window_list(window);
-    // }
 }

@@ -76,19 +76,14 @@ export default class HanabiExtension extends Extension {
             Main.layoutManager.connect('startup-complete', () => {
                 Main.sessionMode.hasOverview = this.old_hasOverview;
             });
-            // Handle Ubuntu's method
             if (Main.layoutManager.startInOverview)
                 Main.layoutManager.startInOverview = false;
         }
 
-        /**
-         * Other overrides
-         */
         this.override = new GnomeShellOverride.GnomeShellOverride(this.settings);
         this.manager = new WindowManager.WindowManager();
         this.autoPause = new AutoPause.AutoPause(this);
 
-        // If the desktop is still starting up, wait until it is ready
         if (Main.layoutManager._startingUp) {
             this.startupCompleteId = Main.layoutManager.connect(
                 'startup-complete',
@@ -156,16 +151,13 @@ export default class HanabiExtension extends Extension {
         if (!this.settings)
             return;
 
-        // Launch preferences dialog for first-time user
         const videoPath = this.settings.get_string('video-path');
-        // TODO: check if the path is exist or not instead
         if (videoPath === '')
             this.openPreferences();
 
         this.reloadTime = 100;
         const argv = [];
         argv.push(GLib.build_filenamev([this.path, 'renderer', 'renderer.js']));
-        // TODO: recheck `-P` argument
         argv.push('-P', this.path);
         argv.push('-F', videoPath);
 
@@ -239,7 +231,6 @@ export default class HanabiExtension extends Extension {
     }
 
     killCurrentProcess() {
-        // If a reload was pending, kill it and schedule a new reload.
         if (this.launchRendererId) {
             GLib.source_remove(this.launchRendererId);
             this.launchRendererId = 0;
@@ -256,7 +247,6 @@ export default class HanabiExtension extends Extension {
             }
         }
 
-        // Kill the renderer. It will be reloaded automatically.
         if (this.currentProcess && this.currentProcess.subprocess) {
             this.currentProcess.cancellable.cancel();
             this.currentProcess.subprocess.send_signal(15);

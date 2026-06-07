@@ -28,14 +28,12 @@ import UPower from 'gi://UPowerGlib';
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const logger = new Logger.Logger('autoPause');
 
-// Get GNOME Shell major version
 const shellVersion = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
 export class AutoPause {
     constructor(extension) {
         this._playbackState = extension.getPlaybackState();
 
-        // Modules
         this.modules = [];
         this.modules.push(new PauseOnMaximizeOrFullscreenModule(extension));
         this.modules.push(new PauseOnBatteryModule(extension));
@@ -162,7 +160,6 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
         }
 
         _windowAdded(metaWindow, doUpdate = true) {
-            // Not need to track renderer window or skip taskbar window
             if (
                 metaWindow.title?.includes(applicationId) ||
                 metaWindow.skip_taskbar
@@ -260,7 +257,6 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
         }
 
         _update() {
-            // Filter out renderer windows and minimized windows
             const metaWindows = this._windows
                 .map(({metaWindow}) => metaWindow)
                 .filter(
@@ -546,8 +542,6 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
 
         _queryMprisNames() {
             try {
-                // let ret = this._dbus.listNames();
-                // let [names] =  ret.deep_unpack();
                 const [names] = this._dbus.listNames();
                 return names.filter(name =>
                     name.startsWith('org.mpris.MediaPlayer2.')

@@ -27,7 +27,6 @@ import * as Logger from './logger.js';
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const logger = new Logger.Logger();
 
-// Get GNOME Shell major version
 const shellVersion = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
 class ManagedWindow {
@@ -52,7 +51,6 @@ class ManagedWindow {
         );
 
         this._signals.push(
-            // TODO: `connect` or `connect_after`?
             window.connect_after('shown', () => {
                 if (this._isDisposed)
                     return;
@@ -62,7 +60,6 @@ class ManagedWindow {
         );
 
         this._signals.push(
-            // TODO: `connect` or `connect_after`?
             window.connect_after('raised', () => {
                 if (this._isDisposed)
                     return;
@@ -128,7 +125,6 @@ class ManagedWindow {
     _parseTitle() {
         const title = this._window.title;
         if (title && title.startsWith(`@${applicationId}!`)) {
-            // TODO: revise syntax, remove split
             const json = title.replace(`@${applicationId}!`, '').split('|')[0];
             try {
                 const newState = JSON.parse(json);
@@ -216,10 +212,8 @@ export class WindowManager {
     }
 
     addWindow(window) {
-        if (window.get_meta_window) {
-            // MetaWindowActor => MetaWindow
+        if (window.get_meta_window)
             window = window.get_meta_window();
-        }
 
         window.managed = new ManagedWindow(window);
         this._windows.add(window);
