@@ -55,6 +55,7 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
             1,
             10
         );
+        prefsRowBoolean(window, generalGroup, _('Random Start Position'), 'random-start-position', _('Start playback from a random position each time a video starts'));
         prefsRowBoolean(
             window,
             generalGroup,

@@ -20,6 +20,12 @@
             <description>Set the volume level for audio playback</description>
         </key>
 
+        <key name="random-start-position" type="b">
+            <default>false</default>
+            <summary>Random Start Position</summary>
+            <description>Start playback from a random position each time a video starts</description>
+        </key>
+
         <key name="change-wallpaper" type="b">
             <default>false</default>
             <summary>Change Wallpaper</summary>
