@@ -131,6 +131,8 @@ export const LiveWallpaper = GObject.registerClass(
             );
 
             this.connect('notify::allocation', () => {
+                if (!this._wallpaper)
+                    return;
                 try {
                     this._applyBounds();
                     const s = this._settings;
