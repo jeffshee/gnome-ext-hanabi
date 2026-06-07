@@ -51,6 +51,12 @@
             <description>Pause playback when there is maximized or fullscreen window</description>
         </key>
 
+        <key name="pause-on-focus" type="b">
+            <default>false</default>
+            <summary>Pause on Window Focus</summary>
+            <description>Pause playback when any window is focused</description>
+        </key>
+
         <key name="pause-on-battery" type="i">
             <range min="0" max="2" />
             <default>0</default>

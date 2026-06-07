@@ -71,6 +71,13 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
         });
         page.add(autoPauseGroup);
         prefsRowPauseOnMaximizeOrFullscreen(window, autoPauseGroup);
+        prefsRowBoolean(
+            window,
+            autoPauseGroup,
+            _('Pause on Window Focus'),
+            'pause-on-focus',
+            _('Pause playback when any window is focused')
+        );
         prefsRowPauseOnBattery(window, autoPauseGroup);
         prefsRowInt(
             window,
