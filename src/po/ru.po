@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-25 18:29+0900\n"
+"POT-Creation-Date: 2026-06-07 17:44+0900\n"
 "PO-Revision-Date: 2024-07-20 02:09+0000\n"
 "Last-Translator: Shebeno4ka <shebeno4ka@outlook.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
@@ -24,132 +24,176 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Weblate 5.7-dev\n"
 
-#: src/panelMenu.js:70 src/panelMenu.js:85
+#: src/panelMenu.js:75 src/panelMenu.js:90
 msgid "Pause"
 msgstr "Приостановить"
 
-#: src/panelMenu.js:70 src/panelMenu.js:85
+#: src/panelMenu.js:75 src/panelMenu.js:90
 msgid "Play"
 msgstr "Воспроизвести"
 
-#: src/panelMenu.js:94 src/panelMenu.js:103
+#: src/panelMenu.js:99 src/panelMenu.js:108
 msgid "Unmute Audio"
 msgstr "Включить звук"
 
-#: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:43
+#: src/panelMenu.js:99 src/panelMenu.js:108 src/prefs.js:46
 msgid "Mute Audio"
 msgstr "Отключить звук"
 
-#: src/panelMenu.js:110
+#: src/panelMenu.js:116
 msgid "Next Wallpaper"
 msgstr "Следующие обои"
 
-#: src/panelMenu.js:125
+#: src/panelMenu.js:136
 msgid "Preferences"
 msgstr "Настройки"
 
-#: src/prefs.js:38
+#: src/prefs.js:41
 msgid "General"
 msgstr "Общее"
 
-#: src/prefs.js:44
+#: src/prefs.js:50
 msgid "Volume Level"
 msgstr "Уровень громкости"
 
-#: src/prefs.js:45
+#: src/prefs.js:58
+msgid "Random Start Position"
+msgstr ""
+
+#: src/prefs.js:58
+msgid "Start playback from a random position each time a video starts"
+msgstr ""
+
+#: src/prefs.js:62
 msgid "Show Panel Menu"
 msgstr "Показывать индикатор в панели состояния"
 
-#: src/prefs.js:51
+#: src/prefs.js:71
 msgid "Auto Pause"
 msgstr "Автоматически приостанавливать"
 
-#: src/prefs.js:56
+#: src/prefs.js:78
+msgid "Pause on Window Focus"
+msgstr ""
+
+#: src/prefs.js:80
+#, fuzzy
+#| msgid "Pause playback when an MPRIS media player is playing media"
+msgid "Pause playback when any window is focused"
+msgstr ""
+"Приостанавливать воспроизведение при работе MPRIS-совместимого медиаплеера."
+
+#: src/prefs.js:86
 msgid "Low Battery Threshold"
 msgstr "Пороговый уровень заряда батареи"
 
-#: src/prefs.js:56
+#: src/prefs.js:88
 msgid "Set the threshold percentage for low battery level"
 msgstr "Установить пороговый уровень заряда батареи"
 
-#: src/prefs.js:60
+#: src/prefs.js:97
 msgid "Pause on Media Player Playing"
 msgstr "Приостановить при проигрывании медиа плеера"
 
-#: src/prefs.js:62
+#: src/prefs.js:99
 msgid "Pause playback when an MPRIS media player is playing media"
 msgstr ""
 "Приостанавливать воспроизведение при работе MPRIS-совместимого медиаплеера."
 
-#: src/prefs.js:69
+#: src/prefs.js:106
 msgid "Wallpaper Changer"
 msgstr "Смена обоев"
 
-#: src/prefs.js:72
+#: src/prefs.js:112
 msgid "Change Wallpaper Automatically"
 msgstr "Менять обои автоматически"
 
-#: src/prefs.js:75
+#: src/prefs.js:121
 msgid "Change Wallpaper Interval (minutes)"
 msgstr "Изменить интервал смены обоев(в минутах)"
 
-#: src/prefs.js:81
+#: src/prefs.js:134
+msgid "Overview"
+msgstr ""
+
+#: src/prefs.js:140
+msgid "Corner Radius"
+msgstr ""
+
+#: src/prefs.js:142
+msgid ""
+"Rounded corner radius in pixels for workspace background in the overview"
+msgstr ""
+
+#: src/prefs.js:153
 msgid "Experimental"
 msgstr "Экспериментальные настройки"
 
-#: src/prefs.js:87
+#: src/prefs.js:159
 msgid "Experimental VA Plugin"
 msgstr "Экспериментальный плагин VA"
 
-#: src/prefs.js:89
+#: src/prefs.js:162
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
 "Включите декодеры VA, которые повышают производительность для пользователей "
 "Intel/AMD на Wayland"
 
-#: src/prefs.js:94
+#: src/prefs.js:168
 msgid "NVIDIA Stateless Decoders"
 msgstr "NVIDIA Stateless Decoders"
 
-#: src/prefs.js:96
+#: src/prefs.js:170
 msgid "Use new stateless NVIDIA decoders"
 msgstr "Используйте новые декодеры NVIDIA без статических данных"
 
-#: src/prefs.js:103
+#: src/prefs.js:177
 msgid "Developer"
 msgstr "Настройки для разработчиков"
 
-#: src/prefs.js:109
+#: src/prefs.js:183
 msgid "Debug Mode"
 msgstr "Режим отладки"
 
-#: src/prefs.js:111
+#: src/prefs.js:185
 msgid "Print debug messages to log"
 msgstr "Вывод сообщений отладки в журнал"
 
-#: src/prefs.js:116
-msgid "Force gtk4paintablesink"
-msgstr "Принудительно использовать gtk4paintablesink"
+#: src/prefs.js:190
+#, fuzzy
+#| msgid "Preferences"
+msgid "Prefer clappersink"
+msgstr "Настройки"
 
-#: src/prefs.js:118
-msgid "Force use of gtk4paintablesink for video playback"
+#: src/prefs.js:192
+#, fuzzy
+#| msgid "Force use of gtk4paintablesink for video playback"
+msgid "Prefer clappersink over gtk4paintablesink for video playback"
 msgstr ""
 "Принудительное использование gtk4paintablesink для воспроизведения видео"
 
-#: src/prefs.js:123
+#: src/prefs.js:197
 msgid "Force GtkMediaFile"
 msgstr "Принудительно использовать GtkMediaFile"
 
-#: src/prefs.js:125
+#: src/prefs.js:199
 msgid "Force use of GtkMediaFile for video playback"
 msgstr "Принудительное использование GtkMediaFile для воспроизведения видео"
 
-#: src/prefs.js:127
+#: src/prefs.js:204
+msgid "Enable Graphics Offload"
+msgstr ""
+
+#: src/prefs.js:207
+msgid "Enable graphics offload for improved performance (requires GTK 4.14+)"
+msgstr ""
+
+#: src/prefs.js:213
 msgid "Startup Delay"
 msgstr "Задержка запуска"
 
-#: src/prefs.js:127
+#: src/prefs.js:216
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
@@ -157,43 +201,52 @@ msgstr ""
 "Добавьте задержку при запуске (в миллисекундах), чтобы уменьшить проблемы "
 "совместимости с другими расширениями"
 
-#: src/prefs.js:214
+#: src/prefs.js:226
+msgid "Border Stroke"
+msgstr ""
+
+#: src/prefs.js:228
+msgid ""
+"Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)"
+msgstr ""
+
+#: src/prefs.js:296
 msgid "Video Path"
 msgstr "Путь до видеофайла"
 
-#: src/prefs.js:220 src/prefs.js:245 src/prefs.js:279 src/prefs.js:300
+#: src/prefs.js:302 src/prefs.js:327 src/prefs.js:356 src/prefs.js:377
 msgid "None"
 msgstr "Нет"
 
-#: src/prefs.js:232
+#: src/prefs.js:314
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: src/prefs.js:237 src/prefs.js:293
+#: src/prefs.js:319 src/prefs.js:370
 msgid "Cancel"
 msgstr "Отмена"
 
-#: src/prefs.js:238 src/prefs.js:254 src/prefs.js:294 src/prefs.js:309
+#: src/prefs.js:320 src/prefs.js:336 src/prefs.js:371 src/prefs.js:386
 msgid "Open"
 msgstr "Открыть"
 
-#: src/prefs.js:273
+#: src/prefs.js:350
 msgid "Change Wallpaper Directory Path"
 msgstr "Изменить путь до директории с обоями"
 
-#: src/prefs.js:288
+#: src/prefs.js:365
 msgid "Select Directory"
 msgstr "Выбрать директорию"
 
-#: src/prefs.js:328
+#: src/prefs.js:400
 msgid "Fit Mode"
 msgstr "Режим"
 
-#: src/prefs.js:329
+#: src/prefs.js:401
 msgid "Control how wallpaper fits within the monitor"
 msgstr "Контроль того, как обои вписываются в монитор"
 
-#: src/prefs.js:330
+#: src/prefs.js:402
 msgid ""
 "\n"
 "    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
@@ -215,35 +268,35 @@ msgstr ""
 ".\n"
 "    "
 
-#: src/prefs.js:338
+#: src/prefs.js:410
 msgid "Fill"
 msgstr "Заполнение"
 
-#: src/prefs.js:339
+#: src/prefs.js:411
 msgid "Contain"
 msgstr "Контейнер"
 
-#: src/prefs.js:340
+#: src/prefs.js:412
 msgid "Cover"
 msgstr "Наложение"
 
-#: src/prefs.js:341
+#: src/prefs.js:413
 msgid "Scale-down"
 msgstr "Сокращение масштаба"
 
-#: src/prefs.js:354
+#: src/prefs.js:426
 msgid "This feature requires Gtk 4.8 or above"
 msgstr "Эта функция требует Gtk 4.8 или выше"
 
-#: src/prefs.js:371
+#: src/prefs.js:438
 msgid "Pause on Maximize or Fullscreen"
 msgstr "Приостанавливать при разворачивании на полный экран"
 
-#: src/prefs.js:372
+#: src/prefs.js:440
 msgid "Pause playback when there is maximized or fullscreen window"
 msgstr "Приостановить при разворачивании приложений."
 
-#: src/prefs.js:373
+#: src/prefs.js:442
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -261,27 +314,27 @@ msgstr ""
 "мониторах запущены приложения развёрнутые на полный экран.\n"
 "    "
 
-#: src/prefs.js:380 src/prefs.js:416
+#: src/prefs.js:449 src/prefs.js:482
 msgid "Never"
 msgstr "Никогда"
 
-#: src/prefs.js:381
+#: src/prefs.js:450
 msgid "Any Monitor"
 msgstr "Любой монитор"
 
-#: src/prefs.js:382
+#: src/prefs.js:451
 msgid "All Monitors"
 msgstr "Все мониторы"
 
-#: src/prefs.js:407
+#: src/prefs.js:471
 msgid "Pause on Battery"
 msgstr "Приостанавливать при использовании батареи"
 
-#: src/prefs.js:408
+#: src/prefs.js:473
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr "Приостанавливать при питании от батареи или низком заряде"
 
-#: src/prefs.js:409
+#: src/prefs.js:475
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -297,23 +350,23 @@ msgstr ""
 "    <b>Всегда<b>: Приостанавливать воспроизведение при питании от батареи.\n"
 "    "
 
-#: src/prefs.js:417
+#: src/prefs.js:483
 msgid "Low Battery"
 msgstr "Низкий уровень заряда баттареи"
 
-#: src/prefs.js:418
+#: src/prefs.js:484
 msgid "Always"
 msgstr "Всегда"
 
-#: src/prefs.js:443
+#: src/prefs.js:504
 msgid "Change Wallpaper Mode"
 msgstr "Изменить режим смены обоев"
 
-#: src/prefs.js:444
+#: src/prefs.js:505
 msgid "Control how to change wallpapers automatically"
 msgstr "Способ, которым обои будут сменяться автоматически"
 
-#: src/prefs.js:445
+#: src/prefs.js:506
 msgid ""
 "\n"
 "    <b>Sequential:</b> Preserve the directory sequence (descending order).\n"
@@ -330,14 +383,42 @@ msgstr ""
 "    <b>Случайно:</b> Случайный выбор обоев из каталога.\n"
 "    "
 
-#: src/prefs.js:452
+#: src/prefs.js:513
 msgid "Sequential"
 msgstr "Последовательно"
 
-#: src/prefs.js:453
+#: src/prefs.js:514
 msgid "Inverse Sequential"
 msgstr "Обратная последовательность"
 
-#: src/prefs.js:454
+#: src/prefs.js:515
 msgid "Random"
 msgstr "Случайный"
+
+#: src/prefs.js:535
+msgid "Bounds Inset"
+msgstr ""
+
+#: src/prefs.js:536
+msgid ""
+"Adjust edges of the overview rounded-rect bounds (positive = shrink inward)"
+msgstr ""
+
+#: src/prefs.js:541
+msgid "Left"
+msgstr ""
+
+#: src/prefs.js:542
+msgid "Top"
+msgstr ""
+
+#: src/prefs.js:543
+msgid "Right"
+msgstr ""
+
+#: src/prefs.js:544
+msgid "Bottom"
+msgstr ""
+
+#~ msgid "Force gtk4paintablesink"
+#~ msgstr "Принудительно использовать gtk4paintablesink"

@@ -1,19 +1,19 @@
-/**
- * Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// Copyright (C) 2026 Jeff Shee <jeffshee8969@gmail.com> and contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 import Clutter from 'gi://Clutter';
 import GLib from 'gi://GLib';
@@ -31,14 +31,13 @@ const logger = new Logger.Logger();
 // Ref: https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/layout.js
 const BACKGROUND_FADE_ANIMATION_TIME = 1000;
 
-// const CUSTOM_BACKGROUND_BOUNDS_PADDING = 2;
 
 /**
  * The widget that holds the window preview of the renderer.
  */
 export const LiveWallpaper = GObject.registerClass(
     class LiveWallpaper extends St.Widget {
-        constructor(backgroundActor) {
+        constructor(backgroundActor, settings = null) {
             super({
                 layout_manager: new Clutter.BinLayout(),
                 width: backgroundActor.width,
@@ -51,6 +50,32 @@ export const LiveWallpaper = GObject.registerClass(
             this._backgroundActor = backgroundActor;
             this._metaBackgroundGroup = backgroundActor.get_parent();
             this._monitorIndex = backgroundActor.monitor;
+            this._settings = settings;
+
+            this._isDisposed = false;
+            this._timeoutId = null;
+            this._settingsChangedIds = [];
+            this.connect('destroy', () => {
+                this._isDisposed = true;
+                if (this._timeoutId) {
+                    GLib.Source.remove(this._timeoutId);
+                    this._timeoutId = null;
+                }
+                for (const id of this._settingsChangedIds)
+                    this._settings?.disconnect(id);
+                this._settingsChangedIds = [];
+                if (this._wallpaper) {
+                    if (this._sourceDestroyId) {
+                        this._wallpaper.source?.disconnect(
+                            this._sourceDestroyId
+                        );
+                        this._sourceDestroyId = null;
+                    }
+                    this._wallpaper.source = null;
+                    this._wallpaper.destroy();
+                    this._wallpaper = null;
+                }
+            });
 
             /**
              * _monitorScale is fractional scale factor
@@ -62,7 +87,7 @@ export const LiveWallpaper = GObject.registerClass(
             this._monitorScale = this._display.get_monitor_scale(
                 this._monitorIndex
             );
-            let {width, height} =
+            const {width, height} =
                 Main.layoutManager.monitors[this._monitorIndex];
             this._monitorWidth = width;
             this._monitorHeight = height;
@@ -86,7 +111,8 @@ export const LiveWallpaper = GObject.registerClass(
 
             this.setPixelStep(this._monitorWidth, this._monitorHeight);
             this.setRoundedClipRadius(0.0);
-            this.setRoundedClipBounds(0, 0, this._monitorWidth, this._monitorHeight);
+            this.setBorderStroke(0);
+            this.setBorderColor([1.0, 0.0, 0.0, 1.0]);
 
             // FIXME: Bounds calculation is wrong if the layout isn't vanilla (with custom dock, panel, etc.), disabled for now.
             // this.connect('notify::allocation', () => {
@@ -137,7 +163,21 @@ export const LiveWallpaper = GObject.registerClass(
             );
         }
 
+        setBorderStroke(stroke) {
+            if (this._isDisposed)
+                return;
+            this._roundedCornersEffect.setBorderStroke(stroke);
+        }
+
+        setBorderColor(color) {
+            if (this._isDisposed)
+                return;
+            this._roundedCornersEffect.setBorderColor(color);
+        }
+
         _applyWallpaper() {
+            if (this._isDisposed)
+                return;
             logger.debug('Applying wallpaper...');
 
             // Cancel any existing poll
@@ -170,6 +210,15 @@ export const LiveWallpaper = GObject.registerClass(
                     this._wallpaper.connect('destroy', () => {
                         this._wallpaper = null;
                     });
+                    this._sourceDestroyId = this._wallpaper.source.connect(
+                        'destroy',
+                        () => {
+                            if (this._wallpaper)
+                                this._wallpaper.destroy();
+                            if (!this._isDisposed)
+                                this._applyWallpaper();
+                        }
+                    );
                     this.add_child(this._wallpaper);
                     this._fade();
                     logger.debug('Wallpaper applied');
@@ -222,18 +271,20 @@ export const LiveWallpaper = GObject.registerClass(
             const hanabiWindowActors = windowActors.filter(window =>
                 window.meta_window.title?.includes(applicationId)
             );
-            logger.debug(`Found ${hanabiWindowActors.length} Hanabi window actors`);
-            logger.debug(`Hanabi window actors monitor: ${hanabiWindowActors.map(w => w.meta_window.get_monitor())}, target monitor: ${this._monitorIndex}`);
 
             // Reject if number of hanabi windows is less than the number of monitors
             const numMonitors = global.display.get_n_monitors();
             if (hanabiWindowActors.length < numMonitors) {
-                logger.debug(`Hanabi windows (${hanabiWindowActors.length}) < monitors (${numMonitors}), rejecting`);
+                logger.debug(
+                    `Hanabi windows (${hanabiWindowActors.length}) < monitors (${numMonitors}), rejecting`
+                );
                 return null;
             }
 
             // Reject if monitor indices are not unique (duplicate monitor assignments)
-            const monitorIndices = hanabiWindowActors.map(w => w.meta_window.get_monitor());
+            const monitorIndices = hanabiWindowActors.map(w =>
+                w.meta_window.get_monitor()
+            );
             const uniqueMonitorIndices = new Set(monitorIndices);
             if (uniqueMonitorIndices.size !== monitorIndices.length) {
                 logger.debug('Non-unique monitor indices detected, rejecting');
@@ -241,14 +292,25 @@ export const LiveWallpaper = GObject.registerClass(
             }
 
             // Find renderer by `applicationId` and monitor index.
+            // We use the monitor index from the backgroundActor dynamically to handle re-indexing.
             const renderer = hanabiWindowActors.find(
-                window => window.meta_window.get_monitor() === this._monitorIndex
+                window =>
+                    window.meta_window.get_monitor() ===
+                    this._backgroundActor.monitor
             );
+
+            if (!renderer) {
+                logger.debug(
+                    `No renderer found for monitor ${this._backgroundActor.monitor}. Found actors for monitors: ${hanabiWindowActors.map(w => w.meta_window.get_monitor())}`
+                );
+            }
 
             return renderer ?? null;
         }
 
         _fade(visible = true) {
+            if (this._isDisposed)
+                return;
             this.ease({
                 opacity: visible ? 255 : 0,
                 duration: BACKGROUND_FADE_ANIMATION_TIME,

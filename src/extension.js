@@ -1,24 +1,27 @@
-/**
- * Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// Copyright (C) 2026 Jeff Shee <jeffshee8969@gmail.com> and contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {
+    Extension,
+    gettext as _,
+} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as GnomeShellOverride from './gnomeShellOverride.js';
 import * as Launcher from './launcher.js';
@@ -54,12 +57,15 @@ export default class HanabiExtension extends Extension {
         if (this.settings.get_boolean('show-panel-menu'))
             this.panelMenu.enable();
 
-        this.settings.connect('changed::show-panel-menu', () => {
-            if (this.settings.get_boolean('show-panel-menu'))
-                this.panelMenu.enable();
-            else
-                this.panelMenu.disable();
-        });
+        this._showPanelMenuChangedId = this.settings.connect(
+            'changed::show-panel-menu',
+            () => {
+                if (this.settings.get_boolean('show-panel-menu'))
+                    this.panelMenu.enable();
+                else
+                    this.panelMenu.disable();
+            }
+        );
 
         /**
          * Disable startup animation (Workaround for issue #65)
@@ -71,42 +77,64 @@ export default class HanabiExtension extends Extension {
             Main.layoutManager.connect('startup-complete', () => {
                 Main.sessionMode.hasOverview = this.old_hasOverview;
             });
-            // Handle Ubuntu's method
             if (Main.layoutManager.startInOverview)
                 Main.layoutManager.startInOverview = false;
         }
 
-        /**
-         * Other overrides
-         */
-        this.override = new GnomeShellOverride.GnomeShellOverride();
+        this.override = new GnomeShellOverride.GnomeShellOverride(this.settings);
         this.manager = new WindowManager.WindowManager();
         this.autoPause = new AutoPause.AutoPause(this);
 
-        // If the desktop is still starting up, wait until it is ready
         if (Main.layoutManager._startingUp) {
             this.startupCompleteId = Main.layoutManager.connect(
                 'startup-complete',
                 () => {
-                    GLib.timeout_add(GLib.PRIORITY_DEFAULT, this.settings.get_int('startup-delay'), () => {
-                        Main.layoutManager.disconnect(this.startupCompleteId);
-                        this.startupCompleteId = null;
-                        this.innerEnable();
-                        return false;
-                    });
+                    GLib.timeout_add(
+                        GLib.PRIORITY_DEFAULT,
+                        this.settings.get_int('startup-delay'),
+                        () => {
+                            Main.layoutManager.disconnect(
+                                this.startupCompleteId
+                            );
+                            this.startupCompleteId = null;
+                            this.innerEnable();
+                            return false;
+                        }
+                    );
                 }
             );
         } else {
-            GLib.timeout_add(GLib.PRIORITY_DEFAULT, this.settings.get_int('startup-delay'), () => {
-                this.innerEnable();
-                return false;
-            });
+            GLib.timeout_add(
+                GLib.PRIORITY_DEFAULT,
+                this.settings.get_int('startup-delay'),
+                () => {
+                    this.innerEnable();
+                    return false;
+                }
+            );
         }
     }
 
     innerEnable() {
         this.override.enable();
         this.manager.enable();
+
+        this._monitorsChangedId = Main.layoutManager.connect(
+            'monitors-changed',
+            () => {
+                if (this._monitorsChangedTimeoutId)
+                    GLib.source_remove(this._monitorsChangedTimeoutId);
+                this._monitorsChangedTimeoutId = GLib.timeout_add(
+                    GLib.PRIORITY_DEFAULT,
+                    500,
+                    () => {
+                        this._monitorsChangedTimeoutId = 0;
+                        this.killCurrentProcess();
+                        return GLib.SOURCE_REMOVE;
+                    }
+                );
+            }
+        );
 
         this.isEnabled = true;
         if (this.launchRendererId)
@@ -298,22 +326,16 @@ export default class HanabiExtension extends Extension {
     }
 
     launchRenderer() {
-        // Launch preferences dialog for first-time user
-        let videoPath = this.settings.get_string('video-path');
-        // TODO: check if the path is exist or not instead
+        if (!this.settings)
+            return;
+
+        const videoPath = this.settings.get_string('video-path');
         if (videoPath === '')
             this.openPreferences();
 
         this.reloadTime = 100;
         const argv = [];
-        argv.push(
-            GLib.build_filenamev([
-                this.path,
-                'renderer',
-                'renderer.js',
-            ])
-        );
-        // TODO: recheck `-P` argument
+        argv.push(GLib.build_filenamev([this.path, 'renderer', 'renderer.js']));
         argv.push('-P', this.path);
         argv.push('-F', videoPath);
 
@@ -333,7 +355,7 @@ export default class HanabiExtension extends Extension {
                 return;
 
             if (obj.get_if_exited()) {
-                let retval = obj.get_exit_status();
+                const retval = obj.get_exit_status();
                 if (retval !== 0)
                     this.reloadTime = 1000;
             } else {
@@ -359,6 +381,13 @@ export default class HanabiExtension extends Extension {
     }
 
     disable() {
+        this.killCurrentProcess();
+
+        if (this._showPanelMenuChangedId) {
+            this.settings.disconnect(this._showPanelMenuChangedId);
+            this._showPanelMenuChangedId = null;
+        }
+
         this.settings = null;
         this.panelMenu.disable();
         Main.sessionMode.hasOverview = this.old_hasOverview;
@@ -392,11 +421,9 @@ export default class HanabiExtension extends Extension {
         this._isSuspending = false;
 
         this.isEnabled = false;
-        this.killCurrentProcess();
     }
 
     killCurrentProcess() {
-        // If a reload was pending, kill it and schedule a new reload.
         if (this.launchRendererId) {
             GLib.source_remove(this.launchRendererId);
             this.launchRendererId = 0;
@@ -413,7 +440,6 @@ export default class HanabiExtension extends Extension {
             }
         }
 
-        // Kill the renderer. It will be reloaded automatically.
         if (this.currentProcess && this.currentProcess.subprocess) {
             this.currentProcess.cancellable.cancel();
             this.currentProcess.subprocess.send_signal(15);
@@ -421,44 +447,46 @@ export default class HanabiExtension extends Extension {
     }
 
     killAllProcesses() {
-        let procFolder = Gio.File.new_for_path('/proc');
+        const procFolder = Gio.File.new_for_path('/proc');
         if (!procFolder.query_exists(null))
             return;
 
-        let fileEnum = procFolder.enumerate_children(
+        const fileEnum = procFolder.enumerate_children(
             'standard::*',
             Gio.FileQueryInfoFlags.NONE,
             null
         );
         let info;
         while ((info = fileEnum.next_file(null))) {
-            let filename = info.get_name();
+            const filename = info.get_name();
             if (!filename)
                 break;
 
-            let processPath = GLib.build_filenamev(['/proc', filename, 'cmdline']);
-            let processUser = Gio.File.new_for_path(processPath);
+            const processPath = GLib.build_filenamev([
+                '/proc',
+                filename,
+                'cmdline',
+            ]);
+            const processUser = Gio.File.new_for_path(processPath);
             if (!processUser.query_exists(null))
                 continue;
 
-            let [binaryData, etag_] = processUser.load_bytes(null);
+            const [binaryData, etag_] = processUser.load_bytes(null);
             let contents = '';
-            let readData = binaryData.get_data();
+            const readData = binaryData.get_data();
             for (let i = 0; i < readData.length; i++) {
                 if (readData[i] < 32)
                     contents += ' ';
                 else
                     contents += String.fromCharCode(readData[i]);
             }
-            let path =
-                `gjs ${
-                    GLib.build_filenamev([
-                        this.path,
-                        'renderer',
-                        'renderer.js',
-                    ])}`;
+            const path = `gjs ${GLib.build_filenamev([
+                this.path,
+                'renderer',
+                'renderer.js',
+            ])}`;
             if (contents.startsWith(path)) {
-                let proc = new Gio.Subprocess({argv: ['/bin/kill', filename]});
+                const proc = new Gio.Subprocess({argv: ['/bin/kill', filename]});
                 proc.init(null);
                 proc.wait(null);
             }

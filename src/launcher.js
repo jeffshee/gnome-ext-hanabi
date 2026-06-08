@@ -1,25 +1,21 @@
-/**
- * Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// Copyright (C) 2026 Jeff Shee <jeffshee8969@gmail.com> and contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 
-/**
- * Credit:
- * This code draws significant inspiration from the implementation of
- * LaunchSubprocess in the DING extension.
- */
+// Adapted from LaunchSubprocess in the DING extension.
 
 import Meta from 'gi://Meta';
 import Gio from 'gi://Gio';
@@ -31,15 +27,18 @@ import * as Logger from './logger.js';
 const logger = new Logger.Logger();
 const rendererLogger = new Logger.Logger('renderer');
 
-// Get GNOME Shell major version
 const shellVersion = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
 
 export class LaunchSubprocess {
     constructor(flags = Gio.SubprocessFlags.NONE) {
-        if (shellVersion < 50)
+        // Feature detection: Use Meta.is_wayland_compositor if available (GNOME < 50)
+        // On GNOME 50+, the function was removed and X11 support was dropped
+        if (shellVersion < 50) {
             this._isX11 = !Meta.is_wayland_compositor();
-        else
-            this._isX11 = false
+        } else {
+            // GNOME 50+: X11 backend removed, assume Wayland
+            this._isX11 = false;
+        }
 
         this._flags =
             flags |
@@ -50,8 +49,12 @@ export class LaunchSubprocess {
         this._launcher = new Gio.SubprocessLauncher({flags: this._flags});
 
         // For GNOME Shell < 49, initialize WaylandClient in constructor
-        if (!this._isX11 && shellVersion < 49)
-            this._waylandClient = Meta.WaylandClient.new(global.context, this._launcher);
+        if (!this._isX11 && shellVersion < 49) {
+            this._waylandClient = Meta.WaylandClient.new(
+                global.context,
+                this._launcher
+            );
+        }
 
         this.subprocess = null;
         this.running = false;
@@ -61,10 +64,17 @@ export class LaunchSubprocess {
         if (!this._isX11) {
             if (shellVersion < 49) {
                 // GNOME Shell < 49: Use spawnv on pre-initialized WaylandClient
-                this.subprocess = this._waylandClient.spawnv(global.display, argv);
+                this.subprocess = this._waylandClient.spawnv(
+                    global.display,
+                    argv
+                );
             } else {
                 // GNOME Shell >= 49: Use new_subprocess to create WaylandClient
-                this._waylandClient = Meta.WaylandClient.new_subprocess(global.context, this._launcher, argv);
+                this._waylandClient = Meta.WaylandClient.new_subprocess(
+                    global.context,
+                    this._launcher,
+                    argv
+                );
                 this.subprocess = this._waylandClient.get_subprocess();
             }
         } else {
@@ -77,7 +87,6 @@ export class LaunchSubprocess {
 
         this._launcher = null;
         if (this.subprocess) {
-            // Read STDOUT and STDERR from the renderer
             this._dataInputStream = Gio.DataInputStream.new(
                 this.subprocess.get_stdout_pipe()
             );
@@ -146,14 +155,4 @@ export class LaunchSubprocess {
         const pid = this.subprocess.get_identifier();
         return pid ? parseInt(pid) : 0;
     }
-
-    // show_in_window_list(window) {
-    //     if (!this._isX11 && this.running)
-    //         this._waylandClient.show_in_window_list(window);
-    // }
-
-    // hide_from_window_list(window) {
-    //     if (!this._isX11 && this.running)
-    //         this._waylandClient.hide_from_window_list(window);
-    // }
 }

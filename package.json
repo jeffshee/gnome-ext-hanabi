@@ -6,8 +6,11 @@
   "repository": "https://github.com/jeffshee/gnome-ext-hanabi",
   "author": "Jeff Shee",
   "license": "GPL-3.0-or-later",
+  "type": "module",
+  "scripts": {
+    "lint": "tools/run-eslint.sh"
+  },
   "devDependencies": {
-    "eslint": "^8.34.0",
-    "eslint-plugin-jsdoc": "^46.9.0"
+    "prettier": "^3.8.3"
   }
 }

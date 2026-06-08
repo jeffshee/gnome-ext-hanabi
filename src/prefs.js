@@ -1,19 +1,19 @@
-/**
- * Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// Copyright (C) 2026 Jeff Shee <jeffshee8969@gmail.com> and contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 /* exported init fillPreferencesWindow */
 
@@ -21,7 +21,10 @@ import Adw from 'gi://Adw';
 import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
 
-import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
+import {
+    ExtensionPreferences,
+    gettext as _,
+} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 const haveContentFit = Gtk.get_minor_version() >= 8;
 
@@ -41,8 +44,25 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
         prefsRowVideoPath(window, generalGroup);
         prefsRowFitMode(window, generalGroup);
         prefsRowBoolean(window, generalGroup, _('Mute Audio'), 'mute', '');
-        prefsRowInt(window, generalGroup, _('Volume Level'), 'volume', '', 0, 100, 1, 10);
-        prefsRowBoolean(window, generalGroup, _('Show Panel Menu'), 'show-panel-menu', '');
+        prefsRowInt(
+            window,
+            generalGroup,
+            _('Volume Level'),
+            'volume',
+            '',
+            0,
+            100,
+            1,
+            10
+        );
+        prefsRowBoolean(window, generalGroup, _('Random Start Position'), 'random-start-position', _('Start playback from a random position each time a video starts'));
+        prefsRowBoolean(
+            window,
+            generalGroup,
+            _('Show Panel Menu'),
+            'show-panel-menu',
+            ''
+        );
 
         /**
          * Auto Pause
@@ -52,8 +72,25 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
         });
         page.add(autoPauseGroup);
         prefsRowPauseOnMaximizeOrFullscreen(window, autoPauseGroup);
+        prefsRowBoolean(
+            window,
+            autoPauseGroup,
+            _('Pause on Window Focus'),
+            'pause-on-focus',
+            _('Pause playback when any window is focused')
+        );
         prefsRowPauseOnBattery(window, autoPauseGroup);
-        prefsRowInt(window, autoPauseGroup, _('Low Battery Threshold'), 'low-battery-threshold', _('Set the threshold percentage for low battery level'), 0, 100, 5, 10);
+        prefsRowInt(
+            window,
+            autoPauseGroup,
+            _('Low Battery Threshold'),
+            'low-battery-threshold',
+            _('Set the threshold percentage for low battery level'),
+            0,
+            100,
+            5,
+            10
+        );
         prefsRowBoolean(
             window,
             autoPauseGroup,
@@ -69,7 +106,13 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
             title: _('Wallpaper Changer'),
         });
         page.add(wallpaperChangerGroup);
-        prefsRowBoolean(window, wallpaperChangerGroup, _('Change Wallpaper Automatically'), 'change-wallpaper', '');
+        prefsRowBoolean(
+            window,
+            wallpaperChangerGroup,
+            _('Change Wallpaper Automatically'),
+            'change-wallpaper',
+            ''
+        );
         prefsRowDirectoryPath(window, wallpaperChangerGroup);
         prefsRowChangeWallpaperMode(window, wallpaperChangerGroup);
         prefsRowInt(window, wallpaperChangerGroup, _('Change Wallpaper Interval (minutes)'), 'change-wallpaper-interval', '', 1, 1440, 5, 0);
@@ -87,7 +130,9 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
             experimentalGroup,
             _('Experimental VA Plugin'),
             'enable-va',
-            _('Enable VA decoders which improve performance for Intel/AMD Wayland users')
+            _(
+                'Enable VA decoders which improve performance for Intel/AMD Wayland users'
+            )
         );
         prefsRowBoolean(
             window,
@@ -114,9 +159,9 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
         prefsRowBoolean(
             window,
             developerGroup,
-            _('Force gtk4paintablesink'),
-            'force-gtk4paintablesink',
-            _('Force use of gtk4paintablesink for video playback')
+            _('Prefer clappersink'),
+            'prefer-clappersink',
+            _('Prefer clappersink over gtk4paintablesink for video playback')
         );
         prefsRowBoolean(
             window,
@@ -130,7 +175,9 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
             developerGroup,
             _('Enable Graphics Offload'),
             'enable-graphics-offload',
-            _('Enable graphics offload for improved performance (requires GTK 4.14+)')
+            _(
+                'Enable graphics offload for improved performance (requires GTK 4.14+)'
+            )
         );
         prefsRowInt(window, developerGroup, _('Startup Delay'), 'startup-delay', _('Delay in milliseconds before loading wallpaper. Set to 0 for instant startup (no delay).'), 0, 10000, 100, 500);
 
@@ -139,14 +186,6 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
     }
 }
 
-/**
- *
- * @param {Adw.PreferencesWindow} window AdwPreferencesWindow
- * @param {Adw.PreferencesGroup} prefsGroup AdwPreferencesGroup
- * @param {string} title Setting title
- * @param {string} key Setting key
- * @param {string} subtitle Setting subtitle
- */
 function prefsRowBoolean(window, prefsGroup, title, key, subtitle) {
     const settings = window._settings;
     // Create a new preferences row
@@ -165,18 +204,6 @@ function prefsRowBoolean(window, prefsGroup, title, key, subtitle) {
     row.activatable_widget = toggle;
 }
 
-/**
- *
- * @param {Adw.PreferencesWindow} window AdwPreferencesWindow
- * @param {Adw.PreferencesGroup} prefsGroup AdwPreferencesGroup
- * @param {string} title Setting title
- * @param {string} key Setting key
- * @param {string} subtitle Setting subtitle
- * @param {number} lower GtkAdjustment lower
- * @param {number} upper GtkAdjustment upper
- * @param {number} stepIncrement GtkAdjustment step_increment
- * @param {number} pageIncrement GtkAdjustment page_increment
- */
 function prefsRowInt(
     window,
     prefsGroup,
@@ -212,17 +239,12 @@ function prefsRowInt(
     row.add_suffix(spin);
 }
 
-/**
- *
- * @param {Adw.PreferencesWindow} window AdwPreferencesWindow
- * @param {Adw.PreferencesGroup} prefsGroup AdwPreferencesGroup
- */
 function prefsRowVideoPath(window, prefsGroup) {
     const settings = window._settings;
     const title = _('Video Path');
     const key = 'video-path';
 
-    let path = settings.get_string(key);
+    const path = settings.get_string(key);
     const row = new Adw.ActionRow({
         title,
         subtitle: `${path !== '' ? path : _('None')}`,
@@ -233,10 +255,10 @@ function prefsRowVideoPath(window, prefsGroup) {
      * Video file chooser
      */
     function createDialog() {
-        let fileFilter = new Gtk.FileFilter();
+        const fileFilter = new Gtk.FileFilter();
         fileFilter.add_mime_type('video/*');
 
-        let fileChooser = new Gtk.FileChooserDialog({
+        const fileChooser = new Gtk.FileChooserDialog({
             title: _('Open File'),
             action: Gtk.FileChooserAction.OPEN,
         });
@@ -248,7 +270,7 @@ function prefsRowVideoPath(window, prefsGroup) {
 
         fileChooser.connect('response', (dialog, responseId) => {
             if (responseId === Gtk.ResponseType.ACCEPT) {
-                let _path = dialog.get_file().get_path();
+                const _path = dialog.get_file().get_path();
                 settings.set_string(key, _path);
                 row.subtitle = `${_path !== '' ? _path : _('None')}`;
             }
@@ -257,7 +279,7 @@ function prefsRowVideoPath(window, prefsGroup) {
         return fileChooser;
     }
 
-    let button = new Adw.ButtonContent({
+    const button = new Adw.ButtonContent({
         icon_name: 'document-open-symbolic',
         label: _('Open'),
     });
@@ -266,22 +288,17 @@ function prefsRowVideoPath(window, prefsGroup) {
     row.add_suffix(button);
 
     row.connect('activated', () => {
-        let dialog = createDialog();
+        const dialog = createDialog();
         dialog.show();
     });
 }
 
-/**
- *
- * @param {Adw.PreferencesWindow} window AdwPreferencesWindow
- * @param {Adw.PreferencesGroup} prefsGroup AdwPreferencesGroup
- */
 function prefsRowDirectoryPath(window, prefsGroup) {
     const settings = window._settings;
     const title = _('Change Wallpaper Directory Path');
     const key = 'change-wallpaper-directory-path';
 
-    let path = settings.get_string(key);
+    const path = settings.get_string(key);
     const row = new Adw.ActionRow({
         title,
         subtitle: `${path !== '' ? path : _('None')}`,
@@ -292,7 +309,7 @@ function prefsRowDirectoryPath(window, prefsGroup) {
      *
      */
     function createDialog() {
-        let fileChooser = new Gtk.FileChooserDialog({
+        const fileChooser = new Gtk.FileChooserDialog({
             title: _('Select Directory'),
             action: Gtk.FileChooserAction.SELECT_FOLDER,
         });
@@ -303,7 +320,7 @@ function prefsRowDirectoryPath(window, prefsGroup) {
 
         fileChooser.connect('response', (dialog, responseId) => {
             if (responseId === Gtk.ResponseType.ACCEPT) {
-                let _path = dialog.get_file().get_path();
+                const _path = dialog.get_file().get_path();
                 settings.set_string(key, _path);
                 row.subtitle = `${_path !== '' ? _path : _('None')}`;
             }
@@ -312,7 +329,7 @@ function prefsRowDirectoryPath(window, prefsGroup) {
         return fileChooser;
     }
 
-    let button = new Adw.ButtonContent({
+    const button = new Adw.ButtonContent({
         icon_name: 'document-open-symbolic',
         label: _('Open'),
     });
@@ -321,16 +338,11 @@ function prefsRowDirectoryPath(window, prefsGroup) {
     row.add_suffix(button);
 
     row.connect('activated', () => {
-        let dialog = createDialog();
+        const dialog = createDialog();
         dialog.show();
     });
 }
 
-/**
- *
- * @param {Adw.PreferencesWindow} window AdwPreferencesWindow
- * @param {Adw.PreferencesGroup} prefsGroup AdwPreferencesGroup
- */
 function prefsRowFitMode(window, prefsGroup) {
     const settings = window._settings;
     const title = _('Fit Mode');
@@ -369,15 +381,12 @@ function prefsRowFitMode(window, prefsGroup) {
     });
 }
 
-/**
- *
- * @param window
- * @param prefsGroup
- */
 function prefsRowPauseOnMaximizeOrFullscreen(window, prefsGroup) {
     const settings = window._settings;
     const title = _('Pause on Maximize or Fullscreen');
-    const subtitle = _('Pause playback when there is maximized or fullscreen window');
+    const subtitle = _(
+        'Pause playback when there is maximized or fullscreen window'
+    );
     const tooltip = _(`
     <b>Never</b>: Disable this feature.
     <b>Any Monitor</b>: Pause playback when there is maximized or fullscreen window on any monitor.
@@ -405,15 +414,12 @@ function prefsRowPauseOnMaximizeOrFullscreen(window, prefsGroup) {
     });
 }
 
-/**
- *
- * @param window
- * @param prefsGroup
- */
 function prefsRowPauseOnBattery(window, prefsGroup) {
     const settings = window._settings;
     const title = _('Pause on Battery');
-    const subtitle = _('Pause playback when the device is on battery or the battery is low');
+    const subtitle = _(
+        'Pause playback when the device is on battery or the battery is low'
+    );
     const tooltip = _(`
     <b>Never</b>: Disable this feature.
     <b>Low Battery</b>: Pause playback when the device is on low battery (below the threshold).
@@ -441,11 +447,6 @@ function prefsRowPauseOnBattery(window, prefsGroup) {
     });
 }
 
-/**
- *
- * @param {Adw.PreferencesWindow} window AdwPreferencesWindow
- * @param {Adw.PreferencesGroup} prefsGroup AdwPreferencesGroup
- */
 function prefsRowChangeWallpaperMode(window, prefsGroup) {
     const settings = window._settings;
     const title = _('Change Wallpaper Mode');
@@ -474,4 +475,32 @@ function prefsRowChangeWallpaperMode(window, prefsGroup) {
     row.connect('notify::selected', () => {
         settings.set_int('change-wallpaper-mode', row.selected);
     });
+}
+
+function prefsRowBoundsInset(window, prefsGroup) {
+    const settings = window._settings;
+    const expander = new Adw.ExpanderRow({
+        title: _('Bounds Inset'),
+        subtitle: _('Adjust edges of the overview rounded-rect bounds (positive = shrink inward)'),
+    });
+    prefsGroup.add(expander);
+
+    for (const [title, key] of [
+        [_('Left'),   'bounds-inset-x1'],
+        [_('Top'),    'bounds-inset-y1'],
+        [_('Right'),  'bounds-inset-x2'],
+        [_('Bottom'), 'bounds-inset-y2'],
+    ]) {
+        const child = new Adw.ActionRow({title});
+        const adjustment = new Gtk.Adjustment({
+            lower: -200,
+            upper: 200,
+            step_increment: 1,
+            page_increment: 10,
+            value: settings.get_int(key),
+        });
+        adjustment.connect('value-changed', () => settings.set_int(key, adjustment.value));
+        child.add_suffix(new Gtk.SpinButton({adjustment, valign: Gtk.Align.CENTER}));
+        expander.add_row(child);
+    }
 }

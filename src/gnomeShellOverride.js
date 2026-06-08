@@ -1,27 +1,31 @@
-/**
- * Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// Copyright (C) 2026 Jeff Shee <jeffshee8969@gmail.com> and contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 /* eslint-disable no-invalid-this */
 
 import Meta from 'gi://Meta';
 import St from 'gi://St';
 import Shell from 'gi://Shell';
+import GLib from 'gi://GLib';
 
-import {InjectionManager, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {
+    InjectionManager,
+    gettext as _,
+} from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Background from 'resource:///org/gnome/shell/ui/background.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as Workspace from 'resource:///org/gnome/shell/ui/workspace.js';
@@ -39,9 +43,10 @@ const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const BACKGROUND_CORNER_RADIUS_PIXELS = 30;
 
 export class GnomeShellOverride {
-    constructor() {
+    constructor(settings = null) {
         this._injectionManager = new InjectionManager();
         this._wallpaperActors = new Set();
+        this._settings = settings;
     }
 
     _reloadBackgrounds() {
@@ -73,7 +78,9 @@ export class GnomeShellOverride {
         }
 
         /**
-         *  Blur My Shell
+         *  Blur My Shell & Dash to Dock refresh
+         *  We defer these slightly to ensure Hanabi's backgrounds are allocated
+         *  before other extensions try to blur or react to the change.
          */
         try {
             if (Main.extensionManager._enabledExtensions.includes('blur-my-shell@aunetx')) {
@@ -91,41 +98,65 @@ export class GnomeShellOverride {
         /**
          * Live wallpaper
          */
-        let thisRef = this;
+        const thisRef = this;
 
-        this._injectionManager.overrideMethod(Background.BackgroundManager.prototype, '_createBackgroundActor',
+        this._injectionManager.overrideMethod(
+            Background.BackgroundManager.prototype,
+            '_createBackgroundActor',
             originalMethod => {
                 return function () {
                     const backgroundActor = originalMethod.call(this);
 
                     // We need to pass radius to actors, so save a ref in bgManager.
-                    this.videoActor = new Wallpaper.LiveWallpaper(backgroundActor);
+                    this.videoActor = new Wallpaper.LiveWallpaper(
+                        backgroundActor,
+                        thisRef._settings
+                    );
                     thisRef._wallpaperActors.add(this.videoActor);
 
                     this.videoActor.connect('destroy', actor => {
                         thisRef._wallpaperActors.delete(actor);
+                        if (this.videoActor === actor)
+                            this.videoActor = null;
                     });
 
                     return backgroundActor;
                 };
-            });
+            }
+        );
 
         /**
          * Rounded corner
          *
          * Ref: https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/a6d35fdd2abd63d23c7a9d093645f760691539a0/js/ui/workspace.js#L1003-1022
          */
-        this._injectionManager.overrideMethod(Workspace.WorkspaceBackground.prototype, '_updateBorderRadius',
-            // Don't call the orginal method, use our implementation of rounded corners instead.
-            _originalMethod => {
+        this._injectionManager.overrideMethod(
+            Workspace.WorkspaceBackground.prototype,
+            '_updateBorderRadius',
+            originalMethod => {
                 return function () {
+                    originalMethod.call(this);
+
                     // The scale factor here is an integer, not the fractional scale factor.
                     // Ref: https://gjs-docs.gnome.org/st13~13/st.themecontext#method-get_scale_factor
-                    const {scaleFactor} = St.ThemeContext.get_for_stage(global.stage);
-                    const cornerRadius = scaleFactor * BACKGROUND_CORNER_RADIUS_PIXELS;
+                    const {scaleFactor} = St.ThemeContext.get_for_stage(
+                        global.stage
+                    );
+                    const cornerRadius =
+                        scaleFactor * (thisRef._settings?.get_int('corner-radius') ?? BACKGROUND_CORNER_RADIUS_PIXELS);
 
-                    const radius = Util.lerp(0, cornerRadius, this._stateAdjustment.value);
+                    const radius = Util.lerp(
+                        0,
+                        cornerRadius,
+                        this._stateAdjustment.value
+                    );
                     this._bgManager.videoActor?.setRoundedClipRadius(radius);
+                    const backgroundContent = this._bgManager.backgroundActor?.content;
+                    if (backgroundContent)
+                        backgroundContent.rounded_clip_radius = radius;
+
+                    // Override the CSS border-radius so the shadow follows our radius.
+                    this.style = `border-radius: ${thisRef._settings?.get_int('corner-radius') ?? BACKGROUND_CORNER_RADIUS_PIXELS}px`;
                 };
             }
         );
@@ -157,10 +188,12 @@ export class GnomeShellOverride {
         }
 
         // These remove the renderer's window preview in overview.
-        this._injectionManager.overrideMethod(Workspace.Workspace.prototype, '_isOverviewWindow',
+        this._injectionManager.overrideMethod(
+            Workspace.Workspace.prototype,
+            '_isOverviewWindow',
             originalMethod => {
                 return function (window) {
-                    let isRenderer = window.title?.includes(applicationId);
+                    const isRenderer = window.title?.includes(applicationId);
                     return isRenderer
                         ? false
                         : originalMethod.apply(this, [window]);
@@ -168,10 +201,12 @@ export class GnomeShellOverride {
             }
         );
 
-        this._injectionManager.overrideMethod(WorkspaceThumbnail.WorkspaceThumbnail.prototype, '_isOverviewWindow',
+        this._injectionManager.overrideMethod(
+            WorkspaceThumbnail.WorkspaceThumbnail.prototype,
+            '_isOverviewWindow',
             originalMethod => {
                 return function (window) {
-                    let isRenderer = window.title?.includes(applicationId);
+                    const isRenderer = window.title?.includes(applicationId);
                     return isRenderer
                         ? false
                         : originalMethod.apply(this, [window]);
@@ -180,14 +215,16 @@ export class GnomeShellOverride {
         );
 
         // This remove the renderer icon from altTab and ctrlAltTab(?).
-        this._injectionManager.overrideMethod(Meta.Display.prototype, 'get_tab_list',
+        this._injectionManager.overrideMethod(
+            Meta.Display.prototype,
+            'get_tab_list',
             originalMethod => {
                 return function (type, workspace) {
-                    let metaWindows = originalMethod.apply(this, [
+                    const metaWindows = originalMethod.apply(this, [
                         type,
                         workspace,
                     ]);
-                    let result = metaWindows.filter(
+                    const result = metaWindows.filter(
                         metaWindow => !metaWindow.title?.includes(applicationId)
                     );
                     return result;
@@ -200,10 +237,12 @@ export class GnomeShellOverride {
         // the renderer window also has the same pid as the gnome-shell.
         // This causes renderer window to be mistakenly associated as same app as nautilus.
         // These overrides workarond this issue. (Almost, nautilus app state might shows as `RUNNING`)
-        this._injectionManager.overrideMethod(Shell.WindowTracker.prototype, 'get_window_app',
+        this._injectionManager.overrideMethod(
+            Shell.WindowTracker.prototype,
+            'get_window_app',
             originalMethod => {
                 return function (window) {
-                    let isRenderer = window.title?.includes(applicationId);
+                    const isRenderer = window.title?.includes(applicationId);
                     return isRenderer
                         ? null
                         : originalMethod.apply(this, [window]);
@@ -211,11 +250,13 @@ export class GnomeShellOverride {
             }
         );
 
-        this._injectionManager.overrideMethod(Shell.App.prototype, 'get_windows',
+        this._injectionManager.overrideMethod(
+            Shell.App.prototype,
+            'get_windows',
             originalMethod => {
                 return function () {
-                    let metaWindows = originalMethod.call(this);
-                    let result = metaWindows.filter(
+                    const metaWindows = originalMethod.call(this);
+                    const result = metaWindows.filter(
                         metaWindow => !metaWindow.title?.includes(applicationId)
                     );
                     return result;
@@ -223,35 +264,37 @@ export class GnomeShellOverride {
             }
         );
 
-        this._injectionManager.overrideMethod(Shell.App.prototype, 'get_n_windows',
+        this._injectionManager.overrideMethod(
+            Shell.App.prototype,
+            'get_n_windows',
             _originalMethod => {
                 return function () {
-                    let app = this;
+                    const app = this;
                     return app.get_windows().length;
                 };
             }
         );
 
         // This remove the renderer icon from altTab and dash.
-        this._injectionManager.overrideMethod(Shell.AppSystem.prototype, 'get_running',
+        this._injectionManager.overrideMethod(
+            Shell.AppSystem.prototype,
+            'get_running',
             originalMethod => {
                 return function () {
-                    let runningApps = originalMethod.call(this);
-                    let result = runningApps.filter(app => app.get_n_windows() > 0);
+                    const runningApps = originalMethod.call(this);
+                    const result = runningApps.filter(
+                        app => app.get_n_windows() > 0
+                    );
                     return result;
                 };
             }
         );
 
-        if (!Main.sessionMode.isLocked) {
-            this._reloadBackgrounds();
-        }
+        this._reloadBackgrounds();
     }
 
     disable() {
         this._injectionManager.clear();
-        if (!Main.sessionMode.isLocked) {
-            this._reloadBackgrounds();
-        }
+        this._reloadBackgrounds();
     }
 }

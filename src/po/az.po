@@ -2,186 +2,239 @@
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # Tofiq Vəlizadə <velizadetofiq1@gmail.com>, 2025.
+# Mahir Mehtizade <tenpesutomahiru@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-25 18:29+0900\n"
-"PO-Revision-Date: 2025-11-05 12:51+0000\n"
-"Last-Translator: Tofiq Vəlizadə <velizadetofiq1@gmail.com>\n"
-"Language-Team: Azerbaijani <https://hosted.weblate.org/projects/"
-"gnome-ext-hanabi/gnome-ext-hanabi/az/>\n"
+"POT-Creation-Date: 2026-06-07 17:44+0900\n"
+"PO-Revision-Date: 2026-05-22 19:11+0000\n"
+"Last-Translator: Mahir Mehtizade <tenpesutomahiru@gmail.com>\n"
+"Language-Team: Azerbaijani <https://hosted.weblate.org/projects/gnome-ext-"
+"hanabi/gnome-ext-hanabi/az/>\n"
 "Language: az\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.1-dev\n"
+"X-Generator: Weblate 2026.6.dev0\n"
 
-#: src/panelMenu.js:70 src/panelMenu.js:85
+#: src/panelMenu.js:75 src/panelMenu.js:90
 msgid "Pause"
-msgstr ""
+msgstr "Dayandır"
 
-#: src/panelMenu.js:70 src/panelMenu.js:85
+#: src/panelMenu.js:75 src/panelMenu.js:90
 msgid "Play"
-msgstr ""
+msgstr "Oynat"
 
-#: src/panelMenu.js:94 src/panelMenu.js:103
+#: src/panelMenu.js:99 src/panelMenu.js:108
 msgid "Unmute Audio"
-msgstr ""
+msgstr "Səsi aç"
 
-#: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:43
+#: src/panelMenu.js:99 src/panelMenu.js:108 src/prefs.js:46
 msgid "Mute Audio"
-msgstr ""
+msgstr "Səsi Susdur"
 
-#: src/panelMenu.js:110
+#: src/panelMenu.js:116
 msgid "Next Wallpaper"
-msgstr ""
+msgstr "Növbəti Divarkağızı"
 
-#: src/panelMenu.js:125
+#: src/panelMenu.js:136
 msgid "Preferences"
-msgstr ""
+msgstr "Parametrlər"
 
-#: src/prefs.js:38
+#: src/prefs.js:41
 msgid "General"
-msgstr ""
+msgstr "Ümumi"
 
-#: src/prefs.js:44
+#: src/prefs.js:50
 msgid "Volume Level"
+msgstr "Səs səviyyəsi"
+
+#: src/prefs.js:58
+msgid "Random Start Position"
 msgstr ""
 
-#: src/prefs.js:45
-msgid "Show Panel Menu"
-msgstr ""
-
-#: src/prefs.js:51
-msgid "Auto Pause"
-msgstr "Dayanma"
-
-#: src/prefs.js:56
-msgid "Low Battery Threshold"
-msgstr ""
-
-#: src/prefs.js:56
-msgid "Set the threshold percentage for low battery level"
-msgstr ""
-
-#: src/prefs.js:60
-msgid "Pause on Media Player Playing"
+#: src/prefs.js:58
+msgid "Start playback from a random position each time a video starts"
 msgstr ""
 
 #: src/prefs.js:62
+msgid "Show Panel Menu"
+msgstr "Panel menyusunu göstər"
+
+#: src/prefs.js:71
+msgid "Auto Pause"
+msgstr "Dayanma"
+
+#: src/prefs.js:78
+msgid "Pause on Window Focus"
+msgstr ""
+
+#: src/prefs.js:80
+#, fuzzy
+#| msgid "Pause playback when an MPRIS media player is playing media"
+msgid "Pause playback when any window is focused"
+msgstr "MPRIS media pleyeri media oxudarkən oynatmanı dayandır"
+
+#: src/prefs.js:86
+msgid "Low Battery Threshold"
+msgstr "Aşağı batareya həddi"
+
+#: src/prefs.js:88
+msgid "Set the threshold percentage for low battery level"
+msgstr "Aşağı batareya səviyyəsi üçün hədd faizini təyin et"
+
+#: src/prefs.js:97
+msgid "Pause on Media Player Playing"
+msgstr "Media pleyer işləyərkən dayandır"
+
+#: src/prefs.js:99
 msgid "Pause playback when an MPRIS media player is playing media"
-msgstr ""
+msgstr "MPRIS media pleyeri media oxudarkən oynatmanı dayandır"
 
-#: src/prefs.js:69
+#: src/prefs.js:106
 msgid "Wallpaper Changer"
-msgstr ""
+msgstr "Divar kağızı dəyişdirici"
 
-#: src/prefs.js:72
+#: src/prefs.js:112
 msgid "Change Wallpaper Automatically"
-msgstr ""
+msgstr "Divar kağızını avtomatik dəyiş"
 
-#: src/prefs.js:75
+#: src/prefs.js:121
 msgid "Change Wallpaper Interval (minutes)"
+msgstr "Divar kağızı dəyişmə müddəti (dəqiqə)"
+
+#: src/prefs.js:134
+msgid "Overview"
 msgstr ""
 
-#: src/prefs.js:81
+#: src/prefs.js:140
+msgid "Corner Radius"
+msgstr ""
+
+#: src/prefs.js:142
+msgid ""
+"Rounded corner radius in pixels for workspace background in the overview"
+msgstr ""
+
+#: src/prefs.js:153
 msgid "Experimental"
-msgstr ""
+msgstr "Sınaq rejimi"
 
-#: src/prefs.js:87
+#: src/prefs.js:159
 msgid "Experimental VA Plugin"
-msgstr ""
+msgstr "Təcrübəvi VA plagin"
 
-#: src/prefs.js:89
+#: src/prefs.js:162
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
-msgstr ""
+msgstr "VA dekoderlərini aktiv et — Intel/AMD Wayland performansını artırır"
 
-#: src/prefs.js:94
+#: src/prefs.js:168
 msgid "NVIDIA Stateless Decoders"
 msgstr ""
 
-#: src/prefs.js:96
+#: src/prefs.js:170
 msgid "Use new stateless NVIDIA decoders"
-msgstr ""
+msgstr "Yeni stateless NVIDIA dekoderlərindən istifadə et"
 
-#: src/prefs.js:103
+#: src/prefs.js:177
 msgid "Developer"
-msgstr ""
+msgstr "Tərtibatçı"
 
-#: src/prefs.js:109
+#: src/prefs.js:183
 msgid "Debug Mode"
-msgstr ""
+msgstr "Xəta axtarış rejimi"
 
-#: src/prefs.js:111
+#: src/prefs.js:185
 msgid "Print debug messages to log"
-msgstr ""
+msgstr "Sazlama mesajlarını log-a yazdır"
 
-#: src/prefs.js:116
-msgid "Force gtk4paintablesink"
-msgstr ""
+#: src/prefs.js:190
+#, fuzzy
+#| msgid "Preferences"
+msgid "Prefer clappersink"
+msgstr "Parametrlər"
 
-#: src/prefs.js:118
-msgid "Force use of gtk4paintablesink for video playback"
-msgstr ""
+#: src/prefs.js:192
+#, fuzzy
+#| msgid "Force use of gtk4paintablesink for video playback"
+msgid "Prefer clappersink over gtk4paintablesink for video playback"
+msgstr "Video oynatma üçün gtk4paintablesink istifadəsini məcbur et"
 
-#: src/prefs.js:123
+#: src/prefs.js:197
 msgid "Force GtkMediaFile"
-msgstr ""
+msgstr "GtkMediaFile-i məcbur et"
 
-#: src/prefs.js:125
+#: src/prefs.js:199
 msgid "Force use of GtkMediaFile for video playback"
+msgstr "Video oynatma üçün GtkMediaFile istifadəsini məcbur et"
+
+#: src/prefs.js:204
+msgid "Enable Graphics Offload"
 msgstr ""
 
-#: src/prefs.js:127
+#: src/prefs.js:207
+msgid "Enable graphics offload for improved performance (requires GTK 4.14+)"
+msgstr ""
+
+#: src/prefs.js:213
 msgid "Startup Delay"
-msgstr ""
+msgstr "Başlatma gecikməsi"
 
-#: src/prefs.js:127
+#: src/prefs.js:216
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr "sistem başlanma gecikməsi"
 
-#: src/prefs.js:214
+#: src/prefs.js:226
+msgid "Border Stroke"
+msgstr ""
+
+#: src/prefs.js:228
+msgid ""
+"Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)"
+msgstr ""
+
+#: src/prefs.js:296
 msgid "Video Path"
-msgstr ""
+msgstr "Video qovluq yolu"
 
-#: src/prefs.js:220 src/prefs.js:245 src/prefs.js:279 src/prefs.js:300
+#: src/prefs.js:302 src/prefs.js:327 src/prefs.js:356 src/prefs.js:377
 msgid "None"
-msgstr ""
+msgstr "Heçnə"
 
-#: src/prefs.js:232
+#: src/prefs.js:314
 msgid "Open File"
-msgstr ""
+msgstr "Faylı aç"
 
-#: src/prefs.js:237 src/prefs.js:293
+#: src/prefs.js:319 src/prefs.js:370
 msgid "Cancel"
-msgstr ""
+msgstr "Ləğv et"
 
-#: src/prefs.js:238 src/prefs.js:254 src/prefs.js:294 src/prefs.js:309
+#: src/prefs.js:320 src/prefs.js:336 src/prefs.js:371 src/prefs.js:386
 msgid "Open"
-msgstr ""
+msgstr "Aç"
 
-#: src/prefs.js:273
+#: src/prefs.js:350
 msgid "Change Wallpaper Directory Path"
-msgstr ""
+msgstr "Divar kağızı qovluğunun yolunu dəyiş"
 
-#: src/prefs.js:288
+#: src/prefs.js:365
 msgid "Select Directory"
-msgstr ""
+msgstr "Qovluq seç"
 
-#: src/prefs.js:328
+#: src/prefs.js:400
 msgid "Fit Mode"
 msgstr ""
 
-#: src/prefs.js:329
+#: src/prefs.js:401
 msgid "Control how wallpaper fits within the monitor"
-msgstr ""
+msgstr "Divar kağızının ekrana necə uyğunlaşmasını tənzimlə"
 
-#: src/prefs.js:330
+#: src/prefs.js:402
 msgid ""
 "\n"
 "    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
@@ -194,35 +247,35 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/prefs.js:338
+#: src/prefs.js:410
 msgid "Fill"
-msgstr ""
+msgstr "Ekranı doldur"
 
-#: src/prefs.js:339
+#: src/prefs.js:411
 msgid "Contain"
-msgstr ""
+msgstr "Çərçivəyə sığdır"
 
-#: src/prefs.js:340
+#: src/prefs.js:412
 msgid "Cover"
-msgstr ""
+msgstr "Doldur"
 
-#: src/prefs.js:341
+#: src/prefs.js:413
 msgid "Scale-down"
-msgstr ""
+msgstr "Ölçünü Kiçilt"
 
-#: src/prefs.js:354
+#: src/prefs.js:426
 msgid "This feature requires Gtk 4.8 or above"
-msgstr ""
+msgstr "Bu funksiya Gtk 4.8 və ya daha yeni versiya tələb edir"
 
-#: src/prefs.js:371
+#: src/prefs.js:438
 msgid "Pause on Maximize or Fullscreen"
-msgstr ""
+msgstr "Maksimallaşdırma və ya tam ekran rejimində dayandır"
 
-#: src/prefs.js:372
+#: src/prefs.js:440
 msgid "Pause playback when there is maximized or fullscreen window"
-msgstr ""
+msgstr "Maksimallaşdırılmış və ya tam ekran pəncərə olduqda oynatmanı dayandır"
 
-#: src/prefs.js:373
+#: src/prefs.js:442
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -233,27 +286,28 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/prefs.js:380 src/prefs.js:416
+#: src/prefs.js:449 src/prefs.js:482
 msgid "Never"
-msgstr ""
+msgstr "Heçvaxt"
 
-#: src/prefs.js:381
+#: src/prefs.js:450
 msgid "Any Monitor"
 msgstr "Hər hansısa monitor"
 
-#: src/prefs.js:382
+#: src/prefs.js:451
 msgid "All Monitors"
 msgstr "Bütün monitorlar"
 
-#: src/prefs.js:407
+#: src/prefs.js:471
 msgid "Pause on Battery"
-msgstr ""
+msgstr "Batareya rejimində dayandır"
 
-#: src/prefs.js:408
+#: src/prefs.js:473
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
+"Cihaz batareya rejimində olduqda və ya batareya az olduqda oynatmanı dayandır"
 
-#: src/prefs.js:409
+#: src/prefs.js:475
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -263,23 +317,23 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/prefs.js:417
+#: src/prefs.js:483
 msgid "Low Battery"
-msgstr ""
+msgstr "Az Batareya"
 
-#: src/prefs.js:418
+#: src/prefs.js:484
 msgid "Always"
 msgstr "Həmişə"
 
-#: src/prefs.js:443
+#: src/prefs.js:504
 msgid "Change Wallpaper Mode"
-msgstr ""
+msgstr "Divar kağızı rejimini dəyiş"
 
-#: src/prefs.js:444
+#: src/prefs.js:505
 msgid "Control how to change wallpapers automatically"
-msgstr ""
+msgstr "Divar kağızlarının avtomatik dəyişmə üsulunu tənzimlə"
 
-#: src/prefs.js:445
+#: src/prefs.js:506
 msgid ""
 "\n"
 "    <b>Sequential:</b> Preserve the directory sequence (descending order).\n"
@@ -289,14 +343,42 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/prefs.js:452
+#: src/prefs.js:513
 msgid "Sequential"
-msgstr ""
+msgstr "Ardıcıl"
 
-#: src/prefs.js:453
+#: src/prefs.js:514
 msgid "Inverse Sequential"
+msgstr "Tərs ardıcıl"
+
+#: src/prefs.js:515
+msgid "Random"
+msgstr "Təsadüfi"
+
+#: src/prefs.js:535
+msgid "Bounds Inset"
 msgstr ""
 
-#: src/prefs.js:454
-msgid "Random"
+#: src/prefs.js:536
+msgid ""
+"Adjust edges of the overview rounded-rect bounds (positive = shrink inward)"
 msgstr ""
+
+#: src/prefs.js:541
+msgid "Left"
+msgstr ""
+
+#: src/prefs.js:542
+msgid "Top"
+msgstr ""
+
+#: src/prefs.js:543
+msgid "Right"
+msgstr ""
+
+#: src/prefs.js:544
+msgid "Bottom"
+msgstr ""
+
+#~ msgid "Force gtk4paintablesink"
+#~ msgstr "gtk4paintablesink-i məcbur et"
