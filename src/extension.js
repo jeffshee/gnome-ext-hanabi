@@ -26,7 +26,6 @@ import * as WindowManager from './windowManager.js';
 import * as PlaybackState from './playbackState.js';
 import * as AutoPause from './autoPause.js';
 import * as PanelMenu from './panelMenu.js';
-import * as MediaKeys from './mediaKeys.js';
 
 export default class HanabiExtension extends Extension {
     constructor(metadata) {
@@ -83,17 +82,6 @@ export default class HanabiExtension extends Extension {
         this.override = new GnomeShellOverride.GnomeShellOverride();
         this.manager = new WindowManager.WindowManager();
         this.autoPause = new AutoPause.AutoPause(this);
-        this.mediaKeys = new MediaKeys.MediaKeys(this);
-
-        if (this.settings.get_boolean('media-keys-enabled'))
-            this.mediaKeys.enable();
-
-        this.settings.connect('changed::media-keys-enabled', () => {
-            if (this.settings.get_boolean('media-keys-enabled'))
-                this.mediaKeys.enable();
-            else
-                this.mediaKeys.disable();
-        });
 
         // If the desktop is still starting up, wait until it is ready
         if (Main.layoutManager._startingUp) {
@@ -377,10 +365,6 @@ export default class HanabiExtension extends Extension {
         this.override.disable();
         this.manager.disable();
         this.autoPause.disable();
-        if (this.mediaKeys) {
-            this.mediaKeys.disable();
-            this.mediaKeys = null;
-        }
 
         // Cancel any pending autoPause delay
         if (this._autoPauseDelayId) {
