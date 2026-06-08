@@ -96,90 +96,69 @@ export const LiveWallpaper = GObject.registerClass(
             backgroundActor.add_child(this);
 
             this._wallpaper = null;
+            this._applyWallpaperTimeoutId = 0;
+            this._isDestroyed = false;
             this._applyWallpaper();
 
-            this._roundedCornersEffect =
-                new RoundedCornersEffect.RoundedCornersEffect();
-            this._backgroundActor.add_effect(this._roundedCornersEffect);
+            try {
+                this._roundedCornersEffect =
+                    new RoundedCornersEffect.RoundedCornersEffect();
+                // this._backgroundActor.add_effect(this._roundedCornersEffect);
+            } catch (e) {
+                logger.warn(`Failed to create rounded corners effect: ${e}`);
+                this._roundedCornersEffect = null;
+            }
 
             this.setPixelStep(this._monitorWidth, this._monitorHeight);
             this.setRoundedClipRadius(0.0);
             this.setBorderStroke(0);
             this.setBorderColor([1.0, 0.0, 0.0, 1.0]);
 
-            if (this._settings) {
-                this._settingsChangedIds.push(
-                    this._settings.connect('changed::border-stroke', () => {
-                        this.setBorderStroke(this._settings.get_int('border-stroke'));
-                        this._backgroundActor?.queue_redraw();
-                    })
-                );
-                for (const key of ['bounds-inset-x1', 'bounds-inset-y1', 'bounds-inset-x2', 'bounds-inset-y2']) {
-                    this._settingsChangedIds.push(
-                        this._settings.connect(`changed::${key}`, () => {
-                            this._applyBounds();
-                            this._backgroundActor?.queue_redraw();
-                        })
-                    );
-                }
-            }
-            this.setRoundedClipBounds(
-                0,
-                0,
-                this._monitorWidth,
-                this._monitorHeight
-            );
+            // FIXME: Bounds calculation is wrong if the layout isn't vanilla (with custom dock, panel, etc.), disabled for now.
+            // this.connect('notify::allocation', () => {
+            //     let heightOffset = this.height - this._metaBackgroundGroup.get_parent().height;
+            //     this._roundedCornersEffect.setBounds(
+            //         [
+            //             CUSTOM_BACKGROUND_BOUNDS_PADDING,
+            //             CUSTOM_BACKGROUND_BOUNDS_PADDING + heightOffset,
+            //             this.width,
+            //             this.height,
+            //         ].map(e => e * this._monitorScale)
+            //     );
+            // });
 
-            this.connect('notify::allocation', () => {
-                if (!this._wallpaper)
-                    return;
-                try {
-                    this._applyBounds();
-                    const s = this._settings;
-                    const stroke = s ? s.get_int('border-stroke') : 0;
-                    this._roundedCornersEffect.setBorderStroke(stroke * this._monitorScale);
-                } catch (e) {
-                    logError(e, 'LiveWallpaper notify::allocation');
+            this._rendererActor = null;
+            this._rendererDestroyId = null;
+
+            this.connect('destroy', () => {
+                this._isDestroyed = true;
+                if (this._applyWallpaperTimeoutId) {
+                    GLib.source_remove(this._applyWallpaperTimeoutId);
+                    this._applyWallpaperTimeoutId = 0;
+                }
+                if (this._rendererActor && this._rendererDestroyId) {
+                    this._rendererActor.disconnect(this._rendererDestroyId);
+                    this._rendererActor = null;
+                    this._rendererDestroyId = null;
                 }
             });
         }
 
-        _applyBounds() {
-            const workArea = Main.layoutManager.getWorkAreaForMonitor(this._monitorIndex);
-            const monitor = Main.layoutManager.monitors[this._monitorIndex];
-            const panelOffset = (workArea.y - monitor.y) / monitor.height * this._backgroundActor.height;
-            const s = this._settings;
-            const ix1 = s ? s.get_int('bounds-inset-x1') : 0;
-            const iy1 = s ? s.get_int('bounds-inset-y1') : 0;
-            const ix2 = s ? s.get_int('bounds-inset-x2') : 0;
-            const iy2 = s ? s.get_int('bounds-inset-y2') : 0;
-            this._roundedCornersEffect.setBounds(
-                [ix1, panelOffset + iy1, this.width - ix2, this.height - iy2]
-                    .map(e => e * this._monitorScale)
-            );
-        }
-
         setPixelStep(width, height) {
-            if (this._isDisposed)
-                return;
-            this._roundedCornersEffect.setPixelStep([
+            this._roundedCornersEffect?.setPixelStep([
                 1.0 / (width * this._monitorScale),
                 1.0 / (height * this._monitorScale),
             ]);
         }
 
         setRoundedClipRadius(radius) {
-            if (this._isDisposed)
-                return;
-            this._roundedCornersEffect.setClipRadius(
+            this._roundedCornersEffect?.setClipRadius(
                 radius * this._monitorScale
             );
         }
 
         setRoundedClipBounds(x1, y1, x2, y2) {
-            if (this._isDisposed)
-                return;
-            this._roundedCornersEffect.setBounds(
+            this._roundedCornersEffect?.setBounds(
                 [x1, y1, x2, y2].map(e => e * this._monitorScale)
             );
         }
@@ -200,16 +179,29 @@ export const LiveWallpaper = GObject.registerClass(
             if (this._isDisposed)
                 return;
             logger.debug('Applying wallpaper...');
+
+            // Cancel any existing poll
+            if (this._applyWallpaperTimeoutId) {
+                GLib.source_remove(this._applyWallpaperTimeoutId);
+                this._applyWallpaperTimeoutId = 0;
+            }
+
+            // Disconnect any previous renderer destroy watch
+            if (this._rendererActor && this._rendererDestroyId) {
+                this._rendererActor.disconnect(this._rendererDestroyId);
+                this._rendererActor = null;
+                this._rendererDestroyId = null;
+            }
+
             const operation = () => {
-                if (this._isDisposed) {
-                    logger.debug(
-                        'LiveWallpaper disposed, stopping wallpaper operation'
-                    );
+                if (this._isDestroyed) {
+                    this._applyWallpaperTimeoutId = 0;
                     return false;
                 }
-
                 const renderer = this._getRenderer();
                 if (renderer) {
+                    if (this._isDestroyed)
+                        return false;
                     this._wallpaper = new Clutter.Clone({
                         source: renderer,
                         // The point around which the scaling and rotation transformations occur.
@@ -230,7 +222,26 @@ export const LiveWallpaper = GObject.registerClass(
                     this.add_child(this._wallpaper);
                     this._fade();
                     logger.debug('Wallpaper applied');
-                    // Stop this specific timeout instance, but we've queued a restart on source destruction.
+
+                    // Watch for renderer destruction (process kill, sleep/wake)
+                    // to automatically re-poll for the new renderer.
+                    this._rendererActor = renderer;
+                    this._rendererDestroyId = renderer.connect('destroy', () => {
+                        this._rendererActor = null;
+                        this._rendererDestroyId = null;
+                        if (!this._isDestroyed) {
+                            logger.debug('Renderer destroyed, re-polling for new renderer...');
+                            this._fade(false);
+                            if (this._wallpaper) {
+                                this._wallpaper.destroy();
+                                this._wallpaper = null;
+                            }
+                            this._applyWallpaper();
+                        }
+                    });
+
+                    this._applyWallpaperTimeoutId = 0;
+                    // Stop the timeout.
                     return false;
                 } else {
                     // Keep waiting.
@@ -238,9 +249,9 @@ export const LiveWallpaper = GObject.registerClass(
                 }
             };
 
-            // Perform intial operation without timeout
+            // Perform initial operation without timeout
             if (operation()) {
-                this._timeoutId = GLib.timeout_add(
+                this._applyWallpaperTimeoutId = GLib.timeout_add(
                     GLib.PRIORITY_DEFAULT,
                     1000,
                     operation
@@ -249,7 +260,13 @@ export const LiveWallpaper = GObject.registerClass(
         }
 
         _getRenderer() {
-            const windowActors = global.get_window_actors(false);
+            let windowActors;
+            try {
+                windowActors = global.get_window_actors(false);
+            } catch (e) {
+                logger.warn(`Failed to query window actors: ${e}`);
+                return null;
+            }
 
             const hanabiWindowActors = windowActors.filter(window =>
                 window.meta_window.title?.includes(applicationId)

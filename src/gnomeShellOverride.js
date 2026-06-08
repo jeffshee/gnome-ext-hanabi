@@ -53,25 +53,28 @@ export class GnomeShellOverride {
         this._wallpaperActors.forEach(actor => actor.destroy());
         this._wallpaperActors.clear();
 
-        const laters = this._getLaters();
-        if (laters) {
-            laters.add(Meta.LaterType.BEFORE_REDRAW, () => {
-                Main.layoutManager._updateBackgrounds();
-                // `Main.screenShield` is null if the user doesn't use Gnome Shell locking.
-                if (Main.screenShield?._dialog?._updateBackgrounds != null)
-                    Main.screenShield._dialog._updateBackgrounds();
+        try {
+            Main.layoutManager._updateBackgrounds();
+        } catch (e) {
+            logger.warn(`Failed to update backgrounds: ${e}`);
+        }
+        // `Main.screenShield` is null if the user doesn't use Gnome Shell locking.
+        try {
+            if (Main.screenShield?._dialog?._updateBackgrounds != null)
+                Main.screenShield._dialog._updateBackgrounds();
+        } catch (e) {
+            logger.warn(`Failed to update lockscreen backgrounds: ${e}`);
+        }
 
-                /**
-                 * WorkspaceBackground has its own bgManager,
-                 * we have to recreate it to use our actors, so it can set radius to our actor.
-                 */
-                try {
-                    Main.overview._overview._controls._workspacesDisplay._updateWorkspacesViews();
-                } catch {
-                    // Suppress errors from extension conflicts (e.g. DING) during background reload
-                }
-                return GLib.SOURCE_REMOVE;
-            });
+        /**
+         * WorkspaceBackground has its own bgManager,
+         * we have to recreate it to use our actors, so it can set radius to our actor.
+         */
+        try {
+            Main.overview._overview._controls._workspacesDisplay._updateWorkspacesViews();
+        } catch (e) {
+            // Suppress errors from extension conflicts (e.g. DING) during background reload
+            logger.warn(`Failed to update workspace views: ${e}`);
         }
 
         /**
@@ -79,26 +82,16 @@ export class GnomeShellOverride {
          *  We defer these slightly to ensure Hanabi's backgrounds are allocated
          *  before other extensions try to blur or react to the change.
          */
-        GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
-            if (
-                Main.extensionManager._enabledExtensions.includes(
-                    'blur-my-shell@aunetx'
-                )
-            )
+        try {
+            if (Main.extensionManager._enabledExtensions.includes('blur-my-shell@aunetx')) {
+                // This will trigger the `update_backgrounds` method of overview, sceenshot and coverflow alt tab.
                 Main.layoutManager.emit('monitors-changed');
-
-            // Trigger a refresh of the panel and other UI elements
-            global.display.emit('workareas-changed');
-            return GLib.SOURCE_REMOVE;
-        });
-    }
-
-    _getLaters() {
-        if (global.compositor?.get_laters)
-            return global.compositor.get_laters();
-        if (Meta.Laters?.get)
-            return Meta.Laters.get();
-        return null;
+                // This will trigger the `reset` method of panel.
+                global.display.emit('workareas-changed');
+            }
+        } catch (e) {
+            logger.warn(`Failed to notify blur-my-shell hooks: ${e}`);
+        }
     }
 
     enable() {
@@ -174,24 +167,25 @@ export class GnomeShellOverride {
 
         // This removes the renderer from the window actor list.
         // Call `global.get_window_actors(false)` explicitly to bypass the override.
-        this._injectionManager.overrideMethod(
-            Shell.Global.prototype,
-            'get_window_actors',
-            originalMethod => {
-                return function (hideRenderer = true) {
-                    const windowActors = originalMethod.call(this);
-                    const result = hideRenderer
-                        ? windowActors.filter(
-                            actor =>
-                                !actor.meta_window.title?.includes(
-                                    applicationId
-                                )
-                        )
-                        : windowActors;
-                    return result;
-                };
-            }
-        );
+        // NOTE: Desktop Icons NG (DING) also overrides this API and can conflict,
+        // causing GNOME Shell errors/freezes on some systems.
+        const isDingEnabled = Main.extensionManager?._enabledExtensions?.includes('ding@rastersoft.com');
+        if (!isDingEnabled) {
+            this._injectionManager.overrideMethod(Shell.Global.prototype, 'get_window_actors',
+                originalMethod => {
+                    // TODO: pass originalMethod to wallpaper instead
+                    return function (hideRenderer = true) {
+                        let windowActors = originalMethod.call(this);
+                        let result = hideRenderer
+                            ? windowActors.filter(
+                                window => !window.meta_window.title?.includes(applicationId)
+                            )
+                            : windowActors;
+                        return result;
+                    };
+                }
+            );
+        }
 
         // These remove the renderer's window preview in overview.
         this._injectionManager.overrideMethod(

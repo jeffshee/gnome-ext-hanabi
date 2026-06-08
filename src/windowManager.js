@@ -215,6 +215,13 @@ export class WindowManager {
         if (window.get_meta_window)
             window = window.get_meta_window();
 
+        // Make the renderer window sticky (on all workspaces) so Mutter's
+        // dynamic-workspace logic doesn't treat it as a "relevant" window
+        // pinning the workspace it was mapped on. Without this, an otherwise
+        // empty leading workspace won't be auto-removed when switching away.
+        if (!window.is_on_all_workspaces())
+            window.stick();
+
         window.managed = new ManagedWindow(window);
         this._windows.add(window);
         window.managed._unmanagedId = window.connect('unmanaged', _window => {

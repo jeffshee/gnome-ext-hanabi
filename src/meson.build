@@ -17,6 +17,7 @@ sources = [
   'gnomeShellOverride.js',
   'launcher.js',
   'logger.js',
+  'mediaKeys.js',
   'panelMenu.js',
   'playbackState.js',
   'prefs.js',

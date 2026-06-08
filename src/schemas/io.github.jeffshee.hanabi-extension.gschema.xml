@@ -50,6 +50,13 @@
             <description>Control how to change wallpapers automatically</description>
         </key>
 
+        <key name="fade-duration" type="i">
+            <range min="0" max="5000" />
+            <default>500</default>
+            <summary>Fade Transition Duration</summary>
+            <description>Duration of fade transition in milliseconds when changing wallpapers. Set to 0 to disable.</description>
+        </key>
+
         <key name="pause-on-maximize-or-fullscreen" type="i">
             <range min="0" max="2" />
             <default>0</default>
@@ -140,46 +147,12 @@
             <description>Show the panel menu for the extension</description>
         </key>
 
-        <key name="corner-radius" type="i">
-            <range min="0" max="100" />
-            <default>30</default>
-            <summary>Corner Radius</summary>
-            <description>Corner radius in pixels for workspace background in the overview</description>
+        <key name="media-keys-enabled" type="b">
+            <default>true</default>
+            <summary>Enable Media Keys</summary>
+            <description>Use Play/Pause, Next, and Previous media keys to control the
+                wallpaper when no media player is currently playing</description>
         </key>
 
-        <key name="border-stroke" type="i">
-            <range min="0" max="20" />
-            <default>0</default>
-            <summary>Border Stroke</summary>
-            <description>Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)</description>
-        </key>
-
-        <key name="bounds-inset-x1" type="i">
-            <range min="-200" max="200" />
-            <default>2</default>
-            <summary>Bounds Inset (Left)</summary>
-            <description>Additional inset for the left edge of the rounded-rect bounds (positive = move inward)</description>
-        </key>
-
-        <key name="bounds-inset-y1" type="i">
-            <range min="-200" max="200" />
-            <default>2</default>
-            <summary>Bounds Inset (Top)</summary>
-            <description>Additional inset for the top edge of the rounded-rect bounds (positive = move inward)</description>
-        </key>
-
-        <key name="bounds-inset-x2" type="i">
-            <range min="-200" max="200" />
-            <default>2</default>
-            <summary>Bounds Inset (Right)</summary>
-            <description>Additional inset for the right edge of the rounded-rect bounds (positive = move inward)</description>
-        </key>
-
-        <key name="bounds-inset-y2" type="i">
-            <range min="-200" max="200" />
-            <default>2</default>
-            <summary>Bounds Inset (Bottom)</summary>
-            <description>Additional inset for the bottom edge of the rounded-rect bounds (positive = move inward)</description>
-        </key>
     </schema>
 </schemalist>

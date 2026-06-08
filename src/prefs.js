@@ -115,36 +115,8 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
         );
         prefsRowDirectoryPath(window, wallpaperChangerGroup);
         prefsRowChangeWallpaperMode(window, wallpaperChangerGroup);
-        prefsRowInt(
-            window,
-            wallpaperChangerGroup,
-            _('Change Wallpaper Interval (minutes)'),
-            'change-wallpaper-interval',
-            '',
-            1,
-            1440,
-            5,
-            0
-        );
-
-        /**
-         * Overview
-         */
-        const overviewGroup = new Adw.PreferencesGroup({
-            title: _('Overview'),
-        });
-        page.add(overviewGroup);
-        prefsRowInt(
-            window,
-            overviewGroup,
-            _('Corner Radius'),
-            'corner-radius',
-            _('Rounded corner radius in pixels for workspace background in the overview'),
-            0,
-            100,
-            1,
-            5
-        );
+        prefsRowInt(window, wallpaperChangerGroup, _('Change Wallpaper Interval (minutes)'), 'change-wallpaper-interval', '', 1, 1440, 5, 0);
+        prefsRowInt(window, wallpaperChangerGroup, _('Fade Transition Duration (ms)'), 'fade-duration', _('Duration of fade transition when changing wallpapers. Set to 0 to disable.'), 0, 5000, 100, 500);
 
         /**
          * Experimental
@@ -207,31 +179,7 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
                 'Enable graphics offload for improved performance (requires GTK 4.14+)'
             )
         );
-        prefsRowInt(
-            window,
-            developerGroup,
-            _('Startup Delay'),
-            'startup-delay',
-            _(
-                'Add a startup delay (in milliseconds) to mitigate compatibility issues with other extensions'
-            ),
-            0,
-            10000,
-            100,
-            500
-        );
-        prefsRowInt(
-            window,
-            developerGroup,
-            _('Border Stroke'),
-            'border-stroke',
-            _('Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)'),
-            0,
-            20,
-            1,
-            1
-        );
-        prefsRowBoundsInset(window, developerGroup);
+        prefsRowInt(window, developerGroup, _('Startup Delay'), 'startup-delay', _('Delay in milliseconds before loading wallpaper. Set to 0 for instant startup (no delay).'), 0, 10000, 100, 500);
 
         // Add our page to the window
         window.add(page);

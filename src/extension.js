@@ -37,6 +37,7 @@ export default class HanabiExtension extends Extension {
         this.launchRendererId = 0;
         this.currentProcess = null;
         this.reloadTime = 100;
+        this._isSuspending = false;
 
         /**
          * This is a safeguard measure for the case of Gnome Shell being relaunched
@@ -117,7 +118,6 @@ export default class HanabiExtension extends Extension {
     innerEnable() {
         this.override.enable();
         this.manager.enable();
-        this.autoPause.enable();
 
         this._monitorsChangedId = Main.layoutManager.connect(
             'monitors-changed',
@@ -140,7 +140,185 @@ export default class HanabiExtension extends Extension {
         if (this.launchRendererId)
             GLib.source_remove(this.launchRendererId);
 
+        // Launch renderer FIRST, then delay autoPause enable by 3 seconds.
+        // This prevents the Pause on Maximize/Fullscreen module from pausing
+        // the video at startup before the renderer has a chance to start playing.
+        // (Session-restored maximized windows would otherwise trigger autoPause
+        //  while the renderer is still starting, and the PlaybackState mismatch
+        //  handler would immediately pause it.)
         this.launchRenderer();
+
+        // Handle monitor configuration changes (connect/disconnect)
+        this._monitorsChangedId = Main.layoutManager.connect('monitors-changed', () => {
+            this._onMonitorsChanged();
+        });
+
+        this.playbackState.suppressMismatch = true;
+        this._autoPauseDelayId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 5000, () => {
+            this._autoPauseDelayId = null;
+            this.playbackState.suppressMismatch = false;
+
+            if (this.isEnabled)
+                this.autoPause.enable();
+
+            this.playbackState.sync();
+            return false;
+        });
+
+        // Watch for sleep/wake to restart the renderer on resume.
+        // After sleep, the GStreamer pipeline may stall and take a long time to recover.
+        // Killing and relaunching the renderer ensures a fresh pipeline on wake.
+        this._setupSleepWatch();
+    }
+
+    _onMonitorsChanged() {
+        if (!this.isEnabled || this._isSuspending)
+            return;
+
+        // Debounce rapid monitor changes
+        if (this._monitorChangeTimeoutId) {
+            GLib.source_remove(this._monitorChangeTimeoutId);
+            this._monitorChangeTimeoutId = null;
+        }
+
+        this._monitorChangeTimeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
+            this._monitorChangeTimeoutId = null;
+
+            if (!this.isEnabled || this._isSuspending)
+                return false;
+
+            // Disable autoPause during transition
+            this.autoPause.disable();
+
+            // Cancel any pending autoPause delay
+            if (this._autoPauseDelayId) {
+                GLib.source_remove(this._autoPauseDelayId);
+                this._autoPauseDelayId = null;
+            }
+
+            // Reset playback state for fresh start
+            this.playbackState.reset();
+
+            // Restart renderer for new monitor configuration
+            this.killCurrentProcess();
+
+            // If no process was running and no relaunch is pending, launch directly
+            if (!this.currentProcess && !this.launchRendererId)
+                this.launchRenderer();
+
+            // Suppress mismatch and re-enable autoPause after renderer stabilizes
+            this.playbackState.suppressMismatch = true;
+            this._autoPauseDelayId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 5000, () => {
+                this._autoPauseDelayId = null;
+                this.playbackState.suppressMismatch = false;
+                if (this.isEnabled && !this._isSuspending)
+                    this.autoPause.enable();
+                this.playbackState.sync();
+                return false;
+            });
+
+            return false;
+        });
+    }
+
+    _setupSleepWatch() {
+        if (this._sleepWatchId)
+            return;
+        try {
+            this._loginProxy = Gio.DBusProxy.new_for_bus_sync(
+                Gio.BusType.SYSTEM,
+                Gio.DBusProxyFlags.NONE,
+                null,
+                'org.freedesktop.login1',
+                '/org/freedesktop/login1',
+                'org.freedesktop.login1.Manager',
+                null
+            );
+            this._sleepWatchId = this._loginProxy.connect('g-signal', (_proxy, _sender, signalName, params) => {
+                if (signalName === 'PrepareForSleep') {
+                    let goingToSleep = params.get_child_value(0).get_boolean();
+                    if (goingToSleep && this.isEnabled) {
+                        this._isSuspending = true;
+                        // Going to sleep - disable autoPause and force-kill renderer
+                        // BEFORE suspend to prevent GStreamer pipeline from freezing
+                        // the UI on wake.
+                        this.autoPause.disable();
+                        this._forceKillRenderer();
+                    } else if (!goingToSleep && this.isEnabled) {
+                        this._isSuspending = false;
+                        // Waking up - relaunch renderer with a fresh pipeline.
+                        this.playbackState.reset();
+                        if (this.launchRendererId) {
+                            GLib.source_remove(this.launchRendererId);
+                            this.launchRendererId = 0;
+                        }
+                        this.launchRenderer();
+
+                        // Cancel any existing autoPause delay
+                        if (this._autoPauseDelayId) {
+                            GLib.source_remove(this._autoPauseDelayId);
+                            this._autoPauseDelayId = null;
+                        }
+                        this._cancelRendererWait();
+
+                        // Small grace period for the renderer process to come
+                        // up and export its D-Bus interface before we start
+                        // sending it commands. This is just a launch race
+                        // guard, not a "wait for GStreamer to stabilize" hack.
+                        // The actual post-wake play/pause loop is prevented
+                        // by the mismatch-handler and autoPause changes in
+                        // playbackState.js (see comments there).
+                        const POST_WAKE_GRACE_MS = 1500;
+                        this._autoPauseDelayId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, POST_WAKE_GRACE_MS, () => {
+                            this._autoPauseDelayId = null;
+                            if (this.isEnabled && !this._isSuspending)
+                                this.autoPause.enable();
+                            return false;
+                        });
+                    }
+                }
+            });
+        } catch (e) {
+            console.warn(`Failed to setup sleep watch: ${e}`);
+        }
+    }
+
+    _teardownSleepWatch() {
+        if (this._sleepWatchId && this._loginProxy) {
+            this._loginProxy.disconnect(this._sleepWatchId);
+            this._sleepWatchId = null;
+        }
+        this._loginProxy = null;
+    }
+
+    /**
+     * Force-kill the renderer process immediately using SIGKILL.
+     * Used before sleep to ensure the GStreamer pipeline is completely dead
+     * before the system suspends. Also cancels any pending relaunch timer
+     * so the renderer doesn't restart before suspend completes.
+     */
+    _forceKillRenderer() {
+        // Cancel any pending relaunch so renderer doesn't restart before suspend
+        if (this.launchRendererId) {
+            GLib.source_remove(this.launchRendererId);
+            this.launchRendererId = 0;
+        }
+
+        if (this.currentProcess && this.currentProcess.subprocess) {
+            this.currentProcess.cancellable.cancel();
+            // SIGKILL (9) for immediate termination - no graceful shutdown
+            this.currentProcess.subprocess.send_signal(9);
+        }
+
+        this.currentProcess = null;
+        this.manager.set_wayland_client(null);
+    }
+
+    _cancelRendererWait() {
+        if (this._rendererWaitCleanup) {
+            this._rendererWaitCleanup();
+            this._rendererWaitCleanup = null;
+        }
     }
 
     getPlaybackState() {
@@ -185,7 +363,7 @@ export default class HanabiExtension extends Extension {
             }
             this.currentProcess = null;
             this.manager.set_wayland_client(null);
-            if (this.isEnabled) {
+            if (this.isEnabled && !this._isSuspending) {
                 if (this.launchRendererId)
                     GLib.source_remove(this.launchRendererId);
 
@@ -217,15 +395,30 @@ export default class HanabiExtension extends Extension {
         this.manager.disable();
         this.autoPause.disable();
 
+        // Cancel any pending autoPause delay
+        if (this._autoPauseDelayId) {
+            GLib.source_remove(this._autoPauseDelayId);
+            this._autoPauseDelayId = null;
+        }
+
+        // Cancel any pending post-wake mismatch-resume timer.
+        if (this._mismatchResumeId) {
+            GLib.source_remove(this._mismatchResumeId);
+            this._mismatchResumeId = 0;
+        }
+
         if (this._monitorsChangedId) {
             Main.layoutManager.disconnect(this._monitorsChangedId);
             this._monitorsChangedId = null;
         }
-
-        if (this._monitorsChangedTimeoutId) {
-            GLib.source_remove(this._monitorsChangedTimeoutId);
-            this._monitorsChangedTimeoutId = 0;
+        if (this._monitorChangeTimeoutId) {
+            GLib.source_remove(this._monitorChangeTimeoutId);
+            this._monitorChangeTimeoutId = null;
         }
+
+        this._cancelRendererWait();
+        this._teardownSleepWatch();
+        this._isSuspending = false;
 
         this.isEnabled = false;
     }
