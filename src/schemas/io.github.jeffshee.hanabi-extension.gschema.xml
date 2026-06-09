@@ -140,6 +140,12 @@
             <description>Show the panel menu for the extension</description>
         </key>
 
+        <key name="show-on-lock-screen" type="b">
+            <default>true</default>
+            <summary>Show on Lock Screen</summary>
+            <description>Show the live wallpaper on the lock screen</description>
+        </key>
+
         <key name="corner-radius" type="i">
             <range min="0" max="100" />
             <default>30</default>

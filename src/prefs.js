@@ -63,6 +63,13 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
             'show-panel-menu',
             ''
         );
+        prefsRowBoolean(
+            window,
+            generalGroup,
+            _('Show on Lock Screen'),
+            'show-on-lock-screen',
+            _('Show the live wallpaper on the lock screen')
+        );
 
         /**
          * Auto Pause

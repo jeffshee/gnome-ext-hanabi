@@ -3,6 +3,7 @@
   "gettext-domain": "@uuid@",
   "name": "Hanabi Extension",
   "settings-schema": "@settings_schema@",
+  "session-modes": ["user", "unlock-dialog"],
   "shell-version": [
     "45", "46", "47", "48", "49", "50"
   ],

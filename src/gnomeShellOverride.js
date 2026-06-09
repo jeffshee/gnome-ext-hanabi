@@ -47,6 +47,7 @@ export class GnomeShellOverride {
         this._injectionManager = new InjectionManager();
         this._wallpaperActors = new Set();
         this._settings = settings;
+        this._settingsChangedIds = [];
     }
 
     _reloadBackgrounds() {
@@ -93,6 +94,23 @@ export class GnomeShellOverride {
         });
     }
 
+    _reloadLockScreenBackgrounds() {
+        // Only destroy and recreate lock screen wallpaper actors, leaving desktop actors intact.
+        for (const actor of [...this._wallpaperActors]) {
+            if (actor._metaBackgroundGroup?.style_class?.includes('screen-shield-background'))
+                actor.destroy();
+        }
+
+        const laters = this._getLaters();
+        if (laters) {
+            laters.add(Meta.LaterType.BEFORE_REDRAW, () => {
+                if (Main.screenShield?._dialog?._updateBackgrounds != null)
+                    Main.screenShield._dialog._updateBackgrounds();
+                return GLib.SOURCE_REMOVE;
+            });
+        }
+    }
+
     _getLaters() {
         if (global.compositor?.get_laters)
             return global.compositor.get_laters();
@@ -113,6 +131,11 @@ export class GnomeShellOverride {
             originalMethod => {
                 return function () {
                     const backgroundActor = originalMethod.call(this);
+
+                    // The lock screen container widget has style_class 'screen-shield-background'.
+                    const isLockScreen = this._container.style_class?.includes('screen-shield-background') ?? false;
+                    if (isLockScreen && !thisRef._settings?.get_boolean('show-on-lock-screen'))
+                        return backgroundActor;
 
                     // We need to pass radius to actors, so save a ref in bgManager.
                     this.videoActor = new Wallpaper.LiveWallpaper(
@@ -296,10 +319,22 @@ export class GnomeShellOverride {
             }
         );
 
+        if (this._settings) {
+            this._settingsChangedIds.push(
+                this._settings.connect('changed::show-on-lock-screen', () => {
+                    this._reloadLockScreenBackgrounds();
+                })
+            );
+        }
+
         this._reloadBackgrounds();
     }
 
     disable() {
+        for (const id of this._settingsChangedIds)
+            this._settings?.disconnect(id);
+        this._settingsChangedIds = [];
+
         this._injectionManager.clear();
         this._reloadBackgrounds();
     }
