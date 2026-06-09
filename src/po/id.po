@@ -5,13 +5,14 @@
 # Farhan SP <fdemogod@gmail.com>, 2025.
 # Naufal F <nfatihussalam@students.unnes.ac.id>, 2025.
 # Muhammad Aidil Fikri <aidil.233040059@mail.unpas.ac.id>, 2026.
+# Arif Budiman <arifpedia@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-09 14:38+0900\n"
-"PO-Revision-Date: 2026-01-13 17:24+0000\n"
-"Last-Translator: Muhammad Aidil Fikri <aidil.233040059@mail.unpas.ac.id>\n"
+"PO-Revision-Date: 2026-06-10 15:01+0000\n"
+"Last-Translator: Arif Budiman <arifpedia@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/gnome-ext-"
 "hanabi/gnome-ext-hanabi/id/>\n"
 "Language: id\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.15.2-dev\n"
+"X-Generator: Weblate 2026.6\n"
 
 #: src/panelMenu.js:75 src/panelMenu.js:90
 msgid "Pause"
@@ -55,11 +56,11 @@ msgstr "Tingkat Suara"
 
 #: src/prefs.js:58
 msgid "Random Start Position"
-msgstr ""
+msgstr "Posisi Awal Acak"
 
 #: src/prefs.js:58
 msgid "Start playback from a random position each time a video starts"
-msgstr ""
+msgstr "Mulai pemutaran dari posisi acak setiap kali video dimulai"
 
 #: src/prefs.js:62
 msgid "Show Panel Menu"
@@ -67,11 +68,11 @@ msgstr "Tampilkan Panel Menu"
 
 #: src/prefs.js:69
 msgid "Show on Lock Screen"
-msgstr ""
+msgstr "Tampilkan di Layar Kunci"
 
 #: src/prefs.js:71
 msgid "Show the live wallpaper on the lock screen"
-msgstr ""
+msgstr "Tampilkan wallpaper hidup di layar kunci"
 
 #: src/prefs.js:78
 msgid "Auto Pause"
@@ -79,13 +80,11 @@ msgstr "Jeda Otomatis"
 
 #: src/prefs.js:85
 msgid "Pause on Window Focus"
-msgstr ""
+msgstr "Jeda saat Jendela Fokus"
 
 #: src/prefs.js:87
-#, fuzzy
-#| msgid "Pause playback when an MPRIS media player is playing media"
 msgid "Pause playback when any window is focused"
-msgstr "Jeda video jika MPRIS memainkan media"
+msgstr "Jeda pemutaran saat jendela apa pun sedang fokus"
 
 #: src/prefs.js:93
 msgid "Low Battery Threshold"
@@ -117,16 +116,18 @@ msgstr "Ubah Interval Wallpaper (menit)"
 
 #: src/prefs.js:141
 msgid "Overview"
-msgstr ""
+msgstr "Ikhtisar"
 
 #: src/prefs.js:147
 msgid "Corner Radius"
-msgstr ""
+msgstr "Radius Sudut"
 
 #: src/prefs.js:149
 msgid ""
 "Rounded corner radius in pixels for workspace background in the overview"
 msgstr ""
+"Radius sudut membulat dalam piksel untuk latar belakang ruang kerja pada "
+"tampilan ikhtisar"
 
 #: src/prefs.js:160
 msgid "Experimental"
@@ -164,16 +165,12 @@ msgid "Print debug messages to log"
 msgstr "Cetak pesan debug ke log"
 
 #: src/prefs.js:197
-#, fuzzy
-#| msgid "Preferences"
 msgid "Prefer clappersink"
-msgstr "Preferensi"
+msgstr "Utamakan clappersink"
 
 #: src/prefs.js:199
-#, fuzzy
-#| msgid "Force use of gtk4paintablesink for video playback"
 msgid "Prefer clappersink over gtk4paintablesink for video playback"
-msgstr "Paksa penggunaan dari gtk4paintablesink untuk video playback"
+msgstr "Utamakan clappersink dibanding gtk4paintablesink untuk pemutaran video"
 
 #: src/prefs.js:204
 msgid "Force GtkMediaFile"
@@ -185,11 +182,12 @@ msgstr "Paksa penggunaan dari GtkMediaFile untuk video playback"
 
 #: src/prefs.js:211
 msgid "Enable Graphics Offload"
-msgstr ""
+msgstr "Aktifkan Offload Grafis"
 
 #: src/prefs.js:214
 msgid "Enable graphics offload for improved performance (requires GTK 4.14+)"
 msgstr ""
+"Aktifkan offload grafis untuk meningkatkan performa (memerlukan GTK 4.14+)"
 
 #: src/prefs.js:220
 msgid "Startup Delay"
@@ -205,12 +203,14 @@ msgstr ""
 
 #: src/prefs.js:233
 msgid "Border Stroke"
-msgstr ""
+msgstr "Ketebalan Garis Tepi"
 
 #: src/prefs.js:235
 msgid ""
 "Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)"
 msgstr ""
+"Lebar tepi dalam piksel yang digambar di dalam batas rounded-rect (0 = "
+"dinonaktifkan)"
 
 #: src/prefs.js:303
 msgid "Video Path"
@@ -399,28 +399,30 @@ msgstr "Acak"
 
 #: src/prefs.js:542
 msgid "Bounds Inset"
-msgstr ""
+msgstr "Inset Batas"
 
 #: src/prefs.js:543
 msgid ""
 "Adjust edges of the overview rounded-rect bounds (positive = shrink inward)"
 msgstr ""
+"Sesuaikan tepi batas rounded-rect pada tampilan ikhtisar (nilai positif = "
+"menyusut ke dalam)"
 
 #: src/prefs.js:548
 msgid "Left"
-msgstr ""
+msgstr "Kiri"
 
 #: src/prefs.js:549
 msgid "Top"
-msgstr ""
+msgstr "Atas"
 
 #: src/prefs.js:550
 msgid "Right"
-msgstr ""
+msgstr "Kanan"
 
 #: src/prefs.js:551
 msgid "Bottom"
-msgstr ""
+msgstr "Bawah"
 
 #~ msgid "Force gtk4paintablesink"
 #~ msgstr "Paksa gtk4paintablesin"
