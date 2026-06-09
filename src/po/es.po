@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-07 17:44+0900\n"
+"POT-Creation-Date: 2026-06-09 14:38+0900\n"
 "PO-Revision-Date: 2024-10-04 11:15+0000\n"
 "Last-Translator: Moises Tamaalit <moisestamaalit@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
@@ -64,15 +64,23 @@ msgstr ""
 msgid "Show Panel Menu"
 msgstr "Mostrar menú del panel"
 
+#: src/prefs.js:69
+msgid "Show on Lock Screen"
+msgstr ""
+
 #: src/prefs.js:71
+msgid "Show the live wallpaper on the lock screen"
+msgstr ""
+
+#: src/prefs.js:78
 msgid "Auto Pause"
 msgstr "Pausa automática"
 
-#: src/prefs.js:78
+#: src/prefs.js:85
 msgid "Pause on Window Focus"
 msgstr ""
 
-#: src/prefs.js:80
+#: src/prefs.js:87
 #, fuzzy
 #| msgid "Pause playback when an MPRIS media player is playing media"
 msgid "Pause playback when any window is focused"
@@ -80,117 +88,117 @@ msgstr ""
 "Pausar la reproducción cuando un reproductor multimedia MPRIS está "
 "reproduciendo los medios"
 
-#: src/prefs.js:86
+#: src/prefs.js:93
 msgid "Low Battery Threshold"
 msgstr "Límite de la batería baja"
 
-#: src/prefs.js:88
+#: src/prefs.js:95
 msgid "Set the threshold percentage for low battery level"
 msgstr "Establece el porcentaje del umbral para el nivel bajo de batería"
 
-#: src/prefs.js:97
+#: src/prefs.js:104
 msgid "Pause on Media Player Playing"
 msgstr "Pausa en la reproducción del reproductor multimedia"
 
-#: src/prefs.js:99
+#: src/prefs.js:106
 msgid "Pause playback when an MPRIS media player is playing media"
 msgstr ""
 "Pausar la reproducción cuando un reproductor multimedia MPRIS está "
 "reproduciendo los medios"
 
-#: src/prefs.js:106
+#: src/prefs.js:113
 msgid "Wallpaper Changer"
 msgstr "Cambiador del fondo de pantalla"
 
-#: src/prefs.js:112
+#: src/prefs.js:119
 msgid "Change Wallpaper Automatically"
 msgstr "Cambiar el fondo de pantalla automáticamente"
 
-#: src/prefs.js:121
+#: src/prefs.js:128
 msgid "Change Wallpaper Interval (minutes)"
 msgstr "Cambiar el intervalo del fondo de pantalla (minutos)"
 
-#: src/prefs.js:134
+#: src/prefs.js:141
 msgid "Overview"
 msgstr ""
 
-#: src/prefs.js:140
+#: src/prefs.js:147
 msgid "Corner Radius"
 msgstr ""
 
-#: src/prefs.js:142
+#: src/prefs.js:149
 msgid ""
 "Rounded corner radius in pixels for workspace background in the overview"
 msgstr ""
 
-#: src/prefs.js:153
+#: src/prefs.js:160
 msgid "Experimental"
 msgstr "Experimental"
 
-#: src/prefs.js:159
+#: src/prefs.js:166
 msgid "Experimental VA Plugin"
 msgstr "Complemento VA experimental"
 
-#: src/prefs.js:162
+#: src/prefs.js:169
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
 "Habilite los decodificadores VA que mejoran el rendimiento para los usuarios "
 "de Intel/AMD Wayland"
 
-#: src/prefs.js:168
+#: src/prefs.js:175
 msgid "NVIDIA Stateless Decoders"
 msgstr "Decodificadores sin estado NVIDIA"
 
-#: src/prefs.js:170
+#: src/prefs.js:177
 msgid "Use new stateless NVIDIA decoders"
 msgstr "Utilice nuevos decodificadores NVIDIA sin estado"
 
-#: src/prefs.js:177
+#: src/prefs.js:184
 msgid "Developer"
 msgstr "Desarrollador"
 
-#: src/prefs.js:183
+#: src/prefs.js:190
 msgid "Debug Mode"
 msgstr "Modo de depuración"
 
-#: src/prefs.js:185
+#: src/prefs.js:192
 msgid "Print debug messages to log"
 msgstr "Escribir mensajes de depuración en el registro."
 
-#: src/prefs.js:190
+#: src/prefs.js:197
 #, fuzzy
 #| msgid "Preferences"
 msgid "Prefer clappersink"
 msgstr "Preferencias"
 
-#: src/prefs.js:192
+#: src/prefs.js:199
 #, fuzzy
 #| msgid "Force use of gtk4paintablesink for video playback"
 msgid "Prefer clappersink over gtk4paintablesink for video playback"
 msgstr "Forzar el uso de gtk4paintablesink para la reproducción de vídeo"
 
-#: src/prefs.js:197
+#: src/prefs.js:204
 msgid "Force GtkMediaFile"
 msgstr "Forzar el uso de GtkMediaFile"
 
-#: src/prefs.js:199
+#: src/prefs.js:206
 msgid "Force use of GtkMediaFile for video playback"
 msgstr "Forzar el uso de GtkMediaFile para la reproducción de vídeo"
 
-#: src/prefs.js:204
+#: src/prefs.js:211
 msgid "Enable Graphics Offload"
 msgstr ""
 
-#: src/prefs.js:207
+#: src/prefs.js:214
 msgid "Enable graphics offload for improved performance (requires GTK 4.14+)"
 msgstr ""
 
-#: src/prefs.js:213
+#: src/prefs.js:220
 msgid "Startup Delay"
 msgstr "Retraso del inicio"
 
-#: src/prefs.js:216
+#: src/prefs.js:223
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
@@ -198,52 +206,52 @@ msgstr ""
 "Agregue un retraso de inicio (en milisegundos) para mitigar los problemas de "
 "compatibilidad con otras extensiones"
 
-#: src/prefs.js:226
+#: src/prefs.js:233
 msgid "Border Stroke"
 msgstr ""
 
-#: src/prefs.js:228
+#: src/prefs.js:235
 msgid ""
 "Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)"
 msgstr ""
 
-#: src/prefs.js:296
+#: src/prefs.js:303
 msgid "Video Path"
 msgstr "Ruta del vídeo"
 
-#: src/prefs.js:302 src/prefs.js:327 src/prefs.js:356 src/prefs.js:377
+#: src/prefs.js:309 src/prefs.js:334 src/prefs.js:363 src/prefs.js:384
 msgid "None"
 msgstr "Ninguno"
 
-#: src/prefs.js:314
+#: src/prefs.js:321
 msgid "Open File"
 msgstr "Abrir documento"
 
-#: src/prefs.js:319 src/prefs.js:370
+#: src/prefs.js:326 src/prefs.js:377
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/prefs.js:320 src/prefs.js:336 src/prefs.js:371 src/prefs.js:386
+#: src/prefs.js:327 src/prefs.js:343 src/prefs.js:378 src/prefs.js:393
 msgid "Open"
 msgstr "Abrir"
 
-#: src/prefs.js:350
+#: src/prefs.js:357
 msgid "Change Wallpaper Directory Path"
 msgstr "Cambiar la ruta del directorio de la imagen de fondo"
 
-#: src/prefs.js:365
+#: src/prefs.js:372
 msgid "Select Directory"
 msgstr "Seleccionar directorio"
 
-#: src/prefs.js:400
+#: src/prefs.js:407
 msgid "Fit Mode"
 msgstr "Modo de ajuste"
 
-#: src/prefs.js:401
+#: src/prefs.js:408
 msgid "Control how wallpaper fits within the monitor"
 msgstr "Controla cómo encaja el fondo de pantalla en el monitor"
 
-#: src/prefs.js:402
+#: src/prefs.js:409
 msgid ""
 "\n"
 "    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
@@ -266,36 +274,36 @@ msgstr ""
 "tamaño original.\n"
 "    "
 
-#: src/prefs.js:410
+#: src/prefs.js:417
 msgid "Fill"
 msgstr "Llenar"
 
-#: src/prefs.js:411
+#: src/prefs.js:418
 msgid "Contain"
 msgstr "Contener"
 
-#: src/prefs.js:412
+#: src/prefs.js:419
 msgid "Cover"
 msgstr "Cubrir"
 
-#: src/prefs.js:413
+#: src/prefs.js:420
 msgid "Scale-down"
 msgstr "Reducir escala"
 
-#: src/prefs.js:426
+#: src/prefs.js:433
 msgid "This feature requires Gtk 4.8 or above"
 msgstr "Esta característica requiere Gtk 4.8 o superior"
 
-#: src/prefs.js:438
+#: src/prefs.js:445
 msgid "Pause on Maximize or Fullscreen"
 msgstr "Pausa en maximizar o pantalla completa"
 
-#: src/prefs.js:440
+#: src/prefs.js:447
 msgid "Pause playback when there is maximized or fullscreen window"
 msgstr ""
 "Pausa la reproducción cuando hay una ventana maximizada o a pantalla completa"
 
-#: src/prefs.js:442
+#: src/prefs.js:449
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -313,29 +321,29 @@ msgstr ""
 "maximizadas o de pantalla completa en todos los monitores.\n"
 "    "
 
-#: src/prefs.js:449 src/prefs.js:482
+#: src/prefs.js:456 src/prefs.js:489
 msgid "Never"
 msgstr "Nunca"
 
-#: src/prefs.js:450
+#: src/prefs.js:457
 msgid "Any Monitor"
 msgstr "Cualquier monitor"
 
-#: src/prefs.js:451
+#: src/prefs.js:458
 msgid "All Monitors"
 msgstr "Todos los monitores"
 
-#: src/prefs.js:471
+#: src/prefs.js:478
 msgid "Pause on Battery"
 msgstr "Pausa en la batería"
 
-#: src/prefs.js:473
+#: src/prefs.js:480
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
 "Pausa la reproducción cuando el dispositivo está con batería o la batería "
 "está baja"
 
-#: src/prefs.js:475
+#: src/prefs.js:482
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -352,23 +360,23 @@ msgstr ""
 "batería.\n"
 "    "
 
-#: src/prefs.js:483
+#: src/prefs.js:490
 msgid "Low Battery"
 msgstr "Batería baja"
 
-#: src/prefs.js:484
+#: src/prefs.js:491
 msgid "Always"
 msgstr "Siempre"
 
-#: src/prefs.js:504
+#: src/prefs.js:511
 msgid "Change Wallpaper Mode"
 msgstr "Cambiar el modo de fondo de pantalla"
 
-#: src/prefs.js:505
+#: src/prefs.js:512
 msgid "Control how to change wallpapers automatically"
 msgstr "Controla cómo cambiar los fondos de pantalla automáticamente"
 
-#: src/prefs.js:506
+#: src/prefs.js:513
 msgid ""
 "\n"
 "    <b>Sequential:</b> Preserve the directory sequence (descending order).\n"
@@ -385,40 +393,40 @@ msgstr ""
 "    <b>Aleatorio:</b> Seleccione fondos de pantalla al azar del directorio.\n"
 "    "
 
-#: src/prefs.js:513
+#: src/prefs.js:520
 msgid "Sequential"
 msgstr "Secuencial"
 
-#: src/prefs.js:514
+#: src/prefs.js:521
 msgid "Inverse Sequential"
 msgstr "Secuencial inverso"
 
-#: src/prefs.js:515
+#: src/prefs.js:522
 msgid "Random"
 msgstr "Aleatorio"
 
-#: src/prefs.js:535
+#: src/prefs.js:542
 msgid "Bounds Inset"
 msgstr ""
 
-#: src/prefs.js:536
+#: src/prefs.js:543
 msgid ""
 "Adjust edges of the overview rounded-rect bounds (positive = shrink inward)"
 msgstr ""
 
-#: src/prefs.js:541
+#: src/prefs.js:548
 msgid "Left"
 msgstr ""
 
-#: src/prefs.js:542
+#: src/prefs.js:549
 msgid "Top"
 msgstr ""
 
-#: src/prefs.js:543
+#: src/prefs.js:550
 msgid "Right"
 msgstr ""
 
-#: src/prefs.js:544
+#: src/prefs.js:551
 msgid "Bottom"
 msgstr ""
 
