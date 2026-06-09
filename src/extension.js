@@ -136,11 +136,51 @@ export default class HanabiExtension extends Extension {
             }
         );
 
+        this._sessionModeUpdatedId = Main.sessionMode.connect('updated', () => {
+            this._onSessionModeUpdated();
+        });
+        this._showOnLockScreenChangedId = this.settings.connect(
+            'changed::show-on-lock-screen',
+            () => this._onSessionModeUpdated()
+        );
+
         this.isEnabled = true;
         if (this.launchRendererId)
             GLib.source_remove(this.launchRendererId);
 
         this.launchRenderer();
+    }
+
+    _onSessionModeUpdated() {
+        const isLockScreen = Main.sessionMode.currentMode === 'unlock-dialog';
+        const showOnLockScreen = this.settings?.get_boolean('show-on-lock-screen') ?? true;
+
+        if (isLockScreen && !showOnLockScreen)
+            this._suspendRenderer();
+        else if (!isLockScreen || showOnLockScreen)
+            this._resumeRenderer();
+    }
+
+    _suspendRenderer() {
+        if (this._rendererSuspended)
+            return;
+        this._rendererSuspended = true;
+        if (this.launchRendererId) {
+            GLib.source_remove(this.launchRendererId);
+            this.launchRendererId = 0;
+        }
+        if (this.currentProcess?.subprocess) {
+            this.currentProcess.cancellable.cancel();
+            this.currentProcess.subprocess.send_signal(15);
+        }
+    }
+
+    _resumeRenderer() {
+        if (!this._rendererSuspended)
+            return;
+        this._rendererSuspended = false;
+        if (this.isEnabled && !this.currentProcess)
+            this.launchRenderer();
     }
 
     getPlaybackState() {
@@ -185,7 +225,7 @@ export default class HanabiExtension extends Extension {
             }
             this.currentProcess = null;
             this.manager.set_wayland_client(null);
-            if (this.isEnabled) {
+            if (this.isEnabled && !this._rendererSuspended) {
                 if (this.launchRendererId)
                     GLib.source_remove(this.launchRendererId);
 
@@ -204,6 +244,17 @@ export default class HanabiExtension extends Extension {
 
     disable() {
         this.killCurrentProcess();
+        this._rendererSuspended = false;
+
+        if (this._sessionModeUpdatedId) {
+            Main.sessionMode.disconnect(this._sessionModeUpdatedId);
+            this._sessionModeUpdatedId = null;
+        }
+
+        if (this._showOnLockScreenChangedId) {
+            this.settings.disconnect(this._showOnLockScreenChangedId);
+            this._showOnLockScreenChangedId = null;
+        }
 
         if (this._showPanelMenuChangedId) {
             this.settings.disconnect(this._showPanelMenuChangedId);
