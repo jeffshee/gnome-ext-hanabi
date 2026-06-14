@@ -342,7 +342,7 @@ const PauseOnBatteryModule = GObject.registerClass(
         }
 
         enable() {
-            this._upower.proxy.connect('g-properties-changed', (_proxy, properties) => {
+            this._propertiesChangedId = this._upower.proxy.connect('g-properties-changed', (_proxy, properties) => {
                 let payload = properties.deep_unpack();
                 if (!payload.hasOwnProperty('State') && !payload.hasOwnProperty('Percentage'))
                     return;
@@ -376,7 +376,10 @@ const PauseOnBatteryModule = GObject.registerClass(
         }
 
         disable() {
-
+            if (this._propertiesChangedId && this._upower.proxy) {
+                this._upower.proxy.disconnect(this._propertiesChangedId);
+                this._propertiesChangedId = null;
+            }
         }
     }
 );

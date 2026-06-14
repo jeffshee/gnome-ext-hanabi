@@ -28,11 +28,10 @@ export class Logger {
 
         this.logPrefix = logPrefix;
         this.logOpt = opt;
-        this.isDebugMode = this._settings ? this._settings.get_boolean('debug-mode') : false;
+    }
 
-        this._settings?.connect('changed::debug-mode', () => {
-            this.isDebugMode = this._settings.get_boolean('debug-mode');
-        });
+    get isDebugMode() {
+        return this._settings ? this._settings.get_boolean('debug-mode') : false;
     }
 
     _processArgs(args) {

@@ -55,7 +55,7 @@ export default class HanabiExtension extends Extension {
         if (this.settings.get_boolean('show-panel-menu'))
             this.panelMenu.enable();
 
-        this.settings.connect('changed::show-panel-menu', () => {
+        this._showPanelMenuId = this.settings.connect('changed::show-panel-menu', () => {
             if (this.settings.get_boolean('show-panel-menu'))
                 this.panelMenu.enable();
             else
@@ -88,7 +88,7 @@ export default class HanabiExtension extends Extension {
         if (this.settings.get_boolean('media-keys-enabled'))
             this.mediaKeys.enable();
 
-        this.settings.connect('changed::media-keys-enabled', () => {
+        this._mediaKeysEnabledId = this.settings.connect('changed::media-keys-enabled', () => {
             if (this.settings.get_boolean('media-keys-enabled'))
                 this.mediaKeys.enable();
             else
@@ -371,6 +371,16 @@ export default class HanabiExtension extends Extension {
     }
 
     disable() {
+        if (this.settings) {
+            if (this._showPanelMenuId) {
+                this.settings.disconnect(this._showPanelMenuId);
+                this._showPanelMenuId = null;
+            }
+            if (this._mediaKeysEnabledId) {
+                this.settings.disconnect(this._mediaKeysEnabledId);
+                this._mediaKeysEnabledId = null;
+            }
+        }
         this.settings = null;
         this.panelMenu.disable();
         Main.sessionMode.hasOverview = this.old_hasOverview;

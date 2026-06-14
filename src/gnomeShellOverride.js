@@ -27,6 +27,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as Workspace from 'resource:///org/gnome/shell/ui/workspace.js';
 import * as WorkspaceThumbnail from 'resource:///org/gnome/shell/ui/workspaceThumbnail.js';
 import * as Util from 'resource:///org/gnome/shell/misc/util.js';
+import System from 'system';
 
 import * as Logger from './logger.js';
 import * as Wallpaper from './wallpaper.js';
@@ -85,6 +86,7 @@ export class GnomeShellOverride {
         } catch (e) {
             logger.warn(`Failed to notify blur-my-shell hooks: ${e}`);
         }
+        System.gc();
     }
 
     enable() {
@@ -116,16 +118,10 @@ export class GnomeShellOverride {
          * Ref: https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/a6d35fdd2abd63d23c7a9d093645f760691539a0/js/ui/workspace.js#L1003-1022
          */
         this._injectionManager.overrideMethod(Workspace.WorkspaceBackground.prototype, '_updateBorderRadius',
-            // Don't call the orginal method, use our implementation of rounded corners instead.
-            _originalMethod => {
+            originalMethod => {
                 return function () {
-                    // The scale factor here is an integer, not the fractional scale factor.
-                    // Ref: https://gjs-docs.gnome.org/st13~13/st.themecontext#method-get_scale_factor
-                    const {scaleFactor} = St.ThemeContext.get_for_stage(global.stage);
-                    const cornerRadius = scaleFactor * BACKGROUND_CORNER_RADIUS_PIXELS;
-
-                    const radius = Util.lerp(0, cornerRadius, this._stateAdjustment.value);
-                    this._bgManager.videoActor?.setRoundedClipRadius(radius);
+                    // Call the original GNOME method to preserve default rounded corners
+                    originalMethod.call(this);
                 };
             }
         );
@@ -253,5 +249,6 @@ export class GnomeShellOverride {
         if (!Main.sessionMode.isLocked) {
             this._reloadBackgrounds();
         }
+        System.gc();
     }
 }

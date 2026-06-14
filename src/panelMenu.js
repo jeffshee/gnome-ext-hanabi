@@ -41,6 +41,9 @@ export class HanabiPanelMenu {
         if (this.isEnabled)
             return;
 
+        this._signals = [];
+        this._dbusSignals = [];
+
         // Indicator
         const indicatorName = `${this._extension.metadata.name} Indicator`;
         this.indicator = new PanelMenu.Button(0.0, indicatorName, false);
@@ -72,9 +75,10 @@ export class HanabiPanelMenu {
         );
         menu.addMenuItem(currentWallpaperItem);
 
-        this._settings.connect('changed::video-path', () => {
+        let id1 = this._settings.connect('changed::video-path', () => {
             currentWallpaperItem.label.set_text(this._getCurrentWallpaperName());
         });
+        this._signals.push({ obj: this._settings, id: id1 });
 
         menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
@@ -90,7 +94,7 @@ export class HanabiPanelMenu {
                 this._playbackState.userPlay();
         });
 
-        this._renderer.proxy.connectSignal(
+        let id2 = this._renderer.proxy.connectSignal(
             'isPlayingChanged',
             (_proxy, _sender, [isPlaying]) => {
                 this._isPlaying = isPlaying;
@@ -99,6 +103,7 @@ export class HanabiPanelMenu {
                 );
             }
         );
+        this._dbusSignals.push({ proxy: this._renderer.proxy, id: id2 });
 
         menu.addMenuItem(playPause);
 
@@ -111,11 +116,12 @@ export class HanabiPanelMenu {
             this._setMute(!this._getMute());
         });
 
-        this._settings.connect('changed::mute', () => {
+        let id3 = this._settings.connect('changed::mute', () => {
             muteAudio.label.set_text(
                 this._getMute() ? _('Unmute Audio') : _('Mute Audio')
             );
         });
+        this._signals.push({ obj: this._settings, id: id3 });
 
         menu.addMenuItem(muteAudio);
 
@@ -134,7 +140,7 @@ export class HanabiPanelMenu {
             prevWallpaperMenuItem.hide();
         }
 
-        this._settings.connect('changed::change-wallpaper', () => {
+        let id4 = this._settings.connect('changed::change-wallpaper', () => {
             if (this._getChangeWallpaper()) {
                 nextWallpaperMenuItem.show();
                 prevWallpaperMenuItem.show();
@@ -143,6 +149,7 @@ export class HanabiPanelMenu {
                 prevWallpaperMenuItem.hide();
             }
         });
+        this._signals.push({ obj: this._settings, id: id4 });
 
         menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
@@ -247,6 +254,22 @@ export class HanabiPanelMenu {
     disable() {
         if (!this.isEnabled)
             return;
+
+        if (this._signals) {
+            this._signals.forEach(({ obj, id }) => {
+                if (obj && id)
+                    obj.disconnect(id);
+            });
+            this._signals = [];
+        }
+
+        if (this._dbusSignals) {
+            this._dbusSignals.forEach(({ proxy, id }) => {
+                if (proxy && id)
+                    proxy.disconnectSignal(id);
+            });
+            this._dbusSignals = [];
+        }
 
         this.indicator.destroy();
         this.isEnabled = false;

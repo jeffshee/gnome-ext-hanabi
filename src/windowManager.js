@@ -99,6 +99,7 @@ class ManagedWindow {
                 child => GObject.type_name(child) === 'MetaSurfaceContainerActorWayland'
             );
             if (surfaceContainer) {
+                this._surfaceContainer = surfaceContainer;
                 this._notifyPositionId = surfaceContainer.connect('notify::position', () => {
                     surfaceContainer.set_position(0, 0);
                 });
@@ -135,8 +136,11 @@ class ManagedWindow {
     }
 
     disconnect() {
-        if (this._notifyPositionId)
-            GLib.source_remove(this._notifyPositionId);
+        if (this._surfaceContainer && this._notifyPositionId) {
+            this._surfaceContainer.disconnect(this._notifyPositionId);
+            this._notifyPositionId = null;
+            this._surfaceContainer = null;
+        }
 
         this._signals.forEach(signal => {
             this._window.disconnect(signal);

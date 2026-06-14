@@ -25,6 +25,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import * as Logger from './logger.js';
 import * as RoundedCornersEffect from './roundedCornersEffect.js';
+import System from 'system';
 
 const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const logger = new Logger.Logger();
@@ -78,7 +79,7 @@ export const LiveWallpaper = GObject.registerClass(
             try {
                 this._roundedCornersEffect =
                     new RoundedCornersEffect.RoundedCornersEffect();
-                // this._backgroundActor.add_effect(this._roundedCornersEffect);
+                this._backgroundActor.add_effect(this._roundedCornersEffect);
             } catch (e) {
                 logger.warn(`Failed to create rounded corners effect: ${e}`);
                 this._roundedCornersEffect = null;
@@ -103,19 +104,29 @@ export const LiveWallpaper = GObject.registerClass(
 
             this._rendererActor = null;
             this._rendererDestroyId = null;
+        }
 
-            this.connect('destroy', () => {
-                this._isDestroyed = true;
-                if (this._applyWallpaperTimeoutId) {
-                    GLib.source_remove(this._applyWallpaperTimeoutId);
-                    this._applyWallpaperTimeoutId = 0;
-                }
-                if (this._rendererActor && this._rendererDestroyId) {
-                    this._rendererActor.disconnect(this._rendererDestroyId);
-                    this._rendererActor = null;
-                    this._rendererDestroyId = null;
-                }
-            });
+        vfunc_destroy() {
+            this._isDestroyed = true;
+            if (this._applyWallpaperTimeoutId) {
+                GLib.source_remove(this._applyWallpaperTimeoutId);
+                this._applyWallpaperTimeoutId = 0;
+            }
+            if (this._rendererActor && this._rendererDestroyId) {
+                this._rendererActor.disconnect(this._rendererDestroyId);
+                this._rendererActor = null;
+                this._rendererDestroyId = null;
+            }
+            if (this._wallpaper) {
+                this._wallpaper.destroy();
+                this._wallpaper = null;
+            }
+            if (this._backgroundActor && this._roundedCornersEffect) {
+                this._backgroundActor.remove_effect(this._roundedCornersEffect);
+                this._roundedCornersEffect = null;
+            }
+            super.vfunc_destroy();
+            System.gc();
         }
 
         setPixelStep(width, height) {
@@ -166,9 +177,6 @@ export const LiveWallpaper = GObject.registerClass(
                         source: renderer,
                         // The point around which the scaling and rotation transformations occur.
                         pivot_point: new Graphene.Point({x: 0.5, y: 0.5}),
-                    });
-                    this._wallpaper.connect('destroy', () => {
-                        this._wallpaper = null;
                     });
                     this.add_child(this._wallpaper);
                     this._fade();
