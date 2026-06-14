@@ -149,15 +149,22 @@ export const LiveWallpaper = GObject.registerClass(
         _applyBounds() {
             const workArea = Main.layoutManager.getWorkAreaForMonitor(this._monitorIndex);
             const monitor = Main.layoutManager.monitors[this._monitorIndex];
-            const panelOffset = (workArea.y - monitor.y) / monitor.height * this._backgroundActor.height;
+            const xOffset = (workArea.x - monitor.x) / monitor.width * this._backgroundActor.width;
+            const yOffset = (workArea.y - monitor.y) / monitor.height * this._backgroundActor.height;
+            const workAreaWidth = (workArea.width / monitor.width) * this._backgroundActor.width;
+            const workAreaHeight = (workArea.height / monitor.height) * this._backgroundActor.height;
             const s = this._settings;
             const ix1 = s ? s.get_int('bounds-inset-x1') : 0;
             const iy1 = s ? s.get_int('bounds-inset-y1') : 0;
             const ix2 = s ? s.get_int('bounds-inset-x2') : 0;
             const iy2 = s ? s.get_int('bounds-inset-y2') : 0;
             this._roundedCornersEffect.setBounds(
-                [ix1, panelOffset + iy1, this.width - ix2, this.height - iy2]
-                    .map(e => e * this._monitorScale)
+                [
+                    xOffset + ix1,
+                    yOffset + iy1,
+                    xOffset + workAreaWidth - ix2,
+                    yOffset + workAreaHeight - iy2,
+                ].map(e => e * this._monitorScale)
             );
         }
 
