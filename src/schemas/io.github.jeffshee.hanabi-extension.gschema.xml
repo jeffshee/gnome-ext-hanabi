@@ -20,6 +20,12 @@
             <description>Set the volume level for audio playback</description>
         </key>
 
+        <key name="random-start-position" type="b">
+            <default>false</default>
+            <summary>Random Start Position</summary>
+            <description>Start playback from a random position each time a video starts</description>
+        </key>
+
         <key name="change-wallpaper" type="b">
             <default>false</default>
             <summary>Change Wallpaper</summary>
@@ -56,6 +62,12 @@
             <default>0</default>
             <summary>Pause on Maximize or Fullscreen</summary>
             <description>Pause playback when there is maximized or fullscreen window</description>
+        </key>
+
+        <key name="pause-on-focus" type="b">
+            <default>false</default>
+            <summary>Pause on Window Focus</summary>
+            <description>Pause playback when any window is focused</description>
         </key>
 
         <key name="pause-on-battery" type="i">
@@ -96,10 +108,10 @@
             <description>Use new stateless NVIDIA decoders</description>
         </key>
 
-        <key name="force-gtk4paintablesink" type="b">
+        <key name="prefer-clappersink" type="b">
             <default>false</default>
-            <summary>Force gtk4paintablesink</summary>
-            <description>Force the use of gtk4paintablesink for video playback</description>
+            <summary>Prefer clappersink</summary>
+            <description>Prefer clappersink over gtk4paintablesink for video playback</description>
         </key>
 
         <key name="force-mediafile" type="b">
@@ -142,5 +154,46 @@
                 wallpaper when no media player is currently playing</description>
         </key>
 
+        <key name="corner-radius" type="i">
+            <range min="0" max="100" />
+            <default>30</default>
+            <summary>Corner Radius</summary>
+            <description>Corner radius in pixels for workspace background in the overview</description>
+        </key>
+
+        <key name="border-stroke" type="i">
+            <range min="0" max="20" />
+            <default>0</default>
+            <summary>Border Stroke</summary>
+            <description>Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)</description>
+        </key>
+
+        <key name="bounds-inset-x1" type="i">
+            <range min="-200" max="200" />
+            <default>2</default>
+            <summary>Bounds Inset (Left)</summary>
+            <description>Additional inset for the left edge of the rounded-rect bounds (positive = move inward)</description>
+        </key>
+
+        <key name="bounds-inset-y1" type="i">
+            <range min="-200" max="200" />
+            <default>2</default>
+            <summary>Bounds Inset (Top)</summary>
+            <description>Additional inset for the top edge of the rounded-rect bounds (positive = move inward)</description>
+        </key>
+
+        <key name="bounds-inset-x2" type="i">
+            <range min="-200" max="200" />
+            <default>2</default>
+            <summary>Bounds Inset (Right)</summary>
+            <description>Additional inset for the right edge of the rounded-rect bounds (positive = move inward)</description>
+        </key>
+
+        <key name="bounds-inset-y2" type="i">
+            <range min="-200" max="200" />
+            <default>2</default>
+            <summary>Bounds Inset (Bottom)</summary>
+            <description>Additional inset for the bottom edge of the rounded-rect bounds (positive = move inward)</description>
+        </key>
     </schema>
 </schemalist>

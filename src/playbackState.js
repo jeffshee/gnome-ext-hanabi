@@ -1,51 +1,44 @@
-/**
- * Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// Copyright (C) 2026 Jeff Shee <jeffshee8969@gmail.com> and contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 import GLib from 'gi://GLib';
 
 import * as DBus from './dbus.js';
 import * as Logger from './logger.js';
 
-// Debounce window for the renderer/state-machine mismatch corrector.
-// GStreamer can rapidly oscillate between PAUSED and PLAYING while a hardware
-// decoder pipeline is warming up (especially right after suspend/resume). If
-// we react to every isPlayingChanged immediately, our forced setPlay/setPause
-// calls amplify that oscillation and the video can stay frozen for tens of
-// seconds. Only act on a mismatch that has remained stable for this long.
-const MISMATCH_DEBOUNCE_MS = 1500;
-
 
 /**
  * Ref: https://kentcdodds.com/blog/implementing-a-simple-state-machine-library-in-javascript
  *
- * @param stateMachineDefinition
+ * @param {*} stateMachineDefinition
  */
 function createMachine(stateMachineDefinition) {
     const machine = {
         value: stateMachineDefinition.initialState,
         transition(currentState, event) {
             const currentStateDefinition = stateMachineDefinition[currentState];
-            const destinationTransition = currentStateDefinition.transitions[event];
+            const destinationTransition =
+                currentStateDefinition.transitions[event];
             if (!destinationTransition)
                 return null;
 
             const destinationState = destinationTransition.target;
             const destinationStateDefinition =
-          stateMachineDefinition[destinationState];
+                stateMachineDefinition[destinationState];
 
             destinationTransition.action();
             currentStateDefinition.actions.onExit();

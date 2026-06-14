@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-25 18:29+0900\n"
+"POT-Creation-Date: 2026-06-07 17:44+0900\n"
 "PO-Revision-Date: 2025-04-10 08:01+0000\n"
 "Last-Translator: Kuwush <79j0hancarl@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
@@ -19,130 +19,173 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.11-dev\n"
 
-#: src/panelMenu.js:70 src/panelMenu.js:85
+#: src/panelMenu.js:75 src/panelMenu.js:90
 msgid "Pause"
 msgstr "Pausa"
 
-#: src/panelMenu.js:70 src/panelMenu.js:85
+#: src/panelMenu.js:75 src/panelMenu.js:90
 msgid "Play"
 msgstr "Spela"
 
-#: src/panelMenu.js:94 src/panelMenu.js:103
+#: src/panelMenu.js:99 src/panelMenu.js:108
 msgid "Unmute Audio"
 msgstr "Sätt på Ljud"
 
-#: src/panelMenu.js:94 src/panelMenu.js:103 src/prefs.js:43
+#: src/panelMenu.js:99 src/panelMenu.js:108 src/prefs.js:46
 msgid "Mute Audio"
 msgstr "Tysta Ljud"
 
-#: src/panelMenu.js:110
+#: src/panelMenu.js:116
 msgid "Next Wallpaper"
 msgstr "Nästa Bakgrund"
 
-#: src/panelMenu.js:125
+#: src/panelMenu.js:136
 msgid "Preferences"
 msgstr "Preferenser"
 
-#: src/prefs.js:38
+#: src/prefs.js:41
 msgid "General"
 msgstr "Allmänt"
 
-#: src/prefs.js:44
+#: src/prefs.js:50
 msgid "Volume Level"
 msgstr "Volymnivå"
 
-#: src/prefs.js:45
+#: src/prefs.js:58
+msgid "Random Start Position"
+msgstr ""
+
+#: src/prefs.js:58
+msgid "Start playback from a random position each time a video starts"
+msgstr ""
+
+#: src/prefs.js:62
 msgid "Show Panel Menu"
 msgstr "Visa Panel Meny"
 
-#: src/prefs.js:51
+#: src/prefs.js:71
 msgid "Auto Pause"
 msgstr "Automatisk pausning"
 
-#: src/prefs.js:56
+#: src/prefs.js:78
+msgid "Pause on Window Focus"
+msgstr ""
+
+#: src/prefs.js:80
+#, fuzzy
+#| msgid "Pause playback when an MPRIS media player is playing media"
+msgid "Pause playback when any window is focused"
+msgstr "Pausa uppspelning när en MPRIS mediaspelar spelar upp media"
+
+#: src/prefs.js:86
 msgid "Low Battery Threshold"
 msgstr "Tröskel för låg batterinivå"
 
-#: src/prefs.js:56
+#: src/prefs.js:88
 msgid "Set the threshold percentage for low battery level"
 msgstr "Sätt tröskelprocenten för låg batterinivå"
 
-#: src/prefs.js:60
+#: src/prefs.js:97
 msgid "Pause on Media Player Playing"
 msgstr "Pausa vid Mediaspelare Spelar"
 
-#: src/prefs.js:62
+#: src/prefs.js:99
 msgid "Pause playback when an MPRIS media player is playing media"
 msgstr "Pausa uppspelning när en MPRIS mediaspelar spelar upp media"
 
-#: src/prefs.js:69
+#: src/prefs.js:106
 msgid "Wallpaper Changer"
 msgstr "Bakgrundsändrare"
 
-#: src/prefs.js:72
+#: src/prefs.js:112
 msgid "Change Wallpaper Automatically"
 msgstr "Ändra Bakgrund Automatiskt"
 
-#: src/prefs.js:75
+#: src/prefs.js:121
 msgid "Change Wallpaper Interval (minutes)"
 msgstr "Ändra Bakgrundsintervall (minuter)"
 
-#: src/prefs.js:81
+#: src/prefs.js:134
+msgid "Overview"
+msgstr ""
+
+#: src/prefs.js:140
+msgid "Corner Radius"
+msgstr ""
+
+#: src/prefs.js:142
+msgid ""
+"Rounded corner radius in pixels for workspace background in the overview"
+msgstr ""
+
+#: src/prefs.js:153
 msgid "Experimental"
 msgstr "Experimentellt"
 
-#: src/prefs.js:87
+#: src/prefs.js:159
 msgid "Experimental VA Plugin"
 msgstr "Experimentellt VA Tillägg"
 
-#: src/prefs.js:89
+#: src/prefs.js:162
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr ""
 "Aktivera VA avkodare vilket förbättrar prestanda för Intel/AMD Wayland "
 "användare"
 
-#: src/prefs.js:94
+#: src/prefs.js:168
 msgid "NVIDIA Stateless Decoders"
 msgstr ""
 
-#: src/prefs.js:96
+#: src/prefs.js:170
 msgid "Use new stateless NVIDIA decoders"
 msgstr "Använd nya stateless NVIDIA avkodare"
 
-#: src/prefs.js:103
+#: src/prefs.js:177
 msgid "Developer"
 msgstr "Utvecklare"
 
-#: src/prefs.js:109
+#: src/prefs.js:183
 msgid "Debug Mode"
 msgstr "Felsökningsläge"
 
-#: src/prefs.js:111
+#: src/prefs.js:185
 msgid "Print debug messages to log"
 msgstr "Skriv ut felsökningsmeddelanden till logg"
 
-#: src/prefs.js:116
-msgid "Force gtk4paintablesink"
-msgstr "Tvinga gtk4paintablesink"
+#: src/prefs.js:190
+#, fuzzy
+#| msgid "Preferences"
+msgid "Prefer clappersink"
+msgstr "Preferenser"
 
-#: src/prefs.js:118
-msgid "Force use of gtk4paintablesink for video playback"
+#: src/prefs.js:192
+#, fuzzy
+#| msgid "Force use of gtk4paintablesink for video playback"
+msgid "Prefer clappersink over gtk4paintablesink for video playback"
 msgstr "Tvinga användning utav gtk4paintablesink för videouppspelning"
 
-#: src/prefs.js:123
+#: src/prefs.js:197
 msgid "Force GtkMediaFile"
 msgstr "Tvinga GtkMediaFile"
 
-#: src/prefs.js:125
+#: src/prefs.js:199
 msgid "Force use of GtkMediaFile for video playback"
 msgstr "Tvinga användning utav GtkMediaFile för videouppspelning"
 
-#: src/prefs.js:127
+#: src/prefs.js:204
+msgid "Enable Graphics Offload"
+msgstr ""
+
+#: src/prefs.js:207
+msgid "Enable graphics offload for improved performance (requires GTK 4.14+)"
+msgstr ""
+
+#: src/prefs.js:213
 msgid "Startup Delay"
 msgstr "Uppstartsfördröjning"
 
-#: src/prefs.js:127
+#: src/prefs.js:216
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
@@ -150,43 +193,52 @@ msgstr ""
 "Lägg till en uppstartsfördröjning (i millisekunder) för att mildra "
 "kompatibiliteten med andra tillägg"
 
-#: src/prefs.js:214
+#: src/prefs.js:226
+msgid "Border Stroke"
+msgstr ""
+
+#: src/prefs.js:228
+msgid ""
+"Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)"
+msgstr ""
+
+#: src/prefs.js:296
 msgid "Video Path"
 msgstr "Videoväg"
 
-#: src/prefs.js:220 src/prefs.js:245 src/prefs.js:279 src/prefs.js:300
+#: src/prefs.js:302 src/prefs.js:327 src/prefs.js:356 src/prefs.js:377
 msgid "None"
 msgstr "Ingen"
 
-#: src/prefs.js:232
+#: src/prefs.js:314
 msgid "Open File"
 msgstr "Öppna Fil"
 
-#: src/prefs.js:237 src/prefs.js:293
+#: src/prefs.js:319 src/prefs.js:370
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: src/prefs.js:238 src/prefs.js:254 src/prefs.js:294 src/prefs.js:309
+#: src/prefs.js:320 src/prefs.js:336 src/prefs.js:371 src/prefs.js:386
 msgid "Open"
 msgstr "Öppen"
 
-#: src/prefs.js:273
+#: src/prefs.js:350
 msgid "Change Wallpaper Directory Path"
 msgstr "Ändra Bakgrundens Katalogsväg"
 
-#: src/prefs.js:288
+#: src/prefs.js:365
 msgid "Select Directory"
 msgstr "Välj mapp"
 
-#: src/prefs.js:328
+#: src/prefs.js:400
 msgid "Fit Mode"
 msgstr ""
 
-#: src/prefs.js:329
+#: src/prefs.js:401
 msgid "Control how wallpaper fits within the monitor"
 msgstr "Kontrollera hur bakgrunden får plats inom bildskärmen"
 
-#: src/prefs.js:330
+#: src/prefs.js:402
 msgid ""
 "\n"
 "    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
@@ -208,35 +260,35 @@ msgstr ""
 "det behövs, behåll annars dess ursprungliga storlek\n"
 "    "
 
-#: src/prefs.js:338
+#: src/prefs.js:410
 msgid "Fill"
 msgstr "Fyll"
 
-#: src/prefs.js:339
+#: src/prefs.js:411
 msgid "Contain"
 msgstr "Innehålla"
 
-#: src/prefs.js:340
+#: src/prefs.js:412
 msgid "Cover"
 msgstr "Täck"
 
-#: src/prefs.js:341
+#: src/prefs.js:413
 msgid "Scale-down"
 msgstr "Skala ner"
 
-#: src/prefs.js:354
+#: src/prefs.js:426
 msgid "This feature requires Gtk 4.8 or above"
 msgstr "Denna funktion kräver Gtk 4.8 eller över"
 
-#: src/prefs.js:371
+#: src/prefs.js:438
 msgid "Pause on Maximize or Fullscreen"
 msgstr "Pausa vid Maximering eller Helskärm"
 
-#: src/prefs.js:372
+#: src/prefs.js:440
 msgid "Pause playback when there is maximized or fullscreen window"
 msgstr "Pausa uppspelning när det är en maximerad eller helskärmsruta"
 
-#: src/prefs.js:373
+#: src/prefs.js:442
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -254,27 +306,28 @@ msgstr ""
 "eller helskärmsruta på alla bildskärmar.\n"
 "    "
 
-#: src/prefs.js:380 src/prefs.js:416
+#: src/prefs.js:449 src/prefs.js:482
 msgid "Never"
 msgstr "Aldrig"
 
-#: src/prefs.js:381
+#: src/prefs.js:450
 msgid "Any Monitor"
 msgstr "Vilken bildskärm som helst"
 
-#: src/prefs.js:382
+#: src/prefs.js:451
 msgid "All Monitors"
 msgstr "Alla bildskärmar"
 
-#: src/prefs.js:407
+#: src/prefs.js:471
 msgid "Pause on Battery"
 msgstr "Pausa på batteri"
 
-#: src/prefs.js:408
+#: src/prefs.js:473
 msgid "Pause playback when the device is on battery or the battery is low"
-msgstr "Pausa uppspelning när enheten är på batteri eller när batteriet är lågt"
+msgstr ""
+"Pausa uppspelning när enheten är på batteri eller när batteriet är lågt"
 
-#: src/prefs.js:409
+#: src/prefs.js:475
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -290,23 +343,23 @@ msgstr ""
 "    <b>Alltid</b>: Pausa uppspelning när enheten går på batteri.\n"
 "    "
 
-#: src/prefs.js:417
+#: src/prefs.js:483
 msgid "Low Battery"
 msgstr "Låg batterinivå"
 
-#: src/prefs.js:418
+#: src/prefs.js:484
 msgid "Always"
 msgstr "Alltid"
 
-#: src/prefs.js:443
+#: src/prefs.js:504
 msgid "Change Wallpaper Mode"
 msgstr "Ändra bakgrundsläge"
 
-#: src/prefs.js:444
+#: src/prefs.js:505
 msgid "Control how to change wallpapers automatically"
 msgstr "Kontrollera hur man ändrar bakgrund automatiskt"
 
-#: src/prefs.js:445
+#: src/prefs.js:506
 msgid ""
 "\n"
 "    <b>Sequential:</b> Preserve the directory sequence (descending order).\n"
@@ -322,14 +375,42 @@ msgstr ""
 "    <b>Slumpmässig:</b> Slumpmässigt välj bakgrunden från mappen.\n"
 "    "
 
-#: src/prefs.js:452
+#: src/prefs.js:513
 msgid "Sequential"
 msgstr "Sekventiell"
 
-#: src/prefs.js:453
+#: src/prefs.js:514
 msgid "Inverse Sequential"
 msgstr "Invers sekvens"
 
-#: src/prefs.js:454
+#: src/prefs.js:515
 msgid "Random"
 msgstr "Slumpmässigt"
+
+#: src/prefs.js:535
+msgid "Bounds Inset"
+msgstr ""
+
+#: src/prefs.js:536
+msgid ""
+"Adjust edges of the overview rounded-rect bounds (positive = shrink inward)"
+msgstr ""
+
+#: src/prefs.js:541
+msgid "Left"
+msgstr ""
+
+#: src/prefs.js:542
+msgid "Top"
+msgstr ""
+
+#: src/prefs.js:543
+msgid "Right"
+msgstr ""
+
+#: src/prefs.js:544
+msgid "Bottom"
+msgstr ""
+
+#~ msgid "Force gtk4paintablesink"
+#~ msgstr "Tvinga gtk4paintablesink"

@@ -1,25 +1,24 @@
-/**
- * Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// Copyright (C) 2026 Jeff Shee <jeffshee8969@gmail.com> and contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 import Gio from 'gi://Gio';
 
 import * as DBusUtil from 'resource://org/gnome/shell/misc/dbusUtils.js';
 import * as Logger from './logger.js';
-
 
 // Ref: https://gjs.guide/guides/gio/dbus.html#high-level-proxies
 export class RendererWrapper {
@@ -89,7 +88,8 @@ export class UPowerWrapper {
     createProxy() {
         const DBUS_INTERFACE = 'org.freedesktop.UPower.Device';
         const DBUS_BUS_NAME = 'org.freedesktop.UPower';
-        const DBUS_OBJECT_PATH = '/org/freedesktop/UPower/devices/DisplayDevice';
+        const DBUS_OBJECT_PATH =
+            '/org/freedesktop/UPower/devices/DisplayDevice';
         const interfaceXml = DBusUtil.loadInterfaceXML(DBUS_INTERFACE);
         const DBusProxy = Gio.DBusProxy.makeProxyWrapper(interfaceXml);
         return DBusProxy(Gio.DBus.system, DBUS_BUS_NAME, DBUS_OBJECT_PATH);
@@ -103,7 +103,6 @@ export class UPowerWrapper {
         return this.proxy.Percentage;
     }
 }
-
 
 export class DBusWrapper {
     constructor() {
