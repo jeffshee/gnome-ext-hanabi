@@ -1,10 +1,10 @@
-<p align="center"><img src="https://raw.githubusercontent.com/jeffshee/gnome-ext-hanabi/master/res/sparkler.svg" width="256"></p>
+<p align="center"><img src="res/sparkler.svg" width="256"></p>
 
 <p align="center">Live Wallpaper for GNOME</p>  
 <p align="center">Hanabi 花火【はなび】(n) fireworks</p>
 <p align="center">( ・ω・)o─━・*:'・:・゜'・:※</p>
 
-# Gnome Shell Extension - Hanabi
+# GNOME Shell Extension - Hanabi
 
 If you like my project, please consider buying me a coffee!! (⁎˃ ꇴ ˂⁎)ｯ
 
@@ -22,46 +22,70 @@ Your support is truly appreciated!
 
 ## Demo 📽️
 
-Please click on the image to view <i>(redirect to YouTube)</i>
+Please click on the image to view _(redirect to YouTube)_
 
 [![](https://i3.ytimg.com/vi/BWjXl4h9_BA/maxresdefault.jpg)](https://www.youtube.com/watch?v=BWjXl4h9_BA)
 [Wallpaper used in demo](https://www.youtube.com/watch?v=2pBj0RKN3Y8)
 
+## Hanabi is migrating to TypeScript!
+
+> [!IMPORTANT]
+> Moving to TypeScript for better type safety and maintainability~ ✨
+>
+> Active development now happens on the `typescript` branch
+> — **GNOME 50+, Wayland only** — merging into the main branch on **July 15, 2026**.
+>
+> Until then, the main branch stays on JavaScript so existing community packages
+> and their CI builds keep working through the transition.
+> The `javascript` branch enters **maintenance mode** — bugs still get fixed,
+> but no new fireworks there. (・ω・)ノ
+
 ## GNOME Shell Support
 
-| Version | ≤41 | 42  | 43  | 44  | 45  | 46  | 47  | 48  | 49  | 50  |
-| :-----: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| Status  | ⛔  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  | ✅  |
+| Version |  42–44   |    45–50     |     50+      |
+| :-----: | :------: | :----------: | :----------: |
+| Status  |    ⚠️    |      ✅      |      ✅      |
+| Branch  | `legacy` | `javascript` | `typescript` |
 
-See also the section [Troubleshooting](#troubleshooting), for version-specific known issues.
+> [!TIP]
+> On GNOME 50? You're encouraged to give the TypeScript version a try!
 
 ## Installation
 
-1. Clone the repo
+1. Clone the branch for your GNOME Shell version
 
-- **For GNOME 45 and later**
+- **GNOME 50 and later** (TypeScript, Wayland only) 🔥
+
     ```bash
-    git clone https://github.com/jeffshee/gnome-ext-hanabi.git
-    ```
-- **For GNOME 44 and earlier**
-    ```bash
-    git clone https://github.com/jeffshee/gnome-ext-hanabi.git -b legacy
+    git clone https://github.com/jeffshee/gnome-ext-hanabi.git -b typescript
     ```
 
-2. Run the installation script (Require `meson`)
+- **GNOME 45–50** (JavaScript, X11 and Wayland)
+
+    ```bash
+    git clone https://github.com/jeffshee/gnome-ext-hanabi.git -b javascript
+    ```
+
+2. Run the installation script
 
     ```bash
     cd gnome-ext-hanabi
     make install
     ```
 
+    **Build dependencies**
+    - `typescript` branch: `meson`, `node`, and `npm`
+    - `javascript` branch: `meson`
+
 3. Restart GNOME Shell
+
 4. Enable the Hanabi extension
+
 5. Choose your video wallpaper in the extension preference window
 
 ### Distro-specific Guides
 
-See [docs/distro/](docs/distro/) for distro-specific installation guides.
+See the [distro-specific guides](docs/distro/) for installation instructions.
 
 ### Troubleshooting
 
@@ -84,18 +108,21 @@ See [docs/distro/](docs/distro/) for distro-specific installation guides.
     In Blur My Shell settings, go to **Applications → Applications blur → Blacklist** and add:  
      `io.github.jeffshee.HanabiRenderer`
 
-### Optimization
+## Advanced Usage
+
+<details>
+<summary>Video backend selection &amp; scripting</summary>
 
 Hanabi uses `gtk4paintablesink` (from GStreamer) as the default video sink, which offers good performance and broad compatibility.
 
 Optionally, `clappersink` from [Clapper](https://github.com/Rafostar/clapper) can be used instead via **Preferences → Developer → Prefer clappersink**. Clapper must be installed **from the package manager and not from Flatpak/Snap** for this to work.
 
-> **Note:** There is a known compatibility issue with `clappersink` on native installs with GStreamer 1.26+ ([Rafostar/clapper#560](https://github.com/Rafostar/clapper/issues/560)). If you encounter crashes after enabling this option, please disable it.
-
-## Advanced Customization
+> There is a known [compatibility issue](https://github.com/Rafostar/clapper/issues/560) with `clappersink` on native installs with GStreamer 1.26+. If you encounter crashes after enabling this option, please disable it.
 
 For more advanced customization, learn how to write scripts for Hanabi extension!  
 Check out the [scripting guide](docs/scripting.md) for detailed instructions and examples.
+
+</details>
 
 ## Get Involved 🚀
 
@@ -103,7 +130,7 @@ Contributors are welcome! Let's make Hanabi extension better together~
 
 ### Development
 
-See [docs/dev.md](docs/dev.md) for development instructions.
+See the [development guide](docs/dev.md) for instructions.
 
 ### Translation
 
