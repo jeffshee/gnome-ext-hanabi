@@ -1,0 +1,84 @@
+name: Build extension zip
+
+on:
+  push:
+    branches: [typescript]
+    tags: ["v*"]
+  pull_request:
+    branches: [typescript]
+  workflow_dispatch:
+
+# Read by default. The release job below opts into write.
+permissions:
+  contents: read
+
+env:
+  UUID: hanabi-extension@jeffshee.github.io
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y meson ninja-build gettext libglib2.0-bin
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build TypeScript sources
+        run: npm run build
+
+      - name: Assemble extension into a staging prefix
+        run: |
+          meson setup .build-ci --prefix=/usr
+          DESTDIR="${GITHUB_WORKSPACE}/staging" meson install -C .build-ci
+
+      - name: Package zip installable with `gnome-extensions install`
+        run: |
+          ext="${GITHUB_WORKSPACE}/staging/usr/share/gnome-shell/extensions/${UUID}"
+          # meson installs the gschema XML under the glib prefix; an installable
+          # zip needs the schema (compiled) inside the extension's own schemas/ dir.
+          mkdir -p "${ext}/schemas"
+          cp "${GITHUB_WORKSPACE}"/staging/usr/share/glib-2.0/schemas/*.gschema.xml "${ext}/schemas/"
+          glib-compile-schemas "${ext}/schemas/"
+          mkdir -p "${GITHUB_WORKSPACE}/dist"
+          ( cd "${ext}" && zip -qr "${GITHUB_WORKSPACE}/dist/${UUID}.shell-extension.zip" . )
+          echo "Packaged:"
+          unzip -l "${GITHUB_WORKSPACE}/dist/${UUID}.shell-extension.zip"
+
+      - name: Upload zip artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.UUID }}.shell-extension
+          path: dist/*.shell-extension.zip
+          if-no-files-found: error
+
+  # Separate job so write permission is granted only when publishing a release.
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download zip artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.UUID }}.shell-extension
+          path: dist
+
+      - name: Attach zip to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${GITHUB_REF_NAME}" dist/*.shell-extension.zip --generate-notes
