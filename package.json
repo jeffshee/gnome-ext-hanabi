@@ -31,7 +31,7 @@
     "@girs/shell-18": "^18.0.0-4.0.4",
     "@girs/st-18": "^18.0.0-4.0.4",
     "@girs/upowerglib-1.0": "^1.91.1-4.0.4",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.28.1",
     "eslint": "^9.38.0",
     "prettier": "^3.8.3",
     "typescript": "^5.8.0",
