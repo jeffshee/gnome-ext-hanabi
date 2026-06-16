@@ -16,12 +16,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import Cogl from 'gi://Cogl';
+import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import Shell from 'gi://Shell';
 
-import * as Logger from './logger.js';
+import {Logger} from './logger.js';
 
-const logger = new Logger.Logger('roundedCorners');
+const logger = new Logger('roundedCorners');
+// Uniform setters fire on every redraw/animation frame; wait for this quiet
+// period (ms) so only the final value is logged instead of every change.
+const LOG_DEBOUNCE_MS = 250;
 
 // Adapted from the Mutter project.
 // See <https://gitlab.gnome.org/GNOME/mutter/-/blob/main/src/compositor/meta-background-content.c>.
@@ -98,22 +102,37 @@ const fragmentShaderCode = [
     '    cogl_color_out *= rounded_rect_coverage (texture_coord);             \n',
 ].join('');
 
-const FragmentHook = Shell.SnippetHook?.FRAGMENT ?? Cogl.SnippetHook.FRAGMENT;
-
-// A naive pipeline that just updates uniforms.
 export const RoundedCornersEffect = GObject.registerClass(
     class RoundedCornersEffect extends Shell.GLSLEffect {
-        vfunc_build_pipeline() {
+        // Pending debounced log timers, keyed by label.
+        private logTimeouts = new Map<string, number>();
+
+        // Logs `label: ...args` only once the value stops changing for LOG_DEBOUNCE_MS.
+        private debugDebounced(label: string, ...args: unknown[]): void {
+            const pending = this.logTimeouts.get(label);
+            if (pending)
+                GLib.source_remove(pending);
+            this.logTimeouts.set(
+                label,
+                GLib.timeout_add(GLib.PRIORITY_DEFAULT, LOG_DEBOUNCE_MS, () => {
+                    this.logTimeouts.delete(label);
+                    logger.debug(`${label}:`, ...args);
+                    return GLib.SOURCE_REMOVE;
+                })
+            );
+        }
+
+        vfunc_build_pipeline(): void {
             this.add_glsl_snippet(
-                FragmentHook,
+                Cogl.SnippetHook.FRAGMENT,
                 fragmentShaderDeclarations,
                 fragmentShaderCode,
                 false
             );
         }
 
-        setBounds(bounds) {
-            logger.debug('bounds:', ...bounds);
+        setBounds(bounds: number[]): void {
+            this.debugDebounced('bounds', ...bounds);
             this.set_uniform_float(
                 this.get_uniform_location('bounds'),
                 4,
@@ -121,8 +140,8 @@ export const RoundedCornersEffect = GObject.registerClass(
             );
         }
 
-        setClipRadius(clipRadius) {
-            logger.debug('clipRadius:', clipRadius);
+        setClipRadius(clipRadius: number): void {
+            this.debugDebounced('clipRadius', clipRadius);
             this.set_uniform_float(
                 this.get_uniform_location('clip_radius'),
                 1,
@@ -130,8 +149,8 @@ export const RoundedCornersEffect = GObject.registerClass(
             );
         }
 
-        setPixelStep(pixelStep) {
-            logger.debug('pixelStep:', ...pixelStep);
+        setPixelStep(pixelStep: number[]): void {
+            this.debugDebounced('pixelStep', ...pixelStep);
             this.set_uniform_float(
                 this.get_uniform_location('pixel_step'),
                 2,
@@ -139,8 +158,8 @@ export const RoundedCornersEffect = GObject.registerClass(
             );
         }
 
-        setBorderStroke(stroke) {
-            logger.debug('borderStroke:', stroke);
+        setBorderStroke(stroke: number): void {
+            this.debugDebounced('borderStroke', stroke);
             this.set_uniform_float(
                 this.get_uniform_location('border_stroke'),
                 1,
@@ -148,8 +167,8 @@ export const RoundedCornersEffect = GObject.registerClass(
             );
         }
 
-        setBorderColor(color) {
-            logger.debug('borderColor:', ...color);
+        setBorderColor(color: number[]): void {
+            this.debugDebounced('borderColor', ...color);
             this.set_uniform_float(
                 this.get_uniform_location('border_color'),
                 4,
@@ -158,3 +177,5 @@ export const RoundedCornersEffect = GObject.registerClass(
         }
     }
 );
+
+export type RoundedCornersEffect = InstanceType<typeof RoundedCornersEffect>;

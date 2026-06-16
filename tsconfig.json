@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "lib": ["ESNext"],
+        "types": [],
+        "strict": true,
+        "skipLibCheck": true,
+        "noEmit": true,
+        "paths": {
+            "gi://Gio": ["./node_modules/@girs/gio-2.0"],
+            "gi://GLib": ["./node_modules/@girs/glib-2.0"],
+            "gi://GObject": ["./node_modules/@girs/gobject-2.0"],
+            "gi://Meta": ["./node_modules/@girs/meta-18"],
+            "gi://St": ["./node_modules/@girs/st-18"],
+            "gi://Shell": ["./node_modules/@girs/shell-18"],
+            "gi://Clutter": ["./node_modules/@girs/clutter-18"],
+            "gi://Graphene": ["./node_modules/@girs/graphene-1.0"],
+            "gi://Cogl": ["./node_modules/@girs/cogl-18"],
+            "gi://Adw": ["./node_modules/@girs/adw-1"],
+            "gi://Gtk": ["./node_modules/@girs/gtk-4.0"],
+            "gi://Gtk?version=4.0": ["./node_modules/@girs/gtk-4.0"],
+            "gi://Gdk": ["./node_modules/@girs/gdk-4.0"],
+            "gi://Gdk?version=4.0": ["./node_modules/@girs/gdk-4.0"],
+            "gi://Gst": ["./node_modules/@girs/gst-1.0"],
+            "gi://GstPlay": ["./node_modules/@girs/gstplay-1.0"],
+            "gi://GstAudio": ["./node_modules/@girs/gstaudio-1.0"],
+            "gi://UPowerGlib": ["./node_modules/@girs/upowerglib-1.0"]
+        }
+    },
+    "include": ["src/**/*.ts"]
+}

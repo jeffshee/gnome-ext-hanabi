@@ -4,6 +4,8 @@ Common development tasks are available via `make`:
 
 | Command         | Description                                      |
 | --------------- | ------------------------------------------------ |
+| `make build`    | Build the TypeScript sources                     |
+| `make typecheck`| Type-check without emitting                      |
 | `make install`  | Build and install the extension                  |
 | `make enable`   | Enable the extension                             |
 | `make disable`  | Disable the extension                            |

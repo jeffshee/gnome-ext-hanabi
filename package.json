@@ -2,15 +2,39 @@
   "name": "gnome-ext-hanabi",
   "version": "1.0.0",
   "description": "Live Wallpaper for GNOME",
-  "main": "extension.js",
+  "main": "src/_build/extension.js",
   "repository": "https://github.com/jeffshee/gnome-ext-hanabi",
   "author": "Jeff Shee",
   "license": "GPL-3.0-or-later",
   "type": "module",
   "scripts": {
-    "lint": "tools/run-eslint.sh"
+    "lint": "tools/run-eslint.sh",
+    "build": "node build.js",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "prettier": "^3.8.3"
+    "@girs/adw-1": "^1.10.0-4.0.4",
+    "@girs/clutter-18": "^18.0.0-4.0.4",
+    "@girs/cogl-18": "^18.0.0-4.0.4",
+    "@girs/gdk-4.0": "^4.0.0-4.0.0-rc.17",
+    "@girs/gio-2.0": "^2.88.0-4.0.4",
+    "@girs/gjs": "^4.0.4",
+    "@girs/glib-2.0": "^2.88.0-4.0.4",
+    "@girs/gnome-shell": "^50.0.0",
+    "@girs/gobject-2.0": "^2.88.0-4.0.4",
+    "@girs/graphene-1.0": "^1.0.0-4.0.4",
+    "@girs/gst-1.0": "^1.28.1-4.0.4",
+    "@girs/gstaudio-1.0": "^1.0.0-4.0.4",
+    "@girs/gstplay-1.0": "^1.0.0-4.0.4",
+    "@girs/gtk-4.0": "^4.23.0-4.0.4",
+    "@girs/meta-18": "^18.0.0-4.0.4",
+    "@girs/shell-18": "^18.0.0-4.0.4",
+    "@girs/st-18": "^18.0.0-4.0.4",
+    "@girs/upowerglib-1.0": "^1.91.1-4.0.4",
+    "esbuild": "^0.25.0",
+    "eslint": "^9.38.0",
+    "prettier": "^3.8.3",
+    "typescript": "^5.8.0",
+    "typescript-eslint": "^8.61.0"
   }
 }
