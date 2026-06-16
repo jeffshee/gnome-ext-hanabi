@@ -57,11 +57,13 @@ jobs:
           echo "Packaged:"
           unzip -l "${GITHUB_WORKSPACE}/dist/${UUID}.shell-extension.zip"
 
+      # archive: false uploads the file as-is without GitHub's zip wrapper.
       - name: Upload zip artifact
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ env.UUID }}.shell-extension
-          path: dist/*.shell-extension.zip
+          name: ${{ env.UUID }}.shell-extension.zip
+          path: dist/${{ env.UUID }}.shell-extension.zip
+          archive: false
           if-no-files-found: error
 
   # Separate job so write permission is granted only when publishing a release.
@@ -75,8 +77,10 @@ jobs:
       - name: Download zip artifact
         uses: actions/download-artifact@v8
         with:
-          name: ${{ env.UUID }}.shell-extension
+          name: ${{ env.UUID }}.shell-extension.zip
           path: dist
+          # Keep the .zip as-is; do not decompress the downloaded file.
+          skip-decompress: true
 
       - name: Attach zip to GitHub Release
         env:
