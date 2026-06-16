@@ -24,8 +24,8 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as Logger from './logger.js';
 import * as DBus from './dbus.js';
 import UPower from 'gi://UPowerGlib';
+import {APPLICATION_ID} from './constants.js';
 
-const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const logger = new Logger.Logger('autoPause');
 
 const shellVersion = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
@@ -162,7 +162,7 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
 
         _windowAdded(metaWindow, doUpdate = true) {
             if (
-                metaWindow.title?.includes(applicationId) ||
+                metaWindow.title?.includes(APPLICATION_ID) ||
                 metaWindow.skip_taskbar
             )
                 return;
@@ -203,7 +203,7 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
 
         _windowRemoved(metaWindow) {
             if (
-                metaWindow.title?.includes(applicationId) ||
+                metaWindow.title?.includes(APPLICATION_ID) ||
                 metaWindow.skip_taskbar
             )
                 return;
@@ -262,7 +262,7 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
                 .map(({metaWindow}) => metaWindow)
                 .filter(
                     metaWindow =>
-                        !metaWindow.title?.includes(applicationId) &&
+                        !metaWindow.title?.includes(APPLICATION_ID) &&
                         !metaWindow.minimized
                 );
 
@@ -415,7 +415,7 @@ const PauseOnFocusModule = GObject.registerClass(
             this.states.windowFocused = focusWindow !== null &&
                 focusWindow.appears_focused &&
                 !focusWindow.minimized &&
-                !focusWindow.title?.includes(applicationId) &&
+                !focusWindow.title?.includes(APPLICATION_ID) &&
                 !focusWindow.skip_taskbar;
 
             this._logger.debug(`Window focused: ${this.states.windowFocused}, title: ${focusWindow?.title}, appears_focused: ${focusWindow?.appears_focused}`);

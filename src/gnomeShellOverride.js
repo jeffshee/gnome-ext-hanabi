@@ -34,11 +34,10 @@ import * as Util from 'resource:///org/gnome/shell/misc/util.js';
 
 import * as Logger from './logger.js';
 import * as Wallpaper from './wallpaper.js';
+import {APPLICATION_ID} from './constants.js';
 
-// eslint-disable-next-line no-unused-vars
-const logger = new Logger.Logger();
+const logger = new Logger.Logger('override');
 
-const applicationId = 'io.github.jeffshee.HanabiRenderer';
 // Ref: https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/workspace.js
 const BACKGROUND_CORNER_RADIUS_PIXELS = 30;
 
@@ -51,6 +50,7 @@ export class GnomeShellOverride {
     }
 
     _reloadBackgrounds() {
+        logger.debug('Reloading backgrounds');
         this._wallpaperActors.forEach(actor => actor.destroy());
         this._wallpaperActors.clear();
 
@@ -95,6 +95,7 @@ export class GnomeShellOverride {
     }
 
     _reloadLockScreenBackgrounds() {
+        logger.debug('Reloading lock screen backgrounds');
         // Only destroy and recreate lock screen wallpaper actors, leaving desktop actors intact.
         for (const actor of [...this._wallpaperActors]) {
             if (actor._metaBackgroundGroup?.style_class?.includes('screen-shield-background'))
@@ -120,6 +121,8 @@ export class GnomeShellOverride {
     }
 
     enable() {
+        logger.debug('Installing overrides');
+
         /**
          * Live wallpaper
          */
@@ -134,9 +137,12 @@ export class GnomeShellOverride {
 
                     // The lock screen container widget has style_class 'screen-shield-background'.
                     const isLockScreen = this._container.style_class?.includes('screen-shield-background') ?? false;
-                    if (isLockScreen && !thisRef._settings?.get_boolean('show-on-lock-screen'))
+                    if (isLockScreen && !thisRef._settings?.get_boolean('show-on-lock-screen')) {
+                        logger.debug('Skipping live wallpaper on lock screen');
                         return backgroundActor;
+                    }
 
+                    logger.debug(`Injecting live wallpaper (monitor ${backgroundActor.monitor})`);
                     // We need to pass radius to actors, so save a ref in bgManager.
                     this.videoActor = new Wallpaper.LiveWallpaper(
                         backgroundActor,
@@ -207,7 +213,7 @@ export class GnomeShellOverride {
                         ? windowActors.filter(
                             actor =>
                                 !actor.meta_window.title?.includes(
-                                    applicationId
+                                    APPLICATION_ID
                                 )
                         )
                         : windowActors;
@@ -222,7 +228,7 @@ export class GnomeShellOverride {
             '_isOverviewWindow',
             originalMethod => {
                 return function (window) {
-                    const isRenderer = window.title?.includes(applicationId);
+                    const isRenderer = window.title?.includes(APPLICATION_ID);
                     return isRenderer
                         ? false
                         : originalMethod.apply(this, [window]);
@@ -235,7 +241,7 @@ export class GnomeShellOverride {
             '_isOverviewWindow',
             originalMethod => {
                 return function (window) {
-                    const isRenderer = window.title?.includes(applicationId);
+                    const isRenderer = window.title?.includes(APPLICATION_ID);
                     return isRenderer
                         ? false
                         : originalMethod.apply(this, [window]);
@@ -254,7 +260,7 @@ export class GnomeShellOverride {
                         workspace,
                     ]);
                     const result = metaWindows.filter(
-                        metaWindow => !metaWindow.title?.includes(applicationId)
+                        metaWindow => !metaWindow.title?.includes(APPLICATION_ID)
                     );
                     return result;
                 };
@@ -271,7 +277,7 @@ export class GnomeShellOverride {
             'get_window_app',
             originalMethod => {
                 return function (window) {
-                    const isRenderer = window.title?.includes(applicationId);
+                    const isRenderer = window.title?.includes(APPLICATION_ID);
                     return isRenderer
                         ? null
                         : originalMethod.apply(this, [window]);
@@ -286,7 +292,7 @@ export class GnomeShellOverride {
                 return function () {
                     const metaWindows = originalMethod.call(this);
                     const result = metaWindows.filter(
-                        metaWindow => !metaWindow.title?.includes(applicationId)
+                        metaWindow => !metaWindow.title?.includes(APPLICATION_ID)
                     );
                     return result;
                 };
@@ -331,6 +337,8 @@ export class GnomeShellOverride {
     }
 
     disable() {
+        logger.debug('Removing overrides');
+
         for (const id of this._settingsChangedIds)
             this._settings?.disconnect(id);
         this._settingsChangedIds = [];

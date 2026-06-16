@@ -23,8 +23,8 @@ import GObject from 'gi://GObject';
 import * as Config from 'resource:///org/gnome/shell/misc/config.js';
 
 import * as Logger from './logger.js';
+import {APPLICATION_ID} from './constants.js';
 
-const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const logger = new Logger.Logger();
 
 const shellVersion = parseInt(Config.PACKAGE_VERSION.split('.')[0]);
@@ -124,8 +124,8 @@ class ManagedWindow {
 
     _parseTitle() {
         const title = this._window.title;
-        if (title && title.startsWith(`@${applicationId}!`)) {
-            const json = title.replace(`@${applicationId}!`, '').split('|')[0];
+        if (title && title.startsWith(`@${APPLICATION_ID}!`)) {
+            const json = title.replace(`@${APPLICATION_ID}!`, '').split('|')[0];
             try {
                 const newState = JSON.parse(json);
                 this._states = {...this._states, ...newState};
@@ -194,7 +194,7 @@ export class WindowManager {
                     const appid = window.get_gtk_application_id();
                     const windowpid = window.get_pid();
                     const mypid = this._waylandClient.query_pid_of_program();
-                    if (appid === applicationId && windowpid === mypid)
+                    if (appid === APPLICATION_ID && windowpid === mypid)
                         this.addWindow(window);
                 }
             }

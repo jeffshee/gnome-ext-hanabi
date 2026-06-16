@@ -17,8 +17,9 @@
 
 import Gio from 'gi://Gio';
 
-import * as DBusUtil from 'resource://org/gnome/shell/misc/dbusUtils.js';
+import * as DBusUtil from 'resource:///org/gnome/shell/misc/dbusUtils.js';
 import * as Logger from './logger.js';
+import {APPLICATION_ID, RENDERER_OBJECT_PATH} from './constants.js';
 
 // Ref: https://gjs.guide/guides/gio/dbus.html#high-level-proxies
 export class RendererWrapper {
@@ -30,7 +31,7 @@ export class RendererWrapper {
     createProxy() {
         const interfaceXml = `
         <node>
-            <interface name="io.github.jeffshee.HanabiRenderer">
+            <interface name="${APPLICATION_ID}">
                 <method name="setPlay"/>
                 <method name="setPause"/>
                 <property name="isPlaying" type="b" access="read"/>
@@ -39,10 +40,8 @@ export class RendererWrapper {
                 </signal>
             </interface>
         </node>`;
-        const DBUS_BUS_NAME = 'io.github.jeffshee.HanabiRenderer';
-        const DBUS_OBJECT_PATH = '/io/github/jeffshee/HanabiRenderer';
         const DBusProxy = Gio.DBusProxy.makeProxyWrapper(interfaceXml);
-        return DBusProxy(Gio.DBus.session, DBUS_BUS_NAME, DBUS_OBJECT_PATH);
+        return DBusProxy(Gio.DBus.session, APPLICATION_ID, RENDERER_OBJECT_PATH);
     }
 
     async setPlay() {
@@ -78,11 +77,11 @@ export class UPowerWrapper {
     }
 
     getState() {
-        return this.proxy.State;
+        return this.proxy.State ?? 0;
     }
 
     getPercentage() {
-        return this.proxy.Percentage;
+        return this.proxy.Percentage ?? 100;
     }
 }
 
@@ -113,7 +112,6 @@ export class DBusWrapper {
 
 export class MprisWrapper {
     constructor(mediaPlayerName) {
-        this._logger = new Logger.Logger(`dbus::mpris::${mediaPlayerName}`);
         this.proxy = this.createProxy(mediaPlayerName);
     }
 
@@ -127,6 +125,6 @@ export class MprisWrapper {
     }
 
     getPlaybackStatus() {
-        return this.proxy.PlaybackStatus;
+        return this.proxy.PlaybackStatus ?? 'Stopped';
     }
 }

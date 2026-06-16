@@ -25,8 +25,8 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import * as Logger from './logger.js';
 import * as RoundedCornersEffect from './roundedCornersEffect.js';
+import {APPLICATION_ID} from './constants.js';
 
-const applicationId = 'io.github.jeffshee.HanabiRenderer';
 const logger = new Logger.Logger();
 // Ref: https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/layout.js
 const BACKGROUND_FADE_ANIMATION_TIME = 1000;
@@ -252,7 +252,7 @@ export const LiveWallpaper = GObject.registerClass(
             const windowActors = global.get_window_actors(false);
 
             const hanabiWindowActors = windowActors.filter(window =>
-                window.meta_window.title?.includes(applicationId)
+                window.meta_window.title?.includes(APPLICATION_ID)
             );
 
             // Reject if number of hanabi windows is less than the number of monitors
@@ -274,7 +274,7 @@ export const LiveWallpaper = GObject.registerClass(
                 return null;
             }
 
-            // Find renderer by `applicationId` and monitor index.
+            // Find renderer by `APPLICATION_ID` and monitor index.
             // We use the monitor index from the backgroundActor dynamically to handle re-indexing.
             const renderer = hanabiWindowActors.find(
                 window =>

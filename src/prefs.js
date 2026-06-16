@@ -306,37 +306,9 @@ function prefsRowVideoPath(window, prefsGroup) {
     const path = settings.get_string(key);
     const row = new Adw.ActionRow({
         title,
-        subtitle: `${path !== '' ? path : _('None')}`,
+        subtitle: path !== '' ? path : _('None'),
     });
     prefsGroup.add(row);
-
-    /**
-     * Video file chooser
-     */
-    function createDialog() {
-        const fileFilter = new Gtk.FileFilter();
-        fileFilter.add_mime_type('video/*');
-
-        const fileChooser = new Gtk.FileChooserDialog({
-            title: _('Open File'),
-            action: Gtk.FileChooserAction.OPEN,
-        });
-        fileChooser.set_modal(true);
-        fileChooser.set_transient_for(window);
-        fileChooser.add_button(_('Cancel'), Gtk.ResponseType.CANCEL);
-        fileChooser.add_button(_('Open'), Gtk.ResponseType.ACCEPT);
-        fileChooser.add_filter(fileFilter);
-
-        fileChooser.connect('response', (dialog, responseId) => {
-            if (responseId === Gtk.ResponseType.ACCEPT) {
-                const _path = dialog.get_file().get_path();
-                settings.set_string(key, _path);
-                row.subtitle = `${_path !== '' ? _path : _('None')}`;
-            }
-            dialog.destroy();
-        });
-        return fileChooser;
-    }
 
     const button = new Adw.ButtonContent({
         icon_name: 'document-open-symbolic',
@@ -347,8 +319,23 @@ function prefsRowVideoPath(window, prefsGroup) {
     row.add_suffix(button);
 
     row.connect('activated', () => {
-        const dialog = createDialog();
-        dialog.show();
+        const fileFilter = new Gtk.FileFilter();
+        fileFilter.add_mime_type('video/*');
+
+        const dialog = new Gtk.FileDialog({title: _('Open File'), modal: true});
+        dialog.set_default_filter(fileFilter);
+        const currentPath = settings.get_string(key);
+        if (currentPath !== '')
+            dialog.set_initial_file(Gio.File.new_for_path(currentPath));
+        dialog.open(window, null, (_dialog, result) => {
+            try {
+                const selectedPath = dialog.open_finish(result)?.get_path() ?? '';
+                settings.set_string(key, selectedPath);
+                row.subtitle = selectedPath !== '' ? selectedPath : _('None');
+            } catch {
+                // Dialog dismissed.
+            }
+        });
     });
 }
 
@@ -360,33 +347,9 @@ function prefsRowDirectoryPath(window, prefsGroup) {
     const path = settings.get_string(key);
     const row = new Adw.ActionRow({
         title,
-        subtitle: `${path !== '' ? path : _('None')}`,
+        subtitle: path !== '' ? path : _('None'),
     });
     prefsGroup.add(row);
-
-    /**
-     *
-     */
-    function createDialog() {
-        const fileChooser = new Gtk.FileChooserDialog({
-            title: _('Select Directory'),
-            action: Gtk.FileChooserAction.SELECT_FOLDER,
-        });
-        fileChooser.set_modal(true);
-        fileChooser.set_transient_for(window);
-        fileChooser.add_button(_('Cancel'), Gtk.ResponseType.CANCEL);
-        fileChooser.add_button(_('Open'), Gtk.ResponseType.ACCEPT);
-
-        fileChooser.connect('response', (dialog, responseId) => {
-            if (responseId === Gtk.ResponseType.ACCEPT) {
-                const _path = dialog.get_file().get_path();
-                settings.set_string(key, _path);
-                row.subtitle = `${_path !== '' ? _path : _('None')}`;
-            }
-            dialog.destroy();
-        });
-        return fileChooser;
-    }
 
     const button = new Adw.ButtonContent({
         icon_name: 'document-open-symbolic',
@@ -397,8 +360,19 @@ function prefsRowDirectoryPath(window, prefsGroup) {
     row.add_suffix(button);
 
     row.connect('activated', () => {
-        const dialog = createDialog();
-        dialog.show();
+        const dialog = new Gtk.FileDialog({title: _('Select Directory'), modal: true});
+        const currentPath = settings.get_string(key);
+        if (currentPath !== '')
+            dialog.set_initial_folder(Gio.File.new_for_path(currentPath));
+        dialog.select_folder(window, null, (_dialog, result) => {
+            try {
+                const selectedPath = dialog.select_folder_finish(result)?.get_path() ?? '';
+                settings.set_string(key, selectedPath);
+                row.subtitle = selectedPath !== '' ? selectedPath : _('None');
+            } catch {
+                // Dialog dismissed.
+            }
+        });
     });
 }
 

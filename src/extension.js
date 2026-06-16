@@ -29,6 +29,9 @@ import * as WindowManager from './windowManager.js';
 import * as PlaybackState from './playbackState.js';
 import * as AutoPause from './autoPause.js';
 import * as PanelMenu from './panelMenu.js';
+import * as Logger from './logger.js';
+
+const logger = new Logger.Logger('extension');
 
 export default class HanabiExtension extends Extension {
     constructor(metadata) {
@@ -46,6 +49,7 @@ export default class HanabiExtension extends Extension {
     }
 
     enable() {
+        logger.debug('Enabling');
         this.settings = this.getSettings();
         this.playbackState = new PlaybackState.PlaybackState();
 
@@ -115,6 +119,7 @@ export default class HanabiExtension extends Extension {
     }
 
     innerEnable() {
+        logger.debug('Activating overrides and starting renderer');
         this.override.enable();
         this.manager.enable();
         this.autoPause.enable();
@@ -164,6 +169,7 @@ export default class HanabiExtension extends Extension {
     _suspendRenderer() {
         if (this._rendererSuspended)
             return;
+        logger.debug('Suspending renderer (lock screen)');
         this._rendererSuspended = true;
         if (this.launchRendererId) {
             GLib.source_remove(this.launchRendererId);
@@ -178,6 +184,7 @@ export default class HanabiExtension extends Extension {
     _resumeRenderer() {
         if (!this._rendererSuspended)
             return;
+        logger.debug('Resuming renderer');
         this._rendererSuspended = false;
         if (this.isEnabled && !this.currentProcess)
             this.launchRenderer();
@@ -194,6 +201,8 @@ export default class HanabiExtension extends Extension {
         const videoPath = this.settings.get_string('video-path');
         if (videoPath === '')
             this.openPreferences();
+
+        logger.debug(`Launching renderer (video: ${videoPath})`);
 
         this.reloadTime = 100;
         const argv = [];
@@ -226,6 +235,7 @@ export default class HanabiExtension extends Extension {
             this.currentProcess = null;
             this.manager.set_wayland_client(null);
             if (this.isEnabled && !this._rendererSuspended) {
+                logger.debug(`Renderer exited; relaunching in ${this.reloadTime}ms`);
                 if (this.launchRendererId)
                     GLib.source_remove(this.launchRendererId);
 
@@ -243,6 +253,7 @@ export default class HanabiExtension extends Extension {
     }
 
     disable() {
+        logger.debug('Disabling');
         this.killCurrentProcess();
         this._rendererSuspended = false;
 
@@ -299,6 +310,7 @@ export default class HanabiExtension extends Extension {
         }
 
         if (this.currentProcess && this.currentProcess.subprocess) {
+            logger.debug('Killing current renderer process');
             this.currentProcess.cancellable.cancel();
             this.currentProcess.subprocess.send_signal(15);
         }
@@ -344,6 +356,7 @@ export default class HanabiExtension extends Extension {
                 'renderer.js',
             ])}`;
             if (contents.startsWith(path)) {
+                logger.debug(`Killing orphaned renderer process (pid ${filename})`);
                 const proc = new Gio.Subprocess({argv: ['/bin/kill', filename]});
                 proc.init(null);
                 proc.wait(null);

@@ -21,6 +21,7 @@ help:
 
 install:
 	rm -rf .build
+	rm -rf $(HOME)/.local/share/gnome-shell/extensions/$(UUID)
 	meson setup .build --prefix=$(HOME)/.local/ && ninja -C .build install
 
 enable:

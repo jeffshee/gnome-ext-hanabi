@@ -12,6 +12,7 @@ configure_file(
 
 sources = [
   'autoPause.js',
+  'constants.js',
   'dbus.js',
   'extension.js',
   'gnomeShellOverride.js',

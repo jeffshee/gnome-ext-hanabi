@@ -16,12 +16,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import Cogl from 'gi://Cogl';
+import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import Shell from 'gi://Shell';
 
 import * as Logger from './logger.js';
 
 const logger = new Logger.Logger('roundedCorners');
+// Uniform setters fire on every redraw/animation frame; wait for this quiet
+// period (ms) so only the final value is logged instead of every change.
+const LOG_DEBOUNCE_MS = 250;
 
 // Adapted from the Mutter project.
 // See <https://gitlab.gnome.org/GNOME/mutter/-/blob/main/src/compositor/meta-background-content.c>.
@@ -103,6 +107,26 @@ const FragmentHook = Shell.SnippetHook?.FRAGMENT ?? Cogl.SnippetHook.FRAGMENT;
 // A naive pipeline that just updates uniforms.
 export const RoundedCornersEffect = GObject.registerClass(
     class RoundedCornersEffect extends Shell.GLSLEffect {
+        // Logs `label: ...args` only once the value stops changing for
+        // LOG_DEBOUNCE_MS, to avoid spamming the log on every redraw frame.
+        _debugDebounced(label, ...args) {
+            if (!this._logTimeouts)
+                this._logTimeouts = new Map();
+
+            const pending = this._logTimeouts.get(label);
+            if (pending)
+                GLib.source_remove(pending);
+
+            this._logTimeouts.set(
+                label,
+                GLib.timeout_add(GLib.PRIORITY_DEFAULT, LOG_DEBOUNCE_MS, () => {
+                    this._logTimeouts.delete(label);
+                    logger.debug(`${label}:`, ...args);
+                    return GLib.SOURCE_REMOVE;
+                })
+            );
+        }
+
         vfunc_build_pipeline() {
             this.add_glsl_snippet(
                 FragmentHook,
@@ -113,7 +137,7 @@ export const RoundedCornersEffect = GObject.registerClass(
         }
 
         setBounds(bounds) {
-            logger.debug('bounds:', ...bounds);
+            this._debugDebounced('bounds', ...bounds);
             this.set_uniform_float(
                 this.get_uniform_location('bounds'),
                 4,
@@ -122,7 +146,7 @@ export const RoundedCornersEffect = GObject.registerClass(
         }
 
         setClipRadius(clipRadius) {
-            logger.debug('clipRadius:', clipRadius);
+            this._debugDebounced('clipRadius', clipRadius);
             this.set_uniform_float(
                 this.get_uniform_location('clip_radius'),
                 1,
@@ -131,7 +155,7 @@ export const RoundedCornersEffect = GObject.registerClass(
         }
 
         setPixelStep(pixelStep) {
-            logger.debug('pixelStep:', ...pixelStep);
+            this._debugDebounced('pixelStep', ...pixelStep);
             this.set_uniform_float(
                 this.get_uniform_location('pixel_step'),
                 2,
@@ -140,7 +164,7 @@ export const RoundedCornersEffect = GObject.registerClass(
         }
 
         setBorderStroke(stroke) {
-            logger.debug('borderStroke:', stroke);
+            this._debugDebounced('borderStroke', stroke);
             this.set_uniform_float(
                 this.get_uniform_location('border_stroke'),
                 1,
@@ -149,7 +173,7 @@ export const RoundedCornersEffect = GObject.registerClass(
         }
 
         setBorderColor(color) {
-            logger.debug('borderColor:', ...color);
+            this._debugDebounced('borderColor', ...color);
             this.set_uniform_float(
                 this.get_uniform_location('border_color'),
                 4,
