@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install system dependencies
         run: |
@@ -28,7 +28,7 @@ jobs:
           sudo apt-get install -y meson ninja-build gettext libglib2.0-bin
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 20
           cache: npm
@@ -58,7 +58,7 @@ jobs:
           unzip -l "${GITHUB_WORKSPACE}/dist/${UUID}.shell-extension.zip"
 
       - name: Upload zip artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.UUID }}.shell-extension
           path: dist/*.shell-extension.zip
@@ -73,7 +73,7 @@ jobs:
       contents: write
     steps:
       - name: Download zip artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ${{ env.UUID }}.shell-extension
           path: dist
