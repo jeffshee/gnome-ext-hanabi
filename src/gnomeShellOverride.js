@@ -159,13 +159,17 @@ export class GnomeShellOverride {
                         cornerRadius,
                         this._stateAdjustment.value
                     );
-                    this._bgManager.videoActor?.setRoundedClipRadius(radius);
-                    const backgroundContent = this._bgManager.backgroundActor?.content;
-                    if (backgroundContent)
-                        backgroundContent.rounded_clip_radius = radius;
+                    if (this._bgManager) {
+                        this._bgManager.videoActor?.setRoundedClipRadius(radius);
+                        const backgroundContent = this._bgManager.backgroundActor?.content;
+                        if (backgroundContent)
+                            backgroundContent.rounded_clip_radius = radius;
+                    }
 
                     // Override the CSS border-radius so the shadow follows our radius.
-                    this.style = `border-radius: ${thisRef._settings?.get_int('corner-radius') ?? BACKGROUND_CORNER_RADIUS_PIXELS}px`;
+                    if (this.style !== undefined) {
+                        this.style = `border-radius: ${thisRef._settings?.get_int('corner-radius') ?? BACKGROUND_CORNER_RADIUS_PIXELS}px`;
+                    }
                 };
             }
         );

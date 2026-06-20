@@ -48,6 +48,7 @@ export default class HanabiExtension extends Extension {
     }
 
     enable() {
+        this._heal_get_window_actors();
         this.settings = this.getSettings();
         this.playbackState = new PlaybackState.PlaybackState();
 
@@ -230,6 +231,25 @@ export default class HanabiExtension extends Extension {
         });
     }
 
+    _heal_get_window_actors() {
+        if (typeof global.get_window_actors === 'function')
+            return;
+        try {
+            global.constructor.prototype.get_window_actors = function () {
+                try {
+                    if (global.compositor?.get_window_actors)
+                        return global.compositor.get_window_actors();
+                } catch (err) {
+                    console.error(`[Hanabi] Healed get_window_actors failed: ${err}`);
+                }
+                return [];
+            };
+            console.log("[Hanabi] Successfully healed global.get_window_actors.");
+        } catch (err) {
+            console.error(`[Hanabi] Failed to heal global.get_window_actors: ${err}`);
+        }
+    }
+
     _setupSleepWatch() {
         if (this._sleepWatchId)
             return;
@@ -253,8 +273,14 @@ export default class HanabiExtension extends Extension {
                         // the UI on wake.
                         this.autoPause.disable();
                         this._forceKillRenderer();
+                        this.override.disable();
+                        this.manager.disable();
                     } else if (!goingToSleep && this.isEnabled) {
                         this._isSuspending = false;
+                        this._heal_get_window_actors();
+                        this.override.enable();
+                        this.manager.enable();
+
                         // Waking up - relaunch renderer with a fresh pipeline.
                         this.playbackState.reset();
                         if (this.launchRendererId) {
@@ -469,8 +495,22 @@ export default class HanabiExtension extends Extension {
         }
 
         if (this.currentProcess && this.currentProcess.subprocess) {
-            this.currentProcess.cancellable.cancel();
-            this.currentProcess.subprocess.send_signal(15);
+            const processToKill = this.currentProcess;
+            processToKill.cancellable.cancel();
+            processToKill.subprocess.send_signal(15); // SIGTERM
+
+            // Safeguard: Forcefully terminate the process with SIGKILL if it does not exit within 1 second
+            GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, () => {
+                if (processToKill.running && processToKill.subprocess) {
+                    console.warn('[Hanabi] Renderer process did not exit gracefully, sending SIGKILL');
+                    try {
+                        processToKill.subprocess.send_signal(9); // SIGKILL
+                    } catch (e) {
+                        console.error(`[Hanabi] Failed to SIGKILL process: ${e}`);
+                    }
+                }
+                return GLib.SOURCE_REMOVE;
+            });
         }
     }
 
@@ -514,7 +554,7 @@ export default class HanabiExtension extends Extension {
                 'renderer.js',
             ])}`;
             if (contents.startsWith(path)) {
-                const proc = new Gio.Subprocess({argv: ['/bin/kill', filename]});
+                const proc = new Gio.Subprocess({argv: ['/bin/kill', '-9', filename]});
                 proc.init(null);
                 proc.wait(null);
             }

@@ -159,6 +159,29 @@ const HanabiRenderer = GObject.registerClass(
             this._exportDbus();
             this._setupGst();
 
+            // Exit cleanly if DBus session disconnects (e.g. on logout)
+            Gio.DBus.session.connect('closed', () => {
+                console.log('[Hanabi] D-Bus session disconnected, quitting renderer...');
+                this.quit();
+            });
+
+            // Listen to SIGTERM and SIGINT for graceful shutdown
+            const GLibUnix = imports.gi.GLibUnix;
+            GLibUnix.signal_add(GLib.PRIORITY_DEFAULT, 15, () => {
+                console.log('[Hanabi] Received SIGTERM, quitting renderer...');
+                this.quit();
+                return GLib.SOURCE_REMOVE;
+            });
+            GLibUnix.signal_add(GLib.PRIORITY_DEFAULT, 2, () => {
+                console.log('[Hanabi] Received SIGINT, quitting renderer...');
+                this.quit();
+                return GLib.SOURCE_REMOVE;
+            });
+
+            this.connect('shutdown', () => {
+                this.cleanup();
+            });
+
             this.connect('activate', app => {
                 this._display = Gdk.Display.get_default();
                 this._monitors = this._display
@@ -585,6 +608,65 @@ const HanabiRenderer = GObject.registerClass(
 
         _unexportDbus() {
             this._dbus.unexport();
+        }
+
+        cleanup() {
+            console.log('[Hanabi] Cleaning up HanabiRenderer...');
+
+            // Remove the change wallpaper timer
+            if (changeWallpaperTimerId) {
+                GLib.source_remove(changeWallpaperTimerId);
+                changeWallpaperTimerId = null;
+            }
+
+            // Remove the fade transition timer
+            if (this._fadeTimerId) {
+                GLib.source_remove(this._fadeTimerId);
+                this._fadeTimerId = null;
+            }
+
+            // Stop and clean up GstPlay
+            if (this._adapter)
+                this._adapter = null;
+
+            if (this._play) {
+                try {
+                    this._play.stop();
+                } catch (e) {
+                    console.error(`[Hanabi] Error stopping GstPlay: ${e}`);
+                }
+                this._play = null;
+            }
+
+            if (this._media) {
+                try {
+                    this._media.pause();
+                } catch (e) {
+                    console.error(`[Hanabi] Error pausing GtkMediaFile: ${e}`);
+                }
+                this._media = null;
+            }
+
+            if (this._dbus) {
+                try {
+                    this._unexportDbus();
+                } catch (e) {
+                    console.error(`[Hanabi] Error unexporting D-Bus: ${e}`);
+                }
+                this._dbus = null;
+            }
+
+            // Close all windows
+            if (this._hanabiWindows) {
+                this._hanabiWindows.forEach(window => {
+                    try {
+                        window.close();
+                    } catch (e) {
+                        console.error(`[Hanabi] Error closing window: ${e}`);
+                    }
+                });
+                this._hanabiWindows = [];
+            }
         }
 
         /**
