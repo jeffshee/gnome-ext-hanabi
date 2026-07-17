@@ -38,10 +38,7 @@ const logger = new Logger('override');
 const BACKGROUND_RELOAD_REFRESH_DELAY_MS = 500;
 
 export class GnomeShellOverride {
-    // Method patching, plus the original get_window_actors captured from our override of it
-    // (the override hides renderer windows, so LiveWallpaper uses this to still find them).
     private injectionManager = new InjectionManager();
-    private getAllWindowActors: () => Meta.WindowActor[] = () => global.get_window_actors();
 
     // Live wallpaper actors we've injected.
     private wallpaperActors = new Set<LiveWallpaper>();
@@ -123,8 +120,7 @@ export class GnomeShellOverride {
                     logger.debug(`Injecting live wallpaper (monitor ${backgroundActor.monitor})`);
                     this.wallpaperActor = new LiveWallpaper(
                         backgroundActor as Meta.BackgroundActor,
-                        thisRef.settings,
-                        thisRef.getAllWindowActors
+                        thisRef.settings
                     );
                     thisRef.wallpaperActors.add(this.wallpaperActor);
 
@@ -172,11 +168,13 @@ export class GnomeShellOverride {
             Shell.Global.prototype,
             'get_window_actors',
             originalMethod => {
-                thisRef.getAllWindowActors = () => originalMethod.call(global);
-                return function (this: Shell.Global) {
-                    return originalMethod.call(this).filter(
-                        actor => !actor.meta_window?.title?.includes(APPLICATION_ID)
-                    );
+                return function (this: Shell.Global, hideRenderer = true) {
+                    const windowActors = originalMethod.call(this);
+                    return hideRenderer
+                        ? windowActors.filter(
+                            actor => !actor.meta_window?.title?.includes(APPLICATION_ID)
+                        )
+                        : windowActors;
                 };
             }
         );
