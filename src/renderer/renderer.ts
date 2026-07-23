@@ -39,6 +39,11 @@ console.log(`Gtk version: ${gtkVersion.join('.')}`);
 const isGstVersionAtLeast = (major: number, minor: number): boolean =>
     gstVersion[0] > major || (gstVersion[0] === major && gstVersion[1] >= minor);
 
+type PendingSeek = {
+    reason: 'loop' | 'random-start';
+    target: number;
+};
+
 
 let GstPlay: any = null;
 try {
@@ -134,6 +139,8 @@ const HanabiRenderer = GObject.registerClass(
         private gstImplName: string;
         private playing: boolean;
         private randomStartPending: boolean;
+        private pendingGstSeek: PendingSeek | null;
+        private pendingMediaSeek: PendingSeek | null;
 
         private play: any;
 
@@ -159,6 +166,8 @@ const HanabiRenderer = GObject.registerClass(
             this.gstImplName = '';
             this.playing = false;
             this.randomStartPending = true;
+            this.pendingGstSeek = null;
+            this.pendingMediaSeek = null;
             this.play = null;
             this.adapter = null;
             this.media = null;
@@ -341,6 +350,12 @@ const HanabiRenderer = GObject.registerClass(
         }
 
         private buildUI(): void {
+            console.log(
+                `Backend selection: forceMediaFile=${forceMediaFile}, ` +
+                `GstPlay=${haveGstPlay ? 'available' : 'unavailable'}, ` +
+                `preferClappersink=${preferClappersink}`
+            );
+
             this.monitors.forEach((gdkMonitor, index) => {
                 let widget: Gtk.Widget | null = this.getWidgetFromSharedPaintable();
 
@@ -388,7 +403,7 @@ const HanabiRenderer = GObject.registerClass(
                 window._setup(widget, gdkMonitor);
                 this.hanabiWindows.push(window);
             });
-            console.log(`using ${this.gstImplName} for video output`);
+            console.log(`Selected video backend: ${this.gstImplName}`);
         }
 
         private getWidgetFromSharedPaintable(): Gtk.Widget | null {
@@ -454,9 +469,26 @@ const HanabiRenderer = GObject.registerClass(
             );
             this.adapter = GstPlay.PlaySignalAdapter.new(this.play);
 
-            this.adapter.connect('end-of-stream', (adapter: {play: {seek(t: number): void}}) =>
-                adapter.play.seek(0)
-            );
+            this.adapter.connect('end-of-stream', (adapter: any) => {
+                console.log(
+                    `GstPlay end-of-stream: position=${adapter.play.get_position()}, ` +
+                    `duration=${adapter.play.get_duration()}, playing=${this.playing}`
+                );
+                this.pendingGstSeek = {reason: 'loop', target: 0};
+                adapter.play.seek(0);
+                adapter.play.play();
+                console.log('GstPlay loop restart requested: seek=0, play=true');
+            });
+            if (isGstVersionAtLeast(1, 26)) {
+                this.adapter.connect('seek-done', (_adapter: any, position: number) => {
+                    const pending = this.pendingGstSeek;
+                    console.log(
+                        `GstPlay seek completed: reason=${pending?.reason ?? 'unknown'}, ` +
+                        `target=${pending?.target ?? 'unknown'}, position=${position}`
+                    );
+                    this.pendingGstSeek = null;
+                });
+            }
             this.adapter.connect('warning', (_adapter: any, err: GLib.Error) =>
                 console.warn(err)
             );
@@ -480,6 +512,10 @@ const HanabiRenderer = GObject.registerClass(
 
             this.adapter.connect('state-changed', (_adapter: any, state: number) => {
                 this.playing = state === GstPlay.PlayState.PLAYING;
+                console.log(
+                    `GstPlay playback state: ${this.getGstPlayStateName(state)} ` +
+                    `(playing=${this.playing})`
+                );
                 this.dbus.emit_signal(
                     'isPlayingChanged',
                     new GLib.Variant('(b)', [this.playing])
@@ -505,20 +541,75 @@ const HanabiRenderer = GObject.registerClass(
             this.gstImplName = 'GtkMediaFile';
 
             this.media = Gtk.MediaFile.new_for_filename(videoPath);
-            this.media.set({loop: true});
+            // GtkMediaFile's loop implementation only seeks at EOS. Handle EOS
+            // explicitly so playback is resumed after the asynchronous rewind.
+            this.media.set_loop(false);
 
-            this.media.connect('notify::prepared', () => {
+            this.media.connect('notify::prepared', (media: Gtk.MediaFile) => {
                 this.setVolume(volume);
                 this.setMute(mute);
                 this.maybeSeekRandomMedia();
+                console.log(
+                    `GtkMediaFile prepared: prepared=${media.is_prepared()}, ` +
+                    `seekable=${media.is_seekable()}, duration=${media.get_duration()}`
+                );
             });
 
             this.media.connect('notify::playing', (media: Gtk.MediaFile) => {
                 this.playing = media.get_playing();
+                console.log(
+                    `GtkMediaFile playback state: playing=${this.playing}, ` +
+                    `ended=${media.get_ended()}, timestamp=${media.get_timestamp()}`
+                );
                 this.dbus.emit_signal(
                     'isPlayingChanged',
                     new GLib.Variant('(b)', [this.playing])
                 );
+            });
+
+            this.media.connect('notify::ended', (media: Gtk.MediaFile) => {
+                if (!media.get_ended())
+                    return;
+
+                console.log(
+                    `GtkMediaFile end-of-stream: timestamp=${media.get_timestamp()}, ` +
+                    `duration=${media.get_duration()}, seekable=${media.is_seekable()}, ` +
+                    `playing=${media.get_playing()}`
+                );
+                if (!media.is_seekable()) {
+                    console.error('GtkMediaFile loop failed: stream is not seekable');
+                    return;
+                }
+
+                this.pendingMediaSeek = {reason: 'loop', target: 0};
+                media.seek(0);
+                media.play();
+                console.log('GtkMediaFile loop restart requested: seek=0, play=true');
+            });
+
+            this.media.connect('notify::seeking', (media: Gtk.MediaFile) => {
+                if (media.is_seeking() || !this.pendingMediaSeek)
+                    return;
+
+                const pending = this.pendingMediaSeek;
+                this.pendingMediaSeek = null;
+                // GtkMediaFile clears "seeking" immediately before publishing
+                // the new timestamp, so report the settled result from idle.
+                GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+                    const error = media.get_error();
+                    console.log(
+                        `GtkMediaFile seek completed: reason=${pending.reason}, ` +
+                        `target=${pending.target}, timestamp=${media.get_timestamp()}, ` +
+                        `error=${error?.message ?? 'none'}`
+                    );
+                    return GLib.SOURCE_REMOVE;
+                });
+            });
+
+            this.media.connect('notify::error', (media: Gtk.MediaFile) => {
+                const error = media.get_error();
+                if (error)
+                    console.error(`GtkMediaFile playback error: ${error.message}`);
             });
 
             this.sharedPaintable = this.media;
@@ -586,6 +677,8 @@ const HanabiRenderer = GObject.registerClass(
 
         setFilePath(_videoPath: string): void {
             const file = Gio.File.new_for_path(_videoPath);
+            this.pendingGstSeek = null;
+            this.pendingMediaSeek = null;
             if (this.play) {
                 this.play.set_uri(file.get_uri());
             } else if (this.media) {
@@ -696,6 +789,8 @@ const HanabiRenderer = GObject.registerClass(
 
             const maxPosition = Math.max(duration - Number(Gst.SECOND ?? 1_000_000_000), 0);
             const position = Math.floor(Math.random() * (maxPosition + 1));
+            this.pendingGstSeek = {reason: 'random-start', target: position};
+            console.log(`GstPlay random-start seek requested: target=${position}`);
             this.play.seek(position);
             this.randomStartPending = false;
         }
@@ -712,8 +807,25 @@ const HanabiRenderer = GObject.registerClass(
 
             const maxPosition = Math.max(duration - GLib.USEC_PER_SEC, 0);
             const position = Math.floor(Math.random() * (maxPosition + 1));
+            this.pendingMediaSeek = {reason: 'random-start', target: position};
+            console.log(`GtkMediaFile random-start seek requested: target=${position}`);
             this.media.seek(position);
             this.randomStartPending = false;
+        }
+
+        private getGstPlayStateName(state: number): string {
+            switch (state) {
+            case GstPlay.PlayState.STOPPED:
+                return 'stopped';
+            case GstPlay.PlayState.BUFFERING:
+                return 'buffering';
+            case GstPlay.PlayState.PAUSED:
+                return 'paused';
+            case GstPlay.PlayState.PLAYING:
+                return 'playing';
+            default:
+                return `unknown(${state})`;
+            }
         }
     }
 );
