@@ -10,19 +10,11 @@ configure_file(
   install_dir: install_dir
 )
 
-sources = [
-  'autoPause.js',
-  'dbus.js',
-  'extension.js',
-  'gnomeShellOverride.js',
-  'launcher.js',
-  'logger.js',
-  'panelMenu.js',
-  'playbackState.js',
-  'prefs.js',
-  'roundedCornersEffect.js',
-  'wallpaper.js',
-  'windowManager.js',
+# TypeScript sources are compiled by esbuild into src/_build/ via `npm run build`.
+# Run `npm install && npm run build` from the project root before `meson install`.
+ts_built_sources = [
+  meson.current_source_dir() / '_build' / 'extension.js',
+  meson.current_source_dir() / '_build' / 'prefs.js',
 ]
 
 extra_sources = [
@@ -30,14 +22,17 @@ extra_sources = [
   'assets/hanabi-symbolic.svg',
 ]
 
-renderer = [
-  'renderer/renderer.js',
+install_data(ts_built_sources + extra_sources, install_dir: install_dir)
+
+install_data(
+  meson.current_source_dir() / '_build' / 'renderer.js',
+  install_dir: join_paths(install_dir, 'renderer'),
+)
+
+install_data(
   'renderer/stylesheet.css',
-]
-
-install_data(sources + extra_sources, install_dir: install_dir)
-
-install_data(renderer, install_dir: join_paths(install_dir, 'renderer'))
+  install_dir: join_paths(install_dir, 'renderer'),
+)
 
 install_data('schemas/@0@.gschema.xml'.format(schema),
   install_dir: schema_dir

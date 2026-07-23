@@ -30,3 +30,6 @@ node_modules/
 # Hanabi extension specific
 .build
 scratch
+
+# TypeScript build output
+src/_build
