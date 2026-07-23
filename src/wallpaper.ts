@@ -43,11 +43,7 @@ export const LiveWallpaper = GObject.registerClass(
         private metaBackgroundGroup: Clutter.Actor | null;
         private monitorIndex: number;
 
-        // Injected dependencies.
         private settings: Gio.Settings;
-        // Returns all window actors unfiltered (renderer windows are hidden from the
-        // public get_window_actors by GnomeShellOverride); injected so getRenderer can find them.
-        private getWindowActors: () => Meta.WindowActor[];
 
         // Lifecycle bookkeeping, cleaned up on destroy.
         private isDisposed = false;
@@ -67,8 +63,7 @@ export const LiveWallpaper = GObject.registerClass(
 
         constructor(
             backgroundActor: Meta.BackgroundActor,
-            settings: Gio.Settings,
-            getWindowActors: () => Meta.WindowActor[]
+            settings: Gio.Settings
         ) {
             super({
                 layout_manager: new Clutter.BinLayout(),
@@ -82,7 +77,6 @@ export const LiveWallpaper = GObject.registerClass(
             this.metaBackgroundGroup = backgroundActor.get_parent();
             this.monitorIndex = this.backgroundActor.monitor;
             this.settings = settings;
-            this.getWindowActors = getWindowActors;
 
             this.connect('destroy', () => {
                 this.isDisposed = true;
@@ -228,10 +222,20 @@ export const LiveWallpaper = GObject.registerClass(
                     this.sourceDestroyId = this.wallpaper.source!.connect(
                         'destroy',
                         () => {
+                            this.sourceDestroyId = null;
                             if (this.wallpaper)
                                 this.wallpaper.destroy();
-                            if (!this.isDisposed)
-                                this.applyWallpaper();
+                            if (!this.isDisposed && !this.rendererPollTimeoutId) {
+                                this.rendererPollTimeoutId = GLib.timeout_add(
+                                    GLib.PRIORITY_DEFAULT,
+                                    RENDERER_POLL_INTERVAL_MS,
+                                    () => {
+                                        this.rendererPollTimeoutId = 0;
+                                        this.applyWallpaper();
+                                        return GLib.SOURCE_REMOVE;
+                                    }
+                                );
+                            }
                         }
                     );
                     this.add_child(this.wallpaper);
@@ -254,9 +258,11 @@ export const LiveWallpaper = GObject.registerClass(
         }
 
         private getRenderer(): Clutter.Actor | null {
-            // Renderer windows are hidden from the public get_window_actors, so use the
-            // injected unfiltered accessor to find them.
-            const hanabiWindowActors = this.getWindowActors().filter(
+            // Pass false to bypass Hanabi's renderer-window filter while the override is active.
+            // After teardown, GNOME's original method safely ignores the extra argument.
+            const getWindowActors = global.get_window_actors as
+                (hideRenderer?: boolean) => Meta.WindowActor[];
+            const hanabiWindowActors = getWindowActors.call(global, false).filter(
                 actor => actor.meta_window?.title?.includes(APPLICATION_ID)
             );
 
