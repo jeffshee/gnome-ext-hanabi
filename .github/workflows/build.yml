@@ -16,6 +16,40 @@ env:
   UUID: hanabi-extension@jeffshee.github.io
 
 jobs:
+  # Static analysis only; no system deps needed, so it runs alongside build.
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+          # The lint toolchain has its own manifest under tools/.
+          cache-dependency-path: |
+            package-lock.json
+            tools/package-lock.json
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      # eslint-config-gnome and ci-run-eslint live in tools/, not the root
+      # manifest. Installing here keeps `npm run lint` from doing it implicitly.
+      - name: Install lint toolchain
+        run: npm ci
+        working-directory: tools
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # Runs even if typecheck failed, so one run reports both.
+      - name: Lint
+        if: '!cancelled()'
+        run: npm run lint
+
   build:
     runs-on: ubuntu-latest
     steps:
