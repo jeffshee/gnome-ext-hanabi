@@ -116,7 +116,7 @@ export const LiveWallpaper = GObject.registerClass(
             this.roundedCornersEffect = new RoundedCornersEffect();
             this.backgroundActor.add_effect(this.roundedCornersEffect);
 
-            this.setPixelStep(this.monitorWidth.width, this.monitorHeight.height);
+            this.setPixelStep(this.monitorWidth, this.monitorHeight);
             this.setRoundedClipRadius(0.0);
             this.setBorderStroke(0);
             this.setBorderColor([1.0, 0.0, 0.0, 1.0]);
@@ -135,7 +135,7 @@ export const LiveWallpaper = GObject.registerClass(
                     })
                 );
             }
-            this.setRoundedClipBounds(0, 0, this.monitorWidth.width, this.monitorHeight.height);
+            this.setRoundedClipBounds(0, 0, this.monitorWidth, this.monitorHeight);
 
             this.connect('notify::allocation', () => {
                 if (!this.wallpaper)
