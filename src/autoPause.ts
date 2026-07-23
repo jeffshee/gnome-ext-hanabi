@@ -25,7 +25,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 import {Logger} from './logger.js';
 import {DBusWrapper, MprisWrapper, UPowerWrapper} from './dbus.js';
-import {APPLICATION_ID} from './constants.js';
+import {isRendererTitle} from './constants.js';
 import type {PlaybackState} from './playbackState.js';
 import type HanabiExtension from './extension.js';
 
@@ -184,7 +184,7 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
         }
 
         private onWindowAdded(metaWindow: Meta.Window, doUpdate = true): void {
-            if (metaWindow.title?.includes(APPLICATION_ID) || metaWindow.skip_taskbar)
+            if (isRendererTitle(metaWindow.title) || metaWindow.skip_taskbar)
                 return;
 
             const signals: number[] = [];
@@ -211,7 +211,7 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
         }
 
         private onWindowRemoved(metaWindow: Meta.Window): void {
-            if (metaWindow.title?.includes(APPLICATION_ID) || metaWindow.skip_taskbar)
+            if (isRendererTitle(metaWindow.title) || metaWindow.skip_taskbar)
                 return;
 
             this.windows = this.windows.filter(window => {
@@ -264,7 +264,7 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
         override update(): void {
             const metaWindows = this.windows
                 .map(({metaWindow}) => metaWindow)
-                .filter(w => !w.title?.includes(APPLICATION_ID) && !w.minimized);
+                .filter(w => !isRendererTitle(w.title) && !w.minimized);
 
             const monitors = Main.layoutManager.monitors;
 
@@ -393,7 +393,7 @@ const PauseOnFocusModule = GObject.registerClass(
                 focusWindow !== undefined &&
                 focusWindow.appears_focused &&
                 !focusWindow.minimized &&
-                !(focusWindow.title?.includes(APPLICATION_ID) ?? false) &&
+                !isRendererTitle(focusWindow.title) &&
                 !focusWindow.skip_taskbar;
 
             this.logger.debug(
