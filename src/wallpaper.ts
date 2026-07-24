@@ -124,15 +124,7 @@ export const LiveWallpaper = GObject.registerClass(
             );
             this.setRoundedClipBounds(0, 0, this.monitorWidth, this.monitorHeight);
 
-            this.connect('notify::allocation', () => {
-                if (!this.wallpaper)
-                    return;
-                try {
-                    this.applyBounds();
-                } catch (e) {
-                    logError(e as object, 'LiveWallpaper notify::allocation');
-                }
-            });
+            this.connect('notify::allocation', () => this.applyBounds());
 
             this.applyWallpaper();
         }
@@ -143,8 +135,10 @@ export const LiveWallpaper = GObject.registerClass(
         }
 
         private applyBounds(): void {
-            const workArea = Main.layoutManager.getWorkAreaForMonitor(this.monitorIndex);
             const monitor = Main.layoutManager.monitors[this.monitorIndex];
+            if (!monitor)
+                return;
+            const workArea = Main.layoutManager.getWorkAreaForMonitor(this.monitorIndex);
             const panelOffset = (workArea.y - monitor.y) / monitor.height * this.backgroundActor.height;
             this.roundedCornersEffect.setBounds(
                 [0, panelOffset, this.width, this.height]
