@@ -141,6 +141,7 @@ export const LiveWallpaper = GObject.registerClass(
                 if (!this.wallpaper)
                     return;
                 try {
+                    this.setPixelStep(this.width, this.height);
                     this.applyBounds();
                     const stroke = this.settings.get_int('border-stroke');
                     this.roundedCornersEffect.setBorderStroke(stroke * this.monitorScale);
