@@ -93,7 +93,6 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
             0, 10000, 100, 500);
         prefsRowInt(win, developerGroup, _('Border Stroke'), 'border-stroke',
             _('Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)'), 0, 20, 1, 1);
-        prefsRowBoundsInset(win, developerGroup);
 
         window.add(page);
         return Promise.resolve();
@@ -353,30 +352,3 @@ function prefsRowChangeWallpaperMode(
     });
 }
 
-function prefsRowBoundsInset(window: PrefsWindow, prefsGroup: Adw.PreferencesGroup): void {
-    const settings = window.settings;
-    const expander = new Adw.ExpanderRow({
-        title: _('Bounds Inset'),
-        subtitle: _('Adjust edges of the overview rounded-rect bounds (positive = shrink inward)'),
-    });
-    prefsGroup.add(expander);
-
-    for (const [title, key] of [
-        [_('Left'), 'bounds-inset-x1'],
-        [_('Top'), 'bounds-inset-y1'],
-        [_('Right'), 'bounds-inset-x2'],
-        [_('Bottom'), 'bounds-inset-y2'],
-    ] as [string, string][]) {
-        const child = new Adw.ActionRow({title});
-        const adjustment = new Gtk.Adjustment({
-            lower: -200,
-            upper: 200,
-            step_increment: 1,
-            page_increment: 10,
-            value: settings.get_int(key),
-        });
-        adjustment.connect('value-changed', () => settings.set_int(key, adjustment.value));
-        child.add_suffix(new Gtk.SpinButton({adjustment, valign: Gtk.Align.CENTER}));
-        expander.add_row(child);
-    }
-}
