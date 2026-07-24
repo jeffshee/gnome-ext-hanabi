@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-ext-hanabi 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-15 02:34+0900\n"
+"POT-Creation-Date: 2026-07-25 01:03+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -198,39 +198,39 @@ msgid ""
 "Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)"
 msgstr ""
 
-#: src/prefs.ts:161
+#: src/prefs.ts:160
 msgid "Video Path"
 msgstr ""
 
-#: src/prefs.ts:167 src/prefs.ts:192 src/prefs.ts:208 src/prefs.ts:229
+#: src/prefs.ts:166 src/prefs.ts:191 src/prefs.ts:207 src/prefs.ts:228
 msgid "None"
 msgstr ""
 
-#: src/prefs.ts:173 src/prefs.ts:214
+#: src/prefs.ts:172 src/prefs.ts:213
 msgid "Open"
 msgstr ""
 
-#: src/prefs.ts:183
+#: src/prefs.ts:182
 msgid "Open File"
 msgstr ""
 
-#: src/prefs.ts:202
+#: src/prefs.ts:201
 msgid "Change Wallpaper Directory Path"
 msgstr ""
 
-#: src/prefs.ts:221
+#: src/prefs.ts:220
 msgid "Select Directory"
 msgstr ""
 
-#: src/prefs.ts:239
+#: src/prefs.ts:238
 msgid "Fit Mode"
 msgstr ""
 
-#: src/prefs.ts:240
+#: src/prefs.ts:239
 msgid "Control how wallpaper fits within the monitor"
 msgstr ""
 
-#: src/prefs.ts:241
+#: src/prefs.ts:240
 msgid ""
 "\n"
 "    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
@@ -243,31 +243,31 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/prefs.ts:249
+#: src/prefs.ts:248
 msgid "Fill"
 msgstr ""
 
-#: src/prefs.ts:250
+#: src/prefs.ts:249
 msgid "Contain"
 msgstr ""
 
-#: src/prefs.ts:251
+#: src/prefs.ts:250
 msgid "Cover"
 msgstr ""
 
-#: src/prefs.ts:252
+#: src/prefs.ts:251
 msgid "Scale-down"
 msgstr ""
 
-#: src/prefs.ts:275
+#: src/prefs.ts:274
 msgid "Pause on Maximize or Fullscreen"
 msgstr ""
 
-#: src/prefs.ts:276
+#: src/prefs.ts:275
 msgid "Pause playback when there is maximized or fullscreen window"
 msgstr ""
 
-#: src/prefs.ts:277
+#: src/prefs.ts:276
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -278,27 +278,27 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/prefs.ts:283 src/prefs.ts:310
+#: src/prefs.ts:282 src/prefs.ts:309
 msgid "Never"
 msgstr ""
 
-#: src/prefs.ts:283
+#: src/prefs.ts:282
 msgid "Any Monitor"
 msgstr ""
 
-#: src/prefs.ts:283
+#: src/prefs.ts:282
 msgid "All Monitors"
 msgstr ""
 
-#: src/prefs.ts:302
+#: src/prefs.ts:301
 msgid "Pause on Battery"
 msgstr ""
 
-#: src/prefs.ts:303
+#: src/prefs.ts:302
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr ""
 
-#: src/prefs.ts:304
+#: src/prefs.ts:303
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -308,23 +308,23 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/prefs.ts:310
+#: src/prefs.ts:309
 msgid "Low Battery"
 msgstr ""
 
-#: src/prefs.ts:310
+#: src/prefs.ts:309
 msgid "Always"
 msgstr ""
 
-#: src/prefs.ts:332
+#: src/prefs.ts:331
 msgid "Change Wallpaper Mode"
 msgstr ""
 
-#: src/prefs.ts:333
+#: src/prefs.ts:332
 msgid "Control how to change wallpapers automatically"
 msgstr ""
 
-#: src/prefs.ts:334
+#: src/prefs.ts:333
 msgid ""
 "\n"
 "    <b>Sequential:</b> Preserve the directory sequence (descending order).\n"
@@ -334,39 +334,14 @@ msgid ""
 "    "
 msgstr ""
 
-#: src/prefs.ts:340
+#: src/prefs.ts:339
 msgid "Sequential"
 msgstr ""
 
-#: src/prefs.ts:340
+#: src/prefs.ts:339
 msgid "Inverse Sequential"
 msgstr ""
 
-#: src/prefs.ts:340
+#: src/prefs.ts:339
 msgid "Random"
-msgstr ""
-
-#: src/prefs.ts:359
-msgid "Bounds Inset"
-msgstr ""
-
-#: src/prefs.ts:360
-msgid ""
-"Adjust edges of the overview rounded-rect bounds (positive = shrink inward)"
-msgstr ""
-
-#: src/prefs.ts:365
-msgid "Left"
-msgstr ""
-
-#: src/prefs.ts:366
-msgid "Top"
-msgstr ""
-
-#: src/prefs.ts:367
-msgid "Right"
-msgstr ""
-
-#: src/prefs.ts:368
-msgid "Bottom"
 msgstr ""
