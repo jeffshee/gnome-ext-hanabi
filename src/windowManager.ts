@@ -17,14 +17,19 @@
 
 // Adapted from ManageWindow and EmulateX11WindowType in the DING extension.
 
+import GLib from 'gi://GLib';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
+import type Clutter from 'gi://Clutter';
 
 import {Logger} from './logger.js';
 import {APPLICATION_ID} from './constants.js';
 import type {WaylandSubprocess} from './waylandSubprocess.js';
 
 const logger = new Logger('windowManager');
+
+// Delay before verifying that a keep-minimized window actually got hidden (ms).
+const MINIMIZE_RESYNC_DELAY_MS = 250;
 
 interface WindowState {
     position: [number, number];
@@ -49,6 +54,7 @@ class ManagedWindow {
     };
 
     private isDisposed = false;
+    private resyncTimeoutId = 0;
 
     constructor(window: Meta.Window) {
         this.window = window;
@@ -65,8 +71,10 @@ class ManagedWindow {
             window.connect_after('shown', () => {
                 if (this.isDisposed)
                     return;
-                if (this.states.keepMinimized)
+                if (this.states.keepMinimized) {
                     this.window.minimize();
+                    this.scheduleMinimizeResync();
+                }
             })
         );
 
@@ -125,11 +133,38 @@ class ManagedWindow {
         this.refresh();
     }
 
+    // After wake from suspend, a window can stay visible (and clickable) even
+    // though mutter already considers it minimized, so minimize() alone does
+    // nothing. Since mutter hides windows asynchronously, check again shortly
+    // after: if the window is still visible, unminimize + minimize to force
+    // mutter to actually hide it.
+    private scheduleMinimizeResync(): void {
+        if (this.resyncTimeoutId)
+            return;
+        this.resyncTimeoutId = GLib.timeout_add(
+            GLib.PRIORITY_DEFAULT,
+            MINIMIZE_RESYNC_DELAY_MS,
+            () => {
+                this.resyncTimeoutId = 0;
+                if (this.isDisposed || !this.states.keepMinimized)
+                    return GLib.SOURCE_REMOVE;
+                const actor = this.window.get_compositor_private() as Clutter.Actor | null;
+                if (this.window.minimized && actor?.visible) {
+                    logger.debug('Minimized window still mapped, forcing resync');
+                    this.window.unminimize();
+                    this.window.minimize();
+                }
+                return GLib.SOURCE_REMOVE;
+            }
+        );
+    }
+
     private refresh(): void {
         if (this.states.keepAtBottom && this.window.above)
             this.window.unmake_above();
         if (this.states.keepMinimized && !this.window.minimized)
             this.window.minimize();
+        this.scheduleMinimizeResync();
         if (this.states.keepPosition) {
             const [x, y] = this.states.position;
             this.window.move_frame(true, x, y);
@@ -138,6 +173,10 @@ class ManagedWindow {
 
     disconnect(): void {
         this.isDisposed = true;
+        if (this.resyncTimeoutId) {
+            GLib.source_remove(this.resyncTimeoutId);
+            this.resyncTimeoutId = 0;
+        }
         this.signals.forEach(signal => this.window.disconnect(signal));
     }
 }
