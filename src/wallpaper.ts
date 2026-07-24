@@ -60,8 +60,6 @@ export const LiveWallpaper = GObject.registerClass(
 
         // Rendering effect and monitor geometry, set up in the constructor.
         private roundedCornersEffect!: RoundedCornersEffect;
-        private display!: Meta.Display;
-        private monitorScale!: number;
         private monitorWidth!: number;
         private monitorHeight!: number;
 
@@ -104,8 +102,6 @@ export const LiveWallpaper = GObject.registerClass(
                 }
             });
 
-            this.display = this.backgroundActor.meta_display;
-            this.monitorScale = this.display.get_monitor_scale(this.monitorIndex);
             const {width, height} = Main.layoutManager.monitors[this.monitorIndex];
             this.monitorWidth = width;
             this.monitorHeight = height;
@@ -116,9 +112,8 @@ export const LiveWallpaper = GObject.registerClass(
             this.roundedCornersEffect = new RoundedCornersEffect();
             this.backgroundActor.add_effect(this.roundedCornersEffect);
 
-            this.setPixelStep(this.monitorWidth, this.monitorHeight);
             this.setRoundedClipRadius(0.0);
-            this.setBorderStroke(0);
+            this.setBorderStroke(this.settings.get_int('border-stroke'));
             this.setBorderColor([1.0, 0.0, 0.0, 1.0]);
 
             this.settingsChangedIds.push(
@@ -127,28 +122,9 @@ export const LiveWallpaper = GObject.registerClass(
                     this.backgroundActor?.queue_redraw();
                 })
             );
-            for (const key of ['bounds-inset-x1', 'bounds-inset-y1', 'bounds-inset-x2', 'bounds-inset-y2']) {
-                this.settingsChangedIds.push(
-                    this.settings.connect(`changed::${key}`, () => {
-                        this.applyBounds();
-                        this.backgroundActor?.queue_redraw();
-                    })
-                );
-            }
             this.setRoundedClipBounds(0, 0, this.monitorWidth, this.monitorHeight);
 
-            this.connect('notify::allocation', () => {
-                if (!this.wallpaper)
-                    return;
-                try {
-                    this.setPixelStep(this.width, this.height);
-                    this.applyBounds();
-                    const stroke = this.settings.get_int('border-stroke');
-                    this.roundedCornersEffect.setBorderStroke(stroke * this.monitorScale);
-                } catch (e) {
-                    logError(e as object, 'LiveWallpaper notify::allocation');
-                }
-            });
+            this.connect('notify::allocation', () => this.applyBounds());
 
             this.applyWallpaper();
         }
@@ -159,40 +135,26 @@ export const LiveWallpaper = GObject.registerClass(
         }
 
         private applyBounds(): void {
-            const workArea = Main.layoutManager.getWorkAreaForMonitor(this.monitorIndex);
             const monitor = Main.layoutManager.monitors[this.monitorIndex];
-            const panelOffset = (workArea.y - monitor.y) / monitor.height * this.backgroundActor.height;
-            const ix1 = this.settings.get_int('bounds-inset-x1');
-            const iy1 = this.settings.get_int('bounds-inset-y1');
-            const ix2 = this.settings.get_int('bounds-inset-x2');
-            const iy2 = this.settings.get_int('bounds-inset-y2');
-            this.roundedCornersEffect.setBounds(
-                [ix1, panelOffset + iy1, this.width - ix2, this.height - iy2]
-                    .map(e => e * this.monitorScale)
-            );
-        }
-
-        setPixelStep(width: number, height: number): void {
-            if (this.isDisposed)
+            if (!monitor)
                 return;
-            this.roundedCornersEffect.setPixelStep([
-                1.0 / (width * this.monitorScale),
-                1.0 / (height * this.monitorScale),
-            ]);
+            const workArea = Main.layoutManager.getWorkAreaForMonitor(this.monitorIndex);
+            const panelOffset = (workArea.y - monitor.y) / monitor.height * this.backgroundActor.height;
+            this.roundedCornersEffect.setBounds(
+                [0, panelOffset, this.width, this.height]
+            );
         }
 
         setRoundedClipRadius(radius: number): void {
             if (this.isDisposed)
                 return;
-            this.roundedCornersEffect.setClipRadius(radius * this.monitorScale);
+            this.roundedCornersEffect.setClipRadius(radius);
         }
 
         setRoundedClipBounds(x1: number, y1: number, x2: number, y2: number): void {
             if (this.isDisposed)
                 return;
-            this.roundedCornersEffect.setBounds(
-                [x1, y1, x2, y2].map(e => e * this.monitorScale)
-            );
+            this.roundedCornersEffect.setBounds([x1, y1, x2, y2]);
         }
 
         setBorderStroke(stroke: number): void {

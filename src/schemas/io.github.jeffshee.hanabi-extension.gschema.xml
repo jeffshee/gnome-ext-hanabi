@@ -160,32 +160,5 @@
             <description>Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)</description>
         </key>
 
-        <key name="bounds-inset-x1" type="i">
-            <range min="-200" max="200" />
-            <default>2</default>
-            <summary>Bounds Inset (Left)</summary>
-            <description>Additional inset for the left edge of the rounded-rect bounds (positive = move inward)</description>
-        </key>
-
-        <key name="bounds-inset-y1" type="i">
-            <range min="-200" max="200" />
-            <default>2</default>
-            <summary>Bounds Inset (Top)</summary>
-            <description>Additional inset for the top edge of the rounded-rect bounds (positive = move inward)</description>
-        </key>
-
-        <key name="bounds-inset-x2" type="i">
-            <range min="-200" max="200" />
-            <default>2</default>
-            <summary>Bounds Inset (Right)</summary>
-            <description>Additional inset for the right edge of the rounded-rect bounds (positive = move inward)</description>
-        </key>
-
-        <key name="bounds-inset-y2" type="i">
-            <range min="-200" max="200" />
-            <default>2</default>
-            <summary>Bounds Inset (Bottom)</summary>
-            <description>Additional inset for the bottom edge of the rounded-rect bounds (positive = move inward)</description>
-        </key>
     </schema>
 </schemalist>
