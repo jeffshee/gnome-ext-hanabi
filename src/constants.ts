@@ -22,3 +22,18 @@ export const APPLICATION_ID = 'io.github.jeffshee.HanabiRenderer';
 
 // The renderer's D-Bus object path, derived from APPLICATION_ID.
 export const RENDERER_OBJECT_PATH = `/${APPLICATION_ID.replaceAll('.', '/')}`;
+
+// The external Hotaru renderer's application id, used in its window-title
+// protocol (`@<id>!<params json>`, see windowManager.ts). Must match
+// hotaru's APPLICATION_ID constant.
+export const HOTARU_APPLICATION_ID = 'io.github.jeffshee.Hotaru';
+
+// Whether a window title identifies a renderer (wallpaper) window —
+// either the built-in renderer or Hotaru.
+export function isRendererTitle(title?: string | null): boolean {
+    return Boolean(
+        title &&
+            (title.includes(APPLICATION_ID) ||
+                title.includes(HOTARU_APPLICATION_ID))
+    );
+}

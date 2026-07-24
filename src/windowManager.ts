@@ -21,7 +21,7 @@ import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 
 import {Logger} from './logger.js';
-import {APPLICATION_ID} from './constants.js';
+import {APPLICATION_ID, HOTARU_APPLICATION_ID} from './constants.js';
 import type {WaylandSubprocess} from './waylandSubprocess.js';
 
 const logger = new Logger('windowManager');
@@ -31,6 +31,16 @@ interface WindowState {
     keepAtBottom: boolean;
     keepMinimized: boolean;
     keepPosition: boolean;
+}
+
+// Hotaru's compact window-title params: p = position, b = keep at bottom,
+// m = keep minimized, k = keep position. Must match hotaru's HanabiParams
+// serialization.
+interface HotaruWindowState {
+    p: [number, number];
+    b: boolean;
+    m: boolean;
+    k: boolean;
 }
 
 interface ManagedMetaWindow extends Meta.Window {
@@ -113,7 +123,22 @@ class ManagedWindow {
 
     private parseTitle(): void {
         const title = this.window.title;
-        if (title?.startsWith(`@${APPLICATION_ID}!`)) {
+        if (title?.startsWith(`@${HOTARU_APPLICATION_ID}!`)) {
+            const json = title
+                .replace(`@${HOTARU_APPLICATION_ID}!`, '')
+                .split('|')[0];
+            try {
+                const v2 = JSON.parse(json) as Partial<HotaruWindowState>;
+                this.states = {
+                    position: v2.p ?? this.states.position,
+                    keepAtBottom: v2.b ?? this.states.keepAtBottom,
+                    keepMinimized: v2.m ?? this.states.keepMinimized,
+                    keepPosition: v2.k ?? this.states.keepPosition,
+                };
+            } catch (e) {
+                logger.trace(e);
+            }
+        } else if (title?.startsWith(`@${APPLICATION_ID}!`)) {
             const json = title.replace(`@${APPLICATION_ID}!`, '').split('|')[0];
             try {
                 const newState = JSON.parse(json) as Partial<WindowState>;
