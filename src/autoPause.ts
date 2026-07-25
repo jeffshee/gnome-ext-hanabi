@@ -136,6 +136,7 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
         private overviewShowingId: number | null;
         private overviewHiddenId: number | null;
         private sessionModeUpdatedId: number | null;
+        private showingDesktopChangedId: number | null;
 
         constructor(settings: Gio.Settings) {
             super(settings, 'maximizeOrFullscreen');
@@ -168,6 +169,7 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
             this.overviewShowingId = null;
             this.overviewHiddenId = null;
             this.sessionModeUpdatedId = null;
+            this.showingDesktopChangedId = null;
         }
 
         override enable(): void {
@@ -188,6 +190,15 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
             this.activeWorkspaceChangedId = this.workspaceManager.connect(
                 'active-workspace-changed',
                 (wm: Meta.WorkspaceManager) => this.onActiveWorkspaceChanged(wm)
+            );
+            // The show-desktop shortcut hides windows without minimizing them,
+            // so no per-window signal fires; watch the workspace-level signal.
+            this.showingDesktopChangedId = this.workspaceManager.connect(
+                'showing-desktop-changed',
+                () => {
+                    this.logger.debug('showing-desktop changed');
+                    this.update();
+                }
             );
 
             this.activeWorkspace
@@ -284,9 +295,12 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
         }
 
         override update(): void {
+            // showing_on_its_workspace() is false for minimized windows and for
+            // windows hidden by the show-desktop shortcut, so neither counts as
+            // covering the wallpaper.
             const metaWindows = this.windows
                 .map(({metaWindow}) => metaWindow)
-                .filter(w => !w.title?.includes(APPLICATION_ID) && !w.minimized);
+                .filter(w => !w.title?.includes(APPLICATION_ID) && w.showing_on_its_workspace());
 
             const monitors = Main.layoutManager.monitors;
 
@@ -339,6 +353,8 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
 
         override disable(): void {
             this.workspaceManager?.disconnect(this.activeWorkspaceChangedId!);
+            if (this.showingDesktopChangedId !== null)
+                this.workspaceManager?.disconnect(this.showingDesktopChangedId);
             this.windows.forEach(({metaWindow, signals}) =>
                 signals.forEach(signal => metaWindow.disconnect(signal))
             );
@@ -361,6 +377,7 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
             this.overviewShowingId = null;
             this.overviewHiddenId = null;
             this.sessionModeUpdatedId = null;
+            this.showingDesktopChangedId = null;
         }
     }
 );
