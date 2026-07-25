@@ -96,8 +96,6 @@ export default class HanabiExtension extends Extension {
             const startupCompleteId = Main.layoutManager.connect(
                 'startup-complete',
                 () => {
-                    // Issue #65: don't open the overview at login.
-                    Main.overview.hide();
                     GLib.timeout_add(
                         GLib.PRIORITY_DEFAULT,
                         this.settings!.get_int('startup-delay'),

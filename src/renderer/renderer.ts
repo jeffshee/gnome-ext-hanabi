@@ -91,7 +91,6 @@ let changeWallpaperMode = extSettings?.get_int('change-wallpaper-mode') ?? 0;
 let changeWallpaperInterval = extSettings?.get_int('change-wallpaper-interval') ?? 15;
 let windowDimension = {width: 1920, height: 1080};
 let windowed = false;
-const fullscreened = true;
 let isDebugMode = extSettings?.get_boolean('debug-mode') ?? true;
 let changeWallpaperTimerId: number | null = null;
 
@@ -112,12 +111,9 @@ const HanabiRendererWindow = GObject.registerClass(
             );
             this.set_child(widget);
             if (!windowed) {
-                if (fullscreened) {
-                    this.fullscreen_on_monitor(gdkMonitor);
-                } else {
-                    const geometry = gdkMonitor.get_geometry();
-                    this.set_size_request(geometry.width, geometry.height);
-                }
+                const geometry = gdkMonitor.get_geometry();
+                this.set_size_request(geometry.width, geometry.height);
+                this.set_resizable(false);
             }
         }
     }
@@ -381,8 +377,8 @@ const HanabiRenderer = GObject.registerClass(
                 const window = new HanabiRendererWindow({
                     application: this,
                     decorated: !!nohide,
-                    default_height: windowDimension.height,
-                    default_width: windowDimension.width,
+                    default_height: windowed ? windowDimension.height : geometry.height,
+                    default_width: windowed ? windowDimension.width : geometry.width,
                     title: windowTitle,
                 });
                 window._setup(widget, gdkMonitor);
