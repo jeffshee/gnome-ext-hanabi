@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-09 14:38+0900\n"
+"POT-Creation-Date: 2026-07-25 01:03+0900\n"
 "PO-Revision-Date: 2024-08-26 02:09+0000\n"
 "Last-Translator: rain1150 <arinchai0405.jj@gmail.com>\n"
 "Language-Team: Thai <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
@@ -19,230 +19,226 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.7.1-dev\n"
 
-#: src/panelMenu.js:75 src/panelMenu.js:90
+#: src/panelMenu.ts:73 src/panelMenu.ts:87
 msgid "Pause"
 msgstr "หยุดชั่วคราว"
 
-#: src/panelMenu.js:75 src/panelMenu.js:90
+#: src/panelMenu.ts:73 src/panelMenu.ts:87
 msgid "Play"
 msgstr "เล่น"
 
-#: src/panelMenu.js:99 src/panelMenu.js:108
+#: src/panelMenu.ts:94 src/panelMenu.ts:102
 msgid "Unmute Audio"
 msgstr "เปิดเสียง"
 
-#: src/panelMenu.js:99 src/panelMenu.js:108 src/prefs.js:46
+#: src/panelMenu.ts:94 src/panelMenu.ts:102 src/prefs.ts:42
 msgid "Mute Audio"
 msgstr "ปิดเสียง"
 
-#: src/panelMenu.js:116
+#: src/panelMenu.ts:109
 msgid "Next Wallpaper"
 msgstr "ภาพพื้นหลังต่อไป"
 
-#: src/panelMenu.js:136
+#: src/panelMenu.ts:126
 msgid "Preferences"
 msgstr "ตั้งค่า"
 
-#: src/prefs.js:41
+#: src/prefs.ts:38
 msgid "General"
 msgstr "ทั่วไป"
 
-#: src/prefs.js:50
+#: src/prefs.ts:43
 msgid "Volume Level"
 msgstr "ตั้งค่าความดังเสียง"
 
-#: src/prefs.js:58
+#: src/prefs.ts:44
 msgid "Random Start Position"
 msgstr ""
 
-#: src/prefs.js:58
+#: src/prefs.ts:45
 msgid "Start playback from a random position each time a video starts"
 msgstr ""
 
-#: src/prefs.js:62
+#: src/prefs.ts:46
 msgid "Show Panel Menu"
 msgstr "แสดงแผงเมนู"
 
-#: src/prefs.js:69
+#: src/prefs.ts:47
 msgid "Show on Lock Screen"
 msgstr ""
 
-#: src/prefs.js:71
+#: src/prefs.ts:48
 msgid "Show the live wallpaper on the lock screen"
 msgstr ""
 
-#: src/prefs.js:78
+#: src/prefs.ts:50
 msgid "Auto Pause"
 msgstr "หยุดอัตโนมัติ"
 
-#: src/prefs.js:85
+#: src/prefs.ts:53
 msgid "Pause on Window Focus"
 msgstr ""
 
-#: src/prefs.js:87
+#: src/prefs.ts:54
 #, fuzzy
 #| msgid "Pause playback when an MPRIS media player is playing media"
 msgid "Pause playback when any window is focused"
 msgstr "หยุดชั่วคราวเมื่อ MPRIS media player กำลังเล่นอยู่"
 
-#: src/prefs.js:93
+#: src/prefs.ts:56
 msgid "Low Battery Threshold"
 msgstr "แบตเตอรี่ขั้นต่ำ"
 
-#: src/prefs.js:95
+#: src/prefs.ts:57
 msgid "Set the threshold percentage for low battery level"
 msgstr "ตั้งค่าแบตเตอรี่ต่ำกี่เปอร์เซ็น"
 
-#: src/prefs.js:104
+#: src/prefs.ts:58
 msgid "Pause on Media Player Playing"
 msgstr "หยุดชั่วคราวเมื่อมีการเล่น Media Player ต่าง ๆ"
 
-#: src/prefs.js:106
+#: src/prefs.ts:59
 msgid "Pause playback when an MPRIS media player is playing media"
 msgstr "หยุดชั่วคราวเมื่อ MPRIS media player กำลังเล่นอยู่"
 
-#: src/prefs.js:113
+#: src/prefs.ts:61
 msgid "Wallpaper Changer"
 msgstr "ตัวเปลี่ยนภาพพื้นหลัง"
 
-#: src/prefs.js:119
+#: src/prefs.ts:63
 msgid "Change Wallpaper Automatically"
 msgstr "เปลี่ยนภาพพื้นหลังอัตโนมัติ"
 
-#: src/prefs.js:128
+#: src/prefs.ts:66
 msgid "Change Wallpaper Interval (minutes)"
 msgstr "เปลี่ยนภาพพื้นหลังให้เอง (นาที)"
 
-#: src/prefs.js:141
+#: src/prefs.ts:69
 msgid "Overview"
 msgstr ""
 
-#: src/prefs.js:147
+#: src/prefs.ts:71
 msgid "Corner Radius"
 msgstr ""
 
-#: src/prefs.js:149
+#: src/prefs.ts:72
 msgid ""
 "Rounded corner radius in pixels for workspace background in the overview"
 msgstr ""
 
-#: src/prefs.js:160
+#: src/prefs.ts:74
 msgid "Experimental"
 msgstr "ทดลอง"
 
-#: src/prefs.js:166
+#: src/prefs.ts:76
 msgid "Experimental VA Plugin"
 msgstr "ทดลองปลั๊กอิน VA"
 
-#: src/prefs.js:169
+#: src/prefs.ts:77
 msgid ""
 "Enable VA decoders which improve performance for Intel/AMD Wayland users"
 msgstr "เปิดค่า VA Decoders เพื่อให้เพิ่มประสิทธิภาพกับผู้ใช้งาน Intel/AMD บน Wayland"
 
-#: src/prefs.js:175
+#: src/prefs.ts:78
 msgid "NVIDIA Stateless Decoders"
 msgstr "NVIDIA Stateless Decoders"
 
-#: src/prefs.js:177
+#: src/prefs.ts:79
 msgid "Use new stateless NVIDIA decoders"
 msgstr "ใช้ตัว stateless NVIDIA decoders"
 
-#: src/prefs.js:184
+#: src/prefs.ts:81
 msgid "Developer"
 msgstr "โหมด ผู้พัฒนา"
 
-#: src/prefs.js:190
+#: src/prefs.ts:83
 msgid "Debug Mode"
 msgstr "โหมด ดีบัก"
 
-#: src/prefs.js:192
+#: src/prefs.ts:84
 msgid "Print debug messages to log"
 msgstr "ส่งค่าข้อความดีบักไปยังข้อความล็อค"
 
-#: src/prefs.js:197
+#: src/prefs.ts:85
 #, fuzzy
 #| msgid "Preferences"
 msgid "Prefer clappersink"
 msgstr "ตั้งค่า"
 
-#: src/prefs.js:199
+#: src/prefs.ts:86
 #, fuzzy
 #| msgid "Force use of gtk4paintablesink for video playback"
 msgid "Prefer clappersink over gtk4paintablesink for video playback"
 msgstr "บังคับใช้ gtk4paintablesink สำหรับการเล่นวิดีโอพื้นหลัง"
 
-#: src/prefs.js:204
+#: src/prefs.ts:87
 msgid "Force GtkMediaFile"
 msgstr "บังคับ GtkMediaFile"
 
-#: src/prefs.js:206
+#: src/prefs.ts:88
 msgid "Force use of GtkMediaFile for video playback"
 msgstr "บังคับใช้ GtkMediaFile สำหรับการเล่นวิดีโอพื้นหลัง"
 
-#: src/prefs.js:211
+#: src/prefs.ts:89
 msgid "Enable Graphics Offload"
 msgstr ""
 
-#: src/prefs.js:214
-msgid "Enable graphics offload for improved performance (requires GTK 4.14+)"
+#: src/prefs.ts:90
+msgid "Enable graphics offload for improved performance"
 msgstr ""
 
-#: src/prefs.js:220
+#: src/prefs.ts:91
 msgid "Startup Delay"
 msgstr "ดีเลย์การเปิดขึ้น"
 
-#: src/prefs.js:223
+#: src/prefs.ts:92
 msgid ""
 "Add a startup delay (in milliseconds) to mitigate compatibility issues with "
 "other extensions"
 msgstr "เพิ่มดีเลย์การเปิดตัว (ใน มิลลิวินาที) เพื่อลดปัญหาความเข้ากันได้กับส่วนขยายอื่น"
 
-#: src/prefs.js:233
+#: src/prefs.ts:94
 msgid "Border Stroke"
 msgstr ""
 
-#: src/prefs.js:235
+#: src/prefs.ts:95
 msgid ""
 "Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)"
 msgstr ""
 
-#: src/prefs.js:303
+#: src/prefs.ts:160
 msgid "Video Path"
 msgstr "ที่อยู่วิดีโอ"
 
-#: src/prefs.js:309 src/prefs.js:334 src/prefs.js:363 src/prefs.js:384
+#: src/prefs.ts:166 src/prefs.ts:191 src/prefs.ts:207 src/prefs.ts:228
 msgid "None"
 msgstr "ไม่มี"
 
-#: src/prefs.js:321
-msgid "Open File"
-msgstr "เปิดไฟล์"
-
-#: src/prefs.js:326 src/prefs.js:377
-msgid "Cancel"
-msgstr "ยกเลิก"
-
-#: src/prefs.js:327 src/prefs.js:343 src/prefs.js:378 src/prefs.js:393
+#: src/prefs.ts:172 src/prefs.ts:213
 msgid "Open"
 msgstr "เปิด"
 
-#: src/prefs.js:357
+#: src/prefs.ts:182
+msgid "Open File"
+msgstr "เปิดไฟล์"
+
+#: src/prefs.ts:201
 msgid "Change Wallpaper Directory Path"
 msgstr "เปลี่ยนที่เก็บไฟล์ของภาพพื้นหลัง"
 
-#: src/prefs.js:372
+#: src/prefs.ts:220
 msgid "Select Directory"
 msgstr "เลือกโฟลเดอร์"
 
-#: src/prefs.js:407
+#: src/prefs.ts:238
 msgid "Fit Mode"
 msgstr "โหมด พอดีหน้าจอ"
 
-#: src/prefs.js:408
+#: src/prefs.ts:239
 msgid "Control how wallpaper fits within the monitor"
 msgstr "ตั้งค่าวิธีการเปลี่ยนภาพพื้นหลังให้หน้าจอ"
 
-#: src/prefs.js:409
+#: src/prefs.ts:240
 msgid ""
 "\n"
 "    <b>Fill</b>: Stretch the wallpaper to fill the monitor.\n"
@@ -262,36 +258,32 @@ msgstr ""
 "จะให้อัตราส่วนเหมือนเดิม\n"
 "    "
 
-#: src/prefs.js:417
+#: src/prefs.ts:248
 msgid "Fill"
 msgstr "เติม"
 
-#: src/prefs.js:418
+#: src/prefs.ts:249
 #, fuzzy
 msgid "Contain"
 msgstr "พอดี"
 
-#: src/prefs.js:419
+#: src/prefs.ts:250
 msgid "Cover"
 msgstr "เต็มหน้าจอ"
 
-#: src/prefs.js:420
+#: src/prefs.ts:251
 msgid "Scale-down"
 msgstr "ลดขนาด"
 
-#: src/prefs.js:433
-msgid "This feature requires Gtk 4.8 or above"
-msgstr "ฟีเจอร์นี้ต้องใช้ Gtk 4.8 หรือ มากกว่านั้น"
-
-#: src/prefs.js:445
+#: src/prefs.ts:274
 msgid "Pause on Maximize or Fullscreen"
 msgstr "หยุดชั่วคราวตอนหน้าจอขยาย หรือ หน้าจอแบบเต็ม"
 
-#: src/prefs.js:447
+#: src/prefs.ts:275
 msgid "Pause playback when there is maximized or fullscreen window"
 msgstr "หยุดการเล่นชั่วคราวเมื่อหน้าจอขยาย หรือ หน้าจอเต็ม"
 
-#: src/prefs.js:449
+#: src/prefs.ts:276
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -307,27 +299,27 @@ msgstr ""
 "    <b>ทุกหน้าจอ</b>: หยุดการเล่นชั่วคราวเมื่อมีหน้าจอขยาย หรือ หน้าจอเต็มที่ทุกหน้าจอ\n"
 "    "
 
-#: src/prefs.js:456 src/prefs.js:489
+#: src/prefs.ts:282 src/prefs.ts:309
 msgid "Never"
 msgstr "ไม่"
 
-#: src/prefs.js:457
+#: src/prefs.ts:282
 msgid "Any Monitor"
 msgstr "หน้าจอใด ๆ"
 
-#: src/prefs.js:458
+#: src/prefs.ts:282
 msgid "All Monitors"
 msgstr "ทุกหน้าจอ"
 
-#: src/prefs.js:478
+#: src/prefs.ts:301
 msgid "Pause on Battery"
 msgstr "หยุดชั่วคราวตอนโหมดแบตเตอรี่"
 
-#: src/prefs.js:480
+#: src/prefs.ts:302
 msgid "Pause playback when the device is on battery or the battery is low"
 msgstr "หยุดการเล่นชั่วคราวเมื่อการอุปกรณ์อยู่โหมดแบตเตอรี่ หรือ แบตเตอรี่ต่ำที่กำหนด"
 
-#: src/prefs.js:482
+#: src/prefs.ts:303
 msgid ""
 "\n"
 "    <b>Never</b>: Disable this feature.\n"
@@ -342,23 +334,23 @@ msgstr ""
 "    <b>ตลอด</b>: หยุดการเล่นเมื่ออุปกรณ์เข้าสู่ระบบใช้พลังงานแบตเตอรี่\n"
 "    "
 
-#: src/prefs.js:490
+#: src/prefs.ts:309
 msgid "Low Battery"
 msgstr "แบตเตอรี่ต่ำ"
 
-#: src/prefs.js:491
+#: src/prefs.ts:309
 msgid "Always"
 msgstr "ตลอด"
 
-#: src/prefs.js:511
+#: src/prefs.ts:331
 msgid "Change Wallpaper Mode"
 msgstr "เปลี่ยนโหมดภาพพื้นหลัง"
 
-#: src/prefs.js:512
+#: src/prefs.ts:332
 msgid "Control how to change wallpapers automatically"
 msgstr "ตั้งค่าวิธีการเปลี่ยนภาพพื้นหลังอัตโนมัติ"
 
-#: src/prefs.js:513
+#: src/prefs.ts:333
 msgid ""
 "\n"
 "    <b>Sequential:</b> Preserve the directory sequence (descending order).\n"
@@ -373,42 +365,23 @@ msgstr ""
 "    <b>สุ่ม:</b> สุ่มภาพในโฟลเดอร์\n"
 "    "
 
-#: src/prefs.js:520
+#: src/prefs.ts:339
 msgid "Sequential"
 msgstr "ตามลำดับ"
 
-#: src/prefs.js:521
+#: src/prefs.ts:339
 msgid "Inverse Sequential"
 msgstr "ลำดับย้อนกลับ"
 
-#: src/prefs.js:522
+#: src/prefs.ts:339
 msgid "Random"
 msgstr "สุ่ม"
 
-#: src/prefs.js:542
-msgid "Bounds Inset"
-msgstr ""
+#~ msgid "Cancel"
+#~ msgstr "ยกเลิก"
 
-#: src/prefs.js:543
-msgid ""
-"Adjust edges of the overview rounded-rect bounds (positive = shrink inward)"
-msgstr ""
-
-#: src/prefs.js:548
-msgid "Left"
-msgstr ""
-
-#: src/prefs.js:549
-msgid "Top"
-msgstr ""
-
-#: src/prefs.js:550
-msgid "Right"
-msgstr ""
-
-#: src/prefs.js:551
-msgid "Bottom"
-msgstr ""
+#~ msgid "This feature requires Gtk 4.8 or above"
+#~ msgstr "ฟีเจอร์นี้ต้องใช้ Gtk 4.8 หรือ มากกว่านั้น"
 
 #~ msgid "Force gtk4paintablesink"
 #~ msgstr "บังคับ gtk4paintablesink"

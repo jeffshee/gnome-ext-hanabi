@@ -27,28 +27,21 @@ Please click on the image to view _(redirect to YouTube)_
 [![](https://i3.ytimg.com/vi/BWjXl4h9_BA/maxresdefault.jpg)](https://www.youtube.com/watch?v=BWjXl4h9_BA)
 [Wallpaper used in demo](https://www.youtube.com/watch?v=2pBj0RKN3Y8)
 
-## Hanabi is migrating to TypeScript!
+## Hanabi has migrated to TypeScript!
 
 > [!IMPORTANT]
-> Moving to TypeScript for better type safety and maintainability~ ✨
+> The TypeScript rewrite has landed on the main branch~ ✨
+> Better type safety and maintainability, targeting **GNOME 50+, Wayland only**.
 >
-> Active development now happens on the `typescript` branch
-> — **GNOME 50+, Wayland only** — merging into the main branch on **July 15, 2026**.
->
-> Until then, the main branch stays on JavaScript so existing community packages
-> and their CI builds keep working through the transition.
-> The `javascript` branch enters **maintenance mode** — bugs still get fixed,
-> but no new fireworks there. (・ω・)ノ
+> The `javascript` branch is in **maintenance mode** for GNOME 45–50 — bugs still
+> get fixed there, but no new fireworks. (・ω・)ノ
 
 ## GNOME Shell Support
 
-| Version |  42–44   |    45–50     |     50+      |
-| :-----: | :------: | :----------: | :----------: |
-| Status  |    ⚠️    |      ✅      |      ✅      |
-| Branch  | `legacy` | `javascript` | `typescript` |
-
-> [!TIP]
-> On GNOME 50? You're encouraged to give the TypeScript version a try!
+| Version |  42–44   |    45–50     |  50+   |
+| :-----: | :------: | :----------: | :----: |
+| Status  |    ⚠️    |      ✅      |   ✅   |
+| Branch  | `legacy` | `javascript` | `main` |
 
 ## Installation
 
@@ -57,7 +50,7 @@ Please click on the image to view _(redirect to YouTube)_
 - **GNOME 50 and later** (TypeScript, Wayland only) 🔥
 
     ```bash
-    git clone https://github.com/jeffshee/gnome-ext-hanabi.git -b typescript
+    git clone https://github.com/jeffshee/gnome-ext-hanabi.git
     ```
 
 - **GNOME 45–50** (JavaScript, X11 and Wayland)
@@ -74,7 +67,7 @@ Please click on the image to view _(redirect to YouTube)_
     ```
 
     **Build dependencies**
-    - `typescript` branch: `meson`, `node`, and `npm`
+    - `main` branch: `meson`, `node`, and `npm`
     - `javascript` branch: `meson`
 
 3. Restart GNOME Shell

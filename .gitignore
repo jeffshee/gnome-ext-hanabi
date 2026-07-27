@@ -33,3 +33,6 @@ scratch
 
 # Nix build result
 result
+
+# TypeScript build output
+src/_build

@@ -4,18 +4,20 @@ excludes:
   - .*lock
   - node_modules/.*
   - \.build/.*
+  - src/_build/.*
   - scratch/.*
   - tools/.*
   - README.*
   - LICENSE.*
   - .*\.(md|rst|txt|xml|pot|po|json|yml|yaml|png|jpg|jpeg|gif|svg|ico|webp)
   - Makefile
+  - eslint\.config\.js
   - .*\.(sh|py|css)
   - meson\.build
   - LINGUAS
 
 licenses:
-  - files: src/.*\.js$
+  - files: (src/.*\.ts|build\.js)$
     ident: GPL-3.0-or-later
     authors:
       - name: Jeff Shee
@@ -42,6 +44,7 @@ licenses:
 comments:
   - extensions:
       - js
+      - ts
     commenter:
       type: line
       comment_char: "//"
