@@ -4,13 +4,14 @@
 # Hugo José Romero Orozco <narcropg@gmail.com>, 2024.
 # gallegonovato <fran-carro@hotmail.es>, 2024.
 # Moises Tamaalit <moisestamaalit@gmail.com>, 2024.
+# "Oswaldo J. Silva" <joquers@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-25 01:03+0900\n"
-"PO-Revision-Date: 2024-10-04 11:15+0000\n"
-"Last-Translator: Moises Tamaalit <moisestamaalit@gmail.com>\n"
+"PO-Revision-Date: 2026-07-29 15:02+0000\n"
+"Last-Translator: \"Oswaldo J. Silva\" <joquers@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/es/>\n"
 "Language: es\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8-dev\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 
 #: src/panelMenu.ts:73 src/panelMenu.ts:87
 msgid "Pause"
@@ -54,11 +55,13 @@ msgstr "Nivel de volumen"
 
 #: src/prefs.ts:44
 msgid "Random Start Position"
-msgstr ""
+msgstr "Posición de Inicio Aleatoria"
 
 #: src/prefs.ts:45
 msgid "Start playback from a random position each time a video starts"
 msgstr ""
+"Iniciar la reproducción desde una posición aleatoria cada vez que comience "
+"un vídeo"
 
 #: src/prefs.ts:46
 msgid "Show Panel Menu"
@@ -66,11 +69,11 @@ msgstr "Mostrar menú del panel"
 
 #: src/prefs.ts:47
 msgid "Show on Lock Screen"
-msgstr ""
+msgstr "Mostrar en la Pantalla de Bloqueo"
 
 #: src/prefs.ts:48
 msgid "Show the live wallpaper on the lock screen"
-msgstr ""
+msgstr "Mostrar el fondo de pantalla animado en la pantalla de bloqueo"
 
 #: src/prefs.ts:50
 msgid "Auto Pause"
@@ -78,15 +81,11 @@ msgstr "Pausa automática"
 
 #: src/prefs.ts:53
 msgid "Pause on Window Focus"
-msgstr ""
+msgstr "Pausar al enfocar la ventana"
 
 #: src/prefs.ts:54
-#, fuzzy
-#| msgid "Pause playback when an MPRIS media player is playing media"
 msgid "Pause playback when any window is focused"
-msgstr ""
-"Pausar la reproducción cuando un reproductor multimedia MPRIS está "
-"reproduciendo los medios"
+msgstr "Pausar la reproducción cuando cualquier ventana tenga el foco"
 
 #: src/prefs.ts:56
 msgid "Low Battery Threshold"
@@ -120,16 +119,18 @@ msgstr "Cambiar el intervalo del fondo de pantalla (minutos)"
 
 #: src/prefs.ts:69
 msgid "Overview"
-msgstr ""
+msgstr "Vista general"
 
 #: src/prefs.ts:71
 msgid "Corner Radius"
-msgstr ""
+msgstr "Radio de las esquinas"
 
 #: src/prefs.ts:72
 msgid ""
 "Rounded corner radius in pixels for workspace background in the overview"
 msgstr ""
+"Radio de las esquinas redondeadas, en píxeles, del fondo del espacio de "
+"trabajo en la vista general"
 
 #: src/prefs.ts:74
 msgid "Experimental"
@@ -167,16 +168,13 @@ msgid "Print debug messages to log"
 msgstr "Escribir mensajes de depuración en el registro."
 
 #: src/prefs.ts:85
-#, fuzzy
-#| msgid "Preferences"
 msgid "Prefer clappersink"
-msgstr "Preferencias"
+msgstr "Preferir Clappersink"
 
 #: src/prefs.ts:86
-#, fuzzy
-#| msgid "Force use of gtk4paintablesink for video playback"
 msgid "Prefer clappersink over gtk4paintablesink for video playback"
-msgstr "Forzar el uso de gtk4paintablesink para la reproducción de vídeo"
+msgstr ""
+"Preferir Clappersink en lugar de gtk4paintablesink para reproducción de video"
 
 #: src/prefs.ts:87
 msgid "Force GtkMediaFile"
@@ -188,11 +186,12 @@ msgstr "Forzar el uso de GtkMediaFile para la reproducción de vídeo"
 
 #: src/prefs.ts:89
 msgid "Enable Graphics Offload"
-msgstr ""
+msgstr "Activar la descarga de procesamiento gráfico"
 
 #: src/prefs.ts:90
 msgid "Enable graphics offload for improved performance"
 msgstr ""
+"Activar la descarga de procesamiento gráfico para mejorar el rendimiento"
 
 #: src/prefs.ts:91
 msgid "Startup Delay"
@@ -208,12 +207,14 @@ msgstr ""
 
 #: src/prefs.ts:94
 msgid "Border Stroke"
-msgstr ""
+msgstr "Trazo del Borde"
 
 #: src/prefs.ts:95
 msgid ""
 "Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)"
 msgstr ""
+"Ancho del borde en píxeles, dibujado dentro de los límites del rectángulo "
+"redondeado (0 = desactivado)"
 
 #: src/prefs.ts:160
 msgid "Video Path"
