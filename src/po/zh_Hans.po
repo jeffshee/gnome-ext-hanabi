@@ -5,13 +5,15 @@
 # 0xarch <alanqa-ops@outlook.com>, 2024.
 # 云晓逸 <jiangmingyu150@gmail.com>, 2024.
 # Xarth <g@lzzz.ink>, 2024.
+# reducedradius <137701630+flytothehighest@users.noreply.github.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-25 01:03+0900\n"
-"PO-Revision-Date: 2024-10-09 02:15+0000\n"
-"Last-Translator: Xarth <g@lzzz.ink>\n"
+"PO-Revision-Date: 2026-08-05 14:01+0000\n"
+"Last-Translator: reducedradius "
+"<137701630+flytothehighest@users.noreply.github.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/gnome-ext-hanabi/gnome-ext-hanabi/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -19,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.8-dev\n"
+"X-Generator: Weblate 2026.8.1.dev0\n"
 
 #: src/panelMenu.ts:73 src/panelMenu.ts:87
 msgid "Pause"
@@ -117,7 +119,7 @@ msgstr "切换壁纸间隔（分钟）"
 
 #: src/prefs.ts:69
 msgid "Overview"
-msgstr ""
+msgstr "概览"
 
 #: src/prefs.ts:71
 msgid "Corner Radius"
