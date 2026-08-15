@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-25 01:03+0900\n"
-"PO-Revision-Date: 2026-08-05 14:01+0000\n"
+"PO-Revision-Date: 2026-08-16 03:51+0000\n"
 "Last-Translator: reducedradius "
 "<137701630+flytothehighest@users.noreply.github.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.8.1.dev0\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 
 #: src/panelMenu.ts:73 src/panelMenu.ts:87
 msgid "Pause"
@@ -69,7 +69,7 @@ msgstr "显示面板菜单"
 
 #: src/prefs.ts:47
 msgid "Show on Lock Screen"
-msgstr ""
+msgstr "在锁屏中显示"
 
 #: src/prefs.ts:48
 msgid "Show the live wallpaper on the lock screen"
