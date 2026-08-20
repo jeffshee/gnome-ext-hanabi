@@ -6,14 +6,14 @@
 # 云晓逸 <jiangmingyu150@gmail.com>, 2024.
 # Xarth <g@lzzz.ink>, 2024.
 # reducedradius <137701630+flytothehighest@users.noreply.github.com>, 2026.
+# Silence <1059022187@qq.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-25 01:03+0900\n"
-"PO-Revision-Date: 2026-08-16 03:51+0000\n"
-"Last-Translator: reducedradius "
-"<137701630+flytothehighest@users.noreply.github.com>\n"
+"PO-Revision-Date: 2026-08-21 11:51+0000\n"
+"Last-Translator: Silence <1059022187@qq.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/gnome-ext-hanabi/gnome-ext-hanabi/zh_Hans/>\n"
 "Language: zh_Hans\n"
@@ -57,11 +57,11 @@ msgstr "音量"
 
 #: src/prefs.ts:44
 msgid "Random Start Position"
-msgstr ""
+msgstr "随机起始位置"
 
 #: src/prefs.ts:45
 msgid "Start playback from a random position each time a video starts"
-msgstr ""
+msgstr "每次视频开始时从随机位置开始播放"
 
 #: src/prefs.ts:46
 msgid "Show Panel Menu"
@@ -73,7 +73,7 @@ msgstr "在锁屏中显示"
 
 #: src/prefs.ts:48
 msgid "Show the live wallpaper on the lock screen"
-msgstr ""
+msgstr "在锁屏显示动态壁纸"
 
 #: src/prefs.ts:50
 msgid "Auto Pause"
@@ -81,13 +81,11 @@ msgstr "自动暂停"
 
 #: src/prefs.ts:53
 msgid "Pause on Window Focus"
-msgstr ""
+msgstr "在窗体聚焦时暂停"
 
 #: src/prefs.ts:54
-#, fuzzy
-#| msgid "Pause playback when an MPRIS media player is playing media"
 msgid "Pause playback when any window is focused"
-msgstr "当MPRIS媒体播放器在播放媒体时暂停播放"
+msgstr "当任何窗口获得焦点时暂停播放"
 
 #: src/prefs.ts:56
 msgid "Low Battery Threshold"
@@ -123,12 +121,12 @@ msgstr "概览"
 
 #: src/prefs.ts:71
 msgid "Corner Radius"
-msgstr ""
+msgstr "圆角"
 
 #: src/prefs.ts:72
 msgid ""
 "Rounded corner radius in pixels for workspace background in the overview"
-msgstr ""
+msgstr "概览中工作区背景的圆角半径，以像素为单位"
 
 #: src/prefs.ts:74
 msgid "Experimental"
@@ -164,16 +162,12 @@ msgid "Print debug messages to log"
 msgstr "将调试信息打印到日志中"
 
 #: src/prefs.ts:85
-#, fuzzy
-#| msgid "Preferences"
 msgid "Prefer clappersink"
-msgstr "偏好设置"
+msgstr "优先使用 clappersink"
 
 #: src/prefs.ts:86
-#, fuzzy
-#| msgid "Force use of gtk4paintablesink for video playback"
 msgid "Prefer clappersink over gtk4paintablesink for video playback"
-msgstr "强制使用 gtk4paintablesink 播放视频"
+msgstr "优先使用 gtk4paintablesink 播放视频"
 
 #: src/prefs.ts:87
 msgid "Force GtkMediaFile"
@@ -185,11 +179,11 @@ msgstr "强制使用 GtkMediaFile 播放视频"
 
 #: src/prefs.ts:89
 msgid "Enable Graphics Offload"
-msgstr ""
+msgstr "启用图形卸载"
 
 #: src/prefs.ts:90
 msgid "Enable graphics offload for improved performance"
-msgstr ""
+msgstr "启用图形卸载以提升性能"
 
 #: src/prefs.ts:91
 msgid "Startup Delay"
@@ -203,12 +197,12 @@ msgstr "增加启动延迟（以毫秒为单位）以减少与其它扩展的兼
 
 #: src/prefs.ts:94
 msgid "Border Stroke"
-msgstr ""
+msgstr "边框描边"
 
 #: src/prefs.ts:95
 msgid ""
 "Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)"
-msgstr ""
+msgstr "边框宽度以像素为单位，绘制在圆角矩形边界内部（0 = 禁用）"
 
 #: src/prefs.ts:160
 msgid "Video Path"
