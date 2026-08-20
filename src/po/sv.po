@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # Olle Modin <ollemodin@outlook.com>, 2024.
 # Kuwush <79j0hancarl@gmail.com>, 2025.
+# bittin1ddc447d824349b2 <bittin@reimu.nl>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-25 01:03+0900\n"
-"PO-Revision-Date: 2025-04-10 08:01+0000\n"
-"Last-Translator: Kuwush <79j0hancarl@gmail.com>\n"
+"PO-Revision-Date: 2026-08-21 11:51+0000\n"
+"Last-Translator: bittin1ddc447d824349b2 <bittin@reimu.nl>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/sv/>\n"
 "Language: sv\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11-dev\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 
 #: src/panelMenu.ts:73 src/panelMenu.ts:87
 msgid "Pause"
@@ -53,11 +54,12 @@ msgstr "Volymnivå"
 
 #: src/prefs.ts:44
 msgid "Random Start Position"
-msgstr ""
+msgstr "Slumpmässig startposition"
 
 #: src/prefs.ts:45
 msgid "Start playback from a random position each time a video starts"
 msgstr ""
+"Starta uppspelning från en slumpmässig position varje gång en video startar"
 
 #: src/prefs.ts:46
 msgid "Show Panel Menu"
@@ -65,11 +67,11 @@ msgstr "Visa Panel Meny"
 
 #: src/prefs.ts:47
 msgid "Show on Lock Screen"
-msgstr ""
+msgstr "Visa på låsskärm"
 
 #: src/prefs.ts:48
 msgid "Show the live wallpaper on the lock screen"
-msgstr ""
+msgstr "Visa den levande bakgrundsbilden på låsskärmen"
 
 #: src/prefs.ts:50
 msgid "Auto Pause"
@@ -77,13 +79,11 @@ msgstr "Automatisk pausning"
 
 #: src/prefs.ts:53
 msgid "Pause on Window Focus"
-msgstr ""
+msgstr "Pausa vid fönsterfokus"
 
 #: src/prefs.ts:54
-#, fuzzy
-#| msgid "Pause playback when an MPRIS media player is playing media"
 msgid "Pause playback when any window is focused"
-msgstr "Pausa uppspelning när en MPRIS mediaspelar spelar upp media"
+msgstr "Pausa uppspelningen när ett fönster är i fokus"
 
 #: src/prefs.ts:56
 msgid "Low Battery Threshold"
@@ -115,16 +115,16 @@ msgstr "Ändra Bakgrundsintervall (minuter)"
 
 #: src/prefs.ts:69
 msgid "Overview"
-msgstr ""
+msgstr "Översikt"
 
 #: src/prefs.ts:71
 msgid "Corner Radius"
-msgstr ""
+msgstr "Hörnradie"
 
 #: src/prefs.ts:72
 msgid ""
 "Rounded corner radius in pixels for workspace background in the overview"
-msgstr ""
+msgstr "Rundad hörnradie i pixlar för arbetsytans bakgrund i översikt"
 
 #: src/prefs.ts:74
 msgid "Experimental"
@@ -162,16 +162,12 @@ msgid "Print debug messages to log"
 msgstr "Skriv ut felsökningsmeddelanden till logg"
 
 #: src/prefs.ts:85
-#, fuzzy
-#| msgid "Preferences"
 msgid "Prefer clappersink"
-msgstr "Preferenser"
+msgstr "Föredra clappersink"
 
 #: src/prefs.ts:86
-#, fuzzy
-#| msgid "Force use of gtk4paintablesink for video playback"
 msgid "Prefer clappersink over gtk4paintablesink for video playback"
-msgstr "Tvinga användning utav gtk4paintablesink för videouppspelning"
+msgstr "Föredra clappersink framför gtk4paintablesink för videouppspelning"
 
 #: src/prefs.ts:87
 msgid "Force GtkMediaFile"
@@ -183,11 +179,11 @@ msgstr "Tvinga användning utav GtkMediaFile för videouppspelning"
 
 #: src/prefs.ts:89
 msgid "Enable Graphics Offload"
-msgstr ""
+msgstr "Aktivera grafikavlastning"
 
 #: src/prefs.ts:90
 msgid "Enable graphics offload for improved performance"
-msgstr ""
+msgstr "Aktivera grafikavlastning för förbättrad prestanda"
 
 #: src/prefs.ts:91
 msgid "Startup Delay"
@@ -209,6 +205,8 @@ msgstr ""
 msgid ""
 "Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)"
 msgstr ""
+"Kantbredd i pixlar ritad innanför de rundade rektangulära gränserna (0 = "
+"inaktiverad)"
 
 #: src/prefs.ts:160
 msgid "Video Path"
