@@ -1,13 +1,13 @@
 # Gnome Shell Extension - Hanabi
 # Copyright (C) 2023 Jeff Shee (jeffshee8969@gmail.com)
 # This file is distributed under the same license as the gnome-ext-hanabi package.
-# Linus Virtanen <linus.virtanen@protonmail.com>, 2024.
+# Linus Virtanen <linus.virtanen@protonmail.com>, 2024, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-25 01:03+0900\n"
-"PO-Revision-Date: 2024-05-27 15:09+0000\n"
+"PO-Revision-Date: 2026-09-02 08:51+0000\n"
 "Last-Translator: Linus Virtanen <linus.virtanen@protonmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/fi/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.6-dev\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 
 #: src/panelMenu.ts:73 src/panelMenu.ts:87
 msgid "Pause"
@@ -52,11 +52,11 @@ msgstr "Äänenvoimakkuus"
 
 #: src/prefs.ts:44
 msgid "Random Start Position"
-msgstr ""
+msgstr "Satunnainen aloituskohta"
 
 #: src/prefs.ts:45
 msgid "Start playback from a random position each time a video starts"
-msgstr ""
+msgstr "Aloita toisto satunnaisesta kohdasta aina kun video alkaa"
 
 #: src/prefs.ts:46
 msgid "Show Panel Menu"
@@ -64,11 +64,11 @@ msgstr "Näytä ohjausvalikko"
 
 #: src/prefs.ts:47
 msgid "Show on Lock Screen"
-msgstr ""
+msgstr "Näytä lukitusnäytöllä"
 
 #: src/prefs.ts:48
 msgid "Show the live wallpaper on the lock screen"
-msgstr ""
+msgstr "Näytä live-taustakuva lukitusruudulla"
 
 #: src/prefs.ts:50
 msgid "Auto Pause"
@@ -76,13 +76,11 @@ msgstr "Automaattitauotus"
 
 #: src/prefs.ts:53
 msgid "Pause on Window Focus"
-msgstr ""
+msgstr "Tauota ikkunaa kohdistettaessa"
 
 #: src/prefs.ts:54
-#, fuzzy
-#| msgid "Pause playback when an MPRIS media player is playing media"
 msgid "Pause playback when any window is focused"
-msgstr "Tauota MPRIS-mediasoittimen toistaessa jotakin"
+msgstr "Tauota toisto kun mikä tahansa ikkuna on kohdistettuna"
 
 #: src/prefs.ts:56
 msgid "Low Battery Threshold"
@@ -114,16 +112,17 @@ msgstr "Muuta taustakuvan vaihtoväli (minuuteissa)"
 
 #: src/prefs.ts:69
 msgid "Overview"
-msgstr ""
+msgstr "Yleiskatsaus"
 
 #: src/prefs.ts:71
 msgid "Corner Radius"
-msgstr ""
+msgstr "Kulman säde"
 
 #: src/prefs.ts:72
 msgid ""
 "Rounded corner radius in pixels for workspace background in the overview"
 msgstr ""
+"Pyöristetty kulmasäde pikseleinä työtilan taustaa varten yleiskatsauksessa"
 
 #: src/prefs.ts:74
 msgid "Experimental"
@@ -161,16 +160,12 @@ msgid "Print debug messages to log"
 msgstr "Kirjaa virheenkorjauksen viestit lokiin"
 
 #: src/prefs.ts:85
-#, fuzzy
-#| msgid "Preferences"
 msgid "Prefer clappersink"
-msgstr "Asetukset"
+msgstr "Clappersink suositelluksi tavaksi"
 
 #: src/prefs.ts:86
-#, fuzzy
-#| msgid "Force use of gtk4paintablesink for video playback"
 msgid "Prefer clappersink over gtk4paintablesink for video playback"
-msgstr "Pakota gtk4paintablesink-käyttö videon toistolle"
+msgstr "Suosi clappersink:iä gtk4paintablesink:in edelle videon toistamiseen"
 
 #: src/prefs.ts:87
 msgid "Force GtkMediaFile"
@@ -182,11 +177,11 @@ msgstr "Pakota GtkMediaFile-käyttö videon toistolle"
 
 #: src/prefs.ts:89
 msgid "Enable Graphics Offload"
-msgstr ""
+msgstr "Ota grafiikkapurku käyttöön"
 
 #: src/prefs.ts:90
 msgid "Enable graphics offload for improved performance"
-msgstr ""
+msgstr "Ota grafiikkapurku käyttöön suorituskyvyn parantamiseksi"
 
 #: src/prefs.ts:91
 msgid "Startup Delay"
@@ -202,12 +197,14 @@ msgstr ""
 
 #: src/prefs.ts:94
 msgid "Border Stroke"
-msgstr ""
+msgstr "Reunaviimeistely"
 
 #: src/prefs.ts:95
 msgid ""
 "Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)"
 msgstr ""
+"Reunan leveys pikseleinä, jotka on piirretty pyöristettyjen suorien rajojen "
+"sisään (0 = pois käytöstä)"
 
 #: src/prefs.ts:160
 msgid "Video Path"
