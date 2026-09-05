@@ -31,5 +31,8 @@ node_modules/
 .build
 scratch
 
+# Nix build result
+result
+
 # TypeScript build output
 src/_build
