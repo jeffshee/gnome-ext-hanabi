@@ -237,16 +237,25 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
                 this.logger.debug('minimized changed');
                 this.update();
             }));
+            // Bug fix: the renderer window may have a null title when first mapped
+            // (Wayland hasn't propagated the title yet). We watch for title changes
+            // to remove it from tracking once it's identified as the renderer.
+            signals.push(
+                metaWindow.connect('notify::title', () => {
+                    this.logger.debug('title changed');
+                    if (metaWindow.title?.includes(APPLICATION_ID) || metaWindow.skip_taskbar)
+                        this.removeTrackedWindow(metaWindow);
+                    else
+                        this.update();
+                })
+            );
             this.windows.push({metaWindow, signals});
             this.logger.debug(`Window ${metaWindow.title} added`);
             if (doUpdate)
                 this.update();
         }
 
-        private onWindowRemoved(metaWindow: Meta.Window): void {
-            if (metaWindow.title?.includes(APPLICATION_ID) || metaWindow.skip_taskbar)
-                return;
-
+        private removeTrackedWindow(metaWindow: Meta.Window): void {
             this.windows = this.windows.filter(window => {
                 if (window.metaWindow === metaWindow) {
                     window.signals.forEach(signal => metaWindow.disconnect(signal));
@@ -256,6 +265,13 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
             });
             this.logger.debug(`Window ${metaWindow.title} removed`);
             this.update();
+        }
+
+        private onWindowRemoved(metaWindow: Meta.Window): void {
+            if (metaWindow.title?.includes(APPLICATION_ID) || metaWindow.skip_taskbar)
+                return;
+
+            this.removeTrackedWindow(metaWindow);
         }
 
         private onActiveWorkspaceChanged(workspaceManager: Meta.WorkspaceManager): void {
@@ -298,9 +314,17 @@ const PauseOnMaximizeOrFullscreenModule = GObject.registerClass(
             // showing_on_its_workspace() is false for minimized windows and for
             // windows hidden by the show-desktop shortcut, so neither counts as
             // covering the wallpaper.
+            // Also filter windows with null titles: a null-title window is unidentified —
+            // it may be the renderer before Wayland has propagated its title to Meta.
+            // The notify::title handler in onWindowAdded will remove it once its identity is known.
             const metaWindows = this.windows
                 .map(({metaWindow}) => metaWindow)
-                .filter(w => !w.title?.includes(APPLICATION_ID) && w.showing_on_its_workspace());
+                .filter(
+                    w =>
+                        w.title !== null &&
+                        !w.title.includes(APPLICATION_ID) &&
+                        w.showing_on_its_workspace()
+                );
 
             const monitors = Main.layoutManager.monitors;
 
@@ -453,7 +477,8 @@ const PauseOnFocusModule = GObject.registerClass(
                 focusWindow !== undefined &&
                 focusWindow.appears_focused &&
                 !focusWindow.minimized &&
-                !(focusWindow.title?.includes(APPLICATION_ID) ?? false) &&
+                focusWindow.title !== null &&
+                !focusWindow.title.includes(APPLICATION_ID) &&
                 !focusWindow.skip_taskbar;
 
             this.logger.debug(
