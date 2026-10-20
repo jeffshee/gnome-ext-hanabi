@@ -45,6 +45,7 @@ export class GnomeShellOverride {
 
     // Live wallpaper actors we've injected.
     private wallpaperActors = new Set<LiveWallpaper>();
+    private reloadBackgroundsTimerId = 0;
 
     // Settings and its tracked signal connections.
     private settings: Gio.Settings;
@@ -75,10 +76,18 @@ export class GnomeShellOverride {
         GLib.timeout_add(GLib.PRIORITY_DEFAULT, BACKGROUND_RELOAD_REFRESH_DELAY_MS, () => {
             // _enabledExtensions (uuid list) is a private field not in the typed API.
             const {_enabledExtensions} = Main.extensionManager as {_enabledExtensions?: string[]};
+            const hasDash2Dock = _enabledExtensions?.includes('dash2dock-lite@icedman.github.com') ?? false;
+
             if (_enabledExtensions?.includes('blur-my-shell@aunetx'))
                 Main.layoutManager.emit('monitors-changed');
 
-            global.display.emit('workareas-changed');
+            // Note: do NOT emit workareas-changed for dash2dock-lite.
+            // dash2dock-lite resets its dock opacity to 0 on workareas-changed and
+            // relies on its own animation loop to fade back in. Emitting this signal
+            // while the dock is already visible causes it to go dim and freeze.
+            if (!hasDash2Dock)
+                global.display.emit('workareas-changed');
+
             return GLib.SOURCE_REMOVE;
         });
     }
@@ -274,11 +283,41 @@ export class GnomeShellOverride {
             })
         );
 
-        this.reloadBackgrounds();
+        /**
+         * Compatibility: dash2dock-lite starts with dock opacity = 0 and fades in over ~500ms.
+         * If we call reloadBackgrounds() synchronously here, we destroy the background actors
+         * while the dock animation is in progress, causing the dock to get stuck dim/frozen.
+         * Delay the reload by 1500ms to let dash2dock-lite finish its startup animation first.
+         */
+        const {_enabledExtensions} = Main.extensionManager as {_enabledExtensions?: string[]};
+        const hasDash2Dock = _enabledExtensions?.includes('dash2dock-lite@icedman.github.com') ?? false;
+
+        if (!Main.sessionMode.isLocked) {
+            if (hasDash2Dock) {
+                if (this.reloadBackgroundsTimerId)
+                    GLib.source_remove(this.reloadBackgroundsTimerId);
+                this.reloadBackgroundsTimerId = GLib.timeout_add(
+                    GLib.PRIORITY_DEFAULT,
+                    1500,
+                    () => {
+                        this.reloadBackgroundsTimerId = 0;
+                        this.reloadBackgrounds();
+                        return GLib.SOURCE_REMOVE;
+                    }
+                );
+            } else {
+                this.reloadBackgrounds();
+            }
+        }
     }
 
     disable(): void {
         logger.debug('Removing overrides');
+
+        if (this.reloadBackgroundsTimerId) {
+            GLib.source_remove(this.reloadBackgroundsTimerId);
+            this.reloadBackgroundsTimerId = 0;
+        }
 
         for (const id of this.settingsChangedIds)
             this.settings.disconnect(id);
