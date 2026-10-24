@@ -603,14 +603,7 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
             const mprisNames = this.queryMprisNames();
             mprisNames.forEach(mprisName => {
                 this.logger.debug('Media Player found:', mprisName);
-                const mpris = new MprisWrapper(mprisName);
-                const playbackStatus = mpris.getPlaybackStatus();
-                const handler = this.mprisPropertiesChangedFactory(mprisName);
-                const mprisPropertiesChangedId = mpris.proxy.connect(
-                    'g-properties-changed',
-                    handler
-                );
-                this.mediaPlayers[mprisName] = {playbackStatus, mpris, mprisPropertiesChangedId};
+                this.addMediaPlayer(mprisName);
             });
             this.logger.debug(this.stringifyMediaPlayers());
 
@@ -627,19 +620,10 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
                     const mprisName = name;
                     if (oldOwner === '') {
                         this.logger.debug('Media Player created:', mprisName);
-                        const mpris = new MprisWrapper(mprisName);
-                        const playbackStatus = mpris.getPlaybackStatus();
-                        const handler = this.mprisPropertiesChangedFactory(mprisName);
-                        const mprisPropertiesChangedId = mpris.proxy.connect(
-                            'g-properties-changed',
-                            handler
-                        );
-                        this.mediaPlayers[mprisName] = {playbackStatus, mpris, mprisPropertiesChangedId};
+                        this.addMediaPlayer(mprisName);
                     } else if (newOwner === '') {
                         this.logger.debug('Media Player destroyed:', mprisName);
-                        const {mpris, mprisPropertiesChangedId} = this.mediaPlayers[mprisName];
-                        mpris.proxy.disconnect(mprisPropertiesChangedId);
-                        delete this.mediaPlayers[mprisName];
+                        this.removeMediaPlayer(mprisName);
                     }
                     this.logger.debug(this.stringifyMediaPlayers());
                     this.update();
@@ -647,6 +631,37 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
             );
 
             this.update();
+        }
+
+        private addMediaPlayer(mprisName: string): void {
+            // Tracked as 'Stopped' until the proxy has loaded the real status.
+            const mpris: MprisWrapper = new MprisWrapper(mprisName, error => {
+                if (this.mediaPlayers[mprisName]?.mpris !== mpris)
+                    return;
+                if (error) {
+                    this.logger.debug(`Failed to connect to ${mprisName}:`, (error as Error).message);
+                    return;
+                }
+                this.mediaPlayers[mprisName].playbackStatus = mpris.getPlaybackStatus();
+                this.logger.debug(this.stringifyMediaPlayers());
+                this.update();
+            });
+            const handler = this.mprisPropertiesChangedFactory(mprisName);
+            const mprisPropertiesChangedId = mpris.proxy.connect('g-properties-changed', handler);
+            this.mediaPlayers[mprisName] = {
+                playbackStatus: 'Stopped',
+                mpris,
+                mprisPropertiesChangedId,
+            };
+        }
+
+        private removeMediaPlayer(mprisName: string): void {
+            const entry = this.mediaPlayers[mprisName];
+            if (!entry)
+                return;
+            entry.mpris.cancel();
+            entry.mpris.proxy.disconnect(entry.mprisPropertiesChangedId);
+            delete this.mediaPlayers[mprisName];
         }
 
         private queryMprisNames(): string[] {
@@ -697,10 +712,7 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
         }
 
         override disable(): void {
-            Object.values(this.mediaPlayers).forEach(({mpris, mprisPropertiesChangedId}) =>
-                mpris.proxy.disconnect(mprisPropertiesChangedId)
-            );
-            this.mediaPlayers = {};
+            Object.keys(this.mediaPlayers).forEach(mprisName => this.removeMediaPlayer(mprisName));
         }
     }
 );
