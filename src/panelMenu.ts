@@ -26,6 +26,7 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import {RendererWrapper} from './dbus.js';
 import type {PlaybackState} from './playbackState.js';
+import {listWallpaperVideos} from './wallpaperEngine.js';
 import type HanabiExtension from './extension.js';
 
 export class HanabiPanelMenu {
@@ -154,21 +155,7 @@ export class HanabiPanelMenu {
         )
             return;
 
-        const enumerator = dir.enumerate_children(
-            'standard::*',
-            Gio.FileQueryInfoFlags.NONE,
-            null
-        );
-
-        let fileInfo: Gio.FileInfo | null;
-        while ((fileInfo = enumerator.next_file(null))) {
-            if (fileInfo.get_content_type()?.startsWith('video/')) {
-                const file = dir.get_child(fileInfo.get_name());
-                const filePath = file.get_path();
-                if (filePath)
-                    videoPaths.push(filePath);
-            }
-        }
+        videoPaths = listWallpaperVideos(dir);
 
         videoPaths = videoPaths.sort();
         const currentVideoPath = this.settings.get_string('video-path');
