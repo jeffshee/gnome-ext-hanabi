@@ -582,6 +582,7 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
         private conditions: { pauseOnMprisPlaying: boolean };
         private dbus: DBusWrapper;
         private mediaPlayers: Record<string, MediaPlayerEntry>;
+        private nameOwnerChangedId: number | null = null;
 
         constructor(settings: Gio.Settings) {
             super(settings, 'mpris');
@@ -608,7 +609,7 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
             this.logger.debug(this.stringifyMediaPlayers());
 
 
-            this.dbus.proxy.connectSignal(
+            this.nameOwnerChangedId = this.dbus.proxy.connectSignal(
                 'NameOwnerChanged',
                 (
                     _proxy: Gio.DBusProxy,
@@ -712,6 +713,11 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
         }
 
         override disable(): void {
+            // Otherwise the handler outlives the extension and keeps tracking new players.
+            if (this.nameOwnerChangedId !== null) {
+                this.dbus.proxy.disconnectSignal(this.nameOwnerChangedId);
+                this.nameOwnerChangedId = null;
+            }
             Object.keys(this.mediaPlayers).forEach(mprisName => this.removeMediaPlayer(mprisName));
         }
     }
