@@ -5,13 +5,14 @@
 #
 # ☂︎ <gabriel_alcantara12@outlook.com>, 2024.
 # Emanoel Rodrigues Aires <emanoelairesrodrigues@gmail.com>, 2024.
+# samsilsou <samsilsou@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-25 01:03+0900\n"
-"PO-Revision-Date: 2024-09-24 22:22+0000\n"
-"Last-Translator: Emanoel Rodrigues Aires <emanoelairesrodrigues@gmail.com>\n"
+"PO-Revision-Date: 2026-10-29 13:20+0000\n"
+"Last-Translator: samsilsou <samsilsou@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "gnome-ext-hanabi/gnome-ext-hanabi/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.8-dev\n"
+"X-Generator: Weblate 2026.11.dev0\n"
 
 #: src/panelMenu.ts:73 src/panelMenu.ts:87
 msgid "Pause"
@@ -67,11 +68,11 @@ msgstr "Mostrar o Menu do Painel"
 
 #: src/prefs.ts:47
 msgid "Show on Lock Screen"
-msgstr ""
+msgstr "Mostrar na tela de bloqueio"
 
 #: src/prefs.ts:48
 msgid "Show the live wallpaper on the lock screen"
-msgstr ""
+msgstr "Mostrar o wallpaper animado na tela de bloqueio"
 
 #: src/prefs.ts:50
 msgid "Auto Pause"
@@ -119,7 +120,7 @@ msgstr "Intervalo p/ mudar de papel de parede (minutos)"
 
 #: src/prefs.ts:69
 msgid "Overview"
-msgstr ""
+msgstr "Visão geral"
 
 #: src/prefs.ts:71
 msgid "Corner Radius"
