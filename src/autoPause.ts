@@ -579,7 +579,11 @@ interface MediaPlayerEntry {
 const PauseOnMprisPlayingModule = GObject.registerClass(
     class PauseOnMprisPlayingModule extends AutoPauseModule {
         private states: { mprisPlaying: boolean };
-        private conditions: { pauseOnMprisPlaying: boolean };
+        private conditions: {
+            pauseOnMprisPlaying: boolean;
+            playerFilterMode: number;
+            playerFilter: string[];
+        };
         private dbus: DBusWrapper;
         private mediaPlayers: Record<string, MediaPlayerEntry>;
 
@@ -588,10 +592,20 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
             this.states = {mprisPlaying: false};
             this.conditions = {
                 pauseOnMprisPlaying: this.settings.get_boolean('pause-on-mpris-playing'),
+                playerFilterMode: this.settings.get_int('mpris-player-filter-mode'),
+                playerFilter: this.getPlayerFilter(),
             };
             this.settings.connect('changed::pause-on-mpris-playing', () => {
                 this.conditions.pauseOnMprisPlaying =
                     this.settings.get_boolean('pause-on-mpris-playing');
+                this.update();
+            });
+            this.settings.connect('changed::mpris-player-filter-mode', () => {
+                this.conditions.playerFilterMode = this.settings.get_int('mpris-player-filter-mode');
+                this.update();
+            });
+            this.settings.connect('changed::mpris-player-filter', () => {
+                this.conditions.playerFilter = this.getPlayerFilter();
                 this.update();
             });
 
@@ -683,9 +697,27 @@ const PauseOnMprisPlayingModule = GObject.registerClass(
             return JSON.stringify(summary, null, 2);
         }
 
+        private getPlayerFilter(): string[] {
+            return this.settings.get_strv('mpris-player-filter')
+                .map(entry => entry.trim().toLowerCase())
+                .filter(entry => entry !== '');
+        }
+
+        // Matches the filter entries against the bus name without its
+        // "org.mpris.MediaPlayer2." prefix, so "spotify" also covers e.g.
+        // a GSConnect-mirrored "GSConnect.PhoneSpotify".
+        private isPlayerFiltered(mprisName: string): boolean {
+            const {playerFilterMode, playerFilter} = this.conditions;
+            if (playerFilterMode === 0)
+                return true;
+            const name = mprisName.replace('org.mpris.MediaPlayer2.', '').toLowerCase();
+            const listed = playerFilter.some(entry => name.includes(entry));
+            return playerFilterMode === 1 ? listed : !listed;
+        }
+
         override update(): void {
-            this.states.mprisPlaying = Object.values(this.mediaPlayers).some(
-                p => p.playbackStatus === 'Playing'
+            this.states.mprisPlaying = Object.entries(this.mediaPlayers).some(
+                ([mprisName, p]) => p.playbackStatus === 'Playing' && this.isPlayerFiltered(mprisName)
             );
             super.update();
         }

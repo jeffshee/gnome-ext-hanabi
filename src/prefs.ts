@@ -57,6 +57,7 @@ export default class HanabiExtensionPreferences extends ExtensionPreferences {
             _('Set the threshold percentage for low battery level'), 0, 100, 5, 10);
         prefsRowBoolean(win, autoPauseGroup, _('Pause on Media Player Playing'), 'pause-on-mpris-playing',
             _('Pause playback when an MPRIS media player is playing media'));
+        prefsRowMprisPlayerFilter(win, autoPauseGroup);
 
         const wallpaperChangerGroup = new Adw.PreferencesGroup({title: _('Wallpaper Changer')});
         page.add(wallpaperChangerGroup);
@@ -294,6 +295,59 @@ function prefsRowPauseOnMaximizeOrFullscreen(
     row.connect('notify::selected', () => {
         settings.set_int('pause-on-maximize-or-fullscreen', row.selected);
     });
+}
+
+function prefsRowMprisPlayerFilter(window: PrefsWindow, prefsGroup: Adw.PreferencesGroup): void {
+    const settings = window.settings;
+    const tooltip = _(`
+    <b>All Players</b>: Any playing media player pauses playback.
+    <b>Only Listed</b>: Only the listed media players pause playback.
+    <b>All Except Listed</b>: The listed media players never pause playback.
+    `);
+
+    const items = Gtk.StringList.new([_('All Players'), _('Only Listed'), _('All Except Listed')]);
+
+    const modeRow = new Adw.ComboRow({
+        title: _('Media Player Filter'),
+        subtitle: _('Choose which media players pause playback'),
+        model: items,
+        selected: settings.get_int('mpris-player-filter-mode'),
+    });
+    modeRow.set_tooltip_markup(tooltip);
+    prefsGroup.add(modeRow);
+
+    modeRow.connect('notify::selected', () => {
+        settings.set_int('mpris-player-filter-mode', modeRow.selected);
+    });
+
+    const listRow = new Adw.EntryRow({
+        title: _('Listed Media Players (comma-separated, e.g. spotify, firefox)'),
+        text: settings.get_strv('mpris-player-filter').join(', '),
+        show_apply_button: true,
+    });
+    listRow.set_tooltip_text(`${_('Running players:')} ${queryMprisPlayers().join(', ') || _('none')}`);
+    prefsGroup.add(listRow);
+
+    listRow.connect('apply', () => {
+        const entries = listRow.text.split(',').map(entry => entry.trim()).filter(entry => entry !== '');
+        settings.set_strv('mpris-player-filter', entries);
+    });
+}
+
+// Names of the MPRIS players running now, without the "org.mpris.MediaPlayer2." prefix.
+function queryMprisPlayers(): string[] {
+    try {
+        const reply = Gio.DBus.session.call_sync(
+            'org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus', 'ListNames',
+            null, null, Gio.DBusCallFlags.NONE, 1000, null
+        );
+        const [names] = reply.deep_unpack() as [string[]];
+        return names
+            .filter(name => name.startsWith('org.mpris.MediaPlayer2.'))
+            .map(name => name.replace('org.mpris.MediaPlayer2.', ''));
+    } catch {
+        return [];
+    }
 }
 
 function prefsRowPauseOnBattery(window: PrefsWindow, prefsGroup: Adw.PreferencesGroup): void {
