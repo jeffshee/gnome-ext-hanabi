@@ -327,7 +327,8 @@ export default class HanabiExtension extends Extension {
                         contents += String.fromCharCode(readData[i]);
                 }
             }
-            const path = `gjs ${GLib.build_filenamev([this.path, 'renderer', 'renderer.js'])}`;
+            // Must match the argv built in launchRenderer().
+            const path = `gjs -m ${GLib.build_filenamev([this.path, 'renderer', 'renderer.js'])}`;
             if (contents.startsWith(path)) {
                 logger.debug(`Killing orphaned renderer process (pid ${filename})`);
                 const proc = new Gio.Subprocess({argv: ['/bin/kill', filename]});
