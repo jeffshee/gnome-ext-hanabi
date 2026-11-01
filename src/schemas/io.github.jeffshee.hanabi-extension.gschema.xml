@@ -83,6 +83,19 @@
             <description>Pause playback when an MPRIS media player is playing media</description>
         </key>
 
+        <key name="mpris-player-filter-mode" type="i">
+            <range min="0" max="2" />
+            <default>0</default>
+            <summary>Media Player Filter Mode</summary>
+            <description>Which media players can pause playback: 0 = all, 1 = only listed, 2 = all except listed</description>
+        </key>
+
+        <key name="mpris-player-filter" type="as">
+            <default>[]</default>
+            <summary>Media Player Filter</summary>
+            <description>Media players for the filter, matched case-insensitively against the part of the MPRIS bus name after org.mpris.MediaPlayer2.</description>
+        </key>
+
         <key name="debug-mode" type="b">
             <default>false</default>
             <summary>Debug Mode</summary>
