@@ -146,21 +146,38 @@ interface MprisProxy extends DBusSignalProxy {
 
 export class MprisWrapper {
     proxy: MprisProxy;
+    private cancellable = new Gio.Cancellable();
 
-    constructor(mediaPlayerName: string) {
-        this.proxy = this.createProxy(mediaPlayerName);
+    // The proxy is initialized asynchronously: a synchronous init fetches the player's
+    // properties on the shell's main loop and freezes the whole shell until the player
+    // answers (up to the 25s D-Bus timeout). onReady runs once properties are loaded.
+    constructor(mediaPlayerName: string, onReady: (error: unknown | null) => void) {
+        this.proxy = this.createProxy(mediaPlayerName, onReady);
     }
 
-    createProxy(mediaPlayerName: string): MprisProxy {
+    createProxy(
+        mediaPlayerName: string,
+        onReady: (error: unknown | null) => void
+    ): MprisProxy {
         const DBUS_INTERFACE = 'org.mpris.MediaPlayer2.Player';
         const DBUS_BUS_NAME = mediaPlayerName;
         const DBUS_OBJECT_PATH = '/org/mpris/MediaPlayer2';
         const interfaceXml = DBusUtil.loadInterfaceXML(DBUS_INTERFACE);
         const DBusProxy = Gio.DBusProxy.makeProxyWrapper<MprisProxy>(interfaceXml);
-        return DBusProxy(Gio.DBus.session, DBUS_BUS_NAME, DBUS_OBJECT_PATH);
+        return DBusProxy(
+            Gio.DBus.session,
+            DBUS_BUS_NAME,
+            DBUS_OBJECT_PATH,
+            (_proxy, error) => onReady(error),
+            this.cancellable
+        );
     }
 
     getPlaybackStatus(): string {
         return this.proxy.PlaybackStatus ?? 'Stopped';
+    }
+
+    cancel(): void {
+        this.cancellable.cancel();
     }
 }
