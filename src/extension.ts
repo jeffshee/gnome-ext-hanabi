@@ -89,6 +89,7 @@ export default class HanabiExtension extends Extension {
         this.signalConnections.push([this.settings, showPanelMenuChangedId]);
 
         this.shellOverride = new GnomeShellOverride(this.settings);
+        this.shellOverride.enable();
         this.windowManager = new WindowManager();
         this.autoPause = new AutoPause(this);
 
@@ -121,7 +122,7 @@ export default class HanabiExtension extends Extension {
 
     private innerEnable(): void {
         logger.debug('Activating overrides and starting renderer');
-        this.shellOverride!.enable();
+        this.shellOverride!.activate();
         this.windowManager!.enable();
         this.autoPause!.enable();
 
