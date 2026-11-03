@@ -256,6 +256,9 @@ export default class HanabiExtension extends Extension {
     disable(): void {
         logger.debug('Disabling');
 
+        // Cleared first so killCurrentProcess() doesn't re-arm the relaunch timeout.
+        this.isEnabled = false;
+
         if (this.startupTimeoutId) {
             GLib.source_remove(this.startupTimeoutId);
             this.startupTimeoutId = 0;
@@ -277,8 +280,6 @@ export default class HanabiExtension extends Extension {
             GLib.source_remove(this.monitorsChangedTimeoutId);
             this.monitorsChangedTimeoutId = 0;
         }
-
-        this.isEnabled = false;
     }
 
     private killCurrentProcess(): void {
