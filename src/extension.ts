@@ -155,8 +155,10 @@ export default class HanabiExtension extends Extension {
         this.signalConnections.push([this.settings!, showOnLockScreenChangedId]);
 
         this.isEnabled = true;
-        if (this.launchRendererTimeoutId)
+        if (this.launchRendererTimeoutId) {
             GLib.source_remove(this.launchRendererTimeoutId);
+            this.launchRendererTimeoutId = 0;
+        }
 
         this.launchRenderer();
     }
@@ -200,6 +202,9 @@ export default class HanabiExtension extends Extension {
         const videoPath = this.settings.get_string('video-path');
         if (videoPath === '')
             this.openPreferences();
+
+        // Reassigning currentProcess below would lose track of a running renderer.
+        this.killCurrentProcess();
 
         logger.debug(`Launching renderer (video: ${videoPath})`);
 
