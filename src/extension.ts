@@ -258,6 +258,8 @@ export default class HanabiExtension extends Extension {
         this.signalConnections = [];
 
         this.settings = null;
+        this.playbackState?.destroy();
+        this.playbackState = null;
         this.panelMenu?.disable();
         this.shellOverride?.disable();
         this.windowManager?.disable();

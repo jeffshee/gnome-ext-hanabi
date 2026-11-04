@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 
 import {RendererWrapper} from './dbus.js';
 import {Logger} from './logger.js';
@@ -70,6 +71,8 @@ export class PlaybackState {
     private renderer = new RendererWrapper();
     private machineDefinition: StateMachineDefinition;
     private machine!: StateMachine;
+    private isPlayingSignalId: number | null = null;
+    private unexpectedStopTimerId = 0;
 
     constructor() {
         this.machineDefinition = {
@@ -137,11 +140,36 @@ export class PlaybackState {
             },
         };
 
-        this.renderer.proxy.connectSignal(
+        this.isPlayingSignalId = this.renderer.proxy.connectSignal(
             'isPlayingChanged',
             (_proxy: Gio.DBusProxy, _sender: string, [isPlaying]: [boolean]) => {
-                if (isPlaying && this.getCurrentState() !== 'playing')
-                    void this.renderer.setPause();
+                if (isPlaying) {
+                    if (this.unexpectedStopTimerId) {
+                        GLib.source_remove(this.unexpectedStopTimerId);
+                        this.unexpectedStopTimerId = 0;
+                    }
+                    if (this.getCurrentState() !== 'playing')
+                        void this.renderer.setPause();
+                } else if (!isPlaying && this.getCurrentState() === 'playing') {
+                    // Renderer stopped unexpectedly while state machine says 'playing'.
+                    // This can happen when:
+                    //   - autoPause briefly triggered setPause before our fix
+                    //   - GStreamer transient error that isn't self-recovered
+                    //   - setFilePath / URI change goes through a STOPPED state briefly
+                    // Schedule a recovery setPlay() with debounce to avoid restart loops.
+                    if (this.unexpectedStopTimerId)
+                        GLib.source_remove(this.unexpectedStopTimerId);
+                    this.unexpectedStopTimerId = GLib.timeout_add(
+                        GLib.PRIORITY_DEFAULT,
+                        1000,
+                        () => {
+                            this.unexpectedStopTimerId = 0;
+                            if (this.getCurrentState() === 'playing')
+                                void this.renderer.setPlay();
+                            return GLib.SOURCE_REMOVE;
+                        }
+                    );
+                }
             }
         );
         this.reset();
@@ -169,5 +197,16 @@ export class PlaybackState {
 
     autoPause(): void {
         this.machine.transition(this.getCurrentState(), 'autoPause');
+    }
+
+    destroy(): void {
+        if (this.unexpectedStopTimerId) {
+            GLib.source_remove(this.unexpectedStopTimerId);
+            this.unexpectedStopTimerId = 0;
+        }
+        if (this.isPlayingSignalId) {
+            this.renderer.proxy.disconnectSignal(this.isPlayingSignalId);
+            this.isPlayingSignalId = null;
+        }
     }
 }

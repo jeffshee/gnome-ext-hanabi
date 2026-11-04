@@ -135,6 +135,9 @@ const HanabiRenderer = GObject.registerClass(
 
         private adapter: any;
         private media: Gtk.MediaFile | null;
+        private mediaSignalIds: number[];
+        private loopTimerId: number;
+        private mediaDuration: number;
 
         private dbus: any;
         private display: Gdk.Display | null;
@@ -158,6 +161,9 @@ const HanabiRenderer = GObject.registerClass(
             this.play = null;
             this.adapter = null;
             this.media = null;
+            this.mediaSignalIds = [];
+            this.loopTimerId = 0;
+            this.mediaDuration = 0;
             this.dbus = null;
             this.display = null;
             this.monitors = [];
@@ -501,21 +507,11 @@ const HanabiRenderer = GObject.registerClass(
             this.gstImplName = 'GtkMediaFile';
 
             this.media = Gtk.MediaFile.new_for_filename(videoPath);
-            this.media.set({loop: true});
-
-            this.media.connect('notify::prepared', () => {
-                this.setVolume(volume);
-                this.setMute(mute);
-                this.maybeSeekRandomMedia();
-            });
-
-            this.media.connect('notify::playing', (media: Gtk.MediaFile) => {
-                this.playing = media.get_playing();
-                this.dbus.emit_signal(
-                    'isPlayingChanged',
-                    new GLib.Variant('(b)', [this.playing])
-                );
-            });
+            // Note: Do NOT set native loop: true on GtkMediaFile in GTK4.
+            // In GTK4 with GStreamer, native loop causes the pipeline to hang at EOS without
+            // rewinding or emitting ended, causing the video to freeze permanently.
+            // Instead, we use active timestamp monitoring in startLoopWatcher to loop seamlessly.
+            this.connectGtkMediaSignals();
 
             this.sharedPaintable = this.media;
             const widget = this.getWidgetFromSharedPaintable()!;
@@ -525,6 +521,128 @@ const HanabiRenderer = GObject.registerClass(
             this.setAutoWallpaper();
 
             return widget;
+        }
+
+        /**
+         * Connect (and reconnect after file change) the signals on this.media.
+         * Kept separate so recreateGtkMedia can reuse them.
+         */
+        private connectGtkMediaSignals(): void {
+            if (!this.media)
+                return;
+
+            this.mediaSignalIds = [];
+
+            // Set the volume and mute after prepared, otherwise it won't work.
+            this.mediaSignalIds.push(
+                this.media.connect('notify::prepared', () => {
+                    if (!this.media || !this.media.prepared)
+                        return;
+                    this.mediaDuration = this.media.get_duration();
+                    this.setVolume(volume);
+                    this.setMute(mute);
+                    this.maybeSeekRandomMedia();
+                })
+            );
+
+            // Monitor playing state.
+            this.mediaSignalIds.push(
+                this.media.connect('notify::playing', (media: Gtk.MediaFile) => {
+                    this.playing = media.get_playing();
+                    this.dbus.emit_signal(
+                        'isPlayingChanged',
+                        new GLib.Variant('(b)', [this.playing])
+                    );
+                    if (this.playing)
+                        this.startLoopWatcher();
+                    else
+                        this.stopLoopWatcher();
+                })
+            );
+
+            // Manual looping fallback in case native loop property fails.
+            this.mediaSignalIds.push(
+                this.media.connect('notify::ended', () => {
+                    if (this.media && this.media.ended) {
+                        this.media.seek(0);
+                        this.media.play();
+                    }
+                })
+            );
+        }
+
+        /**
+         * Watch the media playback timestamp and loop seamlessly back to 0
+         * before the end of the video is reached, preventing GStreamer from stalling at EOS.
+         */
+        private startLoopWatcher(): void {
+            if (this.loopTimerId)
+                return;
+
+            this.loopTimerId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
+                if (this.media && this.playing && this.mediaDuration > 0) {
+                    const t = this.media.get_timestamp();
+                    if (t >= this.mediaDuration - 150000 || t >= this.mediaDuration) {
+                        this.media.seek(0);
+                        this.media.play();
+                    }
+                }
+                return GLib.SOURCE_CONTINUE;
+            });
+        }
+
+        private stopLoopWatcher(): void {
+            if (this.loopTimerId) {
+                GLib.source_remove(this.loopTimerId);
+                this.loopTimerId = 0;
+            }
+        }
+
+        // Recreate the GtkMediaFile object for a new file path.
+        // Detaches existing pictures first to avoid assertions on disposed paintables,
+        // disconnects signals from old media, and cleanly disposes the old stream to release
+        // file descriptors before creating the new GtkMediaFile.
+        private recreateGtkMedia(_videoPath: string): void {
+            this.stopLoopWatcher();
+            this.mediaDuration = 0;
+
+            // 1. Detach old paintable from all pictures FIRST to prevent GdkPaintable assertions
+            if (this.pictures)
+                this.pictures.forEach(p => p.set_paintable(null));
+
+            // 2. Disconnect signals from the old media object so callbacks don't fire during disposal
+            if (this.mediaSignalIds && this.media) {
+                this.mediaSignalIds.forEach(id => {
+                    try {
+                        this.media?.disconnect(id);
+                    } catch {
+                        // Ignore disconnected signals
+                    }
+                });
+                this.mediaSignalIds = [];
+            }
+
+            // 3. Clean up the old media object and force FD release
+            if (this.media) {
+                try {
+                    const old = this.media;
+                    this.media = null;
+                    this.sharedPaintable = null;
+                    old.stream_unprepared();
+                    old.run_dispose();
+                } catch {
+                    // Ignore dispose errors
+                }
+            }
+
+            // 4. Create new GtkMediaFile and reconnect
+            this.media = Gtk.MediaFile.new_for_filename(_videoPath);
+            this.connectGtkMediaSignals();
+            this.sharedPaintable = this.media;
+
+            // 5. Reattach new paintable to all pictures
+            if (this.pictures)
+                this.pictures.forEach(p => p.set_paintable(this.sharedPaintable));
         }
 
         private exportDbus(): void {
@@ -585,25 +703,30 @@ const HanabiRenderer = GObject.registerClass(
             if (this.play) {
                 this.play.set_uri(file.get_uri());
             } else if (this.media) {
-                this.media.stream_unprepared();
-                this.media.file = file;
+                // Bug fix: stream_unprepared() + file reassignment in GJS leaks the
+                // old file descriptor. Recreate the media object entirely to close it.
+                this.recreateGtkMedia(_videoPath);
             }
             this.markRandomStartPending();
             this.setPlay();
         }
 
         setPlay(): void {
-            if (this.play)
+            if (this.play) {
                 this.play.play();
-            else if (this.media)
+            } else if (this.media) {
                 this.media.play();
+                this.startLoopWatcher();
+            }
         }
 
         setPause(): void {
-            if (this.play)
+            if (this.play) {
                 this.play.pause();
-            else if (this.media)
+            } else if (this.media) {
                 this.media.pause();
+                this.stopLoopWatcher();
+            }
         }
 
         setAutoWallpaper(): void {
