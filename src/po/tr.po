@@ -5,13 +5,14 @@
 # Sabri Ünal <libreajans@gmail.com>, 2023.
 # Sabri Ünal <yakushabb@gmail.com>, 2024.
 # Seymen Kalkan <seymenkalkan@gmail.com>, 2024.
+# CoutHi <couthi@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-25 01:03+0900\n"
-"PO-Revision-Date: 2024-06-11 17:00+0000\n"
-"Last-Translator: Seymen Kalkan <seymenkalkan@gmail.com>\n"
+"PO-Revision-Date: 2026-11-06 15:51+0000\n"
+"Last-Translator: CoutHi <couthi@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/tr/>\n"
 "Language: tr\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.6-dev\n"
+"X-Generator: Weblate 2026.11.2.dev0\n"
 
 #: src/panelMenu.ts:73 src/panelMenu.ts:87
 msgid "Pause"
@@ -55,11 +56,11 @@ msgstr "Ses Düzeyi"
 
 #: src/prefs.ts:44
 msgid "Random Start Position"
-msgstr ""
+msgstr "Rastgele başlangıç pozisyonu"
 
 #: src/prefs.ts:45
 msgid "Start playback from a random position each time a video starts"
-msgstr ""
+msgstr "Her yeni videoda oynatmaya rastgele bir pozisyondan başla"
 
 #: src/prefs.ts:46
 msgid "Show Panel Menu"
@@ -67,11 +68,11 @@ msgstr "Panel Menüsünü Göster"
 
 #: src/prefs.ts:47
 msgid "Show on Lock Screen"
-msgstr ""
+msgstr "Ekran kilitliyken de göster"
 
 #: src/prefs.ts:48
 msgid "Show the live wallpaper on the lock screen"
-msgstr ""
+msgstr "Ekran kilitli vaziyetteyken de canlı masaüstünü göster"
 
 #: src/prefs.ts:50
 msgid "Auto Pause"
@@ -79,13 +80,11 @@ msgstr "Otomatik Durdur"
 
 #: src/prefs.ts:53
 msgid "Pause on Window Focus"
-msgstr ""
+msgstr "Odak kaybında otomatik durdurma"
 
 #: src/prefs.ts:54
-#, fuzzy
-#| msgid "Pause playback when an MPRIS media player is playing media"
 msgid "Pause playback when any window is focused"
-msgstr "MPRIS medya oynatıcısı çalıyorken oynatımı duraklat"
+msgstr "Herhangi bir pencereye odaklanılmışken videoyu duraklat"
 
 #: src/prefs.ts:56
 msgid "Low Battery Threshold"
