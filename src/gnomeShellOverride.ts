@@ -49,6 +49,7 @@ export class GnomeShellOverride {
     // Settings and its tracked signal connections.
     private settings: Gio.Settings;
     private settingsChangedIds: number[] = [];
+    private isEnabled = false;
 
     constructor(settings: Gio.Settings) {
         this.settings = settings;
@@ -98,6 +99,12 @@ export class GnomeShellOverride {
     }
 
     enable(): void {
+        // InjectionManager saves only the latest method per name, so a second install
+        // would treat the first override as the original and clear() would restore it.
+        if (this.isEnabled)
+            return;
+        this.isEnabled = true;
+
         logger.debug('Installing overrides');
 
         // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -279,6 +286,7 @@ export class GnomeShellOverride {
 
     disable(): void {
         logger.debug('Removing overrides');
+        this.isEnabled = false;
 
         for (const id of this.settingsChangedIds)
             this.settings.disconnect(id);

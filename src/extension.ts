@@ -56,9 +56,10 @@ export default class HanabiExtension extends Extension {
     private reloadTime = RENDERER_RELOAD_DELAY_MS;
     private rendererSuspended = false;
 
-    // Signal connections and the monitors-changed timeout, cleaned up in disable().
+    // Signal connections and pending timeouts, cleaned up in disable().
     private signalConnections: SignalConnection[] = [];
     private monitorsChangedTimeoutId = 0;
+    private startupTimeoutId = 0;
 
     getPlaybackState(): PlaybackState {
         return this.playbackState!;
@@ -95,28 +96,27 @@ export default class HanabiExtension extends Extension {
         if (Main.layoutManager._startingUp) {
             const startupCompleteId = Main.layoutManager.connect(
                 'startup-complete',
-                () => {
-                    GLib.timeout_add(
-                        GLib.PRIORITY_DEFAULT,
-                        this.settings!.get_int('startup-delay'),
-                        () => {
-                            this.innerEnable();
-                            return false;
-                        }
-                    );
-                }
+                () => this.scheduleInnerEnable()
             );
             this.signalConnections.push([Main.layoutManager, startupCompleteId]);
         } else {
-            GLib.timeout_add(
-                GLib.PRIORITY_DEFAULT,
-                this.settings.get_int('startup-delay'),
-                () => {
-                    this.innerEnable();
-                    return false;
-                }
-            );
+            this.scheduleInnerEnable();
         }
+    }
+
+    // A screen lock can cycle this extension through disable() and enable() several
+    // times in a row, so disable() must cancel this timeout.
+    // Otherwise innerEnable() runs once per cycle.
+    private scheduleInnerEnable(): void {
+        this.startupTimeoutId = GLib.timeout_add(
+            GLib.PRIORITY_DEFAULT,
+            this.settings!.get_int('startup-delay'),
+            () => {
+                this.startupTimeoutId = 0;
+                this.innerEnable();
+                return GLib.SOURCE_REMOVE;
+            }
+        );
     }
 
     private innerEnable(): void {
@@ -155,8 +155,10 @@ export default class HanabiExtension extends Extension {
         this.signalConnections.push([this.settings!, showOnLockScreenChangedId]);
 
         this.isEnabled = true;
-        if (this.launchRendererTimeoutId)
+        if (this.launchRendererTimeoutId) {
             GLib.source_remove(this.launchRendererTimeoutId);
+            this.launchRendererTimeoutId = 0;
+        }
 
         this.launchRenderer();
     }
@@ -200,6 +202,9 @@ export default class HanabiExtension extends Extension {
         const videoPath = this.settings.get_string('video-path');
         if (videoPath === '')
             this.openPreferences();
+
+        // Reassigning currentProcess below would lose track of a running renderer.
+        this.killCurrentProcess();
 
         logger.debug(`Launching renderer (video: ${videoPath})`);
 
@@ -251,6 +256,14 @@ export default class HanabiExtension extends Extension {
     disable(): void {
         logger.debug('Disabling');
 
+        // Cleared first so killCurrentProcess() doesn't re-arm the relaunch timeout.
+        this.isEnabled = false;
+
+        if (this.startupTimeoutId) {
+            GLib.source_remove(this.startupTimeoutId);
+            this.startupTimeoutId = 0;
+        }
+
         this.killCurrentProcess();
         this.rendererSuspended = false;
 
@@ -267,8 +280,6 @@ export default class HanabiExtension extends Extension {
             GLib.source_remove(this.monitorsChangedTimeoutId);
             this.monitorsChangedTimeoutId = 0;
         }
-
-        this.isEnabled = false;
     }
 
     private killCurrentProcess(): void {
