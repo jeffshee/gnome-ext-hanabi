@@ -50,6 +50,10 @@ export class GnomeShellOverride {
     private settings: Gio.Settings;
     private settingsChangedIds: number[] = [];
 
+    // Set by activate(). The overrides are installed earlier, in enable(), but they
+    // only inject live wallpapers once this is true.
+    private isActive = false;
+
     constructor(settings: Gio.Settings) {
         this.settings = settings;
     }
@@ -97,6 +101,11 @@ export class GnomeShellOverride {
         });
     }
 
+    // Call this synchronously from the extension's enable(). GNOME Shell only rebases
+    // extensions that come later in its enable order. If these overrides are installed
+    // after an extension that comes later in that order, its disable() puts back the
+    // method it saved and removes these overrides too (background-logo does this on
+    // every screen lock).
     enable(): void {
         logger.debug('Installing overrides');
 
@@ -113,6 +122,9 @@ export class GnomeShellOverride {
             originalMethod => {
                 return function (this: Background.BackgroundManager) {
                     const backgroundActor = originalMethod.call(this);
+
+                    if (!thisRef.isActive)
+                        return backgroundActor;
 
                     const isLockScreen = (this._container as (Clutter.Actor & { style_class?: string }) | null)?.style_class?.includes('screen-shield-background') ?? false;
                     if (isLockScreen && !thisRef.settings.get_boolean('show-on-lock-screen')) {
@@ -267,6 +279,12 @@ export class GnomeShellOverride {
                 };
             }
         );
+    }
+
+    activate(): void {
+        if (this.isActive)
+            return;
+        this.isActive = true;
 
         this.settingsChangedIds.push(
             this.settings.connect('changed::show-on-lock-screen', () => {
@@ -279,6 +297,7 @@ export class GnomeShellOverride {
 
     disable(): void {
         logger.debug('Removing overrides');
+        this.isActive = false;
 
         for (const id of this.settingsChangedIds)
             this.settings.disconnect(id);
