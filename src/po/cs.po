@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the gnome-ext-hanabi package.
 # vyPal <kubik.palacky@gmail.com>, 2023.
 # David Čudek <dajosek2seznam.cz@gmail.com>, 2024, 2025.
+# David Houdek <hikari03@users.noreply.hosted.weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-25 01:03+0900\n"
-"PO-Revision-Date: 2025-04-06 08:05+0000\n"
-"Last-Translator: David Čudek <dajosek2seznam.cz@gmail.com>\n"
+"PO-Revision-Date: 2026-11-13 15:51+0000\n"
+"Last-Translator: David Houdek <hikari03@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/gnome-ext-hanabi/"
 "gnome-ext-hanabi/cs/>\n"
 "Language: cs\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
-"X-Generator: Weblate 5.11-dev\n"
+"X-Generator: Weblate 2026.12.dev0\n"
 
 #: src/panelMenu.ts:73 src/panelMenu.ts:87
 msgid "Pause"
@@ -53,11 +54,11 @@ msgstr "Hlasitost"
 
 #: src/prefs.ts:44
 msgid "Random Start Position"
-msgstr ""
+msgstr "Náhodná startovací pozice"
 
 #: src/prefs.ts:45
 msgid "Start playback from a random position each time a video starts"
-msgstr ""
+msgstr "Začít přehrávání z náhodné pozice při každém startu videa"
 
 #: src/prefs.ts:46
 msgid "Show Panel Menu"
@@ -65,11 +66,11 @@ msgstr "Zobrazit menu na panelu"
 
 #: src/prefs.ts:47
 msgid "Show on Lock Screen"
-msgstr ""
+msgstr "Ukázat na zamčené obrazovce"
 
 #: src/prefs.ts:48
 msgid "Show the live wallpaper on the lock screen"
-msgstr ""
+msgstr "Zobrazit živé pozadí na zamčené obrazovce"
 
 #: src/prefs.ts:50
 msgid "Auto Pause"
@@ -77,13 +78,11 @@ msgstr "Automaticky pozastavit"
 
 #: src/prefs.ts:53
 msgid "Pause on Window Focus"
-msgstr ""
+msgstr "Pozastavit na fokus okna"
 
 #: src/prefs.ts:54
-#, fuzzy
-#| msgid "Pause playback when an MPRIS media player is playing media"
 msgid "Pause playback when any window is focused"
-msgstr "Zastavit přehrávání jestli jakýkoliv přehrávač MPRIS přehrává média."
+msgstr "Zastavit přehrávání pokud je okno focused"
 
 #: src/prefs.ts:56
 msgid "Low Battery Threshold"
@@ -115,16 +114,16 @@ msgstr "Interval změny tapety (minuty)"
 
 #: src/prefs.ts:69
 msgid "Overview"
-msgstr ""
+msgstr "Přehled"
 
 #: src/prefs.ts:71
 msgid "Corner Radius"
-msgstr ""
+msgstr "Rádius rohu"
 
 #: src/prefs.ts:72
 msgid ""
 "Rounded corner radius in pixels for workspace background in the overview"
-msgstr ""
+msgstr "Zaoblený rádius rohu v pixelech pro pozadí pracovní plochy v přehledu"
 
 #: src/prefs.ts:74
 msgid "Experimental"
@@ -160,16 +159,12 @@ msgid "Print debug messages to log"
 msgstr "Vypisovat ladící zprávy do protokolu"
 
 #: src/prefs.ts:85
-#, fuzzy
-#| msgid "Preferences"
 msgid "Prefer clappersink"
-msgstr "Nastavení"
+msgstr "Preferovat clappersink"
 
 #: src/prefs.ts:86
-#, fuzzy
-#| msgid "Force use of gtk4paintablesink for video playback"
 msgid "Prefer clappersink over gtk4paintablesink for video playback"
-msgstr "Vynutí použití gtk4paintablesink pro přehrávání videa"
+msgstr "Preferovat použití gtk4paintablesink pro přehrávání videa"
 
 #: src/prefs.ts:87
 msgid "Force GtkMediaFile"
@@ -181,11 +176,11 @@ msgstr "Vynutí použití GtkMediaFile pro přehrávání videa"
 
 #: src/prefs.ts:89
 msgid "Enable Graphics Offload"
-msgstr ""
+msgstr "Zapnout odlehčení přes GPU"
 
 #: src/prefs.ts:90
 msgid "Enable graphics offload for improved performance"
-msgstr ""
+msgstr "Zapnout odlehčení přes GPU pro lepší výkon"
 
 #: src/prefs.ts:91
 msgid "Startup Delay"
@@ -201,12 +196,13 @@ msgstr ""
 
 #: src/prefs.ts:94
 msgid "Border Stroke"
-msgstr ""
+msgstr "Okrajová čára"
 
 #: src/prefs.ts:95
 msgid ""
 "Border width in pixels drawn inside the rounded-rect bounds (0 = disabled)"
 msgstr ""
+"Šířka hrany v pixelech, vykreslená uvnitř zaobleného obdélníku (0 = vypnuto)"
 
 #: src/prefs.ts:160
 msgid "Video Path"
@@ -384,7 +380,7 @@ msgstr "Obráceně sekvenční"
 
 #: src/prefs.ts:339
 msgid "Random"
-msgstr "Random"
+msgstr "Náhodně"
 
 #~ msgid "Cancel"
 #~ msgstr "Zrušit"
