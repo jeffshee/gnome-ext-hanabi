@@ -19,7 +19,6 @@ import Clutter from 'gi://Clutter';
 import Cogl from 'gi://Cogl';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
-import Shell from 'gi://Shell';
 
 import {Logger} from './logger.js';
 
@@ -144,8 +143,32 @@ function getFboOffset(actor: Clutter.Actor): [number, number] {
     return [Math.trunc(x1 - box.x1), Math.trunc(y1 - box.y1)];
 }
 
+// GNOME Shell 51 removed Shell.GLSLEffect, so the effect is now a
+// Clutter.ShaderEffect. The old vfunc_build_pipeline()/add_glsl_snippet() pair
+// is replaced by vfunc_get_static_snippet(), which Clutter calls at most once
+// per subclass and caches, then attaches to each instance's pipeline before
+// painting.
+function getStaticSnippet(): Cogl.Snippet {
+    // Hook semantics are unchanged: COGL_SNIPPET_HOOK_FRAGMENT with a 'post'
+    // string is the same insertion point as the previous
+    // add_glsl_snippet(..., is_replace = false) call, so the generated
+    // fragment shader still computes cogl_color_out first and this code then
+    // clips/outlines it. The cogl_* builtins (cogl_tex_coord0_in,
+    // cogl_color_out) are required rather than gl_* names, since a snippet is
+    // not a standalone GLSL shader.
+    //
+    // Cogl.Snippet is constructed with the introspected CoglSnippet constructor
+    // (Cogl.Snippet.new) rather than `new Cogl.Snippet(...)`: the latter takes a
+    // GObject property bag and CoglSnippet exposes no construct properties.
+    return Cogl.Snippet.new(
+        Cogl.SnippetHook.FRAGMENT,
+        fragmentShaderDeclarations,
+        fragmentShaderCode
+    );
+}
+
 export const RoundedCornersEffect = GObject.registerClass(
-    class RoundedCornersEffect extends Shell.GLSLEffect {
+    class RoundedCornersEffect extends Clutter.ShaderEffect {
         // Pending debounced log timers, keyed by label.
         private logTimeouts = new Map<string, number>();
 
@@ -177,13 +200,28 @@ export const RoundedCornersEffect = GObject.registerClass(
             );
         }
 
-        vfunc_build_pipeline(): void {
-            this.add_glsl_snippet(
-                Cogl.SnippetHook.FRAGMENT,
-                fragmentShaderDeclarations,
-                fragmentShaderCode,
-                false
-            );
+        vfunc_get_static_snippet(): Cogl.Snippet {
+            return getStaticSnippet();
+        }
+
+        // Clutter 51 provides clutter_shader_effect_set_uniform_float() (confirmed
+        // in the installed Clutter-51 GIR and at runtime under gjs), but the
+        // @girs/clutter-18 typings this repo resolves gi://Clutter to predate it,
+        // and that older Clutter.ShaderEffect exposed no uniform setters at all.
+        // The cast keeps the call type-checked against the real runtime signature
+        // without an ambient augmentation, which cannot target tsconfig
+        // path-mapped modules. Drop the cast and this wrapper once the repo moves
+        // to the @girs 51 typings.
+        private setUniform(name: string, nComponents: number, value: number[]): void {
+            (
+                this as unknown as {
+                    set_uniform_float(
+                        name: string,
+                        nComponents: number,
+                        value: number[]
+                    ): void;
+                }
+            ).set_uniform_float(name, nComponents, value);
         }
 
         // The shader compares texture coordinates (converted to texture pixels
@@ -229,14 +267,17 @@ export const RoundedCornersEffect = GObject.registerClass(
             this.textureOffsetY = offsetY;
             this.debugDebounced('textureMapping', width, height, scale, offsetX, offsetY);
 
-            this.set_uniform_float(
-                this.get_uniform_location('pixel_step'),
+            // Clutter.ShaderEffect has no get_uniform_location(); uniforms are
+            // addressed by name and Cogl resolves the location when the
+            // pipeline is painted.
+            this.setUniform(
+                'pixel_step',
                 2,
                 [1.0 / width, 1.0 / height]
             );
             const [x1, y1, x2, y2] = this.bounds;
-            this.set_uniform_float(
-                this.get_uniform_location('bounds'),
+            this.setUniform(
+                'bounds',
                 4,
                 [
                     (x1 - offsetX) * scale,
@@ -245,13 +286,13 @@ export const RoundedCornersEffect = GObject.registerClass(
                     (y2 - offsetY) * scale,
                 ]
             );
-            this.set_uniform_float(
-                this.get_uniform_location('clip_radius'),
+            this.setUniform(
+                'clip_radius',
                 1,
                 [this.clipRadius * scale]
             );
-            this.set_uniform_float(
-                this.get_uniform_location('border_stroke'),
+            this.setUniform(
+                'border_stroke',
                 1,
                 [this.borderStroke * scale]
             );
@@ -277,8 +318,8 @@ export const RoundedCornersEffect = GObject.registerClass(
 
         setBorderColor(color: number[]): void {
             this.debugDebounced('borderColor', ...color);
-            this.set_uniform_float(
-                this.get_uniform_location('border_color'),
+            this.setUniform(
+                'border_color',
                 4,
                 color
             );

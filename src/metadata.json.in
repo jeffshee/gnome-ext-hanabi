@@ -5,7 +5,8 @@
   "settings-schema": "@settings_schema@",
   "session-modes": ["user", "unlock-dialog"],
   "shell-version": [
-    "50"
+    "50",
+    "51"
   ],
   "url": "https://github.com/jeffshee/gnome-ext-hanabi",
   "uuid": "@uuid@",
