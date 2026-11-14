@@ -23,6 +23,7 @@ import Gdk from 'gi://Gdk?version=4.0';
 import Gst from 'gi://Gst';
 
 import {APPLICATION_ID, RENDERER_OBJECT_PATH} from '../constants.js';
+import {listWallpaperVideos} from '../wallpaperEngine.js';
 
 // [major, minor, micro, nano]
 const gstVersion = Gst.version();
@@ -614,21 +615,7 @@ const HanabiRenderer = GObject.registerClass(
             if (dir.query_file_type(Gio.FileQueryInfoFlags.NONE, null) !== Gio.FileType.DIRECTORY)
                 return;
 
-            const enumerator = dir.enumerate_children(
-                'standard::*',
-                Gio.FileQueryInfoFlags.NONE,
-                null
-            );
-
-            let fileInfo: Gio.FileInfo | null;
-            while ((fileInfo = enumerator.next_file(null))) {
-                if (fileInfo.get_content_type()?.startsWith('video/')) {
-                    const file = dir.get_child(fileInfo.get_name());
-                    const path = file.get_path();
-                    if (path)
-                        videoPaths.push(path);
-                }
-            }
+            videoPaths = listWallpaperVideos(dir);
             if (videoPaths.length === 0)
                 return;
             videoPaths = videoPaths.sort();
